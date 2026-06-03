@@ -1,122 +1,90 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import "./App.css";
+
+const services = [
+  "Kenaikan Pangkat",
+  "Tugas Belajar",
+  "Pencantuman Gelar Akademik",
+  "Pensiun",
+  "Satya Lencana",
+  "Perubahan Jabatan Pelaksana",
+  "Daftar Pelantikan",
+  "Peninjauan Masa Kerja (PMK)",
+  "Usul Ujikom JF",
+  "Mutasi Dalam Internal Kemenag",
+  "Mutasi Antar Instansi",
+  "Pengajuan Cuti Pegawai",
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      <nav className="navbar">
+        <div className="logo-section">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
+            alt=""
+          />
+          <h2>Layanan Kepegawaian</h2>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+
+        <div className="menu">
+          <a href="/">Beranda</a>
+          <a href="/">Kontak</a>
+
+          <button className="login-btn">
+            🔐 Login Admin
+          </button>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+      </nav>
+
+      <section className="hero">
+        <div className="hero-left">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
+            alt=""
+          />
+        </div>
+
+        <div className="hero-right">
+          <h1>LAYANAN KEPEGAWAIAN</h1>
+          <h2>BMBPSDM</h2>
+          <p>Kementerian Agama RI</p>
+        </div>
+      </section>
+
+      <section className="services">
+        <h2>Pilih Layanan Kepegawaian</h2>
+
+        <div className="grid">
+          {services.map((item, index) => (
+            <div className="card" key={index}>
+              <div className="icon">📄</div>
+              <h3>{item}</h3>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer>
+        <h2>Ada pertanyaan?</h2>
+
+        <p>
+          Informasi selengkapnya hubungi PIC Layanan Kepegawaian
+        </p>
+
+        <h3>Sudirman Abdullah, S.Pd., M.Pd</h3>
+
+        <button className="wa-btn">
+          Laporkan Kendala via WhatsApp
         </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <p className="address">
+          Gedung Kementerian Agama Lantai 18,
+          Jalan M.H. Thamrin No.6 Jakarta Pusat
+        </p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
