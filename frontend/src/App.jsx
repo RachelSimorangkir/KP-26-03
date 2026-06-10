@@ -1,125 +1,99 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "../components/ScrollToTop";
+import HalamanUtama from "../pages/HalamanUtama";
+import Kepegawaian from "../pages/Kepegawaian";
+import DashboardKepegawaian from "../pages/DashboardKepegawaian";
 import KenaikanPangkat from "../pages/KenaikanPangkat";
-
-const services = [
-  { name: "Kenaikan Pangkat", icon: "📈" },
-  { name: "Tugas Belajar", icon: "🎓" },
-  { name: "Pencantuman Gelar Akademik", icon: "📜" },
-  { name: "Pensiun", icon: "⏳" },
-  { name: "Satya Lencana", icon: "🏅" },
-  { name: "Perubahan Jabatan Pelaksana", icon: "👔" },
-  { name: "Daftar Pelantikan", icon: "🏆" },
-  { name: "Peninjauan Masa Kerja (PMK)", icon: "⌛" },
-  { name: "Usul Ujikom JF", icon: "📋" },
-  { name: "Mutasi Dalam Internal Kemenag", icon: "🔄" },
-  { name: "Mutasi Antar Instansi", icon: "🔁" },
-  { name: "Pengajuan Cuti Pegawai", icon: "🏖️" },
-];
-
-function Home() {
-  const navigate = useNavigate();
-
-  const handleClick = (serviceName) => {
-    if (serviceName === "Kenaikan Pangkat") {
-      navigate("/kenaikan-pangkat");
-    }
-  };
-
-  return (
-    <div className="app">
-
-      {/* NAVBAR */}
-      <nav className="navbar">
-        <div className="logo-section">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
-          />
-
-          <h2>Layanan Kepegawaian</h2>
-        </div>
-
-        <div className="menu">
-          <a href="/">Beranda</a>
-          <a href="/">Kontak</a>
-
-          <button className="login-btn">
-            🔐 Login Admin
-          </button>
-        </div>
-      </nav>
-
-      {/* HERO */}
-      <section className="hero-banner">
-        <div className="hero-logo">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
-          />
-        </div>
-
-        <div className="hero-text">
-          <h1>LAYANAN KEPEGAWAIAN</h1>
-          <h2>BMBPSDM</h2>
-          <p>KEMENTERIAN AGAMA RI</p>
-        </div>
-      </section>
-
-      {/* SERVICES */}
-      <section className="services">
-        <h2>Pilih Layanan Kepegawaian</h2>
-
-        <div className="grid">
-          {services.map((item, index) => (
-            <div
-              className="card"
-              key={index}
-              onClick={() => handleClick(item.name)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="icon">{item.icon}</div>
-              <h3>{item.name}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <h2>Ada pertanyaan?</h2>
-
-        <p>
-          Informasi selengkapnya hubungi PIC Layanan Kepegawaian
-        </p>
-
-        <h3>Sudirman Abdullah, S.Pd., M.Pd</h3>
-
-        <button className="wa-btn">
-          Ada kendala pada web? Laporkan via WhatsApp
-        </button>
-
-        <p className="address">
-          Gedung Kementerian Agama Lantai 18,
-          Jalan M.H. Thamrin No.6 Jakarta Pusat
-        </p>
-      </footer>
-
-    </div>
-  );
-}
+import TugasBelajar from "../pages/TugasBelajar";
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+
       <Routes>
 
-        <Route path="/" element={<Home />} />
-
+        {/* Portal Utama */}
         <Route
-          path="/kenaikan-pangkat"
-          element={<KenaikanPangkat />}
+          path="/"
+          element={<HalamanUtama />}
         />
+
+        {/* Modul Kepegawaian */}
+        <Route
+          path="/kepegawaian"
+          element={<Kepegawaian />}
+        >
+          {/* Halaman Default */}
+          <Route
+            index
+            element={<DashboardKepegawaian />}
+          />
+
+          {/* layanan kenaikan pangkat*/}
+          <Route
+            path="kenaikan-pangkat"
+            element={<KenaikanPangkat />}
+          />
+
+          {/* layanan tugas belajar */}
+          <Route
+            path="tugas-belajar"
+            element={<TugasBelajar />}
+          />
+
+          <Route
+            path="gelar-akademik"
+            element={<h2>Gelar Akademik</h2>}
+          />
+
+          <Route
+            path="pensiun"
+            element={<h2>Pensiun</h2>}
+          />
+
+          <Route
+            path="satya-lencana"
+            element={<h2>Satya Lencana</h2>}
+          />
+
+          <Route
+            path="perubahan-jabatan"
+            element={<h2>Perubahan Jabatan</h2>}
+          />
+
+          <Route
+            path="daftar-pelantikan"
+            element={<h2>Daftar Pelantikan</h2>}
+          />
+
+          <Route
+            path="pmk"
+            element={<h2>PMK</h2>}
+          />
+
+          <Route
+            path="ujikom-jf"
+            element={<h2>Ujikom JF</h2>}
+          />
+
+          <Route
+            path="mutasi-internal"
+            element={<h2>Mutasi Internal</h2>}
+          />
+
+          <Route
+            path="mutasi-antar-instansi"
+            element={<h2>Mutasi Antar Instansi</h2>}
+          />
+
+          <Route
+            path="cuti-pegawai"
+            element={<h2>Cuti Pegawai</h2>}
+          />
+
+        </Route>
 
       </Routes>
     </BrowserRouter>

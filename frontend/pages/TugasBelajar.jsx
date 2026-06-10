@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import "./KenaikanPangkat.css";
+import "./TugasBelajar.css";
 
-export default function KenaikanPangkat() {
+export default function TugasBelajar() {
   const navigate = useNavigate();
 
   return (
@@ -15,10 +15,10 @@ export default function KenaikanPangkat() {
           ← Kembali
         </button>
 
-        <h1>Kenaikan Pangkat</h1>
+        <h1>Tugas Belajar</h1>
 
         <p>
-          Pengajuan usul kenaikan pangkat pegawai
+          Pengajuan usul tugas belajar pegawai
           secara digital melalui Portal Layanan Internal.
         </p>
       </div>
