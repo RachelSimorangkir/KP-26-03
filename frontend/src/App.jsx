@@ -1,8 +1,11 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import ScrollToTop from "../components/ScrollToTop";
+
 import HalamanUtama from "../pages/HalamanUtama";
 import Kepegawaian from "../pages/Kepegawaian";
+
 import DashboardKepegawaian from "../pages/DashboardKepegawaian";
 import KenaikanPangkat from "../pages/KenaikanPangkat";
 import TugasBelajar from "../pages/TugasBelajar";
@@ -25,19 +28,19 @@ function App() {
           path="/kepegawaian"
           element={<Kepegawaian />}
         >
+
           {/* Halaman Default */}
           <Route
             index
             element={<DashboardKepegawaian />}
           />
 
-          {/* layanan kenaikan pangkat*/}
+          {/* Layanan */}
           <Route
             path="kenaikan-pangkat"
             element={<KenaikanPangkat />}
           />
 
-          {/* layanan tugas belajar */}
           <Route
             path="tugas-belajar"
             element={<TugasBelajar />}
@@ -94,6 +97,17 @@ function App() {
           />
 
         </Route>
+
+        {/* Placeholder Divisi Lain */}
+        <Route
+          path="/bmn"
+          element={<h2>Halaman BMN Sedang Dikembangkan</h2>}
+        />
+
+        <Route
+          path="/humas-data"
+          element={<h2>Halaman Humas & Data Sedang Dikembangkan</h2>}
+        />
 
       </Routes>
     </BrowserRouter>
