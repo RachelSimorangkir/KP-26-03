@@ -65,11 +65,10 @@ body {
 
 .hero {
   height: 400px;
-
   background: linear-gradient(
     135deg,
-    #0f766e,
-    #15803d
+    #163059,
+    #4f83c0
   );
 
   display: flex;
