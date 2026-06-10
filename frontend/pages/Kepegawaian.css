@@ -102,3 +102,21 @@
   display: block; /* penting */
   overflow-y: auto;
 }
+
+.portal-link{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.logo-text{
+  cursor: pointer;
+}
+
+.logo-text h2{
+  margin: 0;
+}
+
+.logo-text span{
+  font-size: 13px;
+}

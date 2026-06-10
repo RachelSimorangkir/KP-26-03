@@ -73,20 +73,25 @@ function Kepegawaian() {
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         
         <div className="sidebar-header">
-          {!collapsed && (
-            <div className="logo-text">
-              <h2>Portal</h2>
-              <span>Layanan Internal</span>
-            </div>
-          )}
+  {!collapsed && (
+    <Link
+      to="/"
+      className="portal-link"
+    >
+      <div className="logo-text">
+        <h2>Portal</h2>
+        <span>Layanan Internal</span>
+      </div>
+    </Link>
+  )}
 
-          <button
-            className="toggle-btn"
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            ☰
-          </button>
-        </div>
+  <button
+    className="toggle-btn"
+    onClick={() => setCollapsed(!collapsed)}
+  >
+    ☰
+  </button>
+</div>
 
         <div className="menu-title">
           {!collapsed && "MENU KEPEGAWAIAN"}
