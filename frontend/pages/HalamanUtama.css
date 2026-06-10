@@ -184,3 +184,210 @@ body {
 .footer p {
   opacity: 0.8;
 }
+
+/* ===================================
+   PAGE LOAD
+=================================== */
+
+.home-page{
+  animation: pageFade .8s ease;
+}
+
+@keyframes pageFade{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+/* ===================================
+   NAVBAR
+=================================== */
+
+.navbar{
+  animation: navbarDown .7s ease;
+}
+
+@keyframes navbarDown{
+  from{
+    opacity:0;
+    transform:translateY(-40px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ===================================
+   HERO
+=================================== */
+
+.hero{
+  animation: heroZoom .9s ease;
+}
+
+@keyframes heroZoom{
+  from{
+    opacity:0;
+    transform:scale(.96);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+.hero-content img{
+  animation: logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-10px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+}
+
+/* ===================================
+   HERO TEXT
+=================================== */
+
+.hero-content h1{
+  animation: slideTitle .8s ease;
+}
+
+.hero-content p{
+  animation: slideTitle .8s ease .2s both;
+}
+
+.hero-content span{
+  animation: slideTitle .8s ease .4s both;
+}
+
+@keyframes slideTitle{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ===================================
+   SERVICE SECTION
+=================================== */
+
+.services{
+  animation: fadeSection .8s ease .5s both;
+}
+
+@keyframes fadeSection{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+/* ===================================
+   CARD MUNCUL BERURUTAN
+=================================== */
+
+.service-card:nth-child(1){
+  animation: cardUp .7s ease .6s both;
+}
+
+.service-card:nth-child(2){
+  animation: cardUp .7s ease .8s both;
+}
+
+.service-card:nth-child(3){
+  animation: cardUp .7s ease 1s both;
+}
+
+@keyframes cardUp{
+  from{
+    opacity:0;
+    transform:translateY(40px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ===================================
+   CARD HOVER
+=================================== */
+
+.service-card{
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.service-card:hover{
+  transform:translateY(-8px);
+
+  box-shadow:
+  0 20px 35px rgba(0,0,0,.12);
+}
+
+.service-icon{
+  transition:.3s;
+}
+
+.service-card:hover .service-icon{
+  transform:scale(1.15);
+}
+
+/* ===================================
+   LOGIN BUTTON
+=================================== */
+
+.login-btn{
+  transition:.25s;
+}
+
+.login-btn:hover{
+  transform:translateY(-2px);
+}
+
+/* ===================================
+   FOOTER
+=================================== */
+
+.footer{
+  animation: footerFade .8s ease 1.2s both;
+}
+
+@keyframes footerFade{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}

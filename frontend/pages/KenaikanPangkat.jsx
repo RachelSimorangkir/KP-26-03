@@ -11,7 +11,7 @@ export default function KenaikanPangkat() {
         className="back-button"
         onClick={() => navigate("/kepegawaian")}
       >
-        ← Kembali
+        Kembali
       </button>
 
       {/* HEADER */}

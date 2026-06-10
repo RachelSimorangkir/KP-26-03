@@ -19,6 +19,7 @@ function DashboardKepegawaian() {
           Portal ini digunakan untuk mendukung pengelolaan layanan
           administrasi kepegawaian secara terintegrasi di lingkungan
           Balai Manajemen dan Pengembangan Sumber Daya Manusia
+          Direktorat Jenderal Bimbingan Masyarakat Kristen
           Kementerian Agama Republik Indonesia.
         </p>
 
