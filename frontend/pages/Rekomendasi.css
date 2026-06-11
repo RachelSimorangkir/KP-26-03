@@ -1,0 +1,207 @@
+.rekom-page{
+  max-width:1200px;
+  margin:auto;
+  padding:30px 40px;
+
+  animation:fadePage .8s ease;
+}
+
+@keyframes fadePage{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
+}
+
+.back-button{
+  background:white;
+  color:#0c3453;
+
+  border:1px solid #dbe4ee;
+
+  padding:12px 22px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  font-weight:700;
+
+  margin-bottom:25px;
+
+  transition:.25s;
+}
+
+.back-button:hover{
+  background:#0c3453;
+  color:white;
+}
+
+.service-banner{
+  background:linear-gradient(
+    135deg,
+    #0c3453,
+    #164f7a
+  );
+
+  color:white;
+
+  border-radius:12px;
+
+  padding:28px 32px;
+
+  display:flex;
+  gap:20px;
+  align-items:center;
+
+  margin-bottom:30px;
+}
+
+.banner-icon{
+  width:70px;
+  height:70px;
+
+  background:white;
+
+  border-radius:12px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:34px;
+}
+
+.guide-card,
+.description-card,
+.requirement-card,
+.rekom-card{
+  background:white;
+
+  border-radius:10px;
+
+  border:1px solid #e5e7eb;
+
+  padding:30px;
+
+  margin-bottom:30px;
+
+  box-shadow:
+    0 4px 16px rgba(0,0,0,.05);
+}
+
+.guide-card{
+  background:#d1e4f2;
+  border-left:5px solid #0c3453;
+}
+
+.guide-card ol{
+  padding-left:20px;
+}
+
+.guide-card li{
+  line-height:1.9;
+}
+
+.description-card p{
+  line-height:1.9;
+}
+
+.requirement-card ul{
+  padding-left:25px;
+}
+
+.requirement-card li{
+  margin-bottom:8px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group label{
+  margin-bottom:8px;
+  font-weight:600;
+}
+
+.form-group input,
+.form-group select{
+  height:48px;
+
+  border:1px solid #d1d5db;
+  border-radius:8px;
+
+  padding:0 15px;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  outline:none;
+
+  border-color:#0c3453;
+
+  box-shadow:
+    0 0 0 4px rgba(12,52,83,.12);
+}
+
+.upload-section{
+  margin-top:25px;
+}
+
+.upload-box{
+  border:2px dashed #d1d5db;
+
+  border-radius:10px;
+
+  padding:30px;
+
+  text-align:center;
+}
+
+.submit-button{
+  width:100%;
+
+  margin-top:25px;
+
+  height:52px;
+
+  background:#0e592a;
+  color:white;
+
+  border:none;
+
+  border-radius:8px;
+
+  font-weight:700;
+
+  cursor:pointer;
+}
+
+.submit-button:hover{
+  background:#0b4a22;
+}
+
+@media(max-width:768px){
+
+  .rekom-page{
+    padding:20px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .service-banner{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}

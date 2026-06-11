@@ -4,11 +4,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "../components/ScrollToTop";
 
 import HalamanUtama from "../pages/HalamanUtama";
-import Kepegawaian from "../pages/Kepegawaian";
 
-import DashboardKepegawaian from "../pages/DashboardKepegawaian";
-import KenaikanPangkat from "../pages/KenaikanPangkat";
-import TugasBelajar from "../pages/TugasBelajar";
+import Kepegawaian from "../pages/Kepegawaian";
+import DashboardKPG from "../pages/DashboardKPG";
+
+import Rekomendasi from "../pages/Rekomendasi";
+import Cuti from "../pages/Cuti";
+import SKBT from "../pages/SKBT";
 
 function App() {
   return (
@@ -17,88 +19,36 @@ function App() {
 
       <Routes>
 
-        {/* Portal Utama */}
         <Route
           path="/"
           element={<HalamanUtama />}
         />
 
-        {/* Modul Kepegawaian */}
         <Route
           path="/kepegawaian"
           element={<Kepegawaian />}
         >
-
-          {/* Halaman Default */}
           <Route
             index
-            element={<DashboardKepegawaian />}
-          />
-
-          {/* Layanan */}
-          <Route
-            path="kenaikan-pangkat"
-            element={<KenaikanPangkat />}
+            element={<DashboardKPG />}
           />
 
           <Route
-            path="tugas-belajar"
-            element={<TugasBelajar />}
+            path="rekomendasi"
+            element={<Rekomendasi />}
           />
 
           <Route
-            path="gelar-akademik"
-            element={<h2>Gelar Akademik</h2>}
+            path="cuti"
+            element={<Cuti />}
           />
 
           <Route
-            path="pensiun"
-            element={<h2>Pensiun</h2>}
+            path="skbt"
+            element={<SKBT />}
           />
-
-          <Route
-            path="satya-lencana"
-            element={<h2>Satya Lencana</h2>}
-          />
-
-          <Route
-            path="perubahan-jabatan"
-            element={<h2>Perubahan Jabatan</h2>}
-          />
-
-          <Route
-            path="daftar-pelantikan"
-            element={<h2>Daftar Pelantikan</h2>}
-          />
-
-          <Route
-            path="pmk"
-            element={<h2>PMK</h2>}
-          />
-
-          <Route
-            path="ujikom-jf"
-            element={<h2>Ujikom JF</h2>}
-          />
-
-          <Route
-            path="mutasi-internal"
-            element={<h2>Mutasi Internal</h2>}
-          />
-
-          <Route
-            path="mutasi-antar-instansi"
-            element={<h2>Mutasi Antar Instansi</h2>}
-          />
-
-          <Route
-            path="cuti-pegawai"
-            element={<h2>Cuti Pegawai</h2>}
-          />
-
         </Route>
 
-        {/* Placeholder Divisi Lain */}
         <Route
           path="/bmn"
           element={<h2>Halaman BMN Sedang Dikembangkan</h2>}

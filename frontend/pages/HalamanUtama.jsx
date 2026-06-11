@@ -58,67 +58,64 @@ export default function HalamanUtama() {
 
         <div className="service-grid">
 
+          {/* KEPEGAWAIAN */}
           <div
             className="service-card"
             onClick={() => navigate("/kepegawaian")}
           >
-            <div className="service-icon">👥</div>
+            <div className="service-icon"></div>
 
             <h3>Kepegawaian & SDM</h3>
 
             <p>
-              Kenaikan Pangkat, Mutasi,
-              Cuti, Pensiun, dan
-              Pengembangan SDM.
+              Layanan Rekomendasi,
+              Cuti Pegawai,
+              dan SKBT.
             </p>
           </div>
 
+          {/* BMN */}
           <div
             className="service-card"
             onClick={() => navigate("/bmn")}
           >
-            <div className="service-icon">🏢</div>
+            <div className="service-icon"></div>
 
             <h3>Barang Milik Negara</h3>
 
             <p>
               Inventaris Barang,
-              Peminjaman, Mutasi,
+              Peminjaman,
               dan Pengelolaan Aset.
             </p>
           </div>
 
+          {/* HUMAS */}
           <div
             className="service-card"
             onClick={() => navigate("/humas-data")}
           >
-            <div className="service-icon">📊</div>
+            <div className="service-icon"></div>
 
             <h3>Humas & Data</h3>
 
             <p>
-              Berita, Publikasi,
-              Statistik, Dokumentasi
-              dan Pelaporan Data.
+              Publikasi,
+              Dokumentasi,
+              dan Statistik Data.
             </p>
           </div>
 
         </div>
+
       </section>
 
-      {/* FOOTER */}
       <footer className="footer">
-
         <h3>Portal Layanan Internal</h3>
 
-        <p>
-          Kementerian Agama Republik Indonesia
-        </p>
+        <p>Kementerian Agama Republik Indonesia</p>
 
-        <p>
-          Sistem Informasi Terintegrasi
-        </p>
-
+        <p>Sistem Informasi Terintegrasi</p>
       </footer>
 
     </div>
