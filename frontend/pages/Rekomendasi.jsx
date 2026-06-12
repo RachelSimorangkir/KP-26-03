@@ -123,9 +123,29 @@ export default function Rekomendasi() {
           <h3>Upload Dokumen</h3>
 
           <div className="upload-box">
-            <input type="file" />
-            <p>Format PDF maksimal 10 MB</p>
-          </div>
+
+  <div className="upload-icon">
+    ☁️
+  </div>
+
+  <label
+    htmlFor="upload-file"
+    className="upload-label"
+  >
+    Pilih File PDF
+  </label>
+
+  <input
+    id="upload-file"
+    type="file"
+    className="file-input"
+  />
+
+  <p>
+    Format PDF maksimal 10 MB
+  </p>
+
+</div>
 
         </div>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Link, Outlet } from "react-router-dom";
 import "./Kepegawaian.css";
 
 function Kepegawaian() {
@@ -25,11 +25,8 @@ function Kepegawaian() {
 
   return (
     <div className="dashboard">
-
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-
         <div className="sidebar-header">
-
           {!collapsed && (
             <Link to="/" className="portal-link">
               <div className="logo-text">
@@ -45,18 +42,22 @@ function Kepegawaian() {
           >
             ☰
           </button>
-
         </div>
 
-        <div className="menu-title">
-          {!collapsed && "MENU KEPEGAWAIAN"}
-        </div>
+        {!collapsed && (
+          <div className="menu-title">
+            MENU KEPEGAWAIAN
+          </div>
+        )}
 
         <nav className="menu-list">
           {menus.map((menu, index) => (
-            <Link
+            <NavLink
               key={index}
               to={menu.path}
+              className={({ isActive }) =>
+                isActive ? "menu-item active" : "menu-item"
+              }
             >
               <span className="icon">
                 {menu.icon}
@@ -67,16 +68,14 @@ function Kepegawaian() {
                   {menu.title}
                 </span>
               )}
-            </Link>
+            </NavLink>
           ))}
         </nav>
-
       </aside>
 
       <main className="content">
         <Outlet />
       </main>
-
     </div>
   );
 }

@@ -1,7 +1,10 @@
 .rekom-page{
-  max-width:1200px;
-  margin:auto;
-  padding:30px 40px;
+  width:100%;
+  max-width:none;
+
+  padding:30px;
+
+  box-sizing:border-box;
 
   animation:fadePage .8s ease;
 }
@@ -9,11 +12,18 @@
 @keyframes fadePage{
   from{
     opacity:0;
+    transform:translateY(10px);
   }
+
   to{
     opacity:1;
+    transform:translateY(0);
   }
 }
+
+/* ======================
+   BACK BUTTON
+====================== */
 
 .back-button{
   background:white;
@@ -27,100 +37,212 @@
 
   cursor:pointer;
 
-  font-weight:700;
+  font-weight:600;
 
   margin-bottom:25px;
 
   transition:.25s;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.05);
 }
 
 .back-button:hover{
   background:#0c3453;
   color:white;
+
+  transform:translateY(-2px);
 }
 
+/* ======================
+   BANNER
+====================== */
+
 .service-banner{
-  background:linear-gradient(
-    135deg,
-    #0c3453,
-    #164f7a
-  );
+  width:100%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0c3453,
+      #164f7a
+    );
 
   color:white;
 
-  border-radius:12px;
+  border-radius:20px;
 
-  padding:28px 32px;
+  padding:35px;
 
   display:flex;
-  gap:20px;
   align-items:center;
+  gap:24px;
 
   margin-bottom:30px;
+
+  box-sizing:border-box;
+
+  box-shadow:
+    0 12px 30px rgba(12,52,83,.18);
 }
 
 .banner-icon{
-  width:70px;
-  height:70px;
+  width:80px;
+  height:80px;
 
-  background:white;
+  border-radius:18px;
 
-  border-radius:12px;
+  background:
+    rgba(255,255,255,.15);
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  font-size:34px;
+  font-size:36px;
+
+  flex-shrink:0;
 }
+
+.service-banner-content{
+  flex:1;
+}
+
+.service-banner h1{
+  margin:0;
+
+  font-size:38px;
+  font-weight:700;
+}
+
+.service-banner p{
+  margin-top:8px;
+  margin-bottom:0;
+
+  font-size:16px;
+
+  opacity:.95;
+}
+
+/* ======================
+   CARD UMUM
+====================== */
 
 .guide-card,
 .description-card,
 .requirement-card,
 .rekom-card{
+  width:100%;
+
   background:white;
 
-  border-radius:10px;
+  border-radius:18px;
 
   border:1px solid #e5e7eb;
 
   padding:30px;
 
-  margin-bottom:30px;
+  margin-bottom:25px;
+
+  box-sizing:border-box;
 
   box-shadow:
-    0 4px 16px rgba(0,0,0,.05);
+    0 6px 18px rgba(15,23,42,.05);
+
+  text-align:left;
 }
 
+/* ======================
+   JUDUL CARD
+====================== */
+
+.guide-card h2,
+.guide-card h3,
+.description-card h2,
+.description-card h3,
+.requirement-card h2,
+.requirement-card h3,
+.rekom-card h2,
+.rekom-card h3{
+  margin:0 0 20px 0;
+
+  color:#16324b;
+
+  font-size:28px;
+  font-weight:700;
+
+  text-align:left;
+}
+
+/* ======================
+   PANDUAN
+====================== */
+
 .guide-card{
-  background:#d1e4f2;
+  background:#f0f7ff;
+
   border-left:5px solid #0c3453;
 }
 
 .guide-card ol{
-  padding-left:20px;
+  margin:0;
+  padding-left:28px;
 }
 
 .guide-card li{
-  line-height:1.9;
+  text-align:left;
+
+  color:#334155;
+
+  line-height:2;
+
+  font-size:16px;
 }
+
+/* ======================
+   DESKRIPSI
+====================== */
 
 .description-card p{
-  line-height:1.9;
+  margin:0;
+
+  text-align:left;
+
+  color:#334155;
+
+  line-height:2;
 }
 
+/* ======================
+   PERSYARATAN
+====================== */
+
 .requirement-card ul{
-  padding-left:25px;
+  margin:0;
+  padding-left:28px;
 }
 
 .requirement-card li{
+  text-align:left;
+
+  color:#334155;
+
+  line-height:2;
+
   margin-bottom:8px;
 }
 
+/* ======================
+   FORM
+====================== */
+
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:20px;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(350px,1fr));
+
+  gap:22px;
 }
 
 .form-group{
@@ -130,17 +252,24 @@
 
 .form-group label{
   margin-bottom:8px;
+
   font-weight:600;
+
+  color:#334155;
 }
 
 .form-group input,
 .form-group select{
-  height:48px;
+  height:52px;
 
   border:1px solid #d1d5db;
-  border-radius:8px;
+  border-radius:12px;
 
-  padding:0 15px;
+  padding:0 16px;
+
+  background:white;
+
+  transition:.25s;
 }
 
 .form-group input:focus,
@@ -153,42 +282,75 @@
     0 0 0 4px rgba(12,52,83,.12);
 }
 
+/* ======================
+   UPLOAD
+====================== */
+
 .upload-section{
   margin-top:25px;
 }
 
 .upload-box{
-  border:2px dashed #d1d5db;
+  border:2px dashed #cbd5e1;
 
-  border-radius:10px;
+  border-radius:16px;
 
-  padding:30px;
+  padding:40px;
 
-  text-align:center;
+  background:#fafcff;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  gap:15px;
+
+  transition:.3s;
 }
+
+.upload-box:hover{
+  border-color:#0c3453;
+
+  background:#f5faff;
+}
+
+/* ======================
+   BUTTON
+====================== */
 
 .submit-button{
   width:100%;
 
+  height:56px;
+
   margin-top:25px;
 
-  height:52px;
-
   background:#0e592a;
+
   color:white;
 
   border:none;
 
-  border-radius:8px;
+  border-radius:12px;
 
+  font-size:15px;
   font-weight:700;
 
   cursor:pointer;
+
+  transition:.3s;
 }
 
 .submit-button:hover{
   background:#0b4a22;
+
+  transform:translateY(-2px);
 }
+
+/* ======================
+   RESPONSIVE
+====================== */
 
 @media(max-width:768px){
 
@@ -196,12 +358,92 @@
     padding:20px;
   }
 
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
   .service-banner{
     flex-direction:column;
     align-items:flex-start;
   }
+
+  .service-banner h1{
+    font-size:30px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* ======================
+   FORCE TITLE COLOR
+====================== */
+
+.guide-card h3,
+.description-card h3,
+.requirement-card h3,
+.rekom-card h3{
+  color:#16324b !important;
+
+  opacity:1 !important;
+
+  visibility:visible !important;
+}
+
+.upload-box{
+  border:2px dashed #cbd5e1;
+
+  border-radius:18px;
+
+  padding:40px;
+
+  background:#fafcff;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  gap:16px;
+
+  transition:.3s;
+}
+
+.upload-box:hover{
+  border-color:#2563eb;
+  background:#f5f9ff;
+}
+
+.upload-icon{
+  font-size:48px;
+  line-height:1;
+}
+
+.file-input{
+  display:none;
+}
+
+.upload-label{
+  background:#2563eb;
+
+  color:white;
+
+  padding:12px 24px;
+
+  border-radius:10px;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  transition:.25s;
+}
+
+.upload-label:hover{
+  background:#1d4ed8;
+}
+
+.upload-box p{
+  margin:0;
+
+  color:#64748b;
+
+  font-size:15px;
 }
