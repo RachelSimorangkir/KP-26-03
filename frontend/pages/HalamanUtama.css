@@ -101,11 +101,11 @@ body {
 
 /* SERVICES */
 
-.services {
-  max-width: 1200px;
-  margin: auto;
-
-  padding: 80px 20px;
+.services{
+  width:100% !important;
+  max-width:1400px !important;
+  margin:0 auto !important;
+  padding:80px 40px !important;
 }
 
 .services h2 {
@@ -116,16 +116,19 @@ body {
   font-size: 38px;
 }
 
-.service-grid {
-  display: grid;
-
-  grid-template-columns:
-  repeat(auto-fit, minmax(300px, 1fr));
-
-  gap: 30px;
+.service-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3, 1fr) !important;
+  gap:30px !important;
+  width:100% !important;
 }
 
-.service-card {
+.service-card{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+.service-card{
   background: white;
 
   padding: 40px 30px;
@@ -136,10 +139,17 @@ body {
 
   cursor: pointer;
 
-  transition: 0.3s;
+  transition: .3s;
 
   box-shadow:
-  0 4px 15px rgba(0,0,0,0.08);
+    0 4px 15px rgba(0,0,0,.08);
+
+  width: 100%;
+  min-height: 230px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .service-card:hover {

@@ -9,7 +9,7 @@ import PengaktifanKembali from "../pages/PengaktifanKembali";
 import KenaikanJenjang from "../pages/KenaikanJenjang";
 import MutasiPromosi from "../pages/MutasiPromosi";
 import MutasiInternal from "../pages/MutasiInternal";
-import AhliFungsi from "../pages/AhliFungsi";
+import AlihFungsi from "../pages/AlihFungsi";
 import Cuti from "../pages/Cuti";
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
@@ -77,11 +77,10 @@ function App() {
             element={<MutasiAntarInstansi />}
           />
 
-          {/* AHLI FUNGSI */}
           <Route
-            path="rekomendasi/ahli-fungsi"
-            element={<AhliFungsi />}
-          />
+  path="rekomendasi/alih-fungsi"
+  element={<AlihFungsi />}
+/>
 
           {/* CUTI */}
           <Route

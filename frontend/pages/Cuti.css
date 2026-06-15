@@ -1,0 +1,366 @@
+.cuti-page{
+  padding:30px;
+  animation:fadePage .8s ease;
+}
+
+@keyframes fadePage{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.page-header{
+  background:linear-gradient(
+    135deg,
+    #0c3453,
+    #2563eb
+  );
+
+  color:white;
+
+  border-radius:22px;
+
+  padding:35px;
+
+  display:flex;
+  gap:24px;
+  align-items:center;
+
+  margin-bottom:30px;
+}
+
+.header-icon{
+  width:80px;
+  height:80px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,.15);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:40px;
+}
+
+.page-header h1{
+  margin:0;
+  font-size:38px;
+}
+
+.page-header p{
+  margin-top:8px;
+}
+
+.form-card{
+  background:white;
+
+  border-radius:20px;
+
+  padding:30px;
+
+  margin-bottom:25px;
+
+  border:1px solid #e5e7eb;
+
+  box-shadow:
+    0 6px 18px rgba(15,23,42,.05);
+}
+
+.form-card h2{
+  margin-bottom:20px;
+  color:#16324b;
+}
+
+.tips-box{
+  background:#eff6ff;
+
+  border-left:4px solid #2563eb;
+
+  padding:14px 18px;
+
+  border-radius:10px;
+
+  margin-bottom:25px;
+
+  color:#1e40af;
+}
+
+.form-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+  gap:20px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group label{
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.form-group input,
+.form-group select{
+  height:52px;
+
+  border:1px solid #d7dee8;
+
+  border-radius:12px;
+
+  padding:0 16px;
+}
+
+.full-width{
+  grid-column:1 / -1;
+}
+
+.upload-box{
+  border:2px dashed #d7dee8;
+
+  border-radius:16px;
+
+  padding:40px;
+
+  text-align:center;
+
+  margin-bottom:20px;
+
+  background:#fafcff;
+}
+
+.upload-icon{
+  font-size:50px;
+  margin-bottom:10px;
+}
+
+.upload-box h3{
+  margin-bottom:8px;
+  color:#16324b;
+}
+
+.upload-box p{
+  color:#64748b;
+  margin-bottom:20px;
+}
+
+.cuti-actions{
+  display:flex;
+  justify-content:center;
+
+  margin-top:30px;
+  margin-bottom:30px;
+}
+
+.template-btn,
+.submit-btn,
+.cancel-btn{
+  border:none;
+
+  padding:15px 28px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  color:white;
+}
+
+.template-btn{
+  background:#2563eb;
+}
+
+.submit-btn{
+  min-width:280px;
+  height:56px;
+
+  background:#2563eb;
+  color:white;
+
+  border:none;
+  border-radius:14px;
+
+  font-size:15px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 8px 20px rgba(37,99,235,.25);
+
+  transition:.25s;
+}
+
+.submit-btn:hover{
+  transform:translateY(-2px);
+  background:#1d4ed8;
+}
+
+.cancel-btn{
+  background:#94a3b8;
+}
+
+.back-button{
+  margin-bottom:25px;
+
+  padding:12px 22px;
+
+  border:none;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  background:white;
+
+  color:#16324b;
+
+  font-weight:600;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.05);
+}
+
+/* =========================
+   DOKUMEN PENDUKUNG
+========================= */
+
+.upload-box{
+  border:2px dashed #d4dceb;
+  border-radius:18px;
+
+  background:#f8fbff;
+
+  padding:35px 25px;
+  margin-top:20px;
+
+  text-align:center;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  transition:.25s;
+}
+
+.upload-box:hover{
+  border-color:#2563eb;
+  background:#f2f7ff;
+}
+
+.upload-icon{
+  font-size:48px;
+  margin-bottom:15px;
+}
+
+.upload-box h3{
+  color:#16345d;
+  margin-bottom:8px;
+  font-size:20px;
+}
+
+.upload-box p{
+  color:#64748b;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.file-input{
+  display:none;
+}
+
+.upload-btn{
+  background:#2563eb;
+  color:white;
+
+  padding:12px 24px;
+
+  border-radius:10px;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  transition:.25s;
+}
+
+.upload-btn:hover{
+  background:#1d4ed8;
+}
+
+.upload-btn.secondary{
+  background:#64748b;
+}
+
+.upload-btn.secondary:hover{
+  background:#475569;
+}
+
+.template-btn,
+.submit-btn,
+.cancel-btn{
+  min-width:220px;
+  height:52px;
+
+  border:none;
+  border-radius:12px;
+
+  font-size:15px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:8px;
+}
+
+/* Download */
+.template-btn{
+  background:#2563eb;
+  color:white;
+}
+
+.template-btn:hover{
+  background:#1d4ed8;
+  transform:translateY(-2px);
+}
+
+/* Submit */
+.submit-btn{
+  background:#16a34a;
+  color:white;
+}
+
+.submit-btn:hover{
+  background:#15803d;
+  transform:translateY(-2px);
+}
+
+/* Batal */
+.cancel-btn{
+  background:#94a3b8;
+  color:white;
+}
+
+.cancel-btn:hover{
+  background:#64748b;
+  transform:translateY(-2px);
+}

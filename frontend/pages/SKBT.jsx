@@ -49,47 +49,49 @@ function SKBT() {
       {/* PILIHAN */}
       <div className="service-grid">
 
-        <div
-          className="service-card"
-          onClick={() => navigate("/kepegawaian/skbt/mandiri")}
-        >
-          <div className="service-icon">
-            👤
-          </div>
+  <div
+    className="service-card"
+    onClick={() => navigate("/kepegawaian/skbt/mandiri")}
+  >
+    <div className="service-icon">
+      👤
+    </div>
 
-          <h3>SKBT Mandiri</h3>
+    <h3>SKBT Mandiri</h3>
 
-          <p>
-            Pengajuan SKBT yang dilakukan oleh pegawai
-            untuk kebutuhan pribadi.
-          </p>
+    <p>
+      Pengajuan Surat Keterangan Bebas Temuan
+      yang diajukan langsung oleh pegawai
+      untuk kebutuhan pribadi maupun administrasi.
+    </p>
 
-          <span>
-            Pilih Layanan →
-          </span>
-        </div>
+    <button className="service-btn">
+      Pilih Layanan
+    </button>
+  </div>
 
-        <div
-          className="service-card"
-          onClick={() => navigate("/kepegawaian/skbt/organisasi")}
-        >
-          <div className="service-icon">
-            🏢
-          </div>
+  <div
+    className="service-card"
+    onClick={() => navigate("/kepegawaian/skbt/organisasi")}
+  >
+    <div className="service-icon">
+      🏢
+    </div>
 
-          <h3>SKBT Organisasi</h3>
+    <h3>SKBT Organisasi</h3>
 
-          <p>
-            Pengajuan SKBT yang diajukan atas nama
-            unit kerja atau organisasi.
-          </p>
+    <p>
+      Pengajuan Surat Keterangan Bebas Temuan
+      atas nama unit kerja, satker,
+      maupun organisasi secara resmi.
+    </p>
 
-          <span>
-            Pilih Layanan →
-          </span>
-        </div>
+    <button className="service-btn">
+      Pilih Layanan
+    </button>
+  </div>
 
-      </div>
+</div>
 
     </div>
   );
