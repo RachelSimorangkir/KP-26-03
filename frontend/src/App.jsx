@@ -1,19 +1,20 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import ScrollToTop from "../components/ScrollToTop";
-
 import HalamanUtama from "../pages/HalamanUtama";
-
 import Kepegawaian from "../pages/Kepegawaian";
 import DashboardKPG from "../pages/DashboardKPG";
-
 import Rekomendasi from "../pages/Rekomendasi";
+import PengaktifanKembali from "../pages/PengaktifanKembali";
+import KenaikanJenjang from "../pages/KenaikanJenjang";
+import MutasiPromosi from "../pages/MutasiPromosi";
+import MutasiInternal from "../pages/MutasiInternal";
+import AhliFungsi from "../pages/AhliFungsi";
 import Cuti from "../pages/Cuti";
-
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
+import MutasiAntarInstansi from "../pages/MutasiAntarInstansi";
 
 function App() {
   return (
@@ -33,22 +34,62 @@ function App() {
           path="/kepegawaian"
           element={<Kepegawaian />}
         >
+
+          {/* DASHBOARD */}
           <Route
             index
             element={<DashboardKPG />}
           />
 
+          {/* REKOMENDASI */}
           <Route
             path="rekomendasi"
             element={<Rekomendasi />}
           />
 
+          {/* PENGAKTIFAN KEMBALI */}
+          <Route
+            path="rekomendasi/pengaktifan-kembali"
+            element={<PengaktifanKembali />}
+          />
+
+          {/* KENAIKAN JENJANG & PERPINDAHAN JABATAN */}
+          <Route
+            path="rekomendasi/kenaikan-jenjang"
+            element={<KenaikanJenjang />}
+          />
+
+          {/* MUTASI / PROMOSI */}
+          <Route
+            path="rekomendasi/mutasi-promosi"
+            element={<MutasiPromosi />}
+          />
+
+          {/* MUTASI INTERNAL */}
+          <Route
+            path="rekomendasi/mutasi-internal"
+            element={<MutasiInternal />}
+          />
+
+          {/* MUTASI ANTAR INSTANSI */}
+          <Route
+            path="rekomendasi/mutasi-antar-instansi"
+            element={<MutasiAntarInstansi />}
+          />
+
+          {/* AHLI FUNGSI */}
+          <Route
+            path="rekomendasi/ahli-fungsi"
+            element={<AhliFungsi />}
+          />
+
+          {/* CUTI */}
           <Route
             path="cuti"
             element={<Cuti />}
           />
 
-          {/* HALAMAN PILIHAN SKBT */}
+          {/* SKBT */}
           <Route
             path="skbt"
             element={<SKBT />}
@@ -67,16 +108,6 @@ function App() {
           />
 
         </Route>
-
-        {/* BMN */}
-        <Route
-          path="/bmn"
-          element={
-            <h2>
-              Halaman BMN Sedang Dikembangkan
-            </h2>
-          }
-        />
 
         {/* HUMAS & DATA */}
         <Route

@@ -1,0 +1,124 @@
+.mutasi-page{
+  width:100%;
+  padding:30px;
+}
+
+.mutasi-header{
+  display:flex;
+  align-items:center;
+  gap:24px;
+
+  padding:35px;
+
+  border-radius:24px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    135deg,
+    #16324b,
+    #2563eb
+  );
+
+  margin-bottom:35px;
+}
+
+.mutasi-icon{
+  width:80px;
+  height:80px;
+
+  border-radius:18px;
+
+  background:
+  rgba(255,255,255,.15);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:38px;
+}
+
+.mutasi-header h1{
+  margin-bottom:8px;
+}
+
+.mutasi-grid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(320px,1fr));
+
+  gap:25px;
+}
+
+.mutasi-card{
+  background:white;
+
+  border-radius:22px;
+
+  padding:35px;
+
+  border:1px solid #e5e7eb;
+
+  cursor:pointer;
+
+  transition:.3s;
+
+  box-shadow:
+  0 8px 24px rgba(15,23,42,.06);
+}
+
+.mutasi-card:hover{
+  transform:translateY(-6px);
+
+  box-shadow:
+  0 16px 35px rgba(37,99,235,.15);
+}
+
+.card-icon{
+  width:70px;
+  height:70px;
+
+  border-radius:16px;
+
+  background:#eff6ff;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:34px;
+
+  margin-bottom:20px;
+}
+
+.mutasi-card h3{
+  color:#16324b;
+
+  margin-bottom:12px;
+
+  line-height:1.5;
+}
+
+.mutasi-card p{
+  color:#64748b;
+
+  line-height:1.8;
+
+  margin-bottom:18px;
+}
+
+.mutasi-card span{
+  color:#2563eb;
+  font-weight:600;
+}
+
+@media(max-width:768px){
+
+  .mutasi-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+}

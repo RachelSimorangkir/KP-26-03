@@ -246,3 +246,14 @@ body,
     justify-content:center;
   }
 }
+
+select,
+option{
+  color:#1e293b !important;
+  background:#ffffff !important;
+}
+
+input,
+textarea{
+  color:#1e293b !important;
+}

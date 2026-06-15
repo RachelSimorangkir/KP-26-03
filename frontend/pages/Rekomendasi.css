@@ -447,3 +447,67 @@
 
   font-size:15px;
 }
+
+.layanan-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+
+.layanan-card{
+  background:white;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:18px;
+
+  padding:28px;
+
+  cursor:pointer;
+
+  transition:.3s;
+
+  box-shadow:
+    0 6px 18px rgba(15,23,42,.05);
+}
+
+.layanan-card:hover{
+  transform:translateY(-5px);
+
+  border-color:#2563eb;
+
+  box-shadow:
+    0 12px 24px rgba(37,99,235,.12);
+}
+
+.layanan-icon{
+  width:60px;
+  height:60px;
+
+  border-radius:16px;
+
+  background:#eff6ff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:28px;
+
+  margin-bottom:18px;
+}
+
+.layanan-card h3{
+  margin:0 0 10px;
+
+  color:#16324b;
+
+  font-size:18px;
+}
+
+.layanan-card span{
+  color:#2563eb;
+
+  font-size:14px;
+  font-weight:600;
+}

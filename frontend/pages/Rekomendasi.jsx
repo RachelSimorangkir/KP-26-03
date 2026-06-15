@@ -4,6 +4,33 @@ import "./Rekomendasi.css";
 export default function Rekomendasi() {
   const navigate = useNavigate();
 
+  const layanan = [
+    {
+      icon: "🔄",
+      title: "Pengaktifan Kembali",
+      desc: "Pengaktifan kembali jabatan fungsional setelah pemberhentian sementara.",
+      path: "/kepegawaian/rekomendasi/pengaktifan-kembali",
+    },
+    {
+      icon: "📈",
+      title: "Kenaikan Jenjang & Perpindahan Jabatan",
+      desc: "Pengajuan kenaikan jenjang jabatan fungsional atau perpindahan dari jabatan lain.",
+      path: "/kepegawaian/rekomendasi/kenaikan-jenjang",
+    },
+    {
+      icon: "🚀",
+      title: "Mutasi / Promosi",
+      desc: "Pengajuan mutasi pegawai maupun promosi jabatan.",
+      path: "/kepegawaian/rekomendasi/mutasi-promosi",
+    },
+    {
+      icon: "🧩",
+      title: "Alih Fungsi",
+      desc: "Pengajuan alih fungsi sesuai kebutuhan organisasi.",
+      path: "/kepegawaian/rekomendasi/alih-fungsi",
+    },
+  ];
+
   return (
     <div className="rekom-page">
 
@@ -25,25 +52,10 @@ export default function Rekomendasi() {
           <h1>Layanan Rekomendasi</h1>
 
           <p>
-            Pengajuan surat rekomendasi pegawai secara digital
-            melalui Portal Layanan Internal BMBPSDM.
+            Pilih jenis rekomendasi yang akan diajukan melalui
+            Portal Layanan Internal BMBPSDM.
           </p>
         </div>
-
-      </div>
-
-      {/* PANDUAN */}
-      <div className="guide-card">
-
-        <h3>📋 Panduan Pengajuan</h3>
-
-        <ol>
-          <li>Pastikan seluruh data pegawai telah sesuai.</li>
-          <li>Siapkan dokumen pendukung yang diperlukan.</li>
-          <li>Isi formulir pengajuan dengan lengkap.</li>
-          <li>Upload dokumen persyaratan.</li>
-          <li>Kirim pengajuan untuk diproses.</li>
-        </ol>
 
       </div>
 
@@ -53,105 +65,37 @@ export default function Rekomendasi() {
         <h2>Tentang Layanan</h2>
 
         <p>
-          Layanan rekomendasi digunakan untuk membantu pegawai
-          memperoleh surat rekomendasi resmi dari instansi sesuai
-          kebutuhan administrasi yang berlaku.
+          Layanan rekomendasi digunakan untuk mendukung proses
+          administrasi kepegawaian sesuai ketentuan yang berlaku.
+          Pilih jenis layanan rekomendasi sesuai kebutuhan Anda.
         </p>
 
       </div>
 
-      {/* PERSYARATAN */}
-      <div className="requirement-card">
+      {/* DAFTAR LAYANAN */}
+      <div className="layanan-grid">
 
-        <h2>Persyaratan</h2>
+        {layanan.map((item, index) => (
+          <div
+            key={index}
+            className="layanan-card"
+            onClick={() => navigate(item.path)}
+          >
 
-        <ul>
-          <li>Surat Permohonan.</li>
-          <li>Fotokopi KTP.</li>
-          <li>Fotokopi SK Terakhir.</li>
-          <li>Dokumen pendukung sesuai kebutuhan rekomendasi.</li>
-        </ul>
+            <div className="layanan-icon">
+              {item.icon}
+            </div>
 
-      </div>
+            <h3>{item.title}</h3>
 
-      {/* FORM */}
-      <div className="rekom-card">
+            <p>{item.desc}</p>
 
-        <h2>Form Pengajuan</h2>
+            <span>
+              Ajukan Permohonan →
+            </span>
 
-        <div className="form-grid">
-
-          <div className="form-group">
-            <label>NIP</label>
-            <input
-              type="text"
-              placeholder="Masukkan NIP"
-            />
           </div>
-
-          <div className="form-group">
-            <label>Nama Pegawai</label>
-            <input
-              type="text"
-              placeholder="Masukkan Nama Pegawai"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Unit Kerja</label>
-            <input
-              type="text"
-              placeholder="Masukkan Unit Kerja"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Jenis Rekomendasi</label>
-
-            <select>
-              <option>Pilih Jenis Rekomendasi</option>
-              <option>Rekomendasi Pendidikan</option>
-              <option>Rekomendasi Mutasi</option>
-              <option>Rekomendasi Kegiatan</option>
-            </select>
-          </div>
-
-        </div>
-
-        <div className="upload-section">
-
-          <h3>Upload Dokumen</h3>
-
-          <div className="upload-box">
-
-  <div className="upload-icon">
-    ☁️
-  </div>
-
-  <label
-    htmlFor="upload-file"
-    className="upload-label"
-  >
-    Pilih File PDF
-  </label>
-
-  <input
-    id="upload-file"
-    type="file"
-    className="file-input"
-  />
-
-  <p>
-    Format PDF maksimal 10 MB
-  </p>
-
-</div>
-
-        </div>
-
-        <button className="submit-button">
-          Kirim Pengajuan
-        </button>
+        ))}
 
       </div>
 

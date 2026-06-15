@@ -1,5 +1,5 @@
-import "./SKBT.css";
 import { useNavigate } from "react-router-dom";
+import "./SKBT.css";
 
 function SKBT() {
   const navigate = useNavigate();
@@ -7,53 +7,86 @@ function SKBT() {
   return (
     <div className="skbt-page">
 
-      <div className="skbt-header">
-        <h1>Pengajuan SKBT</h1>
-        <p>
-          Pilih jenis pengajuan Surat Keterangan Bebas Temuan (SKBT)
-        </p>
+      <button
+        className="back-button"
+        onClick={() => navigate("/kepegawaian")}
+      >
+        ← Kembali ke Menu
+      </button>
+
+      {/* HEADER */}
+      <div className="page-header">
+
+        <div className="header-icon">
+          📋
+        </div>
+
+        <div>
+          <h1>Surat Keterangan Bebas Temuan (SKBT)</h1>
+
+          <p>
+            Pilih jenis pengajuan SKBT sesuai kebutuhan
+            pegawai maupun organisasi.
+          </p>
+        </div>
+
       </div>
 
-      <div className="skbt-card-container">
+      {/* TENTANG */}
+      <div className="info-card">
+
+        <h2>Tentang Layanan</h2>
+
+        <p>
+          SKBT merupakan surat yang menerangkan bahwa
+          pegawai atau organisasi tidak memiliki temuan
+          pemeriksaan yang belum diselesaikan.
+          Pilih jenis pengajuan sesuai kebutuhan Anda.
+        </p>
+
+      </div>
+
+      {/* PILIHAN */}
+      <div className="service-grid">
 
         <div
-          className="skbt-card"
+          className="service-card"
           onClick={() => navigate("/kepegawaian/skbt/mandiri")}
         >
-          <div className="skbt-icon">
+          <div className="service-icon">
             👤
           </div>
 
-          <h2>SKBT Mandiri</h2>
+          <h3>SKBT Mandiri</h3>
 
           <p>
             Pengajuan SKBT yang dilakukan oleh pegawai
             untuk kebutuhan pribadi.
           </p>
 
-          <button>
-            Pilih Layanan
-          </button>
+          <span>
+            Pilih Layanan →
+          </span>
         </div>
 
         <div
-          className="skbt-card"
+          className="service-card"
           onClick={() => navigate("/kepegawaian/skbt/organisasi")}
         >
-          <div className="skbt-icon">
+          <div className="service-icon">
             🏢
           </div>
 
-          <h2>SKBT Organisasi</h2>
+          <h3>SKBT Organisasi</h3>
 
           <p>
             Pengajuan SKBT yang diajukan atas nama
             unit kerja atau organisasi.
           </p>
 
-          <button>
-            Pilih Layanan
-          </button>
+          <span>
+            Pilih Layanan →
+          </span>
         </div>
 
       </div>
