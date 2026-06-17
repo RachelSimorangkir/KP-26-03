@@ -9,6 +9,8 @@ import KenaikanPangkat from "../pages/KenaikanPangkat";
 import TugasBelajar from "../pages/TugasBelajar";
 import HumasData from "../pages/HumasData";
 import HumasPublish from "../pages/HumasPublish";
+import HumasAdminPenyetuju from "../pages/HumasAdminPenyetuju";
+import HumasAdminVerifikator from "../pages/HumasAdminVerifikator";
 import DataRequest from "../pages/DataRequest";
 import HumasDataRequest from "../pages/HumasDataRequest";
 import Helpdesk from "../pages/Helpdesk";
@@ -112,6 +114,14 @@ function App() {
         <Route
           path="/humas/publikasi"
           element={<HumasPublish />}
+        />
+        <Route
+          path="/humas/admin/penyetuju"
+          element={<HumasAdminPenyetuju />}
+        />
+        <Route
+          path="/humas/admin/verifikator"
+          element={<HumasAdminVerifikator />}
         />
         <Route
           path="/humas/data-request"

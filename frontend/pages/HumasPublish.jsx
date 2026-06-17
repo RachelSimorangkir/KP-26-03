@@ -27,9 +27,6 @@ export default function HumasPublish() {
     penulis: USER_PROFILE.nama,
     kontak: "",
     atasan: "",
-    statusAtasan: "Menunggu",
-    statusVerifikasi: "Menunggu",
-    catatanRevisi: "",
     status: "Draft",
     tanggalPengajuan: "",
     tanggalTerbit: "",
@@ -233,7 +230,7 @@ export default function HumasPublish() {
           </label>
 
           <div className="section fullwidth">
-            <h3 className="section-title">Persetujuan & Status</h3>
+            <h3 className="section-title">Persetujuan</h3>
           </div>
 
           <label>
@@ -247,44 +244,18 @@ export default function HumasPublish() {
             {errors.atasan && <small className="error">{errors.atasan}</small>}
           </label>
 
-          <label>
-            <div className="field-title">Status Persetujuan Atasan</div>
-            <select name="statusAtasan" value={form.statusAtasan} onChange={handleChange}>
-              <option>Menunggu</option>
-              <option>Disetujui</option>
-              <option>Ditolak</option>
-              <option>Revisi</option>
-            </select>
-          </label>
-
-          <label>
-            <div className="field-title">Status Verifikasi Humas Pusat</div>
-            <select name="statusVerifikasi" value={form.statusVerifikasi} onChange={handleChange}>
-              <option>Menunggu</option>
-              <option>Diterima</option>
-              <option>Revisi</option>
-              <option>Ditolak</option>
-              <option>Terbit</option>
-            </select>
-          </label>
-
-          <label className="fullwidth">
-            <div className="field-title">Catatan Revisi</div>
-            <textarea name="catatanRevisi" value={form.catatanRevisi} onChange={handleChange} rows={3} />
-          </label>
-
           <div className="section fullwidth">
             <h3 className="section-title">Kontak & Tanggal</h3>
           </div>
 
           <label>
-            <div className="field-title">Nama Penulis / Kontributor <span className="required">*</span></div>
-            <input name="penulis" value={form.penulis} onChange={handleChange} required />
+            <div className="field-title">Nama Penulis / Kontributor</div>
+            <input name="penulis" value={form.penulis} onChange={handleChange} />
           </label>
 
           <label>
-            <div className="field-title">Kontak Penulis (HP/Email) <span className="required">*</span></div>
-            <input name="kontak" value={form.kontak} onChange={handleChange} required />
+            <div className="field-title">Kontak Penulis (HP/Email)</div>
+            <input name="kontak" value={form.kontak} onChange={handleChange} />
           </label>
 
           <label>
