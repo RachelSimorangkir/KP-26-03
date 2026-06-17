@@ -4,14 +4,14 @@ import "./HumasPublish.css";
 
 export default function HumasMySubmissions() {
   const [items, setItems] = useState([
-    { id: 1, judul: "Publikasi Kegiatan Sosial", status: "Menunggu", tanggalPengajuan: "2026-06-15T10:00", tanggalTerbit: null, catatanRevisi: "" },
-    { id: 2, judul: "Seminar Pendidikan", status: "Revisi", tanggalPengajuan: "2026-06-10T09:00", tanggalTerbit: null, catatanRevisi: "Perbaiki narasi pada paragraf 2." },
-    { id: 3, judul: "Kegiatan Keagamaan", status: "Diterima", tanggalPengajuan: "2026-05-30T08:30", tanggalTerbit: "2026-06-01T12:00", catatanRevisi: "" },
+    { id: 1, judul: "Publikasi Kegiatan Sosial", statusAtasan: "Menunggu", statusHumas: "Menunggu", tanggalPengajuan: "2026-06-15T10:00", tanggalTerbit: null, catatanRevisi: "" },
+    { id: 2, judul: "Seminar Pendidikan", statusAtasan: "Revisi", statusHumas: "Revisi", tanggalPengajuan: "2026-06-10T09:00", tanggalTerbit: null, catatanRevisi: "Perbaiki narasi pada paragraf 2." },
+    { id: 3, judul: "Kegiatan Keagamaan", statusAtasan: "Disetujui", statusHumas: "Diterima", tanggalPengajuan: "2026-05-30T08:30", tanggalTerbit: "2026-06-01T12:00", catatanRevisi: "" },
   ]);
 
   function handleEdit(id) {
     // navigate to HumasPublish with prefilled data in a real app
-    alert('Fungsi edit dipanggil untuk id: ' + id + '. Implement navigasi ke form edit.');
+    alert('Aksi: Edit & Ajukan Ulang untuk id: ' + id + '. (Implementasikan navigasi ke form pengajuan)');
   }
 
   return (
@@ -22,6 +22,15 @@ export default function HumasMySubmissions() {
       </header>
 
       <div className="hp-form">
+        <div style={{marginBottom:12}}>
+          <strong>Legenda:</strong>
+          <span style={{marginLeft:10}}><span className="badge">Menunggu</span> Menunggu</span>
+          <span style={{marginLeft:10}}><span className="badge badge-success">Diterima/Disetujui</span> Disetujui</span>
+          <span style={{marginLeft:10}}><span className="badge badge-warning">Revisi</span> Revisi</span>
+          <span style={{marginLeft:10}}><span className="badge badge-danger">Ditolak</span> Ditolak</span>
+          <span style={{marginLeft:10}}><span className="badge badge-primary">Terbit</span> Terbit</span>
+        </div>
+
         <table className="my-submissions">
           <thead>
             <tr>
@@ -38,16 +47,28 @@ export default function HumasMySubmissions() {
             {items.map((it) => (
               <tr key={it.id}>
                 <td>{it.judul}</td>
-                <td>{it.status === 'Revisi' ? <span className="badge badge-warning">Revisi</span> : it.status === 'Menunggu' ? <span className="badge">Menunggu</span> : <span className="badge badge-success">{it.status}</span>}</td>
-                <td>{it.status === 'Diterima' ? <span className="badge badge-success">Diterima</span> : it.status === 'Terbit' ? <span className="badge badge-primary">Terbit</span> : <span className="badge">{it.status}</span>}</td>
+                <td>
+                  {it.statusAtasan === 'Menunggu' && <span className="badge">Menunggu</span>}
+                  {it.statusAtasan === 'Disetujui' && <span className="badge badge-success">Disetujui</span>}
+                  {it.statusAtasan === 'Diterima' && <span className="badge badge-success">Diterima</span>}
+                  {it.statusAtasan === 'Revisi' && <span className="badge badge-warning">Revisi</span>}
+                  {it.statusAtasan === 'Ditolak' && <span className="badge badge-danger">Ditolak</span>}
+                </td>
+                <td>
+                  {it.statusHumas === 'Menunggu' && <span className="badge">Menunggu</span>}
+                  {it.statusHumas === 'Diterima' && <span className="badge badge-success">Diterima</span>}
+                  {it.statusHumas === 'Terbit' && <span className="badge badge-primary">Terbit</span>}
+                  {it.statusHumas === 'Revisi' && <span className="badge badge-warning">Revisi</span>}
+                  {it.statusHumas === 'Ditolak' && <span className="badge badge-danger">Ditolak</span>}
+                </td>
                 <td><div className="truncate" title={it.catatanRevisi}>{it.catatanRevisi || '-'}</div></td>
                 <td>{new Date(it.tanggalPengajuan).toLocaleString('id-ID')}</td>
                 <td>{it.tanggalTerbit ? new Date(it.tanggalTerbit).toLocaleString('id-ID') : '-'}</td>
                 <td>
-                  {it.status === 'Revisi' ? (
-                    <button onClick={() => handleEdit(it.id)} className="btn-primary">Edit & Ajukan Ulang</button>
+                  {(it.statusAtasan === 'Revisi' || it.statusHumas === 'Revisi') ? (
+                    <button onClick={() => handleEdit(it.id)} className="btn-edit">Edit & Ajukan Ulang</button>
                   ) : (
-                    <button onClick={() => alert('Lihat detail untuk: ' + it.id)}>Lihat</button>
+                    <button onClick={() => alert('Lihat detail untuk: ' + it.id)} className="btn-view">Lihat</button>
                   )}
                 </td>
               </tr>
