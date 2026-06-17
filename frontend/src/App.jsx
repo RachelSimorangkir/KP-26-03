@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "../components/ScrollToTop";
@@ -6,6 +7,15 @@ import Kepegawaian from "../pages/Kepegawaian";
 import DashboardKepegawaian from "../pages/DashboardKepegawaian";
 import KenaikanPangkat from "../pages/KenaikanPangkat";
 import TugasBelajar from "../pages/TugasBelajar";
+import HumasData from "../pages/HumasData";
+import HumasPublish from "../pages/HumasPublish";
+import DataRequest from "../pages/DataRequest";
+import HumasDataRequest from "../pages/HumasDataRequest";
+import Helpdesk from "../pages/Helpdesk";
+import PPIDRequest from "../pages/PPIDRequest";
+import DIPUpload from "../pages/DIPUpload";
+import DIPStatus from "../pages/DIPStatus";
+import PPIDAdminDashboard from "../pages/PPIDAdminDashboard";
 
 function App() {
   return (
@@ -94,6 +104,43 @@ function App() {
           />
 
         </Route>
+
+        <Route 
+          path="/humas-data" 
+          element={<HumasData />} 
+        />
+        <Route
+          path="/humas/publikasi"
+          element={<HumasPublish />}
+        />
+        <Route
+          path="/humas/data-request"
+          element={<HumasDataRequest />}
+        />
+        <Route
+          path="/data/request"
+          element={<DataRequest />}
+        />
+        <Route
+          path="/helpdesk"
+          element={<Helpdesk />}
+        />
+        <Route
+          path="/ppid/request"
+          element={<PPIDRequest />}
+        />
+        <Route
+          path="/ppid/dip/upload"
+          element={<DIPUpload />}
+        />
+        <Route
+          path="/ppid/dip/status"
+          element={<DIPStatus />}
+        />
+        <Route
+          path="/ppid/admin/dip"
+          element={<PPIDAdminDashboard />}
+        />
 
       </Routes>
     </BrowserRouter>
