@@ -32,10 +32,10 @@ Sistem ini mengintegrasikan berbagai layanan administrasi dalam satu platform, m
 - Dashboard Informasi
 
 ### Barang Milik Negara (BMN)
-- Pendataan Aset
-- Inventaris Barang
-- Monitoring Kondisi Barang
-- Laporan BMN
+- Peminjaman barang
+- Permintaan barang
+- Proses barang masuk
+- DBR (Daftar Barang Ruang)
 
 ### Manajemen Pengguna
 - Login dan Autentikasi
