@@ -1,0 +1,295 @@
+import { useState } from "react";
+import { stokBarang, currentUser, kategoriBarang } from "./dummyData";
+import { Modal, StokCard, inputStyle, FormGroup, IconSearch, IconPlus, downloadAsPDF } from "./components";
+
+// Generate nomor surat otomatis
+const generateNomor = () => {
+  const now = new Date();
+  return `${String(Math.floor(Math.random() * 900) + 100)}/PPB/${now.getFullYear()}`;
+};
+
+// Preview surat peminjaman
+const PreviewSurat = ({ form, barangDipilih, onClose, onSubmit }) => {
+  const tglPinjam = new Date(form.tglPinjam).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  const tglKembali = new Date(form.tglKembali).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  const today = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+
+  return (
+    <Modal title="Preview Surat Peminjaman" onClose={onClose} wide>
+      <div id="surat-peminjaman-print" style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 32, background: "#fff", fontFamily: "serif", fontSize: 14, lineHeight: 1.8, color: "#1e293b" }}>
+        {/* Kop Surat */}
+        <div style={{ textAlign: "center", borderBottom: "3px double #1e3a5f", paddingBottom: 12, marginBottom: 20 }}>
+          <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+          <div style={{ fontSize: 12 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+          <div style={{ fontSize: 12 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+        </div>
+
+        {/* Judul */}
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <div style={{ fontWeight: 700, fontSize: 15, textDecoration: "underline", letterSpacing: 1 }}>SURAT PEMINJAMAN BARANG</div>
+          <div style={{ fontSize: 13 }}>Nomor: {generateNomor()}</div>
+        </div>
+
+        {/* Isi surat */}
+        <p>Yang bertanda tangan di bawah ini:</p>
+        <table style={{ marginLeft: 20, marginBottom: 12, fontSize: 14 }}>
+          <tbody>
+            {[
+              ["Nama", currentUser.nama],
+              ["NIP", currentUser.nip],
+              ["Jabatan", form.jabatan || currentUser.jabatan],
+              ["Unit Kerja", form.unitKerja || currentUser.unitKerja],
+            ].map(([k, v]) => (
+              <tr key={k}>
+                <td style={{ paddingRight: 12, width: 120 }}>{k}</td>
+                <td style={{ paddingRight: 8 }}>:</td>
+                <td><strong>{v}</strong></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p>Dengan ini mengajukan permohonan peminjaman barang milik negara sebagai berikut:</p>
+        <table style={{ marginLeft: 20, marginBottom: 12, fontSize: 14 }}>
+          <tbody>
+            {[
+              ["Nama Barang", barangDipilih?.nama || "-"],
+              ["Kode Barang", barangDipilih?.kode || "-"],
+              ["Lokasi Penggunaan", form.lokasi],
+              ["Tanggal Pinjam", tglPinjam],
+              ["Tanggal Kembali", tglKembali],
+              ["Keperluan", form.keperluan],
+            ].map(([k, v]) => (
+              <tr key={k}>
+                <td style={{ paddingRight: 12, width: 160 }}>{k}</td>
+                <td style={{ paddingRight: 8 }}>:</td>
+                <td><strong>{v}</strong></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p>
+          Demikian surat peminjaman barang ini saya buat dengan sebenar-benarnya dan saya bertanggung jawab
+          penuh atas keamanan dan kondisi barang yang dipinjam. Barang akan dikembalikan dalam kondisi baik
+          sesuai batas waktu yang telah ditentukan.
+        </p>
+
+        {/* TTD */}
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 32 }}>
+          <div style={{ textAlign: "center", width: 200 }}>
+            <div>Mengetahui,</div>
+            <div>Kasubbag Perlengkapan dan BMN</div>
+            <div style={{ marginTop: 50, borderTop: "1px solid #000", paddingTop: 4 }}>
+              <div>(__________________________)</div>
+              <div>NIP. ................................</div>
+            </div>
+          </div>
+          <div style={{ textAlign: "center", width: 200 }}>
+            <div>Jakarta, {today}</div>
+            <div>Yang Meminjam,</div>
+            <div style={{ marginTop: 50, borderTop: "1px solid #000", paddingTop: 4 }}>
+              <div><strong>{currentUser.nama}</strong></div>
+              <div>NIP. {currentUser.nip}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 20, flexWrap: "wrap" }}>
+        <button onClick={onClose} style={{ padding: "10px 18px", border: "1.5px solid #e2e8f0", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#64748b", fontSize: 13 }}>
+          Kembali Edit
+        </button>
+        <button onClick={() => window.print()} style={{ padding: "10px 18px", border: "1.5px solid #1d4ed8", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#1d4ed8", fontSize: 13 }}>
+          🖨 Print
+        </button>
+        <button onClick={() => downloadAsPDF("surat-peminjaman-print", "surat-peminjaman")} style={{ padding: "10px 18px", border: "1.5px solid #16a34a", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#16a34a", fontSize: 13 }}>
+          💾 Save PDF
+        </button>
+        <button onClick={onSubmit} style={{ padding: "10px 18px", background: "#1d4ed8", color: "#fff", border: "none", borderRadius: 8, fontWeight: 600, cursor: "pointer", fontSize: 13 }}>
+          Kirim Permohonan
+        </button>
+      </div>
+    </Modal>
+  );
+};
+
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
+const PeminjamanUser = () => {
+  const [keyword, setKeyword] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [barangDipilih, setBarangDipilih] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const [form, setForm] = useState({
+    unitKerja: currentUser.unitKerja,
+    jabatan: currentUser.jabatan,
+    lokasi: "",
+    tglPinjam: "",
+    tglKembali: "",
+    keperluan: "",
+  });
+
+  // Filter barang berdasarkan keyword
+  const barangFiltered = stokBarang.filter(b =>
+    b.nama.toLowerCase().includes(keyword.toLowerCase()) ||
+    b.kategori.toLowerCase().includes(keyword.toLowerCase())
+  );
+
+  const handlePilihBarang = (barang) => {
+    setBarangDipilih(barang);
+    setKeyword(barang.nama);
+    setShowDropdown(false);
+  };
+
+  const handleSubmit = () => {
+    setShowPreview(false);
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400 }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+        <div style={{ fontSize: 20, fontWeight: 700, color: "#1e3a5f", marginBottom: 8 }}>Permohonan Berhasil Dikirim!</div>
+        <div style={{ color: "#64748b", marginBottom: 24 }}>Permohonan peminjaman sedang diproses oleh Admin BMN.</div>
+        <button onClick={() => { setSubmitted(false); setBarangDipilih(null); setKeyword(""); setForm({ unitKerja: currentUser.unitKerja, jabatan: currentUser.jabatan, lokasi: "", tglPinjam: "", tglKembali: "", keperluan: "" }); }}
+          style={{ padding: "10px 24px", background: "#1d4ed8", color: "#fff", border: "none", borderRadius: 8, fontWeight: 600, cursor: "pointer" }}>
+          Ajukan Peminjaman Baru
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1e3a5f" }}>Peminjaman Barang</h2>
+        <p style={{ margin: "4px 0 0", color: "#64748b", fontSize: 14 }}>Ajukan permohonan peminjaman barang milik negara</p>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 20 }}>
+        {/* Form */}
+        <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: 24 }}>
+          <div style={{ fontWeight: 700, color: "#1e3a5f", marginBottom: 18, fontSize: 15 }}>Data Pemohon</div>
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <FormGroup label="Unit Kerja" half>
+              <input style={inputStyle} value={form.unitKerja} onChange={e => setForm({ ...form, unitKerja: e.target.value })} />
+            </FormGroup>
+            <FormGroup label="Jabatan" half>
+              <input style={inputStyle} value={form.jabatan} onChange={e => setForm({ ...form, jabatan: e.target.value })} />
+            </FormGroup>
+          </div>
+
+          <div style={{ fontWeight: 700, color: "#1e3a5f", margin: "18px 0 14px", fontSize: 15 }}>Detail Peminjaman</div>
+
+          {/* Pencarian Barang */}
+          <FormGroup label="Cari Barang yang Dipinjam">
+            <div style={{ position: "relative" }}>
+              <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}><IconSearch /></span>
+              <input
+                style={{ ...inputStyle, paddingLeft: 34 }}
+                value={keyword}
+                placeholder="Ketik nama barang (contoh: printer, proyektor...)"
+                onChange={e => { setKeyword(e.target.value); setShowDropdown(true); setBarangDipilih(null); }}
+                onFocus={() => setShowDropdown(true)}
+              />
+              {showDropdown && keyword && (
+                <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 8, zIndex: 10, maxHeight: 220, overflowY: "auto", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                  {barangFiltered.length === 0 ? (
+                    <div style={{ padding: "12px 14px", color: "#94a3b8", fontSize: 13 }}>Barang tidak ditemukan</div>
+                  ) : barangFiltered.map(b => (
+                    <div key={b.id} onClick={() => handlePilihBarang(b)}
+                      style={{ padding: "10px 14px", cursor: "pointer", borderBottom: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                      onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                    >
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>{b.nama}</div>
+                        <div style={{ fontSize: 11, color: "#64748b" }}>{b.kode} · {b.kategori}</div>
+                      </div>
+                      <span style={{
+                        fontSize: 12, fontWeight: 700, padding: "2px 8px", borderRadius: 12,
+                        background: b.stok === 0 ? "#fee2e2" : b.stok <= 2 ? "#fef9c3" : "#dcfce7",
+                        color: b.stok === 0 ? "#dc2626" : b.stok <= 2 ? "#a16207" : "#16a34a",
+                      }}>
+                        {b.stok === 0 ? "Habis" : `${b.stok} unit`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </FormGroup>
+
+          {/* Info barang dipilih */}
+          {barangDipilih && (
+            <div style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe", borderRadius: 8, padding: "10px 14px", marginBottom: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#1d4ed8" }}>{barangDipilih.nama}</div>
+                <div style={{ fontSize: 12, color: "#3b82f6" }}>Kode: {barangDipilih.kode} · Stok tersedia: {barangDipilih.stok} unit</div>
+              </div>
+              <button onClick={() => { setBarangDipilih(null); setKeyword(""); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", fontSize: 18 }}>×</button>
+            </div>
+          )}
+
+          <FormGroup label="Lokasi Penggunaan">
+            <input style={inputStyle} value={form.lokasi} onChange={e => setForm({ ...form, lokasi: e.target.value })} placeholder="Contoh: Ruang Rapat Lt. 3" />
+          </FormGroup>
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <FormGroup label="Tanggal Pinjam" half>
+              <input style={inputStyle} type="date" value={form.tglPinjam} onChange={e => setForm({ ...form, tglPinjam: e.target.value })} />
+            </FormGroup>
+            <FormGroup label="Tanggal Kembali" half>
+              <input style={inputStyle} type="date" value={form.tglKembali} onChange={e => setForm({ ...form, tglKembali: e.target.value })} />
+            </FormGroup>
+          </div>
+
+          <FormGroup label="Keperluan / Keterangan">
+            <textarea style={{ ...inputStyle, minHeight: 72, resize: "vertical" }} value={form.keperluan} onChange={e => setForm({ ...form, keperluan: e.target.value })} placeholder="Jelaskan keperluan peminjaman..." />
+          </FormGroup>
+
+          <button
+            onClick={() => { if (barangDipilih && form.lokasi && form.tglPinjam && form.tglKembali) setShowPreview(true); }}
+            disabled={!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali}
+            style={{ width: "100%", padding: "11px 0", background: (!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali) ? "#94a3b8" : "#1d4ed8", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: (!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali) ? "not-allowed" : "pointer" }}>
+            👁 Preview & Kirim Surat
+          </button>
+        </div>
+
+        {/* Stok Panel */}
+        <div>
+          <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: 20 }}>
+            <div style={{ fontWeight: 700, color: "#1e3a5f", fontSize: 14, marginBottom: 14 }}>Ketersediaan Barang</div>
+            {stokBarang.map(b => (
+              <div key={b.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: "1px solid #f1f5f9" }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b" }}>{b.nama}</div>
+                  <div style={{ fontSize: 11, color: "#94a3b8" }}>{b.kategori}</div>
+                </div>
+                <span style={{
+                  fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 12,
+                  background: b.stok === 0 ? "#fee2e2" : b.stok <= 2 ? "#fef9c3" : "#dcfce7",
+                  color: b.stok === 0 ? "#dc2626" : b.stok <= 2 ? "#a16207" : "#16a34a",
+                }}>
+                  {b.stok === 0 ? "Habis" : `${b.stok} unit`}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Preview Modal */}
+      {showPreview && (
+        <PreviewSurat form={form} barangDipilih={barangDipilih} onClose={() => setShowPreview(false)} onSubmit={handleSubmit} />
+      )}
+    </div>
+  );
+};
+
+export default PeminjamanUser;

@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { dummyBarangMasuk } from "./dummyData";
-import { Modal, inputStyle, FormGroup, IconPlus, IconSearch } from "./components";
+import { dummyBarangMasuk } from "../user/bmn/dummyData";
+import { Modal, inputStyle, FormGroup, IconPlus, IconSearch } from "../user/bmn/components";
 
 const BarangMasuk = () => {
+  const [data, setData] = useState(dummyBarangMasuk);
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [data, setData] = useState(dummyBarangMasuk);
-  const [form, setForm] = useState({ noPengadaan: "", namaBarang: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", nilaiUnit: "", pj: "", nipPj: "" });
+  const [form, setForm] = useState({
+    noPengadaan: "", namaBarang: "", kategori: "Peralatan IT",
+    jumlah: 1, kondisi: "Baik", nilaiUnit: "", pj: "", nipPj: "",
+  });
 
   const filtered = data.filter(d =>
     d.namaBarang.toLowerCase().includes(search.toLowerCase()) ||
-    d.pj.toLowerCase().includes(search.toLowerCase())
+    d.pj.toLowerCase().includes(search.toLowerCase()) ||
+    d.noPengadaan.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleSubmit = () => {
@@ -27,9 +31,13 @@ const BarangMasuk = () => {
     "Lainnya":      { bg: "#f1f5f9", color: "#475569" },
   };
 
+  const summary = {
+    total: data.length,
+    totalUnit: data.reduce((acc, d) => acc + Number(d.jumlah), 0),
+  };
+
   return (
     <div>
-      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1e3a5f" }}>Proses Barang Masuk</h2>
@@ -40,25 +48,23 @@ const BarangMasuk = () => {
         </button>
       </div>
 
-      {/* Summary */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 20 }}>
         {[
-          { label: "Total Diterima",    value: data.length, color: "#16a34a", bg: "#dcfce7" },
-          { label: "Sebagian Diterima", value: 1,           color: "#a16207", bg: "#fef9c3" },
-          { label: "Ditolak",           value: 0,           color: "#dc2626", bg: "#fee2e2" },
+          { label: "Total Pengadaan",  value: summary.total,     color: "#1d4ed8", bg: "#dbeafe" },
+          { label: "Total Unit Masuk", value: summary.totalUnit, color: "#16a34a", bg: "#dcfce7" },
+          { label: "Ditolak",          value: 0,                 color: "#dc2626", bg: "#fee2e2" },
         ].map(s => (
-          <div key={s.label} style={{ background: s.bg, borderRadius: 10, padding: "18px 20px" }}>
-            <div style={{ fontSize: 28, fontWeight: 800, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 14, color: s.color, fontWeight: 600 }}>{s.label}</div>
+          <div key={s.label} style={{ background: s.bg, borderRadius: 10, padding: "16px 20px" }}>
+            <div style={{ fontSize: 26, fontWeight: 800, color: s.color }}>{s.value}</div>
+            <div style={{ fontSize: 13, color: s.color, fontWeight: 600 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      {/* Table */}
       <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: 20 }}>
         <div style={{ position: "relative", marginBottom: 16 }}>
           <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}><IconSearch /></span>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari barang atau penanggung jawab..." style={{ ...inputStyle, paddingLeft: 36 }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari barang, no. pengadaan, atau penanggung jawab..." style={{ ...inputStyle, paddingLeft: 34 }} />
         </div>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
@@ -79,11 +85,11 @@ const BarangMasuk = () => {
                     <td style={{ padding: "10px 12px" }}>
                       <span style={{ background: kc.bg, color: kc.color, padding: "2px 8px", borderRadius: 12, fontSize: 11, fontWeight: 600 }}>{d.kategori}</span>
                     </td>
-                    <td style={{ padding: "10px 12px", color: "#1e293b", textAlign: "center" }}>{d.jumlah}</td>
+                    <td style={{ padding: "10px 12px", textAlign: "center", color: "#1e293b" }}>{d.jumlah}</td>
                     <td style={{ padding: "10px 12px", color: "#16a34a", fontWeight: 600 }}>{d.kondisi}</td>
                     <td style={{ padding: "10px 12px", color: "#1e293b" }}>{d.nilaiUnit}</td>
                     <td style={{ padding: "10px 12px", color: "#1e293b" }}>{d.pj}</td>
-                    <td style={{ padding: "10px 12px", color: "#64748b", fontFamily: "monospace", fontSize: 12 }}>{d.nipPj}</td>
+                    <td style={{ padding: "10px 12px", fontFamily: "monospace", fontSize: 12, color: "#64748b" }}>{d.nipPj}</td>
                     <td style={{ padding: "10px 12px", color: "#64748b" }}>{d.tanggal}</td>
                   </tr>
                 );
@@ -93,7 +99,6 @@ const BarangMasuk = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <Modal title="Catat Barang Masuk" onClose={() => setShowModal(false)}>
           <FormGroup label="Nomor Pengadaan">
@@ -126,7 +131,7 @@ const BarangMasuk = () => {
             <input style={inputStyle} value={form.pj} onChange={e => setForm({ ...form, pj: e.target.value })} placeholder="Nama penanggung jawab" />
           </FormGroup>
           <FormGroup label="NIP Penanggung Jawab">
-            <input style={inputStyle} value={form.nipPj} onChange={e => setForm({ ...form, nipPj: e.target.value })} placeholder="NIP penanggung jawab" />
+            <input style={inputStyle} value={form.nipPj} onChange={e => setForm({ ...form, nipPj: e.target.value })} placeholder="NIP" />
           </FormGroup>
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 8 }}>
             <button onClick={() => setShowModal(false)} style={{ padding: "10px 20px", border: "1.5px solid #e2e8f0", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#64748b" }}>Batal</button>

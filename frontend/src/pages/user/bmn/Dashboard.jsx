@@ -18,10 +18,10 @@ const Dashboard = ({ setActivePage }) => {
   return (
     <div>
       {/* Welcome Banner */}
-      <div style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)", borderRadius: 12, padding: "28px 32px", marginBottom: 28, color: "#fff" }}>
-        <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>Selamat Datang di Sistem BMN</div>
-        <div style={{ fontSize: 14, opacity: 0.85 }}>Bimas Kristen — Kementerian Agama Republik Indonesia</div>
-        <div style={{ fontSize: 13, opacity: 0.7, marginTop: 6 }}>
+      <div style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)", borderRadius: 12, padding: "30px 34px", marginBottom: 28, color: "#fff" }}>
+        <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Selamat Datang di Sistem BMN</div>
+        <div style={{ fontSize: 15, opacity: 0.85 }}>Bimas Kristen — Kementerian Agama Republik Indonesia</div>
+        <div style={{ fontSize: 14, opacity: 0.7, marginTop: 6 }}>
           {new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
         </div>
       </div>
@@ -29,27 +29,27 @@ const Dashboard = ({ setActivePage }) => {
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 28 }}>
         {stats.map((s, i) => (
-          <div key={i} style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", border: "1px solid #e2e8f0" }}>
+          <div key={i} style={{ background: "#fff", borderRadius: 10, padding: "22px 26px", border: "1px solid #e2e8f0" }}>
             <div style={{ color: s.color, marginBottom: 8 }}>{s.icon}</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "#1e293b" }}>{s.label}</div>
-            <div style={{ fontSize: 12, color: "#94a3b8" }}>{s.sub}</div>
+            <div style={{ fontSize: 30, fontWeight: 800, color: s.color }}>{s.value}</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: "#1e293b" }}>{s.label}</div>
+            <div style={{ fontSize: 13, color: "#94a3b8" }}>{s.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Menu Cards */}
-      <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1e3a5f", marginBottom: 14 }}>Pilih Layanan BMN</h3>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+      <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1e3a5f", marginBottom: 14 }}>Pilih Layanan BMN</h3>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         {menus.map((m) => (
           <div key={m.key} onClick={() => setActivePage(m.key)}
-            style={{ background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 10, padding: 20, cursor: "pointer" }}
+            style={{ background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 10, padding: 22, cursor: "pointer" }}
             onMouseEnter={e => e.currentTarget.style.borderColor = "#2563eb"}
             onMouseLeave={e => e.currentTarget.style.borderColor = "#e2e8f0"}
           >
             <div style={{ color: "#16a34a", marginBottom: 10 }}>{m.icon}</div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#1e3a5f", marginBottom: 4 }}>{m.label}</div>
-            <div style={{ fontSize: 12, color: "#64748b" }}>{m.desc}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "#1e3a5f", marginBottom: 4 }}>{m.label}</div>
+            <div style={{ fontSize: 13, color: "#64748b" }}>{m.desc}</div>
           </div>
         ))}
       </div>

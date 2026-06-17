@@ -85,8 +85,6 @@ body {
   width: 100%;
   min-height: 520px;
 
-  background: white;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,6 +95,23 @@ body {
 
   position: relative;
   overflow: hidden;
+}
+
+.hero.hero-home {
+  background: linear-gradient(135deg, #0f3f7f 0%, #134b8f 45%, #1a61af 100%);
+}
+
+.hero.hero-home::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.2) 0%, transparent 20%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.16) 0%, transparent 30%);
+
+  opacity: 0.5;
 }
 
 .hero::before {
@@ -127,17 +142,33 @@ body {
 .hero-right h1 {
   font-size: 60px;
   font-weight: 800;
+  color: white;
 }
 
 .hero-right h2 {
   font-size: 90px;
   font-weight: 900;
+  color: white;
 }
 
 .hero-right p {
-  font-size: 40px;
-  letter-spacing: 3px;
-  color: #444;
+  font-size: 20px;
+  letter-spacing: 0.4px;
+  color: rgba(255,255,255,0.85);
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.hero-subtitle {
+  font-size: 22px;
+  margin-top: 10px;
+  color: rgba(255,255,255,0.92);
+}
+
+.hero-description {
+  margin-top: 18px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.78);
 }
 
 /* ================= SERVICES ================= */
@@ -188,6 +219,34 @@ body {
 .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 15px 30px rgba(0,0,0,.12);
+}
+
+.home-services .card {
+  min-height: 240px;
+  padding: 30px;
+}
+
+.home-services .card p {
+  margin-top: 18px;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.top-action-bar {
+  width: 100%;
+  padding: 24px 80px;
+  background: #f8fafc;
+}
+
+.back-btn {
+  background: #fff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .icon {
