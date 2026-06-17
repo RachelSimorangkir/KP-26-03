@@ -1,20 +1,30 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "../components/ScrollToTop";
+
 import HalamanUtama from "../pages/HalamanUtama";
+
+import Login from "../pages/Login";
+import LoginUser from "../pages/LoginUser";
+import LoginAdmin from "../pages/LoginAdmin";
+
+import DashboardPegawai from "../pages/DashboardPegawai";
+
 import Kepegawaian from "../pages/Kepegawaian";
 import DashboardKPG from "../pages/DashboardKPG";
+
 import Rekomendasi from "../pages/Rekomendasi";
 import PengaktifanKembali from "../pages/PengaktifanKembali";
 import KenaikanJenjang from "../pages/KenaikanJenjang";
 import MutasiPromosi from "../pages/MutasiPromosi";
 import MutasiInternal from "../pages/MutasiInternal";
+import MutasiAntarInstansi from "../pages/MutasiAntarInstansi";
 import AlihFungsi from "../pages/AlihFungsi";
+
 import Cuti from "../pages/Cuti";
+
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
-import MutasiAntarInstansi from "../pages/MutasiAntarInstansi";
 
 function App() {
   return (
@@ -27,6 +37,30 @@ function App() {
         <Route
           path="/"
           element={<HalamanUtama />}
+        />
+
+        {/* LOGIN */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        {/* LOGIN USER */}
+        <Route
+          path="/login-user"
+          element={<LoginUser />}
+        />
+
+        {/* LOGIN ADMIN */}
+        <Route
+          path="/login-admin"
+          element={<LoginAdmin />}
+        />
+
+        {/* DASHBOARD PEGAWAI */}
+        <Route
+          path="/dashboard-pegawai"
+          element={<DashboardPegawai />}
         />
 
         {/* KEPEGAWAIAN */}
@@ -53,7 +87,7 @@ function App() {
             element={<PengaktifanKembali />}
           />
 
-          {/* KENAIKAN JENJANG & PERPINDAHAN JABATAN */}
+          {/* KENAIKAN JENJANG */}
           <Route
             path="rekomendasi/kenaikan-jenjang"
             element={<KenaikanJenjang />}
@@ -77,10 +111,11 @@ function App() {
             element={<MutasiAntarInstansi />}
           />
 
+          {/* ALIH FUNGSI */}
           <Route
-  path="rekomendasi/alih-fungsi"
-  element={<AlihFungsi />}
-/>
+            path="rekomendasi/alih-fungsi"
+            element={<AlihFungsi />}
+          />
 
           {/* CUTI */}
           <Route
@@ -107,6 +142,16 @@ function App() {
           />
 
         </Route>
+
+        {/* BMN */}
+        <Route
+          path="/bmn"
+          element={
+            <h2>
+              Halaman BMN Sedang Dikembangkan
+            </h2>
+          }
+        />
 
         {/* HUMAS & DATA */}
         <Route
