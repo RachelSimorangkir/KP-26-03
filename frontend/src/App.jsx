@@ -26,6 +26,10 @@ import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
 
+/* ADMIN */
+import AdminDashboard from "./admin/AdminDashboard";
+import DetailPengajuan from "./admin/DetailPengajuan";
+
 function App() {
   return (
     <BrowserRouter>
@@ -69,73 +73,61 @@ function App() {
           element={<Kepegawaian />}
         >
 
-          {/* DASHBOARD */}
           <Route
             index
             element={<DashboardKPG />}
           />
 
-          {/* REKOMENDASI */}
           <Route
             path="rekomendasi"
             element={<Rekomendasi />}
           />
 
-          {/* PENGAKTIFAN KEMBALI */}
           <Route
             path="rekomendasi/pengaktifan-kembali"
             element={<PengaktifanKembali />}
           />
 
-          {/* KENAIKAN JENJANG */}
           <Route
             path="rekomendasi/kenaikan-jenjang"
             element={<KenaikanJenjang />}
           />
 
-          {/* MUTASI / PROMOSI */}
           <Route
             path="rekomendasi/mutasi-promosi"
             element={<MutasiPromosi />}
           />
 
-          {/* MUTASI INTERNAL */}
           <Route
             path="rekomendasi/mutasi-internal"
             element={<MutasiInternal />}
           />
 
-          {/* MUTASI ANTAR INSTANSI */}
           <Route
             path="rekomendasi/mutasi-antar-instansi"
             element={<MutasiAntarInstansi />}
           />
 
-          {/* ALIH FUNGSI */}
           <Route
             path="rekomendasi/alih-fungsi"
             element={<AlihFungsi />}
           />
 
-          {/* CUTI */}
           <Route
             path="cuti"
             element={<Cuti />}
           />
 
-          {/* SKBT */}
           <Route
             path="skbt"
             element={<SKBT />}
           />
 
-          {/* SKBT MANDIRI */}
           <Route
             path="skbt/mandiri"
             element={<SKBTMandiri />}
           />
 
-          {/* SKBT ORGANISASI */}
           <Route
             path="skbt/organisasi"
             element={<SKBTOrganisasi />}
@@ -153,7 +145,7 @@ function App() {
           }
         />
 
-        {/* HUMAS & DATA */}
+        {/* HUMAS */}
         <Route
           path="/humas-data"
           element={
@@ -161,6 +153,17 @@ function App() {
               Halaman Humas & Data Sedang Dikembangkan
             </h2>
           }
+        />
+
+        {/* ADMIN */}
+        <Route
+          path="/admin"
+          element={<AdminDashboard />}
+        />
+
+        <Route
+          path="/admin/detail-pengajuan"
+          element={<DetailPengajuan />}
         />
 
       </Routes>
