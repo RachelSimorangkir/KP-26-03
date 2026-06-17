@@ -33,72 +33,59 @@ export default function Rekomendasi() {
 
   return (
     <div className="rekom-page">
-
-      <button
-        className="back-button"
-        onClick={() => navigate("/kepegawaian")}
-      >
-        ← Kembali ke Menu
-      </button>
+      {/* HEADER */}
+      <div className="rekom-header">
+        <button
+          className="back-button"
+          onClick={() => navigate("/kepegawaian")}
+        >
+          ← Kembali ke Menu
+        </button>
+      </div>
 
       {/* BANNER */}
-      <div className="service-banner">
+      <section className="service-banner">
+        <div className="banner-icon">📄</div>
 
-        <div className="banner-icon">
-          📄
-        </div>
-
-        <div>
+        <div className="service-banner-content">
           <h1>Layanan Rekomendasi</h1>
 
           <p>
-            Pilih jenis rekomendasi yang akan diajukan melalui
-            Portal Layanan Internal BMBPSDM.
+            Pilih jenis rekomendasi yang akan diajukan melalui Portal Layanan
+            Internal BMBPSDM.
           </p>
         </div>
-
-      </div>
+      </section>
 
       {/* DESKRIPSI */}
-      <div className="description-card">
-
+      <section className="description-card">
         <h2>Tentang Layanan</h2>
 
         <p>
-          Layanan rekomendasi digunakan untuk mendukung proses
-          administrasi kepegawaian sesuai ketentuan yang berlaku.
-          Pilih jenis layanan rekomendasi sesuai kebutuhan Anda.
+          Layanan rekomendasi digunakan untuk mendukung proses administrasi
+          kepegawaian sesuai ketentuan yang berlaku. Pilih jenis layanan
+          rekomendasi sesuai kebutuhan Anda.
         </p>
-
-      </div>
+      </section>
 
       {/* DAFTAR LAYANAN */}
-      <div className="layanan-grid">
-
-        {layanan.map((item, index) => (
+      <section className="layanan-grid">
+        {layanan.map((item) => (
           <div
-            key={index}
+            key={item.path}
             className="layanan-card"
             onClick={() => navigate(item.path)}
           >
-
-            <div className="layanan-icon">
-              {item.icon}
-            </div>
+            <div className="layanan-icon">{item.icon}</div>
 
             <h3>{item.title}</h3>
 
             <p>{item.desc}</p>
 
-            <span>
-              Ajukan Permohonan →
-            </span>
-
+            <span>Ajukan Permohonan →</span>
           </div>
         ))}
-
-      </div>
-
+      </section>
     </div>
   );
 }

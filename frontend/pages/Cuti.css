@@ -1,67 +1,112 @@
+/* ==================================
+   PAGE
+================================== */
+
 .cuti-page{
+  width: 100%;
+  max-width:1400px;
+  margin:0 auto;
   padding:30px;
-  animation:fadePage .8s ease;
+  box-sizing:border-box;
 }
 
-@keyframes fadePage{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+/* ==================================
+   BACK BUTTON
+================================== */
+
+.back-button{
+  background:#ffffff;
+  color:#16324b;
+
+  border:none;
+
+  padding:12px 22px;
+
+  border-radius:12px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  margin-bottom:24px;
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,.08);
+
+  transition:.25s;
 }
+
+.back-button:hover{
+  background:#16324b;
+  color:white;
+  transform:translateY(-2px);
+}
+
+/* ==================================
+   HEADER
+================================== */
 
 .page-header{
-  background:linear-gradient(
-    135deg,
-    #0c3453,
-    #2563eb
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #16324b,
+      #2563eb
+    );
 
   color:white;
 
-  border-radius:22px;
+  border-radius:24px;
 
   padding:35px;
 
   display:flex;
-  gap:24px;
   align-items:center;
+  gap:24px;
 
   margin-bottom:30px;
+
+  box-shadow:
+    0 15px 35px rgba(37,99,235,.15);
 }
 
 .header-icon{
   width:80px;
   height:80px;
 
-  border-radius:18px;
+  border-radius:20px;
 
-  background:rgba(255,255,255,.15);
+  background:
+    rgba(255,255,255,.15);
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  font-size:40px;
+  font-size:38px;
+
+  flex-shrink:0;
 }
 
 .page-header h1{
   margin:0;
   font-size:38px;
+  color:white;
 }
 
 .page-header p{
   margin-top:8px;
+  color:rgba(255,255,255,.9);
 }
+
+/* ==================================
+   CARD
+================================== */
 
 .form-card{
   background:white;
 
-  border-radius:20px;
+  border-radius:22px;
 
   padding:30px;
 
@@ -70,33 +115,41 @@
   border:1px solid #e5e7eb;
 
   box-shadow:
-    0 6px 18px rgba(15,23,42,.05);
+    0 6px 20px rgba(15,23,42,.05);
 }
 
 .form-card h2{
-  margin-bottom:20px;
   color:#16324b;
+  margin-bottom:20px;
 }
+
+/* ==================================
+   INFO BOX
+================================== */
 
 .tips-box{
   background:#eff6ff;
 
-  border-left:4px solid #2563eb;
+  border-left:5px solid #2563eb;
 
-  padding:14px 18px;
+  padding:16px 20px;
 
-  border-radius:10px;
-
-  margin-bottom:25px;
+  border-radius:12px;
 
   color:#1e40af;
+
+  margin-bottom:25px;
 }
+
+/* ==================================
+   FORM
+================================== */
 
 .form-grid{
   display:grid;
 
   grid-template-columns:
-    repeat(auto-fit,minmax(300px,1fr));
+    repeat(auto-fit,minmax(320px,1fr));
 
   gap:20px;
 }
@@ -107,151 +160,69 @@
 }
 
 .form-group label{
-  font-weight:600;
   margin-bottom:8px;
+
+  font-weight:600;
+
+  color:#334155;
 }
 
 .form-group input,
-.form-group select{
-  height:52px;
+.form-group select,
+.form-group textarea{
+  width:100%;
 
-  border:1px solid #d7dee8;
+  border:1px solid #dbe4ee;
 
   border-radius:12px;
 
-  padding:0 16px;
+  padding:14px 16px;
+
+  font-size:14px;
+
+  background:white;
+
+  transition:.25s;
+}
+
+.form-group input{
+  height:52px;
+}
+
+.form-group textarea{
+  resize:vertical;
+  min-height:120px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  outline:none;
+
+  border-color:#2563eb;
+
+  box-shadow:
+    0 0 0 4px rgba(37,99,235,.12);
 }
 
 .full-width{
   grid-column:1 / -1;
 }
 
-.upload-box{
-  border:2px dashed #d7dee8;
-
-  border-radius:16px;
-
-  padding:40px;
-
-  text-align:center;
-
-  margin-bottom:20px;
-
-  background:#fafcff;
-}
-
-.upload-icon{
-  font-size:50px;
-  margin-bottom:10px;
-}
-
-.upload-box h3{
-  margin-bottom:8px;
-  color:#16324b;
-}
-
-.upload-box p{
-  color:#64748b;
-  margin-bottom:20px;
-}
-
-.cuti-actions{
-  display:flex;
-  justify-content:center;
-
-  margin-top:30px;
-  margin-bottom:30px;
-}
-
-.template-btn,
-.submit-btn,
-.cancel-btn{
-  border:none;
-
-  padding:15px 28px;
-
-  border-radius:12px;
-
-  cursor:pointer;
-
-  font-weight:600;
-
-  color:white;
-}
-
-.template-btn{
-  background:#2563eb;
-}
-
-.submit-btn{
-  min-width:280px;
-  height:56px;
-
-  background:#2563eb;
-  color:white;
-
-  border:none;
-  border-radius:14px;
-
-  font-size:15px;
-  font-weight:600;
-
-  cursor:pointer;
-
-  box-shadow:
-    0 8px 20px rgba(37,99,235,.25);
-
-  transition:.25s;
-}
-
-.submit-btn:hover{
-  transform:translateY(-2px);
-  background:#1d4ed8;
-}
-
-.cancel-btn{
-  background:#94a3b8;
-}
-
-.back-button{
-  margin-bottom:25px;
-
-  padding:12px 22px;
-
-  border:none;
-
-  border-radius:12px;
-
-  cursor:pointer;
-
-  background:white;
-
-  color:#16324b;
-
-  font-weight:600;
-
-  box-shadow:
-    0 4px 12px rgba(0,0,0,.05);
-}
-
-/* =========================
-   DOKUMEN PENDUKUNG
-========================= */
+/* ==================================
+   UPLOAD
+================================== */
 
 .upload-box{
-  border:2px dashed #d4dceb;
+  border:2px dashed #cbd5e1;
+
   border-radius:18px;
 
   background:#f8fbff;
 
-  padding:35px 25px;
-  margin-top:20px;
+  padding:40px 25px;
 
   text-align:center;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
 
   transition:.25s;
 }
@@ -263,18 +234,16 @@
 
 .upload-icon{
   font-size:48px;
-  margin-bottom:15px;
+  margin-bottom:12px;
 }
 
 .upload-box h3{
-  color:#16345d;
-  margin-bottom:8px;
-  font-size:20px;
+  color:#16324b;
+  margin-bottom:10px;
 }
 
 .upload-box p{
   color:#64748b;
-  font-size:14px;
   margin-bottom:20px;
 }
 
@@ -283,12 +252,14 @@
 }
 
 .upload-btn{
+  display:inline-block;
+
   background:#2563eb;
   color:white;
 
   padding:12px 24px;
 
-  border-radius:10px;
+  border-radius:12px;
 
   cursor:pointer;
 
@@ -301,22 +272,29 @@
   background:#1d4ed8;
 }
 
-.upload-btn.secondary{
-  background:#64748b;
-}
+/* ==================================
+   ACTION BUTTON
+================================== */
 
-.upload-btn.secondary:hover{
-  background:#475569;
+.cuti-actions{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+
+  flex-wrap:wrap;
+
+  margin-top:30px;
 }
 
 .template-btn,
 .submit-btn,
 .cancel-btn{
   min-width:220px;
-  height:52px;
+  height:54px;
 
   border:none;
-  border-radius:12px;
+
+  border-radius:14px;
 
   font-size:15px;
   font-weight:600;
@@ -324,15 +302,10 @@
   cursor:pointer;
 
   transition:.25s;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  gap:8px;
 }
 
-/* Download */
+/* download template */
+
 .template-btn{
   background:#2563eb;
   color:white;
@@ -343,7 +316,8 @@
   transform:translateY(-2px);
 }
 
-/* Submit */
+/* submit */
+
 .submit-btn{
   background:#16a34a;
   color:white;
@@ -354,7 +328,8 @@
   transform:translateY(-2px);
 }
 
-/* Batal */
+/* cancel */
+
 .cancel-btn{
   background:#94a3b8;
   color:white;
@@ -363,4 +338,38 @@
 .cancel-btn:hover{
   background:#64748b;
   transform:translateY(-2px);
+}
+
+/* ==================================
+   RESPONSIVE
+================================== */
+
+@media(max-width:768px){
+
+  .cuti-page{
+    padding:20px;
+  }
+
+  .page-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .page-header h1{
+    font-size:30px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .template-btn,
+  .submit-btn,
+  .cancel-btn{
+    width:100%;
+  }
+
+  .cuti-actions{
+    flex-direction:column;
+  }
 }

@@ -1,62 +1,55 @@
+/* =====================================
+   PAGE
+===================================== */
+
 .rekom-page{
   width:100%;
-  max-width:none;
-
+  max-width:1400px;
+  margin:0 auto;
   padding:30px;
-
   box-sizing:border-box;
-
-  animation:fadePage .8s ease;
 }
 
-@keyframes fadePage{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+*{
+  box-sizing:border-box;
 }
 
-/* ======================
+/* =====================================
    BACK BUTTON
-====================== */
+===================================== */
 
 .back-button{
-  background:white;
-  color:#0c3453;
+  background:#fff;
+  color:#16324b;
 
-  border:1px solid #dbe4ee;
+  border:none;
 
   padding:12px 22px;
 
   border-radius:12px;
 
-  cursor:pointer;
-
   font-weight:600;
 
-  margin-bottom:25px;
+  cursor:pointer;
 
-  transition:.25s;
+  margin-bottom:24px;
 
   box-shadow:
-    0 4px 12px rgba(0,0,0,.05);
+    0 4px 15px rgba(0,0,0,.08);
+
+  transition:.25s;
 }
 
 .back-button:hover{
-  background:#0c3453;
-  color:white;
-
   transform:translateY(-2px);
+
+  background:#16324b;
+  color:white;
 }
 
-/* ======================
+/* =====================================
    BANNER
-====================== */
+===================================== */
 
 .service-banner{
   width:100%;
@@ -64,33 +57,31 @@
   background:
     linear-gradient(
       135deg,
-      #0c3453,
-      #164f7a
+      #16324b,
+      #2563eb
     );
+
+  border-radius:24px;
+
+  padding:40px;
 
   color:white;
 
-  border-radius:20px;
-
-  padding:35px;
-
   display:flex;
   align-items:center;
-  gap:24px;
+  gap:25px;
 
   margin-bottom:30px;
 
-  box-sizing:border-box;
-
   box-shadow:
-    0 12px 30px rgba(12,52,83,.18);
+    0 15px 35px rgba(37,99,235,.15);
 }
 
 .banner-icon{
   width:80px;
   height:80px;
 
-  border-radius:18px;
+  border-radius:20px;
 
   background:
     rgba(255,255,255,.15);
@@ -111,22 +102,25 @@
 .service-banner h1{
   margin:0;
 
-  font-size:38px;
+  font-size:40px;
+
   font-weight:700;
+
+  color:white;
 }
 
 .service-banner p{
-  margin-top:8px;
-  margin-bottom:0;
+  margin-top:10px;
+
+  color:
+    rgba(255,255,255,.9);
 
   font-size:16px;
-
-  opacity:.95;
 }
 
-/* ======================
+/* =====================================
    CARD UMUM
-====================== */
+===================================== */
 
 .guide-card,
 .description-card,
@@ -136,113 +130,85 @@
 
   background:white;
 
-  border-radius:18px;
-
-  border:1px solid #e5e7eb;
+  border-radius:20px;
 
   padding:30px;
 
   margin-bottom:25px;
 
-  box-sizing:border-box;
+  border:1px solid #e5e7eb;
 
   box-shadow:
-    0 6px 18px rgba(15,23,42,.05);
-
-  text-align:left;
+    0 6px 20px rgba(15,23,42,.05);
 }
 
-/* ======================
-   JUDUL CARD
-====================== */
-
 .guide-card h2,
-.guide-card h3,
 .description-card h2,
-.description-card h3,
 .requirement-card h2,
-.requirement-card h3,
 .rekom-card h2,
+.guide-card h3,
+.description-card h3,
+.requirement-card h3,
 .rekom-card h3{
-  margin:0 0 20px 0;
+  margin-bottom:20px;
 
   color:#16324b;
 
   font-size:28px;
-  font-weight:700;
-
-  text-align:left;
 }
 
-/* ======================
-   PANDUAN
-====================== */
+/* =====================================
+   GUIDE
+===================================== */
 
 .guide-card{
-  background:#f0f7ff;
+  background:#f8fbff;
 
-  border-left:5px solid #0c3453;
+  border-left:5px solid #2563eb;
 }
 
 .guide-card ol{
-  margin:0;
-  padding-left:28px;
+  padding-left:25px;
 }
 
 .guide-card li{
-  text-align:left;
-
-  color:#334155;
-
   line-height:2;
-
-  font-size:16px;
+  color:#475569;
 }
 
-/* ======================
-   DESKRIPSI
-====================== */
+/* =====================================
+   DESCRIPTION
+===================================== */
 
 .description-card p{
-  margin:0;
-
-  text-align:left;
-
-  color:#334155;
-
-  line-height:2;
+  line-height:1.9;
+  color:#475569;
 }
 
-/* ======================
-   PERSYARATAN
-====================== */
+/* =====================================
+   REQUIREMENT
+===================================== */
 
 .requirement-card ul{
-  margin:0;
-  padding-left:28px;
+  padding-left:25px;
 }
 
 .requirement-card li{
-  text-align:left;
-
-  color:#334155;
-
   line-height:2;
-
-  margin-bottom:8px;
+  color:#475569;
 }
 
-/* ======================
+/* =====================================
    FORM
-====================== */
+===================================== */
 
 .form-grid{
   display:grid;
 
   grid-template-columns:
-    repeat(auto-fit,minmax(350px,1fr));
+    repeat(auto-fit,minmax(320px,1fr));
 
-  gap:22px;
+  gap:20px;
 }
 
 .form-group{
@@ -260,9 +226,10 @@
 
 .form-group input,
 .form-group select{
-  height:52px;
+  height:54px;
 
-  border:1px solid #d1d5db;
+  border:1px solid #dbe4ee;
+
   border-radius:12px;
 
   padding:0 16px;
@@ -276,15 +243,15 @@
 .form-group select:focus{
   outline:none;
 
-  border-color:#0c3453;
+  border-color:#2563eb;
 
   box-shadow:
-    0 0 0 4px rgba(12,52,83,.12);
+    0 0 0 4px rgba(37,99,235,.12);
 }
 
-/* ======================
+/* =====================================
    UPLOAD
-====================== */
+===================================== */
 
 .upload-section{
   margin-top:25px;
@@ -293,31 +260,60 @@
 .upload-box{
   border:2px dashed #cbd5e1;
 
-  border-radius:16px;
+  border-radius:18px;
 
   padding:40px;
 
   background:#fafcff;
 
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  text-align:center;
 
-  gap:15px;
-
-  transition:.3s;
+  transition:.25s;
 }
 
 .upload-box:hover{
-  border-color:#0c3453;
-
-  background:#f5faff;
+  border-color:#2563eb;
 }
 
-/* ======================
+.upload-icon{
+  font-size:48px;
+
+  margin-bottom:12px;
+}
+
+.file-input{
+  display:none;
+}
+
+.upload-label{
+  display:inline-block;
+
+  background:#2563eb;
+
+  color:white;
+
+  padding:12px 24px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  font-weight:600;
+}
+
+.upload-label:hover{
+  background:#1d4ed8;
+}
+
+.upload-box p{
+  margin-top:15px;
+
+  color:#64748b;
+}
+
+/* =====================================
    BUTTON
-====================== */
+===================================== */
 
 .submit-button{
   width:100%;
@@ -326,33 +322,110 @@
 
   margin-top:25px;
 
-  background:#0e592a;
+  border:none;
+
+  border-radius:14px;
+
+  background:#16a34a;
 
   color:white;
 
-  border:none;
-
-  border-radius:12px;
-
-  font-size:15px;
   font-weight:700;
 
   cursor:pointer;
 
-  transition:.3s;
+  transition:.25s;
 }
 
 .submit-button:hover{
-  background:#0b4a22;
+  background:#15803d;
 
   transform:translateY(-2px);
 }
 
-/* ======================
-   RESPONSIVE
-====================== */
+/* =====================================
+   LAYANAN GRID
+===================================== */
 
-@media(max-width:768px){
+.layanan-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+  gap:25px;
+}
+
+.layanan-card{
+  background:white;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:22px;
+
+  padding:28px;
+
+  transition:.3s;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 6px 20px rgba(15,23,42,.05);
+}
+
+.layanan-card:hover{
+  transform:translateY(-5px);
+
+  border-color:#2563eb;
+
+  box-shadow:
+    0 15px 30px rgba(37,99,235,.12);
+}
+
+.layanan-icon{
+  width:65px;
+  height:65px;
+
+  border-radius:18px;
+
+  background:#eff6ff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:28px;
+
+  margin-bottom:18px;
+}
+
+.layanan-card h3{
+  margin-bottom:12px;
+
+  color:#16324b;
+
+  font-size:20px;
+}
+
+.layanan-card p{
+  color:#64748b;
+
+  line-height:1.8;
+
+  margin-bottom:15px;
+}
+
+.layanan-card span{
+  color:#2563eb;
+
+  font-weight:600;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width:768px){
 
   .rekom-page{
     padding:20px;
@@ -367,147 +440,11 @@
     font-size:30px;
   }
 
+  .layanan-grid{
+    grid-template-columns:1fr;
+  }
+
   .form-grid{
     grid-template-columns:1fr;
   }
-}
-
-/* ======================
-   FORCE TITLE COLOR
-====================== */
-
-.guide-card h3,
-.description-card h3,
-.requirement-card h3,
-.rekom-card h3{
-  color:#16324b !important;
-
-  opacity:1 !important;
-
-  visibility:visible !important;
-}
-
-.upload-box{
-  border:2px dashed #cbd5e1;
-
-  border-radius:18px;
-
-  padding:40px;
-
-  background:#fafcff;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  gap:16px;
-
-  transition:.3s;
-}
-
-.upload-box:hover{
-  border-color:#2563eb;
-  background:#f5f9ff;
-}
-
-.upload-icon{
-  font-size:48px;
-  line-height:1;
-}
-
-.file-input{
-  display:none;
-}
-
-.upload-label{
-  background:#2563eb;
-
-  color:white;
-
-  padding:12px 24px;
-
-  border-radius:10px;
-
-  cursor:pointer;
-
-  font-weight:600;
-
-  transition:.25s;
-}
-
-.upload-label:hover{
-  background:#1d4ed8;
-}
-
-.upload-box p{
-  margin:0;
-
-  color:#64748b;
-
-  font-size:15px;
-}
-
-.layanan-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:24px;
-}
-
-.layanan-card{
-  background:white;
-
-  border:1px solid #e5e7eb;
-
-  border-radius:18px;
-
-  padding:28px;
-
-  cursor:pointer;
-
-  transition:.3s;
-
-  box-shadow:
-    0 6px 18px rgba(15,23,42,.05);
-}
-
-.layanan-card:hover{
-  transform:translateY(-5px);
-
-  border-color:#2563eb;
-
-  box-shadow:
-    0 12px 24px rgba(37,99,235,.12);
-}
-
-.layanan-icon{
-  width:60px;
-  height:60px;
-
-  border-radius:16px;
-
-  background:#eff6ff;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:28px;
-
-  margin-bottom:18px;
-}
-
-.layanan-card h3{
-  margin:0 0 10px;
-
-  color:#16324b;
-
-  font-size:18px;
-}
-
-.layanan-card span{
-  color:#2563eb;
-
-  font-size:14px;
-  font-weight:600;
 }
