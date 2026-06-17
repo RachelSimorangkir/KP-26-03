@@ -9,7 +9,8 @@ const menuItems = [
     title: "Layanan Humas",
     icon: "📢",
     services: [
-      { title: "Publikasi Berita Kegiatan", desc: "Publikasi berita kegiatan dari Kantor Wilayah, Kabupaten/Kota, PTKK dan SPKK.", path: "/humas/publikasi" },
+          { title: "Publikasi Berita Kegiatan", desc: "Publikasi berita kegiatan dari Kantor Wilayah, Kabupaten/Kota, PTKK dan SPKK.", path: "/humas/publikasi" },
+          { title: "Daftar & Status Pengajuan Saya", desc: "Lihat status dan riwayat pengajuan publikasi Anda.", path: "/humas/my-submissions" },
     ]
   },
   {
