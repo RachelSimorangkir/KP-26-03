@@ -1,61 +1,189 @@
-.requirement-card{
-  background:white;
+/* =========================
+   PAGE
+========================= */
 
-  border-radius:24px;
+.kenaikan-page{
+  width:100%;
+  max-width:1400px;
 
-  padding:35px;
+  margin:0 auto;
+
+  padding:30px;
+
+  box-sizing:border-box;
+
+  overflow-x:hidden;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-button{
+  background:#ffffff;
+
+  color:#16324b;
+
+  border:none;
+
+  padding:12px 22px;
+
+  border-radius:12px;
+
+  font-weight:600;
+
+  cursor:pointer;
 
   margin-bottom:25px;
 
-  border-left:6px solid #2563eb;
+  box-shadow:
+    0 4px 12px rgba(15,23,42,.08);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header{
+  display:flex;
+  align-items:center;
+
+  gap:24px;
+
+  width:100%;
+
+  padding:35px 40px;
+
+  border-radius:24px;
+
+  margin-bottom:30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #16324b,
+      #2563eb
+    );
+
+  color:white;
+
+  box-sizing:border-box;
+
+  overflow:hidden;
+}
+
+.header-icon{
+  width:90px;
+  height:90px;
+
+  min-width:90px;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,.15);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:42px;
+}
+
+.header-content{
+  flex:1;
+
+  min-width:0;
+}
+
+.header-content h1{
+  margin:0 0 10px;
+
+  color:white;
+
+  font-size:48px;
+  font-weight:800;
+
+  line-height:1.2;
+}
+
+.header-content p{
+  margin:0;
+
+  color:
+    rgba(255,255,255,.9);
+
+  font-size:18px;
+
+  line-height:1.7;
+}
+
+.requirement-card,
+.form-card,
+.upload-card{
+  width:100%;
+
+  background:#ffffff;
+
+  border-radius:24px;
+
+  padding:40px;
+
+  margin-bottom:30px;
+
+  border:1px solid #e2e8f0;
 
   box-shadow:
-    0 10px 25px rgba(15,23,42,.06);
+    0 10px 25px rgba(15,23,42,.05);
+
+  box-sizing:border-box;
+
+  overflow:hidden;
+}
+
+/* =========================
+   REQUIREMENT
+========================= */
+
+.requirement-card{
+  border-left:6px solid #2563eb;
 }
 
 .requirement-card h2{
   color:#16324b;
-  font-size:28px;
+
+  font-size:30px;
+  font-weight:700;
+
   margin-bottom:25px;
 
   text-align:left;
 }
 
 .requirement-card ol{
-  padding-left:25px;
-  margin:0;
+  padding-left:28px;
 }
 
 .requirement-card li{
   color:#475569;
-  font-size:17px;
+
+  font-size:16px;
 
   line-height:2;
 
   text-align:left;
 }
 
-.form-card{
-  background:white;
-
-  border-radius:24px;
-
-  padding:35px;
-
-  margin-bottom:25px;
-
-  box-shadow:
-    0 10px 25px rgba(15,23,42,.05);
-
-  border:1px solid #e5e7eb;
-}
+/* =========================
+   FORM
+========================= */
 
 .form-card h2{
   text-align:center;
 
   color:#16324b;
 
-  font-size:42px;
+  font-size:36px;
 
   margin-bottom:35px;
 }
@@ -64,9 +192,13 @@
   display:grid;
 
   grid-template-columns:
-    repeat(2,1fr);
+    repeat(2,minmax(280px,1fr));
 
-  gap:25px;
+  gap:24px;
+}
+
+.form-group{
+  width:100%;
 }
 
 .form-group label{
@@ -74,10 +206,10 @@
 
   margin-bottom:10px;
 
+  color:#334155;
+
   font-size:14px;
   font-weight:700;
-
-  color:#334155;
 
   text-align:left;
 }
@@ -86,7 +218,7 @@
 .form-group select{
   width:100%;
 
-  height:56px;
+  height:58px;
 
   padding:0 18px;
 
@@ -94,13 +226,15 @@
 
   border-radius:14px;
 
-  background:white;
+  background:#ffffff;
 
   color:#1e293b;
 
   font-size:15px;
 
   transition:.25s;
+
+  box-sizing:border-box;
 }
 
 .form-group input:focus,
@@ -113,27 +247,27 @@
     0 0 0 4px rgba(37,99,235,.12);
 }
 
-select{
-  color:#1e293b !important;
+select,
+option{
+  color:#1e293b;
 }
 
-option{
-  color:#1e293b !important;
-  background:white !important;
-}
+/* =========================
+   BUTTON
+========================= */
 
 .search-btn{
-  height:56px;
+  width:100%;
+
+  height:58px;
 
   border:none;
+
+  border-radius:14px;
 
   background:#2563eb;
 
   color:white;
-
-  padding:0 24px;
-
-  border-radius:14px;
 
   font-weight:600;
 
@@ -145,6 +279,10 @@ option{
 .search-btn:hover{
   background:#1d4ed8;
 }
+
+/* =========================
+   DRIVE
+========================= */
 
 .drive-card{
   background:#f8fafc;
@@ -167,13 +305,15 @@ option{
 .drive-card input{
   width:100%;
 
-  height:56px;
+  height:58px;
 
   border:1px solid #dbe3ee;
 
   border-radius:14px;
 
   padding:0 18px;
+
+  box-sizing:border-box;
 }
 
 .drive-card p{
@@ -186,25 +326,9 @@ option{
   text-align:left;
 }
 
-@media(max-width:900px){
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-}
-
-.upload-card{
-  background:#fff;
-  border-radius:20px;
-  padding:35px;
-  margin-top:25px;
-
-  border:1px solid #e2e8f0;
-
-  box-shadow:
-    0 10px 25px rgba(15,23,42,.05);
-}
+/* =========================
+   UPLOAD
+========================= */
 
 .upload-header{
   display:flex;
@@ -219,37 +343,33 @@ option{
 }
 
 .upload-header h2{
-  font-size:30px;
   color:#16324b;
+
+  font-size:30px;
 }
 
 .drive-input{
   width:100%;
+
   height:58px;
 
-  background:#ffffff !important;
-  color:#334155 !important;
-
   border:1px solid #dbe3ee;
+
   border-radius:14px;
 
   padding:0 20px;
 
   font-size:15px;
 
+  color:#334155;
+
   margin-bottom:18px;
 
-  transition:.3s;
-}
-
-.drive-input::placeholder{
-  color:#94a3b8;
+  box-sizing:border-box;
 }
 
 .drive-input:focus{
   outline:none;
-
-  background:#ffffff;
 
   border-color:#2563eb;
 
@@ -262,30 +382,60 @@ option{
 
   border-left:4px solid #2563eb;
 
-  padding:16px 20px;
-
   border-radius:12px;
+
+  padding:16px 20px;
 }
 
 .upload-info p{
-  color:#64748b;
-  line-height:1.7;
   margin:0;
+
+  color:#64748b;
+
+  line-height:1.7;
 }
 
 .submit-btn{
-  margin-top:40px;
-  margin-bottom:20px;
-
   width:320px;
+
   height:58px;
+
+  margin:40px auto 20px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  gap:10px;
+  border:none;
 
-  margin-left:auto;
-  margin-right:auto;
+  border-radius:14px;
+
+  background:#2563eb;
+
+  color:white;
+
+  font-weight:700;
+
+  cursor:pointer;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .submit-btn{
+    width:100%;
+  }
+
+  .requirement-card,
+  .form-card,
+  .upload-card{
+    padding:25px;
+  }
 }

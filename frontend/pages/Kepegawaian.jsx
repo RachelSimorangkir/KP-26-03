@@ -73,7 +73,11 @@ function Kepegawaian() {
         </nav>
       </aside>
 
-      <main className="content">
+      <main
+        className={`content ${
+          collapsed ? "content-expanded" : "content-normal"
+        }`}
+      >
         <Outlet />
       </main>
     </div>

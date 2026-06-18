@@ -1,6 +1,11 @@
 .pengaktifan-page{
   width:100%;
-  padding:30px;
+  max-width:1400px;
+
+  margin:0 auto;
+
+  padding:30px 40px;
+
   box-sizing:border-box;
 }
 
@@ -18,11 +23,14 @@
 
   color:white;
 
-  padding:35px;
+  padding:40px;
 
-  border-radius:22px;
+  border-radius:24px;
 
-  margin-bottom:30px;
+  margin-bottom:35px;
+
+  box-shadow:
+    0 15px 35px rgba(37,99,235,.18);
 }
 
 .header-icon{
@@ -44,16 +52,16 @@
 .form-card{
   background:white;
 
-  border-radius:20px;
+  border-radius:24px;
 
-  padding:30px;
+  padding:40px;
 
-  margin-bottom:25px;
+  margin-bottom:30px;
 
   border:1px solid #e5e7eb;
 
   box-shadow:
-    0 8px 24px rgba(15,23,42,.05);
+    0 10px 25px rgba(15,23,42,.06);
 }
 
 .form-card h2{
@@ -63,13 +71,18 @@
 
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:20px;
+
+  grid-template-columns:
+    repeat(2,minmax(300px,1fr));
+
+  gap:28px;
 }
 
 .form-group{
   display:flex;
   flex-direction:column;
+
+  width:100%;
 }
 
 .full-width{
@@ -77,16 +90,33 @@
 }
 
 .form-group label{
-  margin-bottom:8px;
+  margin-bottom:10px;
+
+  font-size:15px;
   font-weight:600;
+
+  color:#334155;
 }
 
 .form-group input,
 .form-group select,
-.form-group textarea{
+.form-group textarea,
+.modern-input,
+.modern-select{
+  width:100%;
+
   border:1px solid #cbd5e1;
-  border-radius:12px;
-  padding:14px;
+  border-radius:14px;
+
+  padding:15px 18px;
+
+  font-size:15px;
+
+  color:#1e293b;
+
+  background:#ffffff;
+
+  transition:.25s;
 }
 
 .form-group textarea{
@@ -167,8 +197,11 @@
 .stepper{
   display:flex;
   justify-content:center;
-  gap:40px;
-  margin-bottom:30px;
+  align-items:center;
+
+  gap:60px;
+
+  margin-bottom:35px;
 }
 
 .step{
@@ -222,6 +255,9 @@
   transition:.3s;
 }
 
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
 .modern-input:focus,
 .modern-select:focus{
   outline:none;
@@ -310,4 +346,12 @@ input[type="date"]:focus{
 
   box-shadow:
     0 0 0 4px rgba(37,99,235,.12);
+}
+
+.form-card *{
+  box-sizing:border-box;
+}
+
+.form-card{
+  overflow:hidden;
 }

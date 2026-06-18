@@ -5,8 +5,9 @@ function AhliFungsi() {
   const navigate = useNavigate();
 
   return (
-    <div className="ahlifungsi-page">
+    <div className="alihfungsi-page">
 
+      {/* BACK BUTTON */}
       <button
         className="back-button"
         onClick={() => navigate("/kepegawaian/rekomendasi")}
@@ -21,7 +22,7 @@ function AhliFungsi() {
           🧩
         </div>
 
-        <div>
+        <div className="header-content">
           <h1>Alih Fungsi</h1>
 
           <p>
@@ -120,7 +121,7 @@ function AhliFungsi() {
 
         <div className="upload-header">
           <span>📁</span>
-          <h2>Upload Berkas Persyaratan</h2>
+          <h3>Upload Berkas Persyaratan</h3>
         </div>
 
         <input

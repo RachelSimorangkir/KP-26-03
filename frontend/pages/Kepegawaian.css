@@ -246,15 +246,24 @@
 
 .content{
   flex:1;
-  min-width:0;
-  width:100%;
 
-  padding:40px;
+  display:flex;
+  justify-content:center;
 
   overflow-y:auto;
   overflow-x:hidden;
 
-  box-sizing:border-box;
+  transition:all .3s ease;
+}
+
+/* Sidebar terbuka */
+.content-normal{
+  padding:40px 70px;
+}
+
+/* Sidebar ditutup */
+.content-expanded{
+  padding:40px 20px;
 }
 
 /* PENTING */
@@ -375,8 +384,17 @@
   }
 
   .content{
-    padding:20px;
-  }
+  flex:1;
+  min-width:0;
+
+  padding:40px;
+
+  overflow-y:auto;
+  overflow-x:hidden;
+
+  display:flex;
+  justify-content:center; /* bikin isi ke tengah */
+}
 
   .menu-list a{
     justify-content:center;
@@ -385,4 +403,9 @@
   .menu-list a.active::before{
     left:0;
   }
+}
+
+.content-wrapper{
+  width:100%;
+  max-width:1200px;
 }
