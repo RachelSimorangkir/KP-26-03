@@ -88,7 +88,20 @@ export default function HalamanUtama() {
 
           <a href="/">Beranda</a>
 
-          <a href="/">Kontak</a>
+          <a
+  href="#kontak"
+  onClick={(e) => {
+    e.preventDefault();
+
+    document
+      .getElementById("kontak")
+      ?.scrollIntoView({
+        behavior: "smooth",
+      });
+  }}
+>
+  Kontak
+</a>
 
           {!isLoggedIn ? (
             <button
@@ -284,21 +297,54 @@ export default function HalamanUtama() {
 
       </section>
 
-      {/* FOOTER */}
-      <footer className="footer">
+{/* FOOTER */}
+<footer
+  className="footer"
+  id="kontak"
+>
 
-        <h3>Portal Layanan Internal</h3>
+  <h3>Portal Layanan Internal</h3>
 
-        <p>
-          Kementerian Agama Republik Indonesia
-        </p>
+  <p>
+    Kementerian Agama Republik Indonesia
+  </p>
 
-        <p>
-          Sistem Informasi Terintegrasi
-        </p>
+  <p>
+    Sistem Informasi Terintegrasi
+  </p>
+
+  <div className="footer-contact">
+
+    <h4>Kontak</h4>
+
+    <p>
+      📍 Jl. M.H. Thamrin No. 6 Lt. 10–11,
+      Jakarta Pusat
+    </p>
+
+    <p>
+      ☎️ TU Dirjen: 021-3812583 |
+      TU Sekretariat: 021-3846832
+    </p>
+
+    <p>
+      ☎️ TU Dir. Urag Kristen: 021-3920628 |
+      TU Dir. PAK: 021-3920626
+    </p>
+
+    <p>
+      ✉️ bimaskristen@kemenag.go.id
+    </p>
+
+    <p>
+      🌐 bimaskristen.kemenag.go.id
+    </p>
+
+  </div>
 
       </footer>
-
     </div>
   );
 }
+
+
