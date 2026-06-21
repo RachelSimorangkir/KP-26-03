@@ -300,3 +300,27 @@
 
   transform:translateY(-2px);
 }
+
+/* ==================================
+   SMOOTH PAGE LOAD
+================================== */
+
+.login-container{
+  animation:smoothAppear .7s cubic-bezier(.22,.61,.36,1);
+}
+
+@keyframes smoothAppear{
+  from{
+    opacity:0;
+    transform:
+      translateY(20px)
+      scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}

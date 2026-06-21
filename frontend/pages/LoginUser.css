@@ -212,3 +212,23 @@
     padding:40px 25px;
   }
 }
+
+/* ==================================
+   SMOOTH PAGE LOAD
+================================== */
+
+.login-user-container{
+  animation:smoothAppear .6s ease;
+}
+
+@keyframes smoothAppear{
+  from{
+    opacity:0;
+    transform:translateY(15px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
