@@ -24,13 +24,32 @@
 
   color:white;
 
-  transition:.3s ease;
+  transition:
+    width .35s ease,
+    min-width .35s ease,
+    box-shadow .35s ease;
 
   border-right:1px solid rgba(255,255,255,.05);
 
   box-shadow:10px 0 30px rgba(0,0,0,.12);
 
   overflow-y:auto;
+
+  .sidebar{
+  animation:sidebarSlide .7s ease;
+}
+
+@keyframes sidebarSlide{
+  from{
+    opacity:0;
+    transform:translateX(-50px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
+}
 }
 
 .sidebar.collapsed{
@@ -129,13 +148,20 @@
    MENU
 ========================= */
 
-.menu-list{
-  display:flex;
-  flex-direction:column;
+.menu-list a:hover .icon{
+  background:rgba(255,255,255,.15);
 
-  gap:8px;
+  animation:iconFloat .8s ease infinite alternate;
+}
 
-  padding:16px 12px;
+@keyframes iconFloat{
+  from{
+    transform:translateY(0);
+  }
+
+  to{
+    transform:translateY(-4px);
+  }
 }
 
 .menu-list a{
@@ -243,10 +269,6 @@
 /* =========================
    CONTENT
 ========================= */
-/* =========================
-   CONTENT
-========================= */
-
 .content{
   flex:1;
   min-width:0;
@@ -254,9 +276,10 @@
   overflow-y:auto;
   overflow-x:hidden;
 
-  transition:.3s ease;
-
-  margin-left:0;
+  transition:
+    margin-left .35s ease,
+    width .35s ease,
+    opacity .3s ease;
 }
 
 /* Sidebar buka */
@@ -279,16 +302,19 @@
 ========================= */
 
 .user-profile{
-  display:flex;
-  align-items:center;
-  gap:12px;
+  animation:userFade .8s ease;
+}
 
-  padding:16px;
-  margin:15px;
+@keyframes userFade{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
 
-  background:#f8fafc;
-
-  border-radius:14px;
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 .avatar{
@@ -410,4 +436,29 @@
 
 .sidebar.collapsed + .content{
   margin-left:85px !important;
+}
+
+.menu-list a{
+  animation:menuFade .5s ease both;
+}
+
+.menu-list a:nth-child(1){animation-delay:.05s;}
+.menu-list a:nth-child(2){animation-delay:.10s;}
+.menu-list a:nth-child(3){animation-delay:.15s;}
+.menu-list a:nth-child(4){animation-delay:.20s;}
+.menu-list a:nth-child(5){animation-delay:.25s;}
+.menu-list a:nth-child(6){animation-delay:.30s;}
+.menu-list a:nth-child(7){animation-delay:.35s;}
+.menu-list a:nth-child(8){animation-delay:.40s;}
+
+@keyframes menuFade{
+  from{
+    opacity:0;
+    transform:translateX(-25px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
 }

@@ -448,3 +448,208 @@
     grid-template-columns:1fr;
   }
 }
+
+/* =====================================
+   PAGE LOAD
+===================================== */
+
+.rekom-page{
+  animation:pageFade .8s ease;
+}
+
+@keyframes pageFade{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+.back-button{
+  animation:slideLeft .7s ease;
+}
+
+@keyframes slideLeft{
+  from{
+    opacity:0;
+    transform:translateX(-30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
+}
+
+.service-banner{
+  animation:
+    bannerFade .9s ease,
+    bannerFloat 6s ease-in-out infinite;
+}
+
+@keyframes bannerFade{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes bannerFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+}
+
+.banner-icon{
+  animation:iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+}
+
+.guide-card{
+  animation:fadeUp .7s ease .2s both;
+}
+
+.description-card{
+  animation:fadeUp .7s ease .4s both;
+}
+
+.requirement-card{
+  animation:fadeUp .7s ease .6s both;
+}
+
+.rekom-card{
+  animation:fadeUp .7s ease .8s both;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.form-group input,
+.form-group select{
+  transition:
+    .3s ease,
+    transform .3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  transform:translateY(-2px);
+}
+
+.upload-box{
+  transition:
+    border-color .3s ease,
+    box-shadow .3s ease,
+    transform .3s ease;
+}
+
+.upload-box:hover{
+  border-color:#2563eb;
+
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 15px 35px rgba(37,99,235,.12);
+}
+
+.submit-button{
+  transition:
+    .3s ease,
+    box-shadow .3s ease;
+}
+
+.submit-button:hover{
+  background:#15803d;
+
+  transform:translateY(-3px);
+
+  box-shadow:
+    0 10px 25px rgba(22,163,74,.25);
+}
+
+.submit-button:active{
+  transform:scale(.98);
+}
+
+.layanan-card:nth-child(1){
+  animation:cardUp .6s ease .1s both;
+}
+
+.layanan-card:nth-child(2){
+  animation:cardUp .6s ease .2s both;
+}
+
+.layanan-card:nth-child(3){
+  animation:cardUp .6s ease .3s both;
+}
+
+.layanan-card:nth-child(4){
+  animation:cardUp .6s ease .4s both;
+}
+
+.layanan-card:nth-child(5){
+  animation:cardUp .6s ease .5s both;
+}
+
+.layanan-card:nth-child(6){
+  animation:cardUp .6s ease .6s both;
+}
+
+@keyframes cardUp{
+  from{
+    opacity:0;
+    transform:translateY(40px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.layanan-icon{
+  transition:.3s ease;
+}
+
+.layanan-card:hover .layanan-icon{
+  transform:
+    scale(1.12)
+    rotate(5deg);
+}

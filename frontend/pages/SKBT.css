@@ -5,13 +5,14 @@
 .skbt-page{
   width:100%;
   max-width:1400px;
+
   margin:0 auto;
 
   padding:30px;
 
   box-sizing:border-box;
 
-  animation:fadePage .5s ease;
+  animation:fadePage .6s ease;
 }
 
 *{
@@ -21,13 +22,46 @@
 @keyframes fadePage{
   from{
     opacity:0;
-    transform:translateY(10px);
+    transform:translateY(15px);
   }
 
   to{
     opacity:1;
     transform:translateY(0);
   }
+}
+
+/* ==================================
+   BACK BUTTON
+================================== */
+
+.back-button{
+  background:#ffffff;
+  color:#16324b;
+
+  border:none;
+
+  padding:12px 22px;
+
+  border-radius:12px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  margin-bottom:24px;
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,.08);
+
+  transition:.3s;
+}
+
+.back-button:hover{
+  background:#16324b;
+  color:white;
+
+  transform:translateY(-2px);
 }
 
 /* ==================================
@@ -50,12 +84,43 @@
 
   display:flex;
   align-items:center;
+
   gap:24px;
 
   margin-bottom:30px;
 
   box-shadow:
     0 15px 35px rgba(37,99,235,.15);
+
+  animation:
+    headerFade .8s ease,
+    headerFloat 7s ease-in-out infinite;
+}
+
+@keyframes headerFade{
+  from{
+    opacity:0;
+    transform:translateY(25px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes headerFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
 }
 
 .header-icon{
@@ -74,12 +139,29 @@
   font-size:36px;
 
   flex-shrink:0;
+
+  animation:iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
 }
 
 .page-header h1{
   margin:0;
 
   font-size:38px;
+
   color:white;
 }
 
@@ -109,6 +191,17 @@
 
   box-shadow:
     0 6px 20px rgba(15,23,42,.05);
+
+  animation:fadeUp .8s ease .2s both;
+}
+
+.info-card:hover{
+  transform:translateY(-3px);
+
+  transition:.3s;
+
+  box-shadow:
+    0 15px 35px rgba(15,23,42,.08);
 }
 
 .info-card h2{
@@ -124,59 +217,85 @@
 }
 
 /* ==================================
-   GRID
+   SERVICE SELECTOR
 ================================== */
 
-.skbt-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(350px,1fr));
-
-  gap:25px;
-}
-
-/* ==================================
-   CARD
-================================== */
-
-.skbt-card{
+.service-selector{
   background:white;
 
-  border-radius:24px;
+  border-radius:22px;
 
-  padding:35px;
+  padding:30px;
+
+  margin-bottom:25px;
 
   border:1px solid #e5e7eb;
 
-  text-align:center;
-
-  cursor:pointer;
-
-  transition:.3s;
-
   box-shadow:
     0 6px 20px rgba(15,23,42,.05);
+
+  animation:fadeUp .8s ease .4s both;
 }
 
-.skbt-card:hover{
-  transform:translateY(-5px);
+.service-selector h2{
+  color:#16324b;
+
+  margin-bottom:15px;
+}
+
+.service-selector select{
+  width:100%;
+
+  height:56px;
+
+  border:1px solid #dbe4ee;
+
+  border-radius:14px;
+
+  padding:0 16px;
+
+  font-size:15px;
+
+  transition:.3s;
+}
+
+.service-selector select:focus{
+  outline:none;
 
   border-color:#2563eb;
 
   box-shadow:
-    0 15px 30px rgba(37,99,235,.12);
+    0 0 0 4px rgba(37,99,235,.12);
 }
 
 /* ==================================
-   ICON
+   DETAIL CARD
 ================================== */
 
-.skbt-icon{
-  width:80px;
-  height:80px;
+.service-detail{
+  background:white;
 
-  border-radius:20px;
+  border-radius:24px;
+
+  padding:40px;
+
+  text-align:center;
+
+  border:1px solid #e5e7eb;
+
+  box-shadow:
+    0 6px 20px rgba(15,23,42,.05);
+
+  animation:fadeUp .5s ease;
+}
+
+.detail-icon{
+  width:100px;
+  height:100px;
+
+  margin:0 auto 25px;
+
+  border-radius:24px;
 
   background:#eff6ff;
 
@@ -186,59 +305,86 @@
   align-items:center;
   justify-content:center;
 
-  font-size:38px;
+  font-size:48px;
 
-  margin:0 auto 20px;
+  animation:iconFloat 4s ease-in-out infinite;
 }
 
-/* ==================================
-   TEXT
-================================== */
-
-.skbt-card h3{
+.service-detail h2{
   color:#16324b;
 
-  font-size:24px;
+  font-size:32px;
 
-  margin-bottom:12px;
+  margin-bottom:15px;
 }
 
-.skbt-card p{
+.service-detail p{
   color:#64748b;
 
-  line-height:1.8;
+  line-height:2;
 
-  margin-bottom:25px;
+  font-size:16px;
+
+  max-width:700px;
+
+  margin:0 auto 30px;
 }
 
 /* ==================================
    BUTTON
 ================================== */
 
-.skbt-btn{
-  background:#2563eb;
-  color:white;
+.service-btn{
+  min-width:240px;
+
+  height:54px;
 
   border:none;
 
-  height:48px;
+  border-radius:14px;
 
-  padding:0 24px;
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    );
 
-  border-radius:12px;
+  color:white;
 
-  font-size:14px;
+  font-size:15px;
   font-weight:600;
 
   cursor:pointer;
 
-  transition:.25s;
+  transition:.3s;
 }
 
-.skbt-btn:hover{
-  background:#1d4ed8;
+.service-btn:hover{
+  transform:translateY(-3px);
 
-  transform:translateY(-2px);
+  box-shadow:
+    0 10px 25px rgba(37,99,235,.25);
+}
+
+.service-btn:active{
+  transform:scale(.98);
+}
+
+/* ==================================
+   ANIMATION
+================================== */
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(25px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 /* ==================================
@@ -260,7 +406,22 @@
     font-size:30px;
   }
 
-  .skbt-grid{
-    grid-template-columns:1fr;
+  .service-detail{
+    padding:25px;
+  }
+
+  .service-detail h2{
+    font-size:26px;
+  }
+
+  .detail-icon{
+    width:80px;
+    height:80px;
+
+    font-size:38px;
+  }
+
+  .service-btn{
+    width:100%;
   }
 }

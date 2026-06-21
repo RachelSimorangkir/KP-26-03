@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SKBT.css";
 
 function SKBT() {
   const navigate = useNavigate();
 
+  const [selectedService, setSelectedService] =
+    useState("");
+
   return (
     <div className="skbt-page">
 
+      {/* BACK */}
       <button
         className="back-button"
         onClick={() => navigate("/kepegawaian")}
@@ -22,76 +27,126 @@ function SKBT() {
         </div>
 
         <div>
-          <h1>Surat Keterangan Bebas Temuan (SKBT)</h1>
+          <h1>
+            Surat Keterangan Bebas Temuan (SKBT)
+          </h1>
 
           <p>
-            Pilih jenis pengajuan SKBT sesuai kebutuhan
-            pegawai maupun organisasi.
+            Pilih jenis pengajuan SKBT sesuai
+            kebutuhan pegawai maupun organisasi.
           </p>
         </div>
 
       </div>
 
-      {/* TENTANG */}
+      {/* INFO */}
       <div className="info-card">
 
         <h2>Tentang Layanan</h2>
 
         <p>
-          SKBT merupakan surat yang menerangkan bahwa
-          pegawai atau organisasi tidak memiliki temuan
-          pemeriksaan yang belum diselesaikan.
-          Pilih jenis pengajuan sesuai kebutuhan Anda.
+          SKBT merupakan surat yang menerangkan
+          bahwa pegawai maupun organisasi tidak
+          memiliki temuan pemeriksaan yang belum
+          diselesaikan. Silakan pilih jenis
+          pengajuan sesuai kebutuhan.
         </p>
 
       </div>
 
-      {/* PILIHAN */}
-      <div className="service-grid">
+      {/* PILIH LAYANAN */}
+      <div className="service-selector">
 
-  <div
-    className="service-card"
-    onClick={() => navigate("/kepegawaian/skbt/mandiri")}
-  >
-    <div className="service-icon">
-      👤
-    </div>
+        <h2>Pilih Jenis Layanan</h2>
 
-    <h3>SKBT Mandiri</h3>
+        <select
+          value={selectedService}
+          onChange={(e) =>
+            setSelectedService(e.target.value)
+          }
+        >
+          <option value="">
+            -- Pilih Layanan SKBT --
+          </option>
 
-    <p>
-      Pengajuan Surat Keterangan Bebas Temuan
-      yang diajukan langsung oleh pegawai
-      untuk kebutuhan pribadi maupun administrasi.
-    </p>
+          <option value="mandiri">
+            👤 SKBT Mandiri
+          </option>
 
-    <button className="service-btn">
-      Pilih Layanan
-    </button>
-  </div>
+          <option value="organisasi">
+            🏢 SKBT Organisasi
+          </option>
+        </select>
 
-  <div
-    className="service-card"
-    onClick={() => navigate("/kepegawaian/skbt/organisasi")}
-  >
-    <div className="service-icon">
-      🏢
-    </div>
+      </div>
 
-    <h3>SKBT Organisasi</h3>
+      {/* DETAIL LAYANAN */}
+      {selectedService && (
 
-    <p>
-      Pengajuan Surat Keterangan Bebas Temuan
-      atas nama unit kerja, satker,
-      maupun organisasi secara resmi.
-    </p>
+        <div className="service-detail">
 
-    <button className="service-btn">
-      Pilih Layanan
-    </button>
-  </div>
+          {selectedService === "mandiri" && (
+            <>
+              <div className="detail-icon">
+                👤
+              </div>
 
-</div>
+              <h2>SKBT Mandiri</h2>
+
+              <p>
+                Pengajuan Surat Keterangan Bebas
+                Temuan yang diajukan langsung oleh
+                pegawai untuk kebutuhan pribadi,
+                administrasi maupun persyaratan
+                tertentu.
+              </p>
+
+              <button
+                className="service-btn"
+                onClick={() =>
+                  navigate(
+                    "/kepegawaian/skbt/mandiri"
+                  )
+                }
+              >
+                Lanjutkan Pengajuan
+              </button>
+            </>
+          )}
+
+          {selectedService ===
+            "organisasi" && (
+            <>
+              <div className="detail-icon">
+                🏢
+              </div>
+
+              <h2>SKBT Organisasi</h2>
+
+              <p>
+                Pengajuan Surat Keterangan Bebas
+                Temuan atas nama unit kerja,
+                satker maupun organisasi untuk
+                kebutuhan administrasi secara
+                resmi.
+              </p>
+
+              <button
+                className="service-btn"
+                onClick={() =>
+                  navigate(
+                    "/kepegawaian/skbt/organisasi"
+                  )
+                }
+              >
+                Lanjutkan Pengajuan
+              </button>
+            </>
+          )}
+
+        </div>
+
+      )}
 
     </div>
   );

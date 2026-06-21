@@ -373,3 +373,276 @@
     flex-direction:column;
   }
 }
+
+/* ==================================
+   PAGE LOAD
+================================== */
+
+.cuti-page{
+  animation:pageFade .8s ease;
+}
+
+@keyframes pageFade{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+/* ==================================
+   BACK BUTTON
+================================== */
+
+.back-button{
+  animation:slideLeft .7s ease;
+}
+
+@keyframes slideLeft{
+  from{
+    opacity:0;
+    transform:translateX(-30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
+}
+
+/* ==================================
+   HEADER ANIMATION
+================================== */
+
+.page-header{
+  animation:
+    headerFade .9s ease,
+    headerFloat 7s ease-in-out infinite;
+}
+
+@keyframes headerFade{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes headerFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+}
+
+/* ==================================
+   HEADER ICON
+================================== */
+
+.header-icon{
+  animation:iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+}
+
+/* ==================================
+   CARD APPEAR
+================================== */
+
+.form-card{
+  animation:cardUp .8s ease both;
+}
+
+.form-card:nth-of-type(1){
+  animation-delay:.2s;
+}
+
+.form-card:nth-of-type(2){
+  animation-delay:.4s;
+}
+
+.form-card:nth-of-type(3){
+  animation-delay:.6s;
+}
+
+@keyframes cardUp{
+  from{
+    opacity:0;
+    transform:translateY(35px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ==================================
+   CARD HOVER
+================================== */
+
+.form-card{
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.form-card:hover{
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 15px 35px rgba(15,23,42,.08);
+}
+
+/* ==================================
+   TIPS BOX
+================================== */
+
+.tips-box{
+  animation:fadeUp .8s ease .5s both;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ==================================
+   INPUT EFFECT
+================================== */
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  transition:
+    .3s ease,
+    transform .3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  transform:translateY(-2px);
+}
+
+/* ==================================
+   UPLOAD BOX
+================================== */
+
+.upload-box{
+  transition:
+    border-color .3s ease,
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.upload-box:hover{
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 15px 35px rgba(37,99,235,.12);
+}
+
+.upload-icon{
+  animation:uploadFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes uploadFloat{
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+}
+
+/* ==================================
+   BUTTON EFFECT
+================================== */
+
+.template-btn,
+.submit-btn,
+.cancel-btn{
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease,
+    background .3s ease;
+}
+
+.template-btn:hover,
+.submit-btn:hover,
+.cancel-btn:hover{
+  transform:translateY(-3px);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.15);
+}
+
+.template-btn:active,
+.submit-btn:active,
+.cancel-btn:active{
+  transform:scale(.97);
+}
+
+/* ==================================
+   ACTION BUTTON APPEAR
+================================== */
+
+.cuti-actions{
+  animation:fadeUp .8s ease .8s both;
+}
+
+.guide-list{
+  list-style:decimal !important;
+  padding-left:30px;
+  margin-top:15px;
+}
+
+.guide-list li{
+  display:list-item;
+  margin-bottom:14px;
+  line-height:1.9;
+  color:#475569;
+}
+
+.guide-list li::marker{
+  color:#000000;
+  font-weight:700;
+}

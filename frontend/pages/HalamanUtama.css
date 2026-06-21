@@ -79,40 +79,67 @@ body {
 
 /* HERO */
 
-.hero {
-  height: 400px;
-  background: linear-gradient(
+.hero{
+  height:400px;
+
+  background:linear-gradient(
     135deg,
     #163059,
     #4f83c0
   );
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 
-  color: white;
-  text-align: center;
+  text-align:center;
+  color:white;
+
+  animation:heroZoom .9s ease;
 }
 
-.hero-content img {
-  width: 120px;
-  margin-bottom: 20px;
+.hero-content{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  width:100%;
 }
 
-.hero-content h1 {
-  font-size: 50px;
-  margin-bottom: 15px;
+.hero-content img{
+  width:120px;
+  height:auto;
+
+  display:block;
+
+  margin:0 auto 25px auto;
+
+  animation:logoFloat 5s ease-in-out infinite;
 }
 
-.hero-content p {
-  font-size: 22px;
-  margin-bottom: 10px;
+.hero-content h1{
+  font-size:52px;
+  font-weight:700;
+
+  margin-bottom:16px;
+
+  animation:slideTitle .8s ease;
 }
 
-.hero-content span {
-  font-size: 18px;
-  opacity: 0.9;
+.hero-content p{
+  font-size:24px;
+
+  margin-bottom:12px;
+
+  animation:slideTitle .8s ease .2s both;
+}
+
+.hero-content span{
+  font-size:18px;
+  opacity:.9;
+
+  animation:slideTitle .8s ease .4s both;
 }
 
 /* SERVICES */
@@ -298,16 +325,35 @@ body {
 }
 
 @keyframes logoFloat{
+
   0%{
-    transform:translateY(0);
+    transform:
+      translateY(0px)
+      rotate(0deg);
+  }
+
+  25%{
+    transform:
+      translateY(-6px)
+      rotate(-1deg);
   }
 
   50%{
-    transform:translateY(-10px);
+    transform:
+      translateY(-12px)
+      rotate(0deg);
+  }
+
+  75%{
+    transform:
+      translateY(-6px)
+      rotate(1deg);
   }
 
   100%{
-    transform:translateY(0);
+    transform:
+      translateY(0px)
+      rotate(0deg);
   }
 }
 

@@ -33,60 +33,51 @@ function Cuti() {
       </div>
 
       {/* PANDUAN PENGGUNAAN */}
-      <div className="guide-card">
+<div className="guide-card">
+  <h2>📋 Panduan Penggunaan Sistem Pengajuan Cuti</h2>
 
-        <h2>
-          📋 Panduan Penggunaan Sistem Pengajuan Cuti
-        </h2>
+  <ol className="guide-list">
+    <li>
+      Klik <strong>Download Template</strong> untuk mengunduh
+      form cuti dalam format Word.
+    </li>
 
-        <ol>
+    <li>
+      Upload Dokumen Cuti pada
+      <strong> Aplikasi Srikandi </strong>
+      + Lampiran (jika ada).
+    </li>
 
-          <li>
-            Klik <strong>Download Template</strong> untuk
-            mengunduh form cuti dalam format Word.
-          </li>
+    <li>
+      Isi Data Pegawai pada form cuti.
+    </li>
 
-          <li>
-            Upload Dokumen Cuti pada
-            <strong> Aplikasi Srikandi </strong>
-            + Lampiran (jika ada).
-          </li>
+    <li>
+      Isi Data Pegawai di form ini,
+      ketik <strong>NIP</strong> lalu klik
+      <strong> Cari</strong>.
+    </li>
 
-          <li>
-            Isi Data Pegawai pada form cuti.
-          </li>
+    <li>
+      Pilih <strong>Jenis Cuti</strong>,
+      isi <strong>Tanggal</strong> dan
+      <strong> Durasi</strong> (hari kerja).
+    </li>
 
-          <li>
-            Isi Data Pegawai di form ini,
-            ketik <strong>NIP</strong> lalu klik
-            <strong> Cari</strong>.
-          </li>
+    <li>
+      Jika sudah di TTE dari Srikandi,
+      <strong> Upload Dokumen + Lampiran</strong>
+      lalu klik
+      <strong> Kirim Pengajuan Cuti</strong>.
+    </li>
 
-          <li>
-            Pilih <strong>Jenis Cuti</strong>,
-            isi <strong> Tanggal </strong>
-            dan <strong> Durasi</strong> (hari kerja).
-          </li>
-
-          <li>
-            Jika sudah di TTE dari Srikandi,
-            <strong> Upload dokumen + Lampiran </strong>
-            (jika ada) lalu klik
-            <strong> Kirim Pengajuan Cuti</strong>.
-          </li>
-
-          <li>
-            Data pengajuan cuti akan diproses oleh tim
-            kepegawaian
-            <strong>
-              {" "}
-              (Muhammad Daffa Daud, S.Sos)
-            </strong>.
-          </li>
-
-        </ol>
-
-      </div>
+    <li>
+      Data pengajuan cuti akan diproses oleh
+      tim kepegawaian
+      <strong> (Muhammad Daffa Daud, S.Sos)</strong>.
+    </li>
+  </ol>
+</div>
 
       {/* DATA PEGAWAI */}
       <div className="form-card">

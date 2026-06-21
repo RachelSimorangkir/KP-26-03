@@ -100,3 +100,107 @@
   }
 
 }
+
+/* =========================
+   CONTAINER MASUK
+========================= */
+
+.welcome-container{
+  animation:containerFade 1s ease;
+}
+
+/* =========================
+   BADGE
+========================= */
+
+.welcome-badge{
+  animation:
+    fadeUp .8s ease,
+    badgeFloat 4s ease-in-out infinite;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.welcome-title{
+  animation:
+    fadeUp .9s ease .2s both;
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.welcome-desc{
+  animation:
+    fadeUp .9s ease .4s both;
+}
+
+/* =========================
+   FLOATING HALUS
+========================= */
+
+.welcome-container > *{
+  transition:all .3s ease;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes containerFade{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes badgeFloat{
+
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+
+}
+
+/* =========================
+   TITLE EFFECT
+========================= */
+
+.welcome-title:hover{
+  transform:translateY(-3px);
+  transition:.3s ease;
+}
+
+/* =========================
+   DESC EFFECT
+========================= */
+
+.welcome-desc:hover{
+  transform:translateY(-2px);
+  transition:.3s ease;
+}
