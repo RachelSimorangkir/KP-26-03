@@ -145,15 +145,11 @@ function SKBTMandiri() {
       {/* BUTTON */}
       <div className="button-group">
 
-        <button className="draft-btn">
-          Simpan Draft
-        </button>
-
         <button
           className="submit-btn"
           onClick={handleSubmit}
         >
-          Ajukan SKBT
+          Ajukan Permohonan
         </button>
 
       </div>

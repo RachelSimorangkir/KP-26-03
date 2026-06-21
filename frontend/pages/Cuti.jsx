@@ -238,7 +238,7 @@ function Cuti() {
       <div className="cuti-actions">
 
   <button className="submit-btn">
-    📤 Kirim Pengajuan Cuti
+    Ajukan Permohonan 
   </button>
 
 </div>
