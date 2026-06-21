@@ -42,7 +42,7 @@ function Login() {
                 className="login-card"
                 onClick={() => navigate("/login-user")}
               >
-                <div className="icon">👤</div>
+                <div className="icon"></div>
 
                 <h3>Login Pegawai</h3>
 
@@ -57,7 +57,7 @@ function Login() {
                 className="login-card"
                 onClick={() => navigate("/login-admin")}
               >
-                <div className="icon">🔐</div>
+                <div className="icon"></div>
 
                 <h3>Login Admin</h3>
 

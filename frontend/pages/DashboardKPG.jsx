@@ -23,17 +23,6 @@ function DashboardKPG() {
           Kementerian Agama Republik Indonesia.
         </p>
 
-        <div className="info-card">
-          <h3>Informasi</h3>
-
-          <p>
-            Silakan memilih layanan yang dibutuhkan melalui menu
-            navigasi di sebelah kiri. Pastikan seluruh dokumen
-            persyaratan telah dipersiapkan sebelum melakukan
-            pengajuan layanan.
-          </p>
-        </div>
-
       </div>
 
     </div>
