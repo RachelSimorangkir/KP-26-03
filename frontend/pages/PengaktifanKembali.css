@@ -355,3 +355,8 @@ input[type="date"]:focus{
 .form-card{
   overflow:hidden;
 }
+
+.stepper{
+  display:none !important;
+}
+

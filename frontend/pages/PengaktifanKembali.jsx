@@ -299,10 +299,6 @@ function PengaktifanKembali() {
 
       <div className="button-group">
 
-        <button className="draft-btn">
-          Simpan Draft
-        </button>
-
         <button className="submit-btn">
           Ajukan Permohonan
         </button>

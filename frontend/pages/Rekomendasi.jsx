@@ -39,7 +39,7 @@ export default function Rekomendasi() {
           className="back-button"
           onClick={() => navigate("/kepegawaian")}
         >
-          ← Kembali ke Menu
+          ← Kembali
         </button>
       </div>
 

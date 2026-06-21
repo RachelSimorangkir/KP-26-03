@@ -98,56 +98,54 @@ export default function DetailPengajuan() {
       <div className="detail-card">
 
         {/* HEADER */}
+{/* HEADER */}
+
+<button
+  className="back-btn"
+  onClick={() => navigate("/admin")}
+>
+  ← Kembali
+</button>
+
 <div className="detail-header">
 
-  <button
-    className="back-btn"
-    onClick={() => navigate("/admin")}
-  >
-    ← Kembali
-  </button>
+  <div className="header-content">
 
-  <div className="header-profile">
+    <div className="profile-section">
 
-    <div className="avatar">
-      {data.nama?.charAt(0)}
-    </div>
+      <div className="avatar-circle">
+        {data.nama?.charAt(0)}
+      </div>
 
-    <div className="profile-info">
+      <div className="header-info">
 
-      <div className="profile-top">
+        <h1>Detail Pengajuan</h1>
 
-        <div>
+        <h2>{data.nama}</h2>
 
-          <h1>
-            Detail Pengajuan
-          </h1>
-
-          <h2>
-            {data.nama}
-          </h2>
-
-          <p>
-            {data.unitKerja || "-"} • {data.tanggal}
-          </p>
-
-        </div>
-
-        <span
-          className={`status-badge ${
-            status === "Menunggu"
-              ? "pending"
-              : status === "Diproses"
-              ? "process"
-              : status === "Disetujui"
-              ? "approved"
-              : "rejected"
-          }`}
-        >
-          {status}
-        </span>
+        <p>
+          {data.unitKerja || "-"} • {data.tanggal}
+        </p>
 
       </div>
+
+    </div>
+
+    <div className="status-section">
+
+      <span
+        className={`status-badge ${
+          status === "Menunggu"
+            ? "pending"
+            : status === "Diproses"
+            ? "process"
+            : status === "Disetujui"
+            ? "approved"
+            : "rejected"
+        }`}
+      >
+        {status}
+      </span>
 
     </div>
 

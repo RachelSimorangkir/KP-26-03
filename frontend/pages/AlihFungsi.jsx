@@ -153,7 +153,7 @@ function AhliFungsi() {
       <div className="submit-wrapper">
 
         <button className="submit-btn">
-          🧩 Kirim Pengajuan Alih Fungsi
+          Ajukan Permohonan
         </button>
 
       </div>

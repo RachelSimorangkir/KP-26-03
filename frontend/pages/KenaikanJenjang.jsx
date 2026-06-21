@@ -210,7 +210,7 @@ function KenaikanJenjang() {
         type="button"
         className="submit-btn"
       >
-        📂 Kirim Pengajuan Kenaikan Jenjang
+        Ajukan Permohonan
       </button>
 
     </div>

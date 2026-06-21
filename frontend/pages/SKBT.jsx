@@ -16,7 +16,7 @@ function SKBT() {
         className="back-button"
         onClick={() => navigate("/kepegawaian")}
       >
-        ← Kembali ke Menu
+        ← Kembali
       </button>
 
       {/* HEADER */}
@@ -70,11 +70,11 @@ function SKBT() {
           </option>
 
           <option value="mandiri">
-            👤 SKBT Mandiri
+            SKBT Mandiri
           </option>
 
           <option value="organisasi">
-            🏢 SKBT Organisasi
+            SKBT Organisasi
           </option>
         </select>
 
@@ -88,7 +88,6 @@ function SKBT() {
           {selectedService === "mandiri" && (
             <>
               <div className="detail-icon">
-                👤
               </div>
 
               <h2>SKBT Mandiri</h2>
@@ -118,7 +117,6 @@ function SKBT() {
             "organisasi" && (
             <>
               <div className="detail-icon">
-                🏢
               </div>
 
               <h2>SKBT Organisasi</h2>

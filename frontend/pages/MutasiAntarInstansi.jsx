@@ -201,7 +201,7 @@ function MutasiInternal() {
       <div className="submit-wrapper">
 
         <button className="submit-btn">
-          🏢 Kirim Pengajuan Mutasi Internal
+          Ajukan Permohonan
         </button>
 
       </div>
