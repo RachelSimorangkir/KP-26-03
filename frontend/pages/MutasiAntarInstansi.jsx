@@ -25,7 +25,7 @@ function MutasiInternal() {
         </div>
 
         <div>
-          <h1>Mutasi Internal Kementerian Agama</h1>
+          <h1>Mutasi Antar Instansi</h1>
 
           <p>
             Pengajuan perpindahan pegawai antar unit kerja
@@ -38,9 +38,9 @@ function MutasiInternal() {
       {/* PERSYARATAN */}
 <div className="info-card">
 
-  <h2>📋 Persyaratan Umum</h2>
+  <h2>Persyaratan Umum</h2>
 
-  <ol>
+<ol className="number-list">
   <li>
     Surat Pengantar dari Pimpinan Unit Kerja Tujuan
     ke Kepala Badan Litbang dan Diklat.
@@ -121,7 +121,7 @@ function MutasiInternal() {
       {/* FORM DATA PEGAWAI */}
 <div className="form-card">
 
-  <h2>👤 Data Pegawai</h2>
+  <h2>Data Pegawai</h2>
 
   <div className="form-grid">
 
@@ -169,7 +169,7 @@ function MutasiInternal() {
       <div className="upload-card">
 
         <div className="upload-header">
-          <span>📁</span>
+          <span></span>
           <h2>Upload Berkas Persyaratan</h2>
         </div>
 

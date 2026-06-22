@@ -38,9 +38,9 @@ function MutasiInternal() {
       {/* PERSYARATAN */}
 <div className="info-card">
 
-  <h2>📋 Persyaratan Umum</h2>
+  <h2>Persyaratan Umum</h2>
 
-  <ol>
+<ol className="number-list">
     <li>Surat Pengantar dari Satuan Kerja.</li>
 
     <li>
@@ -99,7 +99,7 @@ function MutasiInternal() {
       {/* FORM DATA PEGAWAI */}
 <div className="form-card">
 
-  <h2>👤 Data Pegawai</h2>
+  <h2>Data Pegawai</h2>
 
   <div className="form-grid">
 
@@ -147,7 +147,7 @@ function MutasiInternal() {
       <div className="upload-card">
 
         <div className="upload-header">
-          <span>📁</span>
+          <span></span>
           <h2>Upload Berkas Persyaratan</h2>
         </div>
 

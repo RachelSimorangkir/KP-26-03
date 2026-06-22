@@ -36,7 +36,7 @@ function KenaikanJenjang() {
       {/* PERSYARATAN */}
       <div className="requirement-card">
 
-        <h2>📋 Persyaratan Umum</h2>
+        <h2>Persyaratan Umum</h2>
 
         <ol>
           <li>Surat Pengantar dari Pimpinan Unit Kerja.</li>
@@ -179,7 +179,7 @@ function KenaikanJenjang() {
       <div className="upload-card">
 
   <div className="upload-header">
-    <span className="upload-folder">📁</span>
+    <span className="upload-folder"></span>
     <h2>Upload Berkas Persyaratan</h2>
   </div>
 

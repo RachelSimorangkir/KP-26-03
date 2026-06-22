@@ -34,7 +34,7 @@ function Cuti() {
 
       {/* PANDUAN PENGGUNAAN */}
 <div className="guide-card">
-  <h2>📋 Panduan Penggunaan Sistem Pengajuan Cuti</h2>
+  <h2>Panduan Penggunaan Sistem Pengajuan Cuti</h2>
 
   <ol className="guide-list">
     <li>
@@ -82,10 +82,10 @@ function Cuti() {
       {/* DATA PEGAWAI */}
       <div className="form-card">
 
-        <h2>👤 Data Pegawai</h2>
+        <h2>Data Pegawai</h2>
 
         <div className="tips-box">
-          💡 Isi data pegawai sebelum melakukan pengajuan cuti.
+          Isi data pegawai sebelum melakukan pengajuan cuti.
         </div>
 
         <div className="form-grid">
@@ -137,7 +137,7 @@ function Cuti() {
       {/* DETAIL CUTI */}
       <div className="form-card">
 
-        <h2>📅 Detail Cuti</h2>
+        <h2>Detail Cuti</h2>
 
         <div className="form-grid">
 
@@ -183,7 +183,7 @@ function Cuti() {
       {/* DOKUMEN */}
 <div className="form-card">
 
-  <h2>📄 Dokumen Pendukung</h2>
+  <h2>Dokumen Pendukung</h2>
 
   <div className="upload-box">
 
