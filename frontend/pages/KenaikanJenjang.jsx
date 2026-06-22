@@ -16,25 +16,22 @@ function KenaikanJenjang() {
       </button>
 
       {/* HEADER */}
-      <div className="page-header">
+<div className="page-header">
+  <div className="header-icon">📈</div>
 
-        <div className="header-icon">
-          📈
-        </div>
+  <div className="header-content">
+    <h1>
+      Kenaikan Jenjang Jabatan &
+      Perpindahan Dari Jabatan Lain
+    </h1>
 
-        <div className="header-content">
-          <h1>
-            Kenaikan Jenjang Jabatan &
-            Perpindahan Dari Jabatan Lain
-          </h1>
-
-          <p>
-            Pengajuan kenaikan jenjang jabatan fungsional
-            dan perpindahan dari jabatan lain secara elektronik.
-          </p>
-        </div>
-
-      </div>
+    <p>
+      Pengajuan kenaikan jenjang jabatan
+      fungsional dan perpindahan dari
+      jabatan lain secara elektronik.
+    </p>
+  </div>
+</div>
 
       {/* PERSYARATAN */}
       <div className="requirement-card">

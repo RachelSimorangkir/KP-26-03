@@ -48,9 +48,14 @@
    HEADER
 ========================= */
 
+/* =========================
+   HEADER
+========================= */
+
 .page-header{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
+
   gap:24px;
 
   padding:35px 40px;
@@ -67,6 +72,43 @@
   color:white;
 
   margin-bottom:30px;
+
+  position:relative;
+  overflow:hidden;
+}
+
+.page-header::before{
+  content:"";
+
+  position:absolute;
+
+  top:-60px;
+  right:-60px;
+
+  width:180px;
+  height:180px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.08);
+}
+
+.page-header::after{
+  content:"";
+
+  position:absolute;
+
+  bottom:-80px;
+  left:-40px;
+
+  width:180px;
+  height:180px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.05);
 }
 
 .header-icon{
@@ -85,30 +127,46 @@
   font-size:40px;
 
   flex-shrink:0;
+
+  z-index:2;
 }
 
 .header-content{
   flex:1;
+
+  display:flex;
+  flex-direction:column;
+
+  align-items:flex-start; /* rata kiri */
+
+  text-align:left; /* rata kiri */
 }
 
 .header-content h1{
-  margin:0 0 10px;
+  width:100%;
 
-  font-size:52px;
+  margin:0 0 10px 0;
+
+  text-align:left;
+
+  font-size:42px;
   font-weight:800;
 
   color:white;
 }
 
 .header-content p{
+  width:100%;
+
   margin:0;
 
-  color:
-    rgba(255,255,255,.9);
+  text-align:left;
 
-  font-size:18px;
+  color:rgba(255,255,255,.9);
 
-  line-height:1.7;
+  font-size:16px;
+
+  line-height:1.8;
 }
 
 /* =========================

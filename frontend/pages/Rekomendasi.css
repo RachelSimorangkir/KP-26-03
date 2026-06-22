@@ -309,23 +309,24 @@
 
 .layanan-card{
   background:white;
-
   border:none;
-
   border-radius:26px;
 
   padding:32px;
 
   position:relative;
-
   overflow:hidden;
 
   box-shadow:
     0 12px 30px rgba(15,23,42,.06);
 
   transition:.35s;
-
   animation:cardUp .7s ease both;
+
+  /* TAMBAHAN */
+  display:flex;
+  flex-direction:column;
+  height:100%;
 }
 
 .layanan-card::before{
@@ -406,10 +407,12 @@
   color:#64748b;
 
   line-height:1.9;
-
   font-size:15px;
 
-  margin-bottom:18px;
+  margin-bottom:20px;
+
+  /* TAMBAHAN */
+  flex:1;
 }
 
 .layanan-card span{
@@ -420,12 +423,15 @@
   border-radius:12px;
 
   background:#eff6ff;
-
   color:#2563eb;
 
   font-weight:700;
 
   transition:.3s;
+
+  /* TAMBAHAN */
+  margin-top:auto;
+  align-self:flex-start;
 }
 
 .layanan-card:hover span{

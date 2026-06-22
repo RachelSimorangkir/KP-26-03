@@ -16,22 +16,18 @@ function AhliFungsi() {
       </button>
 
       {/* HEADER */}
-      <div className="page-header">
+<div className="page-header">
+  <div className="header-icon">🧩</div>
 
-        <div className="header-icon">
-          🧩
-        </div>
+  <div className="header-content">
+    <h1>Alih Fungsi</h1>
 
-        <div className="header-content">
-          <h1>Alih Fungsi</h1>
-
-          <p>
-            Pengajuan alih fungsi jabatan pegawai sesuai
-            kebutuhan organisasi dan ketentuan yang berlaku.
-          </p>
-        </div>
-
-      </div>
+    <p>
+      Pengajuan alih fungsi jabatan pegawai sesuai
+      kebutuhan organisasi dan ketentuan yang berlaku.
+    </p>
+  </div>
+</div>
 
       {/* FORM */}
       <div className="form-card">
