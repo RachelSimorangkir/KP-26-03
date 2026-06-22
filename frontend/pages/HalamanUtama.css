@@ -8,12 +8,30 @@ body,
   padding:0;
 }
 
-.navbar,
 .hero,
 .footer{
   width:100%;
 }
 
+.navbar{
+  height:85px;
+
+  background:
+    rgba(255,255,255,.95);
+
+  backdrop-filter:blur(15px);
+
+  position:sticky;
+  top:0;
+
+  z-index:999;
+
+  border-bottom:
+    1px solid rgba(0,0,0,.05);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.05);
+}
 * {
   margin: 0;
   padding: 0;
@@ -66,27 +84,56 @@ body {
   font-weight: 500;
 }
 
-.login-btn {
-  background: #2563eb;
-  color: white;
+.login-btn{
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6
+    );
 
-  border: none;
-  padding: 12px 20px;
+  color:white;
 
-  border-radius: 10px;
-  cursor: pointer;
+  border:none;
+
+  padding:12px 24px;
+
+  border-radius:14px;
+
+  font-weight:600;
+
+  transition:.3s;
+}
+
+.login-btn:hover{
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 12px 25px rgba(37,99,235,.25);
 }
 
 /* HERO */
 
 .hero{
-  height:400px;
+  min-height:520px;
 
-  background:linear-gradient(
-    135deg,
-    #163059,
-    #4f83c0
-  );
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255,255,255,.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(255,255,255,.08),
+      transparent 40%
+    ),
+    linear-gradient(
+      135deg,
+      #163b67,
+      #2563eb
+    );
 
   display:flex;
   justify-content:center;
@@ -95,7 +142,43 @@ body {
   text-align:center;
   color:white;
 
-  animation:heroZoom .9s ease;
+  position:relative;
+
+  overflow:hidden;
+}
+
+.hero::before{
+  content:"";
+
+  position:absolute;
+
+  width:450px;
+  height:450px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.05);
+
+  top:-150px;
+  right:-120px;
+}
+
+.hero::after{
+  content:"";
+
+  position:absolute;
+
+  width:300px;
+  height:300px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.04);
+
+  bottom:-100px;
+  left:-100px;
 }
 
 .hero-content{
@@ -146,9 +229,15 @@ body {
 
 .services{
   width:100%;
-  max-width:1400px;
-  margin:0 auto;
-  padding:80px 40px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #f8fafc,
+      #eef2f7
+    );
+
+  padding:90px 40px;
 }
 
 .services h2{
@@ -171,27 +260,49 @@ body {
 .service-card{
   background:white;
 
-  padding:40px 30px;
+  padding:45px 35px;
 
-  border-radius:20px;
+  border-radius:24px;
 
   text-align:center;
 
   cursor:pointer;
 
+  position:relative;
+
+  overflow:hidden;
+
   box-shadow:
-    0 4px 15px rgba(0,0,0,.08);
+    0 15px 35px rgba(0,0,0,.08);
 
-  min-height:280px;
+  transition:.35s;
+}
 
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+.service-card::before{
+  content:"";
 
-  transition:
-    transform .3s ease,
-    box-shadow .3s ease;
+  position:absolute;
+
+  top:0;
+  left:0;
+
+  width:100%;
+  height:5px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2563eb,
+      #60a5fa
+    );
+
+  transform:scaleX(0);
+
+  transition:.3s;
+}
+
+.service-card:hover::before{
+  transform:scaleX(1);
 }
 
 .service-card:hover{
@@ -202,16 +313,25 @@ body {
 }
 
 .service-icon{
-  width:74px;
-  height:74px;
+  width:90px;
+  height:90px;
 
-  background:#eef4ff;
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #dbeafe
+    );
 
-  border-radius:20px;
+  border-radius:24px;
 
-  margin-bottom:24px;
+  margin-bottom:25px;
 
-  transition:.3s;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:40px;
 }
 
 .service-card:hover .service-icon{
@@ -245,21 +365,31 @@ body {
 
 /* FOOTER */
 
-.footer {
-  background: #111827;
-  color: white;
+.footer{
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #020617
+    );
 
-  text-align: center;
+  color:white;
 
-  padding: 40px;
+  text-align:center;
+
+  padding:60px 40px;
 }
 
-.footer h3 {
-  margin-bottom: 10px;
+.footer h3{
+  margin-bottom:12px;
+
+  font-size:24px;
 }
 
-.footer p {
-  opacity: 0.8;
+.footer p{
+  opacity:.8;
+
+  line-height:1.8;
 }
 
 /* ===================================

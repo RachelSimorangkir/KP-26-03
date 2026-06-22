@@ -5,19 +5,45 @@ import "./LoginAdmin.css";
 function LoginAdmin() {
   const navigate = useNavigate();
 
-  const [username, setUsername] =
+  const [selectedRole, setSelectedRole] =
+    useState("");
+
+  const [nip, setNip] =
     useState("");
 
   const [password, setPassword] =
     useState("");
 
+  const adminAccounts = [
+    {
+      nip: "198701012010011001",
+      password: "admin123",
+      division: "kepegawaian",
+      name: "Admin Kepegawaian",
+    },
+    {
+      nip: "198702022011011002",
+      password: "admin123",
+      division: "bmn",
+      name: "Admin BMN",
+    },
+    {
+      nip: "198703032012011003",
+      password: "admin123",
+      division: "humas",
+      name: "Admin Humas & Data",
+    },
+  ];
+
   const handleLogin = () => {
+    const admin = adminAccounts.find(
+      (item) =>
+        item.nip === nip &&
+        item.password === password &&
+        item.division === selectedRole
+    );
 
-    if (
-      username === "admin" &&
-      password === "admin123"
-    ) {
-
+    if (admin) {
       localStorage.setItem(
         "isLoggedIn",
         "true"
@@ -29,24 +55,43 @@ function LoginAdmin() {
       );
 
       localStorage.setItem(
+        "adminDivision",
+        admin.division
+      );
+
+      localStorage.setItem(
         "userName",
-        "Administrator"
+        admin.name
+      );
+
+      localStorage.setItem(
+        "userNIP",
+        admin.nip
       );
 
       navigate("/admin");
-
     } else {
-
       alert(
-        "Username atau Password salah!"
+        "NIP atau Password salah!"
       );
+    }
+  };
 
+  const getRoleTitle = () => {
+    switch (selectedRole) {
+      case "kepegawaian":
+        return "Admin Kepegawaian";
+      case "bmn":
+        return "Admin BMN";
+      case "humas":
+        return "Admin Humas & Data";
+      default:
+        return "";
     }
   };
 
   return (
     <div className="login-admin-page">
-
       <div className="login-admin-container">
 
         {/* KIRI */}
@@ -71,73 +116,136 @@ function LoginAdmin() {
         {/* KANAN */}
         <div className="login-admin-right">
 
-          <form
-            className="login-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleLogin();
-            }}
-          >
+          {!selectedRole ? (
 
-            <h2>Masuk Sebagai Admin</h2>
+            <div className="role-selection">
 
-            <div className="form-group">
+              <h2>
+                Pilih Divisi Admin
+              </h2>
 
-              <label>Username</label>
-
-              <input
-                type="text"
-                placeholder="Masukkan Username"
-                value={username}
-                onChange={(e) =>
-                  setUsername(
-                    e.target.value
+              <button
+                className="role-btn"
+                onClick={() =>
+                  setSelectedRole(
+                    "kepegawaian"
                   )
                 }
-              />
+              >
+                👤 Admin Kepegawaian
+              </button>
+
+              <button
+                className="role-btn"
+                onClick={() =>
+                  setSelectedRole(
+                    "bmn"
+                  )
+                }
+              >
+                📦 Admin BMN
+              </button>
+
+              <button
+                className="role-btn"
+                onClick={() =>
+                  setSelectedRole(
+                    "humas"
+                  )
+                }
+              >
+                📊 Admin Humas & Data
+              </button>
+
+              <button
+                className="back-btn"
+                onClick={() =>
+                  navigate("/login")
+                }
+              >
+                ← Kembali
+              </button>
 
             </div>
 
-            <div className="form-group">
+          ) : (
 
-              <label>Password</label>
-
-              <input
-                type="password"
-                placeholder="Masukkan Password"
-                value={password}
-                onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
-                }
-              />
-
-            </div>
-
-            <button
-              type="submit"
-              className="login-submit"
+            <form
+              className="login-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleLogin();
+              }}
             >
-              Login Admin
-            </button>
 
-            <button
-              type="button"
-              className="back-btn"
-              onClick={() =>
-                navigate("/login")
-              }
-            >
-              ← Kembali
-            </button>
+              <h2>
+                {getRoleTitle()}
+              </h2>
 
-          </form>
+              <div className="form-group">
+
+                <label>
+                  NIP
+                </label>
+
+                <input
+                  type="text"
+                  placeholder="Masukkan NIP"
+                  value={nip}
+                  onChange={(e) =>
+                    setNip(
+                      e.target.value
+                    )
+                  }
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label>
+                  Password
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="Masukkan Password"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(
+                      e.target.value
+                    )
+                  }
+                />
+
+              </div>
+
+              <button
+                type="submit"
+                className="login-submit"
+              >
+                Login
+              </button>
+
+              <button
+                type="button"
+                className="back-btn"
+                onClick={() => {
+                  setSelectedRole("");
+                  setNip("");
+                  setPassword("");
+                }}
+              >
+                ← Ganti Divisi
+              </button>
+
+            </form>
+
+          )}
 
         </div>
 
       </div>
-
     </div>
   );
 }
