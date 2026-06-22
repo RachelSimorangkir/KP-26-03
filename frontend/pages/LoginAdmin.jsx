@@ -132,7 +132,7 @@ function LoginAdmin() {
                   )
                 }
               >
-                👤 Admin Kepegawaian
+                Admin Kepegawaian
               </button>
 
               <button
@@ -143,7 +143,7 @@ function LoginAdmin() {
                   )
                 }
               >
-                📦 Admin BMN
+                Admin BMN
               </button>
 
               <button
@@ -154,7 +154,7 @@ function LoginAdmin() {
                   )
                 }
               >
-                📊 Admin Humas & Data
+                Admin Humas & Data
               </button>
 
               <button
