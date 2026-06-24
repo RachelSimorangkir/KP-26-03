@@ -13,30 +13,19 @@ export default function HumasPublish() {
     namaPengusul: USER_PROFILE.nama,
     satuanKerja: USER_PROFILE.satuanKerja,
     judul: "",
-    asalInstansi: "Kanwil",
-    provinsi: "",
-    kabupaten: "",
     kategori: "Pendidikan",
     tanggalKegiatan: "",
-    waktuKegiatan: "",
     lokasiKegiatan: "",
     isiBerita: "",
     foto: [],
     fotoPreviews: [],
-    videoLink: "",
-    penulis: USER_PROFILE.nama,
-    kontak: "",
     atasan: "",
-    status: "Draft",
-    tanggalPengajuan: "",
-    tanggalTerbit: "",
   });
 
   const [errors, setErrors] = useState({});
+  const editorRef = useRef(null);
 
   useEffect(() => {
-    const now = new Date().toISOString().slice(0, 16);
-    setForm((s) => ({ ...s, tanggalPengajuan: now }));
     return () => {
       // revoke any object URLs
       form.fotoPreviews.forEach((p) => p && p.url && URL.revokeObjectURL(p.url));
@@ -44,16 +33,21 @@ export default function HumasPublish() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (form.status === "Terbit") {
-      const now = new Date().toISOString();
-      setForm((s) => ({ ...s, tanggalTerbit: now }));
-    }
-  }, [form.status]);
-
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
+  }
+
+  function handleEditorInput() {
+    if (editorRef.current) {
+      setForm((s) => ({ ...s, isiBerita: editorRef.current.innerHTML }));
+    }
+  }
+
+  function exec(command, value = null) {
+    document.execCommand(command, false, value);
+    editorRef.current?.focus();
+    handleEditorInput();
   }
 
   function handleFile(e) {
@@ -82,7 +76,8 @@ export default function HumasPublish() {
     if (!form.kategori) err.kategori = "Kategori wajib";
     if (!form.tanggalKegiatan) err.tanggalKegiatan = "Tanggal kegiatan wajib";
     if (!form.lokasiKegiatan) err.lokasiKegiatan = "Lokasi kegiatan wajib";
-    if (!form.isiBerita) err.isiBerita = "Isi berita wajib";
+    const text = (editorRef.current?.innerText || "").trim();
+    if (!text) err.isiBerita = "Isi berita wajib";
     if (!form.foto || form.foto.length === 0) err.foto = "Minimal 1 file pendukung";
     if (!form.atasan) err.atasan = "Atasan penyetuju wajib";
     return err;
@@ -93,20 +88,20 @@ export default function HumasPublish() {
     const err = validate();
     setErrors(err);
     if (Object.keys(err).length > 0) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => {
-      if (k === 'foto' || k === 'fotoPreviews') return;
+      if (k === "foto" || k === "fotoPreviews") return;
       if (v !== undefined && v !== null) fd.append(k, v);
     });
-    form.foto.forEach((f) => fd.append('foto[]', f));
+    form.foto.forEach((f) => fd.append("foto[]", f));
 
-    console.log('Submitting Humas form, action=', action);
+    console.log("Submitting Humas form, action=", action);
     for (const pair of fd.entries()) console.log(pair[0], pair[1]);
-    alert('Form dikirim: ' + action + '. Periksa console untuk detail.');
+    alert("Form dikirim: " + action + ". Periksa console untuk detail.");
   }
 
   return (
@@ -116,7 +111,7 @@ export default function HumasPublish() {
         <p>Isi data pengajuan sesuai format untuk proses editorial dan verifikasi</p>
       </header>
 
-      <form className="hp-form" onSubmit={(e) => handleSubmit(e, "submit") }>
+      <form className="hp-form" onSubmit={(e) => handleSubmit(e, "submit")}>
         {Object.keys(errors).length > 0 && (
           <div className="hp-errors">
             {Object.values(errors).map((er, i) => (
@@ -126,6 +121,7 @@ export default function HumasPublish() {
         )}
 
         <div className="hp-grid">
+          {/* ===== Informasi Pengusul ===== */}
           <div className="section fullwidth">
             <h3 className="section-title">Informasi Pengusul</h3>
           </div>
@@ -144,21 +140,16 @@ export default function HumasPublish() {
 
           <label>
             <div className="field-title">Satuan Kerja Pengusul <span className="required">*</span></div>
-            <select name="satuanKerja" value={form.satuanKerja} onChange={handleChange} required>
-              <option>Kanwil</option>
-              <option>Kab-Kota</option>
-              <option>PTKK</option>
-              <option>SPKK</option>
-              <option>Pusat</option>
-            </select>
+            <input name="satuanKerja" value={form.satuanKerja} readOnly />
             {errors.satuanKerja && <small className="error">{errors.satuanKerja}</small>}
           </label>
 
+          {/* ===== Detail Kegiatan ===== */}
           <div className="section fullwidth">
             <h3 className="section-title">Detail Kegiatan</h3>
           </div>
 
-          <label>
+          <label className="fullwidth">
             <div className="field-title">Judul Berita <span className="required">*</span></div>
             <input name="judul" value={form.judul} onChange={handleChange} required />
             {errors.judul && <small className="error">{errors.judul}</small>}
@@ -178,31 +169,62 @@ export default function HumasPublish() {
 
           <label>
             <div className="field-title">Tanggal Kegiatan <span className="required">*</span></div>
-            <input type="date" name="tanggalKegiatan" value={form.tanggalKegiatan} onChange={handleChange} required />
+            <input
+              type="date"
+              name="tanggalKegiatan"
+              value={form.tanggalKegiatan}
+              onChange={handleChange}
+              required
+            />
             {errors.tanggalKegiatan && <small className="error">{errors.tanggalKegiatan}</small>}
           </label>
 
-          <label>
-            <div className="field-title">Waktu Kegiatan</div>
-            <input type="time" name="waktuKegiatan" value={form.waktuKegiatan} onChange={handleChange} />
-          </label>
-
-          <label>
+          <label className="fullwidth">
             <div className="field-title">Lokasi Kegiatan <span className="required">*</span></div>
-            <input name="lokasiKegiatan" value={form.lokasiKegiatan} onChange={handleChange} required />
+            <input
+              name="lokasiKegiatan"
+              value={form.lokasiKegiatan}
+              onChange={handleChange}
+              required
+            />
             {errors.lokasiKegiatan && <small className="error">{errors.lokasiKegiatan}</small>}
           </label>
 
+          {/* ===== Konten Berita (Rich Text Editor) ===== */}
           <div className="section fullwidth">
             <h3 className="section-title">Konten Berita</h3>
           </div>
 
           <label className="fullwidth">
             <div className="field-title">Isi Berita / Narasi <span className="required">*</span></div>
-            <textarea name="isiBerita" value={form.isiBerita} onChange={handleChange} required rows={8} />
+            <div className="rte-toolbar">
+              <button type="button" onClick={() => exec("bold")} title="Bold"><b>B</b></button>
+              <button type="button" onClick={() => exec("italic")} title="Italic"><i>I</i></button>
+              <button type="button" onClick={() => exec("underline")} title="Underline"><u>U</u></button>
+              <button type="button" onClick={() => exec("insertUnorderedList")} title="Bullet List">• List</button>
+              <button type="button" onClick={() => exec("insertOrderedList")} title="Numbered List">1. List</button>
+              <button type="button" onClick={() => exec("formatBlock", "h2")} title="Heading">H2</button>
+              <button type="button" onClick={() => exec("formatBlock", "p")} title="Paragraph">P</button>
+            </div>
+            <div
+              ref={editorRef}
+              className="rte-editor"
+              contentEditable
+              suppressContentEditableWarning
+              onInput={handleEditorInput}
+              style={{
+                minHeight: "180px",
+                border: "1px solid #d0d7de",
+                borderRadius: "6px",
+                padding: "10px 12px",
+                outline: "none",
+                backgroundColor: "#fff",
+              }}
+            />
             {errors.isiBerita && <small className="error">{errors.isiBerita}</small>}
           </label>
 
+          {/* ===== Media & Lampiran ===== */}
           <div className="section fullwidth">
             <h3 className="section-title">Media & Lampiran</h3>
           </div>
@@ -215,20 +237,27 @@ export default function HumasPublish() {
             <div className="preview">
               {form.fotoPreviews.map((p, i) => (
                 <div key={i} className="thumb">
-                  {p.file.type.startsWith('image') ? (
+                  {p.file.type.startsWith("image") ? (
                     <img src={p.url} alt={p.name} />
                   ) : (
                     <div className="video-placeholder">{p.name}</div>
                   )}
                   <div className="thumb-meta">
                     <div className="thumb-name">{p.name}</div>
-                    <button type="button" className="thumb-remove" onClick={() => removePreview(i)}>Hapus</button>
+                    <button
+                      type="button"
+                      className="thumb-remove"
+                      onClick={() => removePreview(i)}
+                    >
+                      Hapus
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </label>
 
+          {/* ===== Persetujuan ===== */}
           <div className="section fullwidth">
             <h3 className="section-title">Persetujuan</h3>
           </div>
@@ -243,34 +272,14 @@ export default function HumasPublish() {
             </select>
             {errors.atasan && <small className="error">{errors.atasan}</small>}
           </label>
-
-          <div className="section fullwidth">
-            <h3 className="section-title">Kontak & Tanggal</h3>
-          </div>
-
-          <label>
-            <div className="field-title">Nama Penulis / Kontributor</div>
-            <input name="penulis" value={form.penulis} onChange={handleChange} />
-          </label>
-
-          <label>
-            <div className="field-title">Kontak Penulis (HP/Email)</div>
-            <input name="kontak" value={form.kontak} onChange={handleChange} />
-          </label>
-
-          <label>
-            <div className="field-title">Tanggal Pengajuan</div>
-            <input name="tanggalPengajuan" value={form.tanggalPengajuan} readOnly />
-          </label>
-
-          <label>
-            <div className="field-title">Tanggal Terbit</div>
-            <input name="tanggalTerbit" value={form.tanggalTerbit} readOnly />
-          </label>
         </div>
 
         <div className="hp-actions">
-          <button type="button" className="btn-secondary" onClick={(e) => handleSubmit(e, "draft")}>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={(e) => handleSubmit(e, "draft")}
+          >
             Simpan Draft
           </button>
           <button type="submit" className="btn-primary">

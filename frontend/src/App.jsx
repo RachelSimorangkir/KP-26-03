@@ -17,7 +17,7 @@ import HumasDataRequest from "../pages/HumasDataRequest";
 import Helpdesk from "../pages/Helpdesk";
 import PPIDRequest from "../pages/PPIDRequest";
 import DIPUpload from "../pages/DIPUpload";
-import DIPStatus from "../pages/DIPStatus";
+import DIPStatus from '../pages/DIPStatus';
 import PPIDAdminDashboard from "../pages/PPIDAdminDashboard";
 
 function App() {

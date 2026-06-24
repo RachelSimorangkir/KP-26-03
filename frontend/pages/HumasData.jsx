@@ -19,6 +19,7 @@ const menuItems = [
     icon: "📊",
     services: [
       { title: "Penyediaan Data & Informasi", desc: "Penyediaan data dan informasi Bimas Kristen sesuai kebutuhan pemangku kepentingan.", path: "/humas/data-request" },
+      { title: "Daftar & Status Pengajuan Saya", desc: "Lihat status dan riwayat pengajuan publikasi Anda.", path: "/humas/my-submissions" },
     ]
   },
   {
@@ -27,6 +28,7 @@ const menuItems = [
     icon: "🖥️",
     services: [
       { title: "Helpdesk & Pendampingan", desc: "Layanan bantuan teknis (helpdesk) dan pendampingan penggunaan aplikasi.", path: "/helpdesk" },
+      { title: "Daftar & Status Pengajuan Saya", desc: "Lihat status dan riwayat pengajuan publikasi Anda.", path: "/humas/my-submissions" },
     ]
   },
   {
@@ -35,7 +37,7 @@ const menuItems = [
     icon: "📝",
     services: [
       { title: "Upload DIP Tahunan", desc: "Unggah Dokumen Daftar Informasi Publik (DIP) per bidang.", path: "/ppid/dip/upload" },
-      { title: "Status Upload DIP", desc: "Lihat status upload DIP bidang Anda dan notifikasi.", path: "/ppid/dip/status" },
+      { title: "Daftar & Status Pengajuan Saya", desc: "Lihat status dan riwayat pengajuan publikasi Anda.", path: "/humas/my-submissions" },
     ]
   }
 ];
