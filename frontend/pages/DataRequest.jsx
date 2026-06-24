@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./HumasPublish.css";
+
 
 const USER_PROFILE = {
   nip: "197001011990031001",

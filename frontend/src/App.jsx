@@ -2,18 +2,13 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "../components/ScrollToTop";
-
 import HalamanUtama from "../pages/HalamanUtama";
-
 import Login from "../pages/Login";
 import LoginUser from "../pages/LoginUser";
 import LoginAdmin from "../pages/LoginAdmin";
-
 import DashboardPegawai from "../pages/DashboardPegawai";
-
 import Kepegawaian from "../pages/Kepegawaian";
 import DashboardKPG from "../pages/DashboardKPG";
-
 import Rekomendasi from "../pages/Rekomendasi";
 import PengaktifanKembali from "../pages/PengaktifanKembali";
 import KenaikanJenjang from "../pages/KenaikanJenjang";
@@ -21,9 +16,7 @@ import MutasiPromosi from "../pages/MutasiPromosi";
 import MutasiInternal from "../pages/MutasiInternal";
 import MutasiAntarInstansi from "../pages/MutasiAntarInstansi";
 import AlihFungsi from "../pages/AlihFungsi";
-
 import Cuti from "../pages/Cuti";
-
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
@@ -31,18 +24,15 @@ import SKBTOrganisasi from "../pages/SKBTOrganisasi";
 /* ADMIN */
 import AdminDashboard from "./admin/AdminDashboard";
 import DetailPengajuan from "./admin/DetailPengajuan";
-import HumasData from "../pages/HumasData";
-import HumasPublish from "../pages/HumasPublish";
-import HumasAdminPenyetuju from "../pages/HumasAdminPenyetuju";
-import HumasAdminVerifikator from "../pages/HumasAdminVerifikator";
-import HumasMySubmissions from "../pages/HumasMySubmissions";
 import DataRequest from "../pages/DataRequest";
-import HumasDataRequest from "../pages/HumasDataRequest";
-import Helpdesk from "../pages/Helpdesk";
 import PPIDRequest from "../pages/PPIDRequest";
-import DIPUpload from "../pages/DIPUpload";
-import DIPStatus from '../pages/DIPStatus';
 import PPIDAdminDashboard from "../pages/PPIDAdminDashboard";
+
+/*Humas */
+import HumasData from "../pages/Humas/HumasData";
+import DashboardHumas from "../pages/Humas/DashboardHumas"; 
+
+
 
 function App() {
   return (
@@ -149,6 +139,8 @@ function App() {
 
         </Route>
 
+        {/* COMMENT OUT SEMUA ROUTE YANG KOMPONENNYA BELUM ADA */}
+        {/* 
         <Route 
           path="/humas-data" 
           element={<HumasData />} 
@@ -173,18 +165,26 @@ function App() {
           path="/humas/data-request"
           element={<HumasDataRequest />}
         />
+        */}
+
         <Route
           path="/data/request"
           element={<DataRequest />}
         />
+
+        {/* 
         <Route
           path="/helpdesk"
           element={<Helpdesk />}
         />
+        */}
+
         <Route
           path="/ppid/request"
           element={<PPIDRequest />}
         />
+
+        {/* 
         <Route
           path="/ppid/dip/upload"
           element={<DIPUpload />}
@@ -193,6 +193,8 @@ function App() {
           path="/ppid/dip/status"
           element={<DIPStatus />}
         />
+        */}
+
         <Route
           path="/ppid/admin/dip"
           element={<PPIDAdminDashboard />}
@@ -208,15 +210,26 @@ function App() {
           }
         />
 
+        
         {/* HUMAS */}
-        <Route
-          path="/humas-data"
-          element={
-            <h2>
-              Halaman Humas & Data Sedang Dikembangkan
-            </h2>
-          }
-        />
+        <Route path="/humas-data" element={<HumasData />}>
+        {/* Default: tampilkan DashboardHumas saat akses /humas-data */}
+       <Route index element={<DashboardHumas />} />
+  
+        {/* Sub-halaman lainnya */}
+        <Route 
+         path="publikasi" 
+         element={<h2>Publikasi Berita Kegiatan</h2>} />
+        <Route 
+         path="permintaan" 
+         element={<h2>Permintaan Data Internal</h2>} />
+        <Route 
+         path="helpdesk" 
+         element={<h2>Helpdesk</h2>} />
+        <Route 
+         path="permohonan" 
+         element={<h2>Permohonan/Keberatan</h2>} />
+        </Route>
 
         {/* ADMIN */}
         <Route

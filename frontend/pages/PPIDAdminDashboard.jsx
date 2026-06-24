@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./DIP.css";
+
 
 const FIELDS = [
   'Keuangan','Perencanaan','Humas','Data','Evaluasi','Sistem Informasi','Ortala Kepegawaian','Umum','BMN'
