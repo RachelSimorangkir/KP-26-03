@@ -1,89 +1,164 @@
+/* eslint-disable no-undef */
 import "./App.css";
-
-const services = [
-  "Kenaikan Pangkat",
-  "Tugas Belajar",
-  "Pencantuman Gelar Akademik",
-  "Pensiun",
-  "Satya Lencana",
-  "Perubahan Jabatan Pelaksana",
-  "Daftar Pelantikan",
-  "Peninjauan Masa Kerja (PMK)",
-  "Usul Ujikom JF",
-  "Mutasi Dalam Internal Kemenag",
-  "Mutasi Antar Instansi",
-  "Pengajuan Cuti Pegawai",
-];
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "../components/ScrollToTop";
+import HalamanUtama from "../pages/HalamanUtama";
+import Kepegawaian from "../pages/Kepegawaian";
+import DashboardKepegawaian from "../pages/DashboardKepegawaian";
+import KenaikanPangkat from "../pages/KenaikanPangkat";
+import TugasBelajar from "../pages/TugasBelajar";
+import HumasData from "../pages/HumasData";
+import HumasPublish from "../pages/HumasPublish";
+import HumasAdminPenyetuju from "../pages/HumasAdminPenyetuju";
+import HumasAdminVerifikator from "../pages/HumasAdminVerifikator";
+import HumasMySubmissions from "../pages/HumasMySubmissions";
+import DataRequest from "../pages/DataRequest";
+import HumasDataRequest from "../pages/HumasDataRequest";
+import Helpdesk from "../pages/Helpdesk";
+import PPIDRequest from "../pages/PPIDRequest";
+import DIPUpload from "../pages/DIPUpload";
+import DIPStatus from '../pages/DIPStatus';
+import PPIDAdminDashboard from "../pages/PPIDAdminDashboard";
 
 function App() {
   return (
-    <div className="app">
-      <nav className="navbar">
-        <div className="logo-section">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt=""
+    <BrowserRouter>
+      <ScrollToTop />
+
+      <Routes>
+
+        {/* Portal Utama */}
+        <Route
+          path="/"
+          element={<HalamanUtama />}
+        />
+
+        {/* Modul Kepegawaian */}
+        <Route
+          path="/kepegawaian"
+          element={<Kepegawaian />}
+        >
+          {/* Halaman Default */}
+          <Route
+            index
+            element={<DashboardKepegawaian />}
           />
-          <h2>Layanan Kepegawaian</h2>
-        </div>
 
-        <div className="menu">
-          <a href="/">Beranda</a>
-          <a href="/">Kontak</a>
-
-          <button className="login-btn">
-            🔐 Login Admin
-          </button>
-        </div>
-      </nav>
-
-      <section className="hero">
-        <div className="hero-left">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt=""
+          {/* layanan kenaikan pangkat*/}
+          <Route
+            path="kenaikan-pangkat"
+            element={<KenaikanPangkat />}
           />
-        </div>
 
-        <div className="hero-right">
-          <h1>LAYANAN KEPEGAWAIAN</h1>
-          <h2>BMBPSDM</h2>
-          <p>Kementerian Agama RI</p>
-        </div>
-      </section>
+          {/* layanan tugas belajar */}
+          <Route
+            path="tugas-belajar"
+            element={<TugasBelajar />}
+          />
 
-      <section className="services">
-        <h2>Pilih Layanan Kepegawaian</h2>
+          <Route
+            path="gelar-akademik"
+            element={<h2>Gelar Akademik</h2>}
+          />
 
-        <div className="grid">
-          {services.map((item, index) => (
-            <div className="card" key={index}>
-              <div className="icon">📄</div>
-              <h3>{item}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
+          <Route
+            path="pensiun"
+            element={<h2>Pensiun</h2>}
+          />
 
-      <footer>
-        <h2>Ada pertanyaan?</h2>
+          <Route
+            path="satya-lencana"
+            element={<h2>Satya Lencana</h2>}
+          />
 
-        <p>
-          Informasi selengkapnya hubungi PIC Layanan Kepegawaian
-        </p>
+          <Route
+            path="perubahan-jabatan"
+            element={<h2>Perubahan Jabatan</h2>}
+          />
 
-        <h3>Sudirman Abdullah, S.Pd., M.Pd</h3>
+          <Route
+            path="daftar-pelantikan"
+            element={<h2>Daftar Pelantikan</h2>}
+          />
 
-        <button className="wa-btn">
-          Laporkan Kendala via WhatsApp
-        </button>
+          <Route
+            path="pmk"
+            element={<h2>PMK</h2>}
+          />
 
-        <p className="address">
-          Gedung Kementerian Agama Lantai 18,
-          Jalan M.H. Thamrin No.6 Jakarta Pusat
-        </p>
-      </footer>
-    </div>
+          <Route
+            path="ujikom-jf"
+            element={<h2>Ujikom JF</h2>}
+          />
+
+          <Route
+            path="mutasi-internal"
+            element={<h2>Mutasi Internal</h2>}
+          />
+
+          <Route
+            path="mutasi-antar-instansi"
+            element={<h2>Mutasi Antar Instansi</h2>}
+          />
+
+          <Route
+            path="cuti-pegawai"
+            element={<h2>Cuti Pegawai</h2>}
+          />
+
+        </Route>
+
+        <Route 
+          path="/humas-data" 
+          element={<HumasData />} 
+        />
+        <Route
+          path="/humas/publikasi"
+          element={<HumasPublish />}
+        />
+        <Route
+          path="/humas/my-submissions"
+          element={<HumasMySubmissions />}
+        />
+        <Route
+          path="/humas/admin/penyetuju"
+          element={<HumasAdminPenyetuju />}
+        />
+        <Route
+          path="/humas/admin/verifikator"
+          element={<HumasAdminVerifikator />}
+        />
+        <Route
+          path="/humas/data-request"
+          element={<HumasDataRequest />}
+        />
+        <Route
+          path="/data/request"
+          element={<DataRequest />}
+        />
+        <Route
+          path="/helpdesk"
+          element={<Helpdesk />}
+        />
+        <Route
+          path="/ppid/request"
+          element={<PPIDRequest />}
+        />
+        <Route
+          path="/ppid/dip/upload"
+          element={<DIPUpload />}
+        />
+        <Route
+          path="/ppid/dip/status"
+          element={<DIPStatus />}
+        />
+        <Route
+          path="/ppid/admin/dip"
+          element={<PPIDAdminDashboard />}
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
