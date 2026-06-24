@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dummyPeminjaman, stokBarang } from "../user/bmn/dummyData";
-import { Modal, StatusBadge, StokCard, inputStyle, FormGroup, IconSearch, IconEye, IconReturn, downloadAsPDF } from "../user/bmn/components";
+import { Modal, StatusBadge, inputStyle, FormGroup, IconEye, IconReturn, downloadAsPDF, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
 
 const PeminjamanAdmin = () => {
   const [data, setData] = useState(dummyPeminjaman);
@@ -28,9 +28,7 @@ const PeminjamanAdmin = () => {
   };
 
   const handleKembali = () => {
-    // Update status peminjaman
     setData(data.map(d => d.id === showKembali.id ? { ...d, status: "Dikembalikan", kondisiKembali: kondisi } : d));
-    // Update stok jika kondisi baik/rusak ringan (tetap bisa dipakai)
     if (kondisi !== "Rusak Berat") {
       setStok(stok.map(s => s.id === showKembali.barang.id ? { ...s, stok: s.stok + 1 } : s));
     }
@@ -47,125 +45,109 @@ const PeminjamanAdmin = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1e3a5f" }}>Proses Peminjaman Barang</h2>
-        <p style={{ margin: "4px 0 0", color: "#64748b", fontSize: 14 }}>Kelola permohonan peminjaman, pengembalian, dan stok barang</p>
-      </div>
+      <AdminHeaderCard
+        title="Proses Peminjaman Barang"
+        subtitle="Kelola permohonan peminjaman, pengembalian, dan stok barang"
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Cari nama, NIP, atau barang..."
+      />
 
       {/* Stok Barang */}
-      <StokCard items={stok} title="Stok Barang Saat Ini" />
+      <AdminCard style={{ marginBottom: 14 }}>
+        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 12, marginBottom: 10 }}>Stok Barang Saat Ini</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 8 }}>
+          {stok.map((s, i) => (
+            <div key={i} style={{ background: s.stok === 0 ? "#fef2f2" : s.stok <= 2 ? "#fffbeb" : "#f8fafc", borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
+              <div style={{ fontSize: 10, color: "#64748b", marginBottom: 3, lineHeight: 1.25 }}>{s.nama}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: s.stok === 0 ? "#dc2626" : s.stok <= 2 ? "#d97706" : "#2563eb" }}>{s.stok}</div>
+              <div style={{ fontSize: 9, color: "#94a3b8" }}>Unit</div>
+            </div>
+          ))}
+        </div>
+      </AdminCard>
 
       {/* Summary */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 20 }}>
-        {[
-          { label: "Menunggu Persetujuan", value: summary.diajukan, bg: "#fef9c3", color: "#a16207" },
-          { label: "Sedang Dipinjam", value: summary.dipinjam, bg: "#dbeafe", color: "#1d4ed8" },
-          { label: "Sudah Dikembalikan", value: summary.dikembalikan, bg: "#dcfce7", color: "#16a34a" },
-        ].map(s => (
-          <div key={s.label} style={{ background: s.bg, borderRadius: 10, padding: "16px 20px" }}>
-            <div style={{ fontSize: 26, fontWeight: 800, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 13, color: s.color, fontWeight: 600 }}>{s.label}</div>
-          </div>
-        ))}
+      <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+        <AdminStatCard value={summary.diajukan} label="Menunggu Persetujuan" color="#d97706" bg="#fffbeb" />
+        <AdminStatCard value={summary.dipinjam} label="Sedang Dipinjam" color="#2563eb" bg="#eff6ff" />
+        <AdminStatCard value={summary.dikembalikan} label="Sudah Dikembalikan" color="#16a34a" bg="#f0fdf4" />
       </div>
 
       {/* Table */}
-      <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: 20 }}>
-        <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
-          <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
-            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}><IconSearch /></span>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama, NIP, atau barang..." style={{ ...inputStyle, paddingLeft: 34 }} />
-          </div>
-          <div style={{ display: "flex", gap: 6 }}>
-            {["Semua", "Diajukan", "Dipinjam", "Dikembalikan", "Ditolak"].map(f => (
-              <button key={f} onClick={() => setFilter(f)}
-                style={{ padding: "8px 14px", border: "1.5px solid", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 600,
-                  borderColor: filter === f ? "#1d4ed8" : "#e2e8f0",
-                  background: filter === f ? "#eff6ff" : "#fff",
-                  color: filter === f ? "#1d4ed8" : "#64748b" }}>
-                {f}
-              </button>
-            ))}
-          </div>
+      <AdminCard>
+        <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+          {["Semua", "Diajukan", "Dipinjam", "Dikembalikan", "Ditolak"].map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              style={{ padding: "7px 14px", border: "1.5px solid", borderRadius: 20, cursor: "pointer", fontSize: 12, fontWeight: 600,
+                borderColor: filter === f ? "#2563eb" : "#e2e8f0",
+                background: filter === f ? "#2563eb" : "#fff",
+                color: filter === f ? "#fff" : "#64748b" }}>
+              {f}
+            </button>
+          ))}
         </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: "#f8fafc" }}>
-                {["No. Surat", "Peminjam", "Barang", "Lokasi", "Tgl Pinjam", "Tgl Kembali", "Status", "Aksi"].map(h => (
-                  <th key={h} style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151", borderBottom: "1.5px solid #e2e8f0", whiteSpace: "nowrap" }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(d => (
-                <tr key={d.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                  <td style={{ padding: "10px 12px", fontFamily: "monospace", fontSize: 12, color: "#64748b" }}>{d.nomorSurat}</td>
-                  <td style={{ padding: "10px 12px" }}>
-                    <div style={{ fontWeight: 600, color: "#1e293b" }}>{d.peminjam.nama}</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8" }}>{d.peminjam.nip}</div>
-                  </td>
-                  <td style={{ padding: "10px 12px", color: "#1e293b" }}>{d.barang.nama}</td>
-                  <td style={{ padding: "10px 12px", color: "#64748b" }}>{d.lokasi}</td>
-                  <td style={{ padding: "10px 12px", color: "#64748b" }}>{d.tglPinjam}</td>
-                  <td style={{ padding: "10px 12px", color: "#64748b" }}>{d.tglKembali}</td>
-                  <td style={{ padding: "10px 12px" }}><StatusBadge status={d.status} /></td>
-                  <td style={{ padding: "10px 12px" }}>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                      <button onClick={() => setDetailItem(d)} style={{ display: "flex", alignItems: "center", gap: 4, background: "#f1f5f9", border: "none", borderRadius: 6, padding: "5px 10px", fontSize: 12, cursor: "pointer", color: "#475569" }}>
-                        <IconEye /> Detail
-                      </button>
-                      {d.status === "Diajukan" && (
-                        <>
-                          <button onClick={() => handleSetujui(d.id)} style={{ background: "#16a34a", color: "#fff", border: "none", borderRadius: 6, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Setujui</button>
-                          <button onClick={() => handleTolak(d.id)} style={{ background: "#dc2626", color: "#fff", border: "none", borderRadius: 6, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Tolak</button>
-                        </>
-                      )}
-                      {d.status === "Dipinjam" && (
-                        <button onClick={() => setShowKembali(d)} style={{ display: "flex", alignItems: "center", gap: 4, background: "#7c3aed", color: "#fff", border: "none", borderRadius: 6, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-                          <IconReturn /> Kembalikan
-                        </button>
-                      )}
-                      {d.status === "Dikembalikan" && d.kondisiKembali && (
-                        <StatusBadge status={d.kondisiKembali} />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <AdminTable headers={["No. Surat", "Peminjam", "Barang", "Lokasi", "Tgl Pinjam", "Tgl Kembali", "Status", "Aksi"]}>
+          {filtered.map(d => (
+            <tr key={d.id} style={{ borderBottom: "1px solid #f8fafc" }}>
+              <td style={{ padding: "12px 16px", fontFamily: "monospace", fontSize: 12, color: "#64748b" }}>{d.nomorSurat}</td>
+              <td style={{ padding: "12px 16px" }}>
+                <div style={{ fontWeight: 600, color: "#1e293b" }}>{d.peminjam.nama}</div>
+                <div style={{ fontSize: 11, color: "#94a3b8" }}>{d.peminjam.nip}</div>
+              </td>
+              <td style={{ padding: "12px 16px", color: "#1e293b" }}>{d.barang.nama}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b" }}>{d.lokasi}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b" }}>{d.tglPinjam}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b" }}>{d.tglKembali}</td>
+              <td style={{ padding: "12px 16px" }}><StatusBadge status={d.status} /></td>
+              <td style={{ padding: "12px 16px" }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <AdminButton variant="outline" onClick={() => setDetailItem(d)}><IconEye /> Detail</AdminButton>
+                  {d.status === "Diajukan" && (
+                    <>
+                      <AdminButton variant="success" onClick={() => handleSetujui(d.id)}>Setujui</AdminButton>
+                      <AdminButton variant="danger" onClick={() => handleTolak(d.id)}>Tolak</AdminButton>
+                    </>
+                  )}
+                  {d.status === "Dipinjam" && (
+                    <AdminButton onClick={() => setShowKembali(d)} style={{ background: "#7c3aed" }}><IconReturn /> Kembalikan</AdminButton>
+                  )}
+                  {d.status === "Dikembalikan" && d.kondisiKembali && <StatusBadge status={d.kondisiKembali} />}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </AdminTable>
+      </AdminCard>
 
       {/* Modal Detail */}
       {detailItem && (
         <Modal title="Detail Peminjaman" onClose={() => setDetailItem(null)}>
           <div id="peminjaman-detail-print">
-          <div style={{ background: "#f8fafc", borderRadius: 8, padding: 16, marginBottom: 16 }}>
-            <div style={{ fontWeight: 700, color: "#1e3a5f", marginBottom: 10 }}>Data Peminjam</div>
-            {[["Nama", detailItem.peminjam.nama], ["NIP", detailItem.peminjam.nip], ["Jabatan", detailItem.peminjam.jabatan], ["Unit Kerja", detailItem.peminjam.unitKerja]].map(([k, v]) => (
-              <div key={k} style={{ display: "flex", gap: 8, fontSize: 13, marginBottom: 4 }}>
-                <span style={{ fontWeight: 600, width: 80, flexShrink: 0 }}>{k}</span>
-                <span>: {v}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ background: "#f8fafc", borderRadius: 8, padding: 16 }}>
-            <div style={{ fontWeight: 700, color: "#1e3a5f", marginBottom: 10 }}>Detail Barang</div>
-            {[["Barang", detailItem.barang.nama], ["Kode", detailItem.barang.kode], ["Lokasi", detailItem.lokasi], ["Tgl Pinjam", detailItem.tglPinjam], ["Tgl Kembali", detailItem.tglKembali], ["Keperluan", detailItem.keperluan], ["Status", detailItem.status]].map(([k, v]) => (
-              <div key={k} style={{ display: "flex", gap: 8, fontSize: 13, marginBottom: 4 }}>
-                <span style={{ fontWeight: 600, width: 100, flexShrink: 0 }}>{k}</span>
-                <span>: {k === "Status" ? <StatusBadge status={v} /> : v}</span>
-              </div>
-            ))}
-          </div>
+            <div style={{ background: "#f8fafc", borderRadius: 8, padding: 16, marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 10 }}>Data Peminjam</div>
+              {[["Nama", detailItem.peminjam.nama], ["NIP", detailItem.peminjam.nip], ["Jabatan", detailItem.peminjam.jabatan], ["Unit Kerja", detailItem.peminjam.unitKerja]].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", gap: 8, fontSize: 13, marginBottom: 4 }}>
+                  <span style={{ fontWeight: 600, width: 80, flexShrink: 0 }}>{k}</span>
+                  <span>: {v}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ background: "#f8fafc", borderRadius: 8, padding: 16 }}>
+              <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 10 }}>Detail Barang</div>
+              {[["Barang", detailItem.barang.nama], ["Kode", detailItem.barang.kode], ["Lokasi", detailItem.lokasi], ["Tgl Pinjam", detailItem.tglPinjam], ["Tgl Kembali", detailItem.tglKembali], ["Keperluan", detailItem.keperluan], ["Status", detailItem.status]].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", gap: 8, fontSize: 13, marginBottom: 4 }}>
+                  <span style={{ fontWeight: 600, width: 100, flexShrink: 0 }}>{k}</span>
+                  <span>: {k === "Status" ? <StatusBadge status={v} /> : v}</span>
+                </div>
+              ))}
+            </div>
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
-            <button onClick={() => setDetailItem(null)} style={{ padding: "10px 18px", border: "1.5px solid #e2e8f0", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#64748b", fontSize: 13 }}>Tutup</button>
-            <button onClick={() => window.print()} style={{ padding: "10px 18px", border: "1.5px solid #1d4ed8", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#1d4ed8", fontSize: 13 }}>🖨 Print</button>
-            <button onClick={() => downloadAsPDF("peminjaman-detail-print", `Peminjaman-${detailItem.nomorSurat}`)} style={{ padding: "10px 18px", border: "1.5px solid #16a34a", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#16a34a", fontSize: 13 }}>💾 Save PDF</button>
+            <AdminButton variant="outline" onClick={() => setDetailItem(null)}>Tutup</AdminButton>
+            <AdminButton variant="outline" onClick={() => window.print()}>🖨 Print</AdminButton>
+            <AdminButton variant="success" onClick={() => downloadAsPDF("peminjaman-detail-print", `Peminjaman-${detailItem.nomorSurat}`)}>💾 Save PDF</AdminButton>
           </div>
         </Modal>
       )}
@@ -174,7 +156,7 @@ const PeminjamanAdmin = () => {
       {showKembali && (
         <Modal title="Proses Pengembalian Barang" onClose={() => setShowKembali(null)}>
           <div style={{ background: "#f8fafc", borderRadius: 8, padding: 14, marginBottom: 16, fontSize: 13 }}>
-            <div style={{ fontWeight: 700, color: "#1e3a5f", marginBottom: 6 }}>Barang yang Dikembalikan</div>
+            <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>Barang yang Dikembalikan</div>
             <div><strong>{showKembali.barang.nama}</strong></div>
             <div style={{ color: "#64748b" }}>Dipinjam oleh: {showKembali.peminjam.nama}</div>
             <div style={{ color: "#64748b" }}>Tgl kembali: {showKembali.tglKembali}</div>
@@ -190,13 +172,13 @@ const PeminjamanAdmin = () => {
             <textarea style={{ ...inputStyle, minHeight: 64, resize: "vertical" }} value={catatan} onChange={e => setCatatan(e.target.value)} placeholder="Catatan kondisi barang..." />
           </FormGroup>
           {kondisi === "Rusak Berat" && (
-            <div style={{ background: "#fee2e2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#dc2626", marginBottom: 14 }}>
+            <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#dc2626", marginBottom: 14 }}>
               ⚠️ Stok barang <strong>tidak akan bertambah</strong> karena kondisi rusak berat.
             </div>
           )}
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <button onClick={() => setShowKembali(null)} style={{ padding: "10px 20px", border: "1.5px solid #e2e8f0", borderRadius: 8, background: "#fff", cursor: "pointer", fontWeight: 600, color: "#64748b" }}>Batal</button>
-            <button onClick={handleKembali} style={{ padding: "10px 24px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer" }}>Konfirmasi Pengembalian</button>
+            <AdminButton variant="outline" onClick={() => setShowKembali(null)}>Batal</AdminButton>
+            <AdminButton style={{ background: "#7c3aed" }} onClick={handleKembali}>Konfirmasi Pengembalian</AdminButton>
           </div>
         </Modal>
       )}

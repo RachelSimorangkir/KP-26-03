@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SidebarLayout, IconBox, IconClipboard, IconTruck, IconList, IconTool } from "../user/bmn/components";
+import { AdminSidebarLayout, IconBox, IconClipboard, IconTruck, IconList, IconTool } from "../user/bmn/components";
 import PeminjamanAdmin from "./PeminjamanAdmin";
 import PermintaanAdmin from "./PermintaanAdmin";
 import BarangMasukAdmin from "./BarangMasuk";
@@ -14,7 +14,7 @@ const menuItems = [
   { key: "pemeliharaan", icon: <IconTool />,      label: "Pemeliharaan Barang" },
 ];
 
-const BMNAdmin = () => {
+const BMNAdmin = ({ user, onBack, onLogout }) => {
   const [activePage, setActivePage] = useState("peminjaman");
 
   const renderPage = () => {
@@ -29,15 +29,16 @@ const BMNAdmin = () => {
   };
 
   return (
-    <SidebarLayout
+    <AdminSidebarLayout
       menuItems={menuItems}
       activePage={activePage}
       setActivePage={setActivePage}
-      role="admin"
-      userName="Admin BMN"
+      userName={user?.nama || "Admin BMN"}
+      onBack={onBack}
+      onLogout={onLogout}
     >
       {renderPage()}
-    </SidebarLayout>
+    </AdminSidebarLayout>
   );
 };
 

@@ -1,9 +1,19 @@
-// ─── USER LOGIN DUMMY ─────────────────────────────────────────────────────────
+// ─── USER LOGIN ───────────────────────────────────────────────────────────────
+// currentUser ini akan otomatis diisi dengan data hasil login (lewat
+// setCurrentUserOverride). Nilai default di bawah hanya dipakai sebagai
+// fallback kalau halaman dibuka tanpa proses login (misal saat development).
 export const currentUser = {
-  nama: "Nana Suryana",
-  nip: "199203152018032001",
-  jabatan: "Staf Administrasi",
-  unitKerja: "Sub Bagian Umum",
+  nama: "Pegawai",
+  nip: "",
+  jabatan: "",
+  unitKerja: "Bimas Kristen",
+};
+
+export const setCurrentUserOverride = (userData) => {
+  currentUser.nama = userData.nama;
+  currentUser.nip = userData.nip;
+  currentUser.jabatan = userData.jabatan;
+  currentUser.unitKerja = userData.unitKerja || "Bimas Kristen";
 };
 
 // ─── STOK BARANG ─────────────────────────────────────────────────────────────

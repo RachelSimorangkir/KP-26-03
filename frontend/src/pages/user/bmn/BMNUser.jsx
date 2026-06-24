@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { currentUser } from "./dummyData";
+import { setCurrentUserOverride } from "./dummyData";
 import { SidebarLayout, IconBox, IconClipboard, IconList, IconTool } from "./components";
 import PeminjamanUser from "./PeminjamanUser";
 import PermintaanUser from "./PermintaanUser";
@@ -13,8 +13,18 @@ const menuItems = [
   { key: "pemeliharaan", icon: <IconTool />,       label: "Pemeliharaan Barang" },
 ];
 
-const BMNUser = () => {
+const BMNUser = ({ user, onBack, onLogout }) => {
   const [activePage, setActivePage] = useState("peminjaman");
+
+  // Set data user yang sedang login (dari hasil API login) agar dipakai
+  // oleh semua halaman lain (Peminjaman, Permintaan, DBR, Pemeliharaan)
+  // tanpa perlu ubah satu-satu import currentUser di file-file tersebut.
+  setCurrentUserOverride({
+    nama: user.nama,
+    nip: user.nip,
+    jabatan: user.jabatan,
+    unitKerja: user.unitKerja || "Bimas Kristen",
+  });
 
   const renderPage = () => {
     switch (activePage) {
@@ -32,7 +42,9 @@ const BMNUser = () => {
       activePage={activePage}
       setActivePage={setActivePage}
       role="user"
-      userName={currentUser.nama}
+      userName={user.nama}
+      onBack={onBack}
+      onLogout={onLogout}
     >
       {renderPage()}
     </SidebarLayout>
