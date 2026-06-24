@@ -1,0 +1,238 @@
+/* =========================
+   PAGE
+========================= */
+
+.mutasi-page{
+  width:100%;
+  max-width:1400px;
+
+  margin:0 auto;
+
+  padding:30px;
+
+  box-sizing:border-box;
+
+  overflow-x:hidden;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-button{
+  background:#ffffff;
+
+  color:#16324b;
+
+  border:none;
+
+  padding:12px 22px;
+
+  border-radius:12px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  margin-bottom:25px;
+
+  box-shadow:
+    0 4px 12px rgba(15,23,42,.08);
+
+  transition:.25s;
+}
+
+.back-button:hover{
+  transform:translateY(-2px);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.mutasi-header{
+  display:flex;
+  align-items:center;
+
+  gap:24px;
+
+  width:100%;
+
+  padding:35px 40px;
+
+  border-radius:24px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #16324b,
+      #2563eb
+    );
+
+  margin-bottom:35px;
+
+  box-sizing:border-box;
+
+  overflow:hidden;
+}
+
+.mutasi-icon{
+  width:90px;
+  height:90px;
+
+  min-width:90px;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,.15);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:42px;
+}
+
+.mutasi-header > div:last-child{
+  flex:1;
+  min-width:0;
+}
+
+.mutasi-header h1{
+  margin:0 0 10px;
+
+  font-size:52px;
+  font-weight:800;
+
+  line-height:1.2;
+
+  color:white;
+}
+
+.mutasi-header p{
+  margin:0;
+
+  color:
+    rgba(255,255,255,.9);
+
+  font-size:18px;
+
+  line-height:1.7;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.mutasi-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(380px,1fr));
+
+  gap:25px;
+
+  width:100%;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.mutasi-card{
+  background:white;
+
+  border-radius:22px;
+
+  padding:35px;
+
+  border:1px solid #e5e7eb;
+
+  cursor:pointer;
+
+  transition:.3s;
+
+  box-shadow:
+    0 8px 24px rgba(15,23,42,.06);
+
+  text-align:left;
+}
+
+.mutasi-card:hover{
+  transform:translateY(-6px);
+
+  box-shadow:
+    0 16px 35px rgba(37,99,235,.15);
+}
+
+.card-icon{
+  width:70px;
+  height:70px;
+
+  border-radius:16px;
+
+  background:#eff6ff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:34px;
+
+  margin-bottom:20px;
+}
+
+.mutasi-card h3{
+  color:#16324b;
+
+  margin-bottom:12px;
+
+  line-height:1.5;
+
+  font-size:30px;
+}
+
+.mutasi-card p{
+  color:#64748b;
+
+  line-height:1.8;
+
+  margin-bottom:18px;
+
+  font-size:16px;
+}
+
+.mutasi-card span{
+  color:#2563eb;
+
+  font-weight:700;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .mutasi-page{
+    padding:20px;
+  }
+
+  .mutasi-header{
+    flex-direction:column;
+    align-items:flex-start;
+
+    padding:25px;
+  }
+
+  .mutasi-header h1{
+    font-size:36px;
+  }
+
+  .mutasi-grid{
+    grid-template-columns:1fr;
+  }
+}

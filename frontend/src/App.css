@@ -1,3 +1,7 @@
+/* ===================================
+   GLOBAL
+=================================== */
+
 *{
   margin:0;
   padding:0;
@@ -5,16 +9,12 @@
   font-family:Arial, Helvetica, sans-serif;
 }
 
-body{
-  background:#eef1f5;
-}
-
 html,
 body,
 #root{
   width:100%;
-  margin:0;
-  padding:0;
+  min-height:100vh;
+  background:#eef1f5;
 }
 
 .app{
@@ -22,17 +22,21 @@ body,
   min-height:100vh;
 }
 
-/* NAVBAR */
+/* ===================================
+   NAVBAR
+=================================== */
 
 .navbar{
-  background:white;
-  padding:20px 60px;
+  background:#ffffff;
+
+  padding:18px 50px;
 
   display:flex;
   justify-content:space-between;
   align-items:center;
 
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  box-shadow:
+    0 4px 15px rgba(0,0,0,.06);
 
   position:sticky;
   top:0;
@@ -46,105 +50,142 @@ body,
 }
 
 .logo-section img{
-  width:55px;
+  width:52px;
 }
 
 .logo-section h2{
-  color:#2f3a4c;
+  color:#16324b;
+  font-size:24px;
 }
 
 .menu{
   display:flex;
   align-items:center;
-  gap:35px;
+  gap:28px;
 }
 
 .menu a{
   text-decoration:none;
-  color:#444;
-  font-size:18px;
+  color:#334155;
+  font-weight:500;
+  transition:.25s;
+}
+
+.menu a:hover{
+  color:#2563eb;
 }
 
 .login-btn{
-  background:#4285f4;
+  background:#2563eb;
   color:white;
+
   border:none;
-  padding:14px 25px;
-  border-radius:10px;
+
+  padding:12px 24px;
+
+  border-radius:12px;
+
   cursor:pointer;
-  font-size:16px;
+
+  font-weight:600;
+
+  transition:.25s;
 }
 
-/* HERO */
+.login-btn:hover{
+  background:#1d4ed8;
+}
+
+/* ===================================
+   HERO
+=================================== */
 
 .hero-banner{
-  min-height:500px;
+  min-height:520px;
 
-  background:linear-gradient(
-    135deg,
-    #fff8d6,
-    #ffffff,
-    #ffe59a
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #fff8d6,
+      #ffffff,
+      #ffe59a
+    );
 
   display:flex;
   justify-content:center;
   align-items:center;
   gap:80px;
 
-  padding:50px;
+  padding:60px;
 }
 
 .hero-logo img{
-  width:260px;
+  width:240px;
 }
 
 .hero-text h1{
-  font-size:55px;
-  color:#000;
+  font-size:52px;
+  color:#111827;
 }
 
 .hero-text h2{
-  font-size:95px;
-  font-weight:900;
-  color:#000;
+  font-size:85px;
+  font-weight:800;
+  color:#16324b;
+  line-height:1;
 }
 
 .hero-text p{
-  font-size:30px;
-  color:#666;
+  margin-top:15px;
+  font-size:24px;
+  color:#64748b;
 }
 
-/* SERVICES */
+/* ===================================
+   SERVICES
+=================================== */
 
 .services{
-  padding:70px 60px;
+  max-width:1400px;
+  margin:0 auto;
+
+  padding:70px 30px;
 }
 
 .services h2{
   text-align:center;
-  font-size:50px;
-  color:#16345d;
+
+  font-size:42px;
+
+  color:#16324b;
+
   margin-bottom:50px;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:30px;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+  gap:25px;
 }
 
 .card{
   background:white;
-  border-radius:20px;
 
-  min-height:220px;
+  border-radius:24px;
 
-  padding:35px;
+  padding:30px;
 
   text-align:center;
 
-  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  min-height:220px;
+
+  border:1px solid #e5e7eb;
+
+  box-shadow:
+    0 8px 20px rgba(15,23,42,.05);
 
   transition:.3s;
 
@@ -152,37 +193,46 @@ body,
 }
 
 .card:hover{
-  transform:translateY(-8px);
+  transform:translateY(-5px);
+
+  border-color:#2563eb;
+
+  box-shadow:
+    0 15px 30px rgba(37,99,235,.12);
 }
 
 .icon{
-  font-size:55px;
+  font-size:50px;
   margin-bottom:20px;
 }
 
 .card h3{
-  line-height:1.5;
-  color:#1f2d44;
+  color:#16324b;
+  line-height:1.6;
+  font-size:20px;
 }
 
-/* FOOTER */
+/* ===================================
+   FOOTER
+=================================== */
 
 .footer{
-  background:#1f2d44;
+  background:#16324b;
   color:white;
 
   text-align:center;
 
-  padding:80px 20px;
+  padding:70px 20px;
 }
 
 .footer h2{
-  font-size:42px;
-  margin-bottom:20px;
+  font-size:36px;
+  margin-bottom:15px;
 }
 
 .footer p{
   margin:10px 0;
+  opacity:.9;
 }
 
 .footer h3{
@@ -193,32 +243,51 @@ body,
   margin-top:25px;
 
   background:#22c55e;
-
   color:white;
 
   border:none;
 
-  padding:16px 40px;
+  padding:14px 30px;
 
-  border-radius:10px;
+  border-radius:12px;
 
   cursor:pointer;
 
-  font-size:16px;
+  font-weight:600;
+
+  transition:.25s;
+}
+
+.wa-btn:hover{
+  background:#16a34a;
 }
 
 .address{
-  margin-top:35px;
+  margin-top:25px;
   opacity:.8;
 }
 
-/* RESPONSIVE */
+/* ===================================
+   FORM GLOBAL
+=================================== */
+
+select,
+option{
+  color:#1e293b !important;
+  background:#ffffff !important;
+}
+
+input,
+textarea{
+  color:#1e293b !important;
+  background:#ffffff !important;
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
 
 @media(max-width:1000px){
-
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
 
   .hero-banner{
     flex-direction:column;
@@ -226,23 +295,48 @@ body,
   }
 
   .hero-text h2{
-    font-size:60px;
+    font-size:65px;
+  }
+
+  .hero-logo img{
+    width:180px;
   }
 }
 
-@media(max-width:700px){
-
-  .grid{
-    grid-template-columns:1fr;
-  }
+@media(max-width:768px){
 
   .navbar{
     flex-direction:column;
     gap:20px;
+    padding:20px;
   }
 
   .menu{
     flex-wrap:wrap;
     justify-content:center;
+  }
+
+  .hero-banner{
+    padding:30px 20px;
+  }
+
+  .hero-text h1{
+    font-size:34px;
+  }
+
+  .hero-text h2{
+    font-size:48px;
+  }
+
+  .hero-text p{
+    font-size:18px;
+  }
+
+  .services{
+    padding:40px 20px;
+  }
+
+  .services h2{
+    font-size:30px;
   }
 }
