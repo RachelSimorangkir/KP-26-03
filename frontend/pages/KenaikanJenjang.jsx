@@ -1,8 +1,124 @@
-import "./KenaikanJenjang.css";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "./KenaikanJenjang.css";
 
 function KenaikanJenjang() {
   const navigate = useNavigate();
+  const [submitted, setSubmitted] = useState(false);
+const [status, setStatus] = useState("Menunggu");
+
+const [nip, setNip] = useState("");
+const [nama, setNama] = useState("");
+const [jabatan, setJabatan] = useState("");
+const [pangkat, setPangkat] = useState("");
+const [unitKerja, setUnitKerja] = useState("");
+
+const [suratPermohonan, setSuratPermohonan] =
+  useState(null);
+
+const [linkDrive, setLinkDrive] =
+  useState("");
+const handleNipChange = async (e) => {
+  const value = e.target.value;
+
+  setNip(value);
+
+  if (value.length < 5) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/pegawai/${value}`
+    );
+
+    const data = await response.json();
+
+    if (data) {
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(
+        data.pangkat_golongan || ""
+      );
+      setUnitKerja(
+        data.unit_organisasi || ""
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+const handleSubmit = async () => {
+
+  if (!suratPermohonan) {
+    Swal.fire({
+      icon: "warning",
+      title: "Dokumen belum diupload",
+      text:
+        "Upload Surat Permohonan terlebih dahulu.",
+    });
+
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      "http://localhost:8080/api/pengajuan",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          nip,
+          nama,
+          unitKerja,
+          jabatan,
+
+          layanan:
+            "Rekomendasi",
+
+          subLayanan:
+            "Kenaikan Jenjang",
+
+          status:
+            "Menunggu",
+
+          dataPengajuan: {
+            linkDrive,
+          },
+        }),
+      }
+    );
+
+    const result =
+      await response.json();
+
+    if (result.success) {
+
+      setSubmitted(true);
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text:
+          "Pengajuan berhasil dikirim.",
+      });
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Gagal!",
+      text:
+        "Pengajuan gagal dikirim.",
+    });
+  }
+};
 
   return (
     <div className="kenaikan-page">
@@ -32,6 +148,9 @@ function KenaikanJenjang() {
     </p>
   </div>
 </div>
+
+{!submitted ? (
+  <>
 
       {/* PERSYARATAN */}
       <div className="requirement-card">
@@ -66,26 +185,31 @@ function KenaikanJenjang() {
 
             <div className="nip-search">
               <input
-                type="text"
-                placeholder="Masukkan NIP"
-              />
+  type="text"
+  placeholder="Masukkan NIP"
+  value={nip}
+  onChange={handleNipChange}
+/>
             </div>
           </div>
 
           {/* DATA PEGAWAI */}
           <div className="form-group">
             <label>Nama *</label>
-            <input type="text" />
-          </div>
-
-          <div className="form-group">
-            <label>Nama + Gelar Akademik *</label>
-            <input type="text" />
+            <input
+  type="text"
+  value={nama}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
             <label>Jabatan Terakhir *</label>
-            <input type="text" />
+            <input
+  type="text"
+  value={jabatan}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
@@ -101,7 +225,11 @@ function KenaikanJenjang() {
 
           <div className="form-group">
             <label>Pangkat / Golongan *</label>
-            <input type="text" />
+            <input
+  type="text"
+  value={pangkat}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
@@ -159,7 +287,11 @@ function KenaikanJenjang() {
 
           <div className="form-group">
             <label>Unit Kerja *</label>
-            <input type="text" />
+            <input
+  type="text"
+  value={unitKerja}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
@@ -176,42 +308,136 @@ function KenaikanJenjang() {
       </div>
 
       {/* UPLOAD */}
-      <div className="upload-card">
+      <div className="form-card">
 
-  <div className="upload-header">
-    <span className="upload-folder"></span>
-    <h2>Upload Berkas Persyaratan</h2>
+  <h2>Surat Permohonan</h2>
+
+  <div className="upload-area">
+
+    <div className="upload-icon">
+      📄
+    </div>
+
+    <label htmlFor="surat">
+      Upload Surat Permohonan
+    </label>
+
+    <input
+      id="surat"
+      type="file"
+      accept=".pdf"
+      onChange={(e) =>
+        setSuratPermohonan(
+          e.target.files[0]
+        )
+      }
+    />
+
+    {
+      suratPermohonan && (
+        <div className="uploaded-file">
+          ✅ {suratPermohonan.name}
+        </div>
+      )
+    }
+
+    <span>PDF Maks. 10 MB</span>
+
+  </div>
+  
+
+</div>
+
+<div className="form-card">
+
+  <h2>Dokumen Pendukung</h2>
+
+  <div className="form-group">
+
+    <label>
+      Link Folder Google Drive
+    </label>
+
+    <input
+      type="text"
+      value={linkDrive}
+      onChange={(e) =>
+        setLinkDrive(
+          e.target.value
+        )
+      }
+      placeholder="https://drive.google.com/drive/folders/..."
+    />
+
   </div>
 
-  <input
-    type="text"
-    placeholder="https://drive.google.com/drive/folders/..."
-    className="drive-input"
-  />
+  <div className="drive-note">
 
-  <div className="upload-info">
-    <p>
-      Tempel link Google Drive yang berisi seluruh berkas persyaratan.
-    </p>
+    <strong>Catatan:</strong>
 
-    <p>
-      Pastikan akses folder diatur menjadi
-      <strong> "Siapa saja yang memiliki link dapat melihat"</strong>.
-    </p>
+    Upload seluruh dokumen
+    persyaratan ke Google Drive
+    kemudian tempelkan link folder
+    di atas.
+
   </div>
 
 </div>
 
-      {/* SUBMIT */}
-      <button
-        type="button"
-        className="submit-btn"
-      >
-        Ajukan Permohonan
-      </button>
+  </>
+) : (
+
+  <div className="tracking-card">
+    <h2>Status Pengajuan</h2>
+
+    <div className="timeline">
+
+      <div className="timeline-item completed">
+        <div className="timeline-dot"></div>
+
+        <div className="timeline-content">
+          <h4>Pengajuan Dikirim</h4>
+          <span>
+            {new Date().toLocaleString("id-ID")}
+          </span>
+        </div>
+      </div>
+
+      <div className="timeline-item current">
+        <div className="timeline-dot"></div>
+
+        <div className="timeline-content">
+          <h4>Sedang Diproses</h4>
+          <span>Menunggu verifikasi admin</span>
+        </div>
+      </div>
+
+      <div className="timeline-item pending">
+        <div className="timeline-dot"></div>
+
+        <div className="timeline-content">
+          <h4>Selesai</h4>
+          <span>Menunggu penyelesaian</span>
+        </div>
+      </div>
 
     </div>
+  </div>
+
+)}
+      {/* SUBMIT */}
+     <button
+  type="button"
+  className="submit-btn"
+  onClick={handleSubmit}
+>
+        Ajukan Permohonan
+      </button>
+    </div> 
+
+    
   );
-}
+} 
+
 
 export default KenaikanJenjang;

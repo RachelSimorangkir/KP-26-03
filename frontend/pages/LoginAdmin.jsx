@@ -16,66 +16,66 @@ function LoginAdmin() {
 
   const adminAccounts = [
     {
-      nip: "198701012010011001",
+      nip: "adminkpg",
       password: "admin123",
       division: "kepegawaian",
       name: "Admin Kepegawaian",
     },
     {
-      nip: "198702022011011002",
+      nip: "adminbmn",
       password: "admin123",
       division: "bmn",
       name: "Admin BMN",
     },
     {
-      nip: "198703032012011003",
+      nip: "adminhumas",
       password: "admin123",
       division: "humas",
       name: "Admin Humas & Data",
     },
   ];
 
-  const handleLogin = () => {
-    const admin = adminAccounts.find(
-      (item) =>
-        item.nip === nip &&
-        item.password === password &&
-        item.division === selectedRole
+const handleLogin = () => {
+  const admin = adminAccounts.find(
+    (item) =>
+      item.nip === nip &&
+      item.password === password &&
+      item.division === selectedRole
+  );
+
+  if (admin) {
+    localStorage.setItem(
+      "isLoggedIn",
+      "true"
     );
 
-    if (admin) {
-      localStorage.setItem(
-        "isLoggedIn",
-        "true"
-      );
+    localStorage.setItem(
+      "userRole",
+      "admin"
+    );
 
-      localStorage.setItem(
-        "userRole",
-        "admin"
-      );
+    localStorage.setItem(
+      "adminDivision",
+      admin.division
+    );
 
-      localStorage.setItem(
-        "adminDivision",
-        admin.division
-      );
+    localStorage.setItem(
+      "userName",
+      admin.name
+    );
 
-      localStorage.setItem(
-        "userName",
-        admin.name
-      );
+    localStorage.setItem(
+      "userNIP",
+      admin.nip
+    );
 
-      localStorage.setItem(
-        "userNIP",
-        admin.nip
-      );
-
-      navigate("/admin");
-    } else {
-      alert(
-        "NIP atau Password salah!"
-      );
-    }
-  };
+    navigate("/admin");
+  } else {
+    alert(
+      "NIP atau Password salah!"
+    );
+  }
+};
 
   const getRoleTitle = () => {
     switch (selectedRole) {

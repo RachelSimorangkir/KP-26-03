@@ -1,9 +1,135 @@
 import "./MutasiInternal.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 function MutasiInternal() {
   const navigate = useNavigate();
+  const [submitted, setSubmitted] = useState(false);
+  const [nip, setNip] = useState("");
+const [nama, setNama] = useState("");
+const [jabatan, setJabatan] = useState("");
+const [unitKerja, setUnitKerja] = useState("");
+const [status, setStatus] = useState("Menunggu");
 
+const [suratPermohonan, setSuratPermohonan] =
+  useState(null);
+
+const [driveLink, setDriveLink] =
+  useState("");
+
+  const handleSubmit = async () => {
+
+  if (!suratPermohonan) {
+    Swal.fire({
+      icon: "warning",
+      title: "Surat Permohonan Belum Diupload",
+      text:
+        "Silakan upload Surat Permohonan terlebih dahulu.",
+    });
+
+    return;
+  }
+
+  if (!driveLink) {
+    Swal.fire({
+      icon: "warning",
+      title: "Link Google Drive Kosong",
+      text:
+        "Silakan masukkan link folder Google Drive.",
+    });
+
+    return;
+  }
+
+  try {
+
+  const response = await fetch(
+    "http://localhost:8080/api/pengajuan",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        nip,
+        nama,
+
+        unitKerja,
+
+        jabatan,
+
+        layanan: "Mutasi Internal",
+
+        subLayanan:
+          "Mutasi Internal Kementerian Agama",
+
+        status: "Menunggu",
+
+        dataPengajuan: {
+          driveLink,
+        },
+      }),
+    }
+  );
+
+  const result =
+    await response.json();
+
+  if (result.success) {
+
+    setSubmitted(true);
+
+    setStatus("Menunggu");
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text:
+        "Pengajuan Mutasi Internal berhasil dikirim.",
+    });
+
+  }
+
+} catch (error) {
+
+  console.error(error);
+
+  Swal.fire({
+    icon: "error",
+    title: "Gagal",
+    text:
+      "Pengajuan gagal dikirim.",
+  });
+
+}
+};
+
+const handleNipChange = async (e) => {
+  const value = e.target.value;
+
+  setNip(value);
+
+  if (value.length < 5) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/pegawai/${value}`
+    );
+
+    const data = await response.json();
+
+    if (data) {
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+  
   return (
     <div className="mutasiinternal-page">
 
@@ -35,156 +161,233 @@ function MutasiInternal() {
 
       </div>
 
+      
+
       {/* PERSYARATAN */}
-<div className="info-card">
+      {!submitted ? (
+  <>
 
-  <h2>Persyaratan Umum</h2>
+    <div className="info-card">
 
-<ol className="number-list">
-    <li>Surat Pengantar dari Satuan Kerja.</li>
+      <h2>Persyaratan Umum</h2>
 
-    <li>
-      Surat Pernyataan Tanggung Jawab Mutlak (SPTJM)
-      dari Instansi Penerima dan Instansi Asal.
-    </li>
+      <ol className="number-list">
+        <li>Surat Pengantar dari Satuan Kerja.</li>
+        <li>Surat Pernyataan Tanggung Jawab Mutlak (SPTJM) dari Instansi Penerima dan Instansi Asal.</li>
+        <li>ANJAB dan ABK dari Satuan Kerja Penerima dan Satuan Kerja Asal.</li>
+        <li>Surat Permohonan Mutasi dari Pegawai Negeri Sipil yang bersangkutan.</li>
+        <li>Surat Pernyataan Persetujuan Melepas dari Pimpinan Satuan Kerja Asal.</li>
+        <li>Surat Pernyataan Persetujuan Menerima dari Pimpinan Satuan Kerja Tujuan.</li>
+        <li>SK Pangkat Terakhir.</li>
+        <li>SK Jabatan Terakhir.</li>
+        <li>SKP 2 (dua) Tahun Terakhir.</li>
+        <li>Surat Pernyataan Tidak Sedang Menjalani Tugas Belajar atau Ikatan Dinas.</li>
+        <li>Surat Pernyataan Tidak Sedang Menjalani Hukuman Disiplin atau Proses Peradilan.</li>
+        <li>Surat Keterangan Bebas Temuan dari Itjen Kemenag.</li>
+      </ol>
 
-    <li>
-      ANJAB dan ABK dari Satuan Kerja Penerima
-      dan Satuan Kerja Asal.
-    </li>
-
-    <li>
-      Surat Permohonan Mutasi dari Pegawai Negeri
-      Sipil yang bersangkutan.
-    </li>
-
-    <li>
-      Surat Pernyataan Persetujuan Melepas
-      dari Pimpinan Satuan Kerja Asal.
-    </li>
-
-    <li>
-      Surat Pernyataan Persetujuan Menerima
-      dari Pimpinan Satuan Kerja Tujuan.
-    </li>
-
-    <li>SK Pangkat Terakhir.</li>
-
-    <li>SK Jabatan Terakhir.</li>
-
-    <li>
-      SKP 2 (dua) Tahun Terakhir
-      (menggunakan aplikasi e-Kinerja BKN).
-    </li>
-
-    <li>
-      Surat Pernyataan Tidak Sedang Menjalani
-      Tugas Belajar atau Ikatan Dinas.
-    </li>
-
-    <li>
-      Surat Pernyataan Tidak Sedang Menjalani
-      Hukuman Disiplin atau Proses Peradilan.
-    </li>
-
-    <li>
-      Surat Keterangan Bebas Temuan yang diterbitkan
-      oleh Inspektorat Jenderal Kementerian Agama.
-    </li>
-
-  </ol>
-
-</div>
-
-      {/* FORM DATA PEGAWAI */}
-<div className="form-card">
-
-  <h2>Data Pegawai</h2>
-
-  <div className="form-grid">
-
-    <div className="form-group">
-      <label>NIP *</label>
-
-      <input
-        type="text"
-        placeholder="Masukkan NIP"
-      />
     </div>
 
-    <div className="form-group">
-      <label>Nama + Gelar Akademik *</label>
+    <div className="form-card">
 
-      <input
-        type="text"
-        placeholder="Contoh: Rachel C.P Simorangkir, S.Kom."
-      />
+      <h2>Data Pegawai</h2>
+
+      <div className="form-grid">
+
+        <div className="form-group">
+          <label>NIP *</label>
+          <input
+            type="text"
+            placeholder="Masukkan NIP"
+            value={nip}
+            onChange={handleNipChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Nama + Gelar Akademik *</label>
+          <input
+            type="text"
+            value={nama}
+            readOnly
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Jabatan *</label>
+          <input
+            type="text"
+            value={jabatan}
+            readOnly
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Unit / Satuan Kerja Asal *</label>
+          <input
+            type="text"
+            value={unitKerja}
+            readOnly
+          />
+        </div>
+
+      </div>
+
     </div>
 
-    <div className="form-group">
-      <label>Jabatan *</label>
+    <div className="form-card">
 
-      <input
-        type="text"
-        placeholder="Masukkan Jabatan"
-      />
+      <h2>Surat Permohonan</h2>
+
+      <div className="upload-area">
+
+        <div className="upload-icon">
+          📄
+        </div>
+
+        <label htmlFor="surat">
+          Upload Surat Permohonan
+        </label>
+
+        <input
+          id="surat"
+          type="file"
+          accept=".pdf"
+          onChange={(e) =>
+            setSuratPermohonan(
+              e.target.files[0]
+            )
+          }
+        />
+
+        {suratPermohonan && (
+          <div className="uploaded-file">
+            ✅ {suratPermohonan.name}
+          </div>
+        )}
+
+        <span>PDF Maks. 10 MB</span>
+
+      </div>
+
     </div>
 
-    <div className="form-group">
-      <label>Unit / Satuan Kerja Asal *</label>
+    <div className="form-card">
 
-      <input
-        type="text"
-        placeholder="Masukkan Unit Kerja"
-      />
+      <h2>Dokumen Pendukung</h2>
+
+      <div className="form-group">
+
+        <label>
+          Link Folder Google Drive
+        </label>
+
+        <input
+          type="text"
+          value={driveLink}
+          onChange={(e) =>
+            setDriveLink(e.target.value)
+          }
+          placeholder="https://drive.google.com/drive/folders/..."
+        />
+
+      </div>
+
+      <div className="drive-note">
+
+        <strong>Catatan:</strong>
+
+        Upload seluruh dokumen persyaratan
+        mutasi internal ke Google Drive,
+        kemudian tempelkan link folder di atas.
+
+      </div>
+
+    </div>
+
+    <div className="form-card">
+
+      <label className="checkbox-wrapper">
+
+        <input type="checkbox" />
+
+        <span>
+          Saya menyatakan bahwa data dan dokumen
+          yang diunggah adalah benar dan dapat
+          dipertanggungjawabkan.
+        </span>
+
+      </label>
+
+    </div>
+
+    <div className="submit-wrapper">
+
+      <button
+        className="submit-btn"
+        onClick={handleSubmit}
+      >
+        Ajukan Permohonan
+      </button>
+
+    </div>
+
+  </>
+
+) : (
+
+  <div className="tracking-card">
+
+    <h2>Status Pengajuan Mutasi Internal</h2>
+
+    <div className="timeline">
+
+      <div className="timeline-item completed">
+
+        <div className="timeline-dot"></div>
+
+        <div className="timeline-content">
+          <h4>Pengajuan Dikirim</h4>
+          <span>
+            {new Date().toLocaleString("id-ID")}
+          </span>
+        </div>
+
+      </div>
+
+      <div className="timeline-item current">
+
+        <div className="timeline-dot"></div>
+
+        <div className="timeline-content">
+          <h4>Sedang Diproses</h4>
+          <span>
+            Menunggu verifikasi admin
+          </span>
+        </div>
+
+      </div>
+
+      <div className="timeline-item pending">
+
+        <div className="timeline-dot"></div>
+
+        <div className="timeline-content">
+          <h4>Selesai</h4>
+          <span>
+            Menunggu penyelesaian
+          </span>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
 
+)}
+
 </div>
-      {/* UPLOAD */}
-
-      <div className="upload-card">
-
-        <div className="upload-header">
-          <span></span>
-          <h2>Upload Berkas Persyaratan</h2>
-        </div>
-
-        <input
-          type="text"
-          className="drive-input"
-          placeholder="https://drive.google.com/drive/folders/..."
-        />
-
-        <div className="upload-info">
-
-          <p>
-            Tempel link Google Drive yang berisi seluruh
-            dokumen persyaratan mutasi.
-          </p>
-
-          <p>
-            Pastikan akses folder diatur menjadi
-            <strong>
-              {" "}
-              "Siapa saja yang memiliki link dapat melihat"
-            </strong>
-          </p>
-
-        </div>
-
-      </div>
-
-      <div className="submit-wrapper">
-
-        <button className="submit-btn">
-          Ajukan Permohonan
-        </button>
-
-      </div>
-
-    </div>
   );
 }
 

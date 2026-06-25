@@ -56,6 +56,8 @@ export default function HalamanUtama() {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userNIP");
 
     navigate("/");
     window.location.reload();
@@ -133,7 +135,7 @@ export default function HalamanUtama() {
     <div className="notif-dropdown">
 
       <div className="notif-header">
-        🔔 Notifikasi
+        Notifikasi
       </div>
 
       {notifications.map((notif) => (
@@ -180,7 +182,7 @@ export default function HalamanUtama() {
                     )
                   }
                 >
-                  👤 {userName}
+                   {userName}
                 </div>
 
                 {showProfileMenu && (
@@ -189,7 +191,7 @@ export default function HalamanUtama() {
                     <button
                       onClick={handleLogout}
                     >
-                      🚪 Logout
+                      Logout
                     </button>
 
                   </div>

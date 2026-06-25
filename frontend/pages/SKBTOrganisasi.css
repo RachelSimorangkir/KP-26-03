@@ -442,3 +442,15 @@
 
   font-size:14px;
 }
+
+.timeline-item.current{
+  background: transparent !important;
+}
+
+.timeline-item.current .timeline-dot{
+  background:#2563eb;
+}
+
+.timeline-item.current h4{
+  color:#2563eb;
+}

@@ -1,8 +1,32 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DashboardPegawai.css";
 
 function DashboardPegawai() {
   const navigate = useNavigate();
+  const [pegawai, setPegawai] = useState(null);
+
+  useEffect(() => {
+  const nip =
+    localStorage.getItem("userNIP");
+
+  fetch(
+    `http://localhost:8080/pegawai/profile/${nip}`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status) {
+        setPegawai(data.data);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}, []);
+
+if (!pegawai) {
+  return <h2>Loading...</h2>;
+}
 
   return (
     <div className="pegawai-page">
@@ -36,13 +60,26 @@ function DashboardPegawai() {
 
         <div className="profile-info">
 
-          <h2>Rachel Simorangkir</h2>
+<h2>{pegawai.nama}</h2>
 
-          <p>NIP : 199900001234</p>
+<p>
+  NIP : {pegawai.nip}
+</p>
 
-          <p>Unit Kerja : BMBPSDM</p>
+<p>
+  Unit Kerja :
+  {pegawai.unit_organisasi}
+</p>
 
-          <p>Jabatan : Staf Administrasi</p>
+<p>
+  Jabatan :
+  {pegawai.jabatan}
+</p>
+
+<p>
+  Pangkat/Golongan :
+  {pegawai.pangkat_golongan}
+</p>
 
         </div>
 
@@ -98,9 +135,21 @@ function DashboardPegawai() {
 
           <div
             className="menu-card"
-            onClick={() =>
-              navigate("/kepegawaian/cuti")
-            }
+            onClick={() => {
+
+  localStorage.removeItem("user");
+
+  localStorage.removeItem(
+    "userNIP"
+  );
+
+  localStorage.setItem(
+  "userNIP",
+  data.user.nip
+  );
+
+  navigate("/login");
+}}
           >
             <div className="menu-icon">🏖️</div>
 

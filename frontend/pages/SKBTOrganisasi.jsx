@@ -1,15 +1,99 @@
 import "./SKBTOrganisasi.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Swal from "sweetalert2";
+
 
 function SKBTOrganisasi() {
   const navigate = useNavigate();
 
   const [submitted, setSubmitted] = useState(false);
+  const [nip, setNip] = useState("");
+const [nama, setNama] = useState("");
+const [jabatan, setJabatan] = useState("");
+const [pangkat, setPangkat] = useState("");
+const [unitOrganisasi, setUnitOrganisasi] = useState("");
+const [status, setStatus] = useState("Menunggu");
+const [email, setEmail] = useState("");
+const [noHp, setNoHp] = useState("");
+const [keperluan, setKeperluan] = useState("");
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-  };
+  const handleSubmit = async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:8080/api/pengajuan",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nip,
+          nama,
+          unitKerja: unitOrganisasi,
+          jabatan,
+          email,
+          noHp,
+
+          layanan: "SKBT",
+          subLayanan: "Organisasi",
+
+          status: "Menunggu",
+
+          dataPengajuan: {
+            keperluan,
+          },
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+  setSubmitted(true);
+  setStatus("Menunggu");
+
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "Pengajuan SKBT Organisasi berhasil dikirim.",
+    confirmButtonColor: "#2563eb",
+  });
+}
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      icon: "error",
+      title: "Gagal!",
+      text: "Pengajuan gagal dikirim.",
+      confirmButtonColor: "#dc2626",
+    });
+  }
+};
+
+const handleNipChange = async (e) => {
+  const value = e.target.value;
+  setNip(value);
+
+  if (value.length < 5) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/pegawai/${value}`
+    );
+
+    const data = await response.json();
+
+    if (data) {
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitOrganisasi(data.unit_organisasi || "");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <div className="skbt-organisasi-page">
@@ -39,6 +123,9 @@ function SKBTOrganisasi() {
 
       </div>
 
+      {!submitted ? (
+  <>
+
       {/* DATA PEGAWAI */}
       <div className="form-card">
 
@@ -49,49 +136,68 @@ function SKBTOrganisasi() {
           <div className="form-group">
             <label>NIP</label>
             <input
-              type="text"
-              placeholder="Masukkan NIP"
-            />
+  type="text"
+  placeholder="Masukkan NIP"
+  value={nip}
+  onChange={handleNipChange}
+/>
           </div>
 
           <div className="form-group">
             <label>Nama Pegawai</label>
             <input
-              type="text"
-              placeholder="Masukkan Nama Pegawai"
-            />
+  type="text"
+  value={nama}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
             <label>Unit Kerja</label>
             <input
-              type="text"
-              placeholder="Masukkan Unit Kerja"
-            />
+  type="text"
+  value={unitOrganisasi}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
             <label>Jabatan</label>
             <input
-              type="text"
-              placeholder="Masukkan Jabatan"
-            />
+  type="text"
+  value={jabatan}
+  readOnly
+/>
           </div>
+
+          <div className="form-group">
+  <label>Pangkat / Golongan</label>
+
+  <input
+    type="text"
+    value={pangkat}
+    readOnly
+  />
+</div>
 
           <div className="form-group">
             <label>Email</label>
             <input
-              type="email"
-              placeholder="Masukkan Email"
-            />
+  type="email"
+  placeholder="Masukkan Email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+/>
           </div>
 
           <div className="form-group">
             <label>Nomor HP</label>
             <input
-              type="text"
-              placeholder="Masukkan Nomor HP"
-            />
+  type="text"
+  placeholder="Masukkan Nomor HP"
+  value={noHp}
+  onChange={(e) => setNoHp(e.target.value)}
+/>
           </div>
 
         </div>
@@ -108,9 +214,11 @@ function SKBTOrganisasi() {
           <label>Keperluan SKBT</label>
 
           <textarea
-            rows="5"
-            placeholder="Jelaskan keperluan pengajuan SKBT"
-          />
+  rows="5"
+  placeholder="Jelaskan keperluan pengajuan SKBT"
+  value={keperluan}
+  onChange={(e) => setKeperluan(e.target.value)}
+/>
 
         </div>
 
@@ -154,71 +262,72 @@ function SKBTOrganisasi() {
 
       </div>
 
-      {/* TIMELINE */}
-      {submitted && (
+  </>
+) : (
         <div className="tracking-card">
+  <h2>Status Pengajuan SKBT Organisasi</h2>
 
-          <h2>Status Pengajuan SKBT</h2>
+  <div className="timeline">
 
-          <div className="timeline">
+    <div className="timeline-item completed">
+      <div className="timeline-dot"></div>
 
-            <div className="timeline-item completed">
-              <div className="timeline-dot"></div>
+      <div className="timeline-content">
+        <h4>Pengajuan Dikirim</h4>
 
-              <div className="timeline-content">
-                <h4>Status Diajukan</h4>
-                <span>Pengajuan berhasil dibuat</span>
-              </div>
-            </div>
+        <span>
+          {new Date().toLocaleString("id-ID")}
+        </span>
+      </div>
+    </div>
 
-            <div className="timeline-item pending">
-              <div className="timeline-dot"></div>
+    <div
+      className={`timeline-item ${
+        status === "Menunggu"
+          ? "current"
+          : status === "Diproses" ||
+            status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+      <div className="timeline-dot"></div>
 
-              <div className="timeline-content">
-                <h4>Verifikator 1</h4>
-                <span>Menunggu verifikasi</span>
-              </div>
-            </div>
+      <div className="timeline-content">
+        <h4>Sedang Diproses</h4>
 
-            <div className="timeline-item pending">
-              <div className="timeline-dot"></div>
+        <span>
+          {status === "Menunggu"
+            ? "Menunggu verifikasi admin"
+            : status === "Diproses"
+            ? "Sedang diverifikasi"
+            : "Verifikasi selesai"}
+        </span>
+      </div>
+    </div>
 
-              <div className="timeline-content">
-                <h4>Verifikator 2</h4>
-                <span>Menunggu verifikasi</span>
-              </div>
-            </div>
+    <div
+      className={`timeline-item ${
+        status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+      <div className="timeline-dot"></div>
 
-            <div className="timeline-item pending">
-              <div className="timeline-dot"></div>
+      <div className="timeline-content">
+        <h4>Selesai</h4>
 
-              <div className="timeline-content">
-                <h4>Verifikator Kabag</h4>
-                <span>Belum diproses</span>
-              </div>
-            </div>
+        <span>
+          {status === "Selesai"
+            ? "Permohonan telah selesai"
+            : "Menunggu penyelesaian"}
+        </span>
+      </div>
+    </div>
 
-            <div className="timeline-item pending">
-              <div className="timeline-dot"></div>
-
-              <div className="timeline-content">
-                <h4>Penandatangan</h4>
-                <span>Belum diproses</span>
-              </div>
-            </div>
-
-            <div className="timeline-item pending">
-              <div className="timeline-dot"></div>
-
-              <div className="timeline-content">
-                <h4>Selesai</h4>
-                <span>Menunggu penyelesaian</span>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
+  </div>
+</div>
       )}
 
     </div>

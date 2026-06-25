@@ -1,8 +1,120 @@
-import "./PengaktifanKembali.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import "./PengaktifanKembali.css";
 
 function PengaktifanKembali() {
   const navigate = useNavigate();
+  const [nip, setNip] = useState("");
+const [nama, setNama] = useState("");
+const [jabatan, setJabatan] = useState("");
+const [pangkat, setPangkat] = useState("");
+const [unitKerja, setUnitKerja] = useState("");
+const [suratPermohonan, setSuratPermohonan] = useState(null);
+const [tanggalPengaktifan, setTanggalPengaktifan] =
+  useState("");
+
+const [nomorSK, setNomorSK] =
+  useState("");
+
+const [dasarPengaktifan, setDasarPengaktifan] =
+  useState("");
+
+const [keterangan, setKeterangan] =
+  useState("");
+
+const [linkDrive, setLinkDrive] =
+  useState("");
+
+
+const handleNipChange = async (e) => {
+  const value = e.target.value;
+
+  setNip(value);
+
+  if (value.length < 5) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/pegawai/${value}`
+    );
+
+    const data = await response.json();
+
+    if (data) {
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const handleSubmit = async () => {
+  try {
+
+    const response = await fetch(
+      "http://localhost:8080/api/pengajuan",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          nip,
+          nama,
+          unitKerja,
+          jabatan,
+
+          layanan: "Rekomendasi",
+
+          subLayanan:
+            "Pengaktifan Kembali",
+
+          status: "Menunggu",
+
+          dataPengajuan: {
+            tanggalPengaktifan,
+            nomorSK,
+            dasarPengaktifan,
+            keterangan,
+          },
+        }),
+      }
+    );
+
+    const result =
+      await response.json();
+
+    if (result.success) {
+      setSubmitted(true);
+      setStatus("Menunggu");
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text:
+          "Pengajuan berhasil dikirim.",
+      });
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Gagal",
+      text:
+        "Pengajuan gagal dikirim.",
+    });
+  }
+};
+
+  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("Menunggu");
 
   return (
     <div className="pengaktifan-page">
@@ -33,6 +145,9 @@ function PengaktifanKembali() {
         </div>
 
       </div>
+
+      {!submitted ? (
+  <>
 
       {/* STEPPER */}
 
@@ -72,27 +187,31 @@ function PengaktifanKembali() {
             <label>NIP</label>
 
             <input
-              type="text"
-              placeholder="Masukkan NIP"
-            />
+  type="text"
+  placeholder="Masukkan NIP"
+  value={nip}
+  onChange={handleNipChange}
+/>
           </div>
 
           <div className="form-group">
             <label>Nama Pegawai</label>
 
             <input
-              type="text"
-              placeholder="Masukkan Nama Pegawai"
-            />
+  type="text"
+  value={nama}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
             <label>Pangkat / Golongan</label>
 
             <input
-              type="text"
-              placeholder="Contoh: Penata Tingkat I (III/d)"
-            />
+  type="text"
+  value={jabatan}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
@@ -108,9 +227,10 @@ function PengaktifanKembali() {
             <label>Unit Kerja</label>
 
             <input
-              type="text"
-              placeholder="Masukkan Unit Kerja"
-            />
+  type="text"
+  value={unitKerja}
+  readOnly
+/>
           </div>
 
           <div className="form-group">
@@ -138,18 +258,28 @@ function PengaktifanKembali() {
             <label>Tanggal Pengaktifan Kembali</label>
 
             <input
-              type="date"
-              className="modern-input"
-            />
+  type="date"
+  className="modern-input"
+  value={tanggalPengaktifan}
+  onChange={(e) =>
+    setTanggalPengaktifan(
+      e.target.value
+    )
+  }
+/>
           </div>
 
           <div className="form-group">
             <label>Nomor SK Pemberhentian Sementara</label>
 
             <input
-              type="text"
-              placeholder="Masukkan Nomor SK"
-            />
+  type="text"
+  placeholder="Masukkan Nomor SK"
+  value={nomorSK}
+  onChange={(e) =>
+    setNomorSK(e.target.value)
+  }
+/>
           </div>
 
           <div className="form-group">
@@ -164,7 +294,15 @@ function PengaktifanKembali() {
           <div className="form-group">
             <label>Dasar Pengaktifan Kembali</label>
 
-            <select className="modern-select">
+            <select
+  className="modern-select"
+  value={dasarPengaktifan}
+  onChange={(e) =>
+    setDasarPengaktifan(
+      e.target.value
+    )
+  }
+>
               <option>Pilih Dasar Pengaktifan</option>
               <option>Selesai Tugas Belajar</option>
               <option>Selesai CLTN</option>
@@ -182,9 +320,15 @@ function PengaktifanKembali() {
           <label>Keterangan Pengajuan</label>
 
           <textarea
-            rows="5"
-            placeholder="Jelaskan alasan dan dasar pengajuan pengaktifan kembali"
-          />
+  rows="5"
+  placeholder="Jelaskan alasan dan dasar pengajuan pengaktifan kembali"
+  value={keterangan}
+  onChange={(e) =>
+    setKeterangan(
+      e.target.value
+    )
+  }
+/>
 
         </div>
 
@@ -192,90 +336,88 @@ function PengaktifanKembali() {
 
       {/* UPLOAD DOKUMEN */}
 
-      <div className="form-card">
+      {/* UPLOAD SURAT PERMOHONAN */}
 
-        <h2>Upload Dokumen</h2>
+<div className="form-card">
 
-        <div className="upload-grid">
+  <h2>Surat Permohonan</h2>
 
-          <div className="upload-area">
-            <div className="upload-icon">📄</div>
+  <div className="upload-area">
 
-            <label htmlFor="surat">
-              Surat Permohonan
-            </label>
+  <div className="upload-icon">
+    📄
+  </div>
 
-            <input
-              id="surat"
-              type="file"
-            />
+  <label htmlFor="surat">
+    Upload Surat Permohonan
+  </label>
 
-            <span>PDF Maks. 10 MB</span>
-          </div>
+  <input
+    id="surat"
+    type="file"
+    accept=".pdf"
+    onChange={(e) =>
+      setSuratPermohonan(
+        e.target.files[0]
+      )
+    }
+  />
 
-          <div className="upload-area">
-            <div className="upload-icon">📑</div>
-
-            <label htmlFor="sksementara">
-              SK Pemberhentian
-            </label>
-
-            <input
-              id="sksementara"
-              type="file"
-            />
-
-            <span>PDF Maks. 10 MB</span>
-          </div>
-
-          <div className="upload-area">
-            <div className="upload-icon">📋</div>
-
-            <label htmlFor="skpangkat">
-              SK Pangkat Terakhir
-            </label>
-
-            <input
-              id="skpangkat"
-              type="file"
-            />
-
-            <span>PDF Maks. 10 MB</span>
-          </div>
-
-          <div className="upload-area">
-            <div className="upload-icon">🗂️</div>
-
-            <label htmlFor="skjabatan">
-              SK Jabatan Terakhir
-            </label>
-
-            <input
-              id="skjabatan"
-              type="file"
-            />
-
-            <span>PDF Maks. 10 MB</span>
-          </div>
-
-          <div className="upload-area">
-            <div className="upload-icon">📎</div>
-
-            <label htmlFor="pendukung">
-              Dokumen Pendukung
-            </label>
-
-            <input
-              id="pendukung"
-              type="file"
-            />
-
-            <span>PDF Maks. 10 MB</span>
-          </div>
-
-        </div>
-
+  {
+    suratPermohonan && (
+      <div className="uploaded-file">
+        ✅ {suratPermohonan.name}
       </div>
+    )
+  }
+
+  <span>PDF Maks. 10 MB</span>
+
+</div>
+
+</div>
+
+{/* DOKUMEN PENDUKUNG */}
+
+<div className="form-card">
+
+  <h2>Dokumen Pendukung</h2>
+
+  <div className="form-group">
+
+    <label>
+      Link Folder Google Drive
+    </label>
+
+   <input
+  type="text"
+  placeholder="https://drive.google.com/drive/folders/..."
+  value={linkDrive}
+  onChange={(e) =>
+    setLinkDrive(
+      e.target.value
+    )
+  }
+/>
+
+  </div>
+
+  <div className="drive-note">
+
+    <strong>Upload ke folder Google Drive:</strong>
+
+     <div className="drive-note">
+    <strong>Catatan:</strong>
+    Upload seluruh dokumen pendukung
+    (SK Pemberhentian, SK Pangkat Terakhir,
+    SK Jabatan Terakhir, dan dokumen lainnya)
+    ke Google Drive, kemudian tempelkan
+    link folder di atas.
+  </div>
+
+  </div>
+
+</div>
 
       {/* PERNYATAAN */}
 
@@ -299,12 +441,83 @@ function PengaktifanKembali() {
 
       <div className="button-group">
 
-        <button className="submit-btn">
-          Ajukan Permohonan
-        </button>
+        <button
+  className="submit-btn"
+  onClick={handleSubmit}
+>
+  Ajukan Permohonan
+</button>
 
       </div>
 
+  </>
+) : (
+
+  <div className="tracking-card">
+  <h2>Status Pengajuan</h2>
+
+  <div className="timeline">
+
+    <div className="timeline-item completed">
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+        <h4>Pengajuan Dikirim</h4>
+
+        <span>
+          {new Date().toLocaleString("id-ID")}
+        </span>
+      </div>
+    </div>
+
+    <div
+      className={`timeline-item ${
+        status === "Menunggu"
+          ? "current"
+          : status === "Diproses" ||
+            status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+        <h4>Sedang Diproses</h4>
+
+        <span>
+          {status === "Menunggu"
+            ? "Menunggu verifikasi admin"
+            : status === "Diproses"
+            ? "Sedang diverifikasi"
+            : "Verifikasi selesai"}
+        </span>
+      </div>
+    </div>
+
+    <div
+      className={`timeline-item ${
+        status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+        <h4>Selesai</h4>
+
+        <span>
+          {status === "Selesai"
+            ? "Permohonan telah selesai"
+            : "Menunggu penyelesaian"}
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+)}
     </div>
   );
 }
