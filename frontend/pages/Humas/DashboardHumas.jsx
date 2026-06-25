@@ -1,7 +1,8 @@
-
 import "./DashboardHumas.css";
 
 function DashboardHumas() {
+
+
   return (
     <div className="dashboard-humas">
 
@@ -23,6 +24,8 @@ function DashboardHumas() {
           Balai Manajemen dan Pengembangan Sumber Daya Manusia
           Kementerian Agama Republik Indonesia.
         </p>
+
+        
 
       </div>
 

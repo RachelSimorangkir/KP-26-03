@@ -30,7 +30,11 @@ import PPIDAdminDashboard from "../pages/PPIDAdminDashboard";
 
 /*Humas */
 import HumasData from "../pages/Humas/HumasData";
-import DashboardHumas from "../pages/Humas/DashboardHumas"; 
+import DashboardHumas from "../pages/Humas/DashboardHumas";
+import Publikasi from "../pages/Humas/Publikasi";
+import DaftarPengajuan from "../pages/Humas/DaftarPengajuan";
+import FormPengajuan from "../pages/Humas/FormPengajuan";
+ 
 
 
 
@@ -211,25 +215,29 @@ function App() {
         />
 
         
-        {/* HUMAS */}
-        <Route path="/humas-data" element={<HumasData />}>
-        {/* Default: tampilkan DashboardHumas saat akses /humas-data */}
-       <Route index element={<DashboardHumas />} />
-  
-        {/* Sub-halaman lainnya */}
-        <Route 
-         path="publikasi" 
-         element={<h2>Publikasi Berita Kegiatan</h2>} />
-        <Route 
-         path="permintaan" 
-         element={<h2>Permintaan Data Internal</h2>} />
-        <Route 
-         path="helpdesk" 
-         element={<h2>Helpdesk</h2>} />
-        <Route 
-         path="permohonan" 
-         element={<h2>Permohonan/Keberatan</h2>} />
+        {/* HUMAS - PARENT ROUTE DENGAN SIDEBAR */}
+        <Route path="/humasdata" element={<HumasData />}>
+          {/* Default: DashboardHumas */}
+          <Route index element={<DashboardHumas />} />
+          
+          {/* Sub-halaman dengan komponen yang benar */}
+          <Route path="publikasi" element={<Publikasi />} />
+          <Route path="publikasi/form-pengajuan" element={<FormPengajuan/>} />
+          <Route path="publikasi/daftar-pengajuan" element={<DaftarPengajuan/>} />
+          <Route path="permintaan" element={<h2>Permintaan Data Internal</h2>} />
+          <Route path="helpdesk" element={<h2>Helpdesk</h2>} />
+          <Route path="permohonan" element={<h2>Permohonan/Keberatan</h2>} />
         </Route>
+
+        <Route
+            path="Publikasi"
+            element={<Publikasi />}
+          />
+
+        <Route
+          path="/humasdata/publikasi"
+          element={<Publikasi />}
+        />
 
         {/* ADMIN */}
         <Route
@@ -241,6 +249,7 @@ function App() {
           path="/admin/detail-pengajuan"
           element={<DetailPengajuan />}
         />
+
 
       </Routes>
     </BrowserRouter>

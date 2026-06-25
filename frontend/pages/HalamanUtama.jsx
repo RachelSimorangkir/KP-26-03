@@ -277,7 +277,7 @@ export default function HalamanUtama() {
           <div
             className="service-card"
             onClick={() =>
-              handleAccess("/humas-data")
+              handleAccess("/humasdata")
             }
           >
             <div className="service-icon">
