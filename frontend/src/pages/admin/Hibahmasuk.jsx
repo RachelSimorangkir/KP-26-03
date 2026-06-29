@@ -1,49 +1,28 @@
 import { useState } from "react";
-import { dummyBarangMasuk, currentUser } from "../user/bmn/dummyData";
-import { Modal, inputStyle, FormGroup, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
-import { IconPlus } from "../user/bmn/components";
+import { currentUser } from "../user/bmn/dummyData";
+import {
+  Modal, inputStyle, FormGroup,
+  AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton,
+  IconPlus,
+} from "../user/bmn/components";
 
-// ─── DAFTAR ADMIN BMN (dari data kepegawaian Bimas Kristen) ───────────────────
-// Jabatan: Pengelola Pengadaan Barang/Jasa Ahli Pertama &
-//          Penata Kelola Sistem dan Teknologi Informasi
+// ─── DAFTAR ADMIN BMN ─────────────────────────────────────────────────────────
 const adminBMN = [
-  { nama: "Olin Mawar Kristianty",  jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Tabita Marselia Silaen", jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martha Fransiska Manalu",jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Lidya Septaria Sinurat", jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Niar Ningsih Sabara",    jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
+  { nama: "Olin Mawar Kristianty",    jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
+  { nama: "Tabita Marselia Silaen",   jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
+  { nama: "Martha Fransiska Manalu",  jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
+  { nama: "Lidya Septaria Sinurat",   jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
+  { nama: "Niar Ningsih Sabara",      jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
   { nama: "Martin Hasiholan Siagian", jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Roynardo",               jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
+  { nama: "Roynardo",                 jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
 ];
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
-const parseRupiah = (str) => {
-  if (!str) return 0;
-  return parseInt(str.replace(/[^0-9]/g, "")) || 0;
-};
-
-const formatRupiah = (num) =>
-  "Rp " + Number(num).toLocaleString("id-ID");
-
-const emptyBarangItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
-
-// Konversi data lama (single-barang) → format baru (multi-barang per pengadaan)
-const normalizeData = (raw) =>
-  raw.map(d => ({
-    id: d.id,
-    noPengadaan: d.noPengadaan,
-    tanggal: d.tanggal,
-    pemeriksa: d.pj || "",
-    items: [{
-      nama: d.namaBarang,
-      kategori: d.kategori,
-      jumlah: d.jumlah,
-      kondisi: d.kondisi,
-      hargaUnit: d.nilaiUnit || "Rp 0",
-    }],
-  }));
+const parseRupiah = (str) => parseInt((str || "").replace(/[^0-9]/g, "")) || 0;
+const formatRupiah = (num) => "Rp " + Number(num).toLocaleString("id-ID");
 
 const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kondisiList  = ["Baik", "Rusak Ringan", "Rusak Berat"];
 
 const kategoriColor = {
   "Peralatan IT": { bg: "#eff6ff", color: "#2563eb" },
@@ -52,102 +31,126 @@ const kategoriColor = {
   "Lainnya":      { bg: "#f8fafc", color: "#475569" },
 };
 
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
-const BarangMasukAdmin = () => {
-  const [data, setData] = useState(normalizeData(dummyBarangMasuk));
-  const [search, setSearch] = useState("");
-  const [showModal, setShowModal] = useState(false);
+const tdBase = {
+  padding: "10px 14px", textAlign: "left",
+  borderBottom: "1px solid #f1f5f9", verticalAlign: "middle",
+};
+const tdTop = { ...tdBase, verticalAlign: "top" };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HIBAH MASUK
+// ─────────────────────────────────────────────────────────────────────────────
+const emptyMasukItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
+
+const dummyHibahMasuk = [
+  {
+    id: 1,
+    noPengadaan: "HBM-2026-001",
+    tanggal: "2026-05-10",
+    pemeriksa: "Olin Mawar Kristianty",
+    asalHibah: "Kementerian Keuangan RI",
+    items: [
+      { nama: "Laptop Lenovo ThinkPad", kategori: "Peralatan IT", jumlah: 3, kondisi: "Baik", hargaUnit: "Rp 12.000.000" },
+      { nama: "Printer Canon G3010",    kategori: "Peralatan IT", jumlah: 2, kondisi: "Baik", hargaUnit: "Rp 2.500.000" },
+    ],
+  },
+  {
+    id: 2,
+    noPengadaan: "HBM-2026-002",
+    tanggal: "2026-06-01",
+    pemeriksa: "Tabita Marselia Silaen",
+    asalHibah: "USAID Indonesia",
+    items: [
+      { nama: "Kursi Ergonomis", kategori: "Perabot", jumlah: 10, kondisi: "Baik", hargaUnit: "Rp 1.800.000" },
+    ],
+  },
+];
+
+const HibahMasukAdmin = () => {
+  const [data, setData]             = useState(dummyHibahMasuk);
+  const [search, setSearch]         = useState("");
+  const [showModal, setShowModal]   = useState(false);
   const [detailItem, setDetailItem] = useState(null);
 
-  // Cari nama admin yang login; kalau tidak ketemu gunakan admin pertama
   const defaultPemeriksa =
     adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
 
-  const [form, setForm] = useState({
+  const emptyForm = () => ({
     noPengadaan: "",
-    tanggal: new Date().toISOString().slice(0, 10),
-    pemeriksa: defaultPemeriksa,
-    items: [{ ...emptyBarangItem }],
+    tanggal:     new Date().toISOString().slice(0, 10),
+    pemeriksa:   defaultPemeriksa,
+    asalHibah:   "",
+    items:       [{ ...emptyMasukItem }],
   });
+
+  const [form, setForm] = useState(emptyForm());
 
   const filtered = data.filter(d =>
     d.noPengadaan.toLowerCase().includes(search.toLowerCase()) ||
     d.pemeriksa.toLowerCase().includes(search.toLowerCase()) ||
+    d.asalHibah.toLowerCase().includes(search.toLowerCase()) ||
     d.items.some(it => it.nama.toLowerCase().includes(search.toLowerCase()))
   );
 
-  // Hitung harga total per pengadaan
   const hitungTotal = (items) =>
     items.reduce((acc, it) => acc + parseRupiah(it.hargaUnit) * Number(it.jumlah), 0);
-
-  // Hitung total unit per pengadaan
   const hitungUnit = (items) =>
     items.reduce((acc, it) => acc + Number(it.jumlah), 0);
 
-  // ── Form helpers ──
   const addItem = () =>
-  setForm(prev => ({ ...prev, items: [...prev.items, { ...emptyBarangItem }] }));
+    setForm(prev => ({ ...prev, items: [...prev.items, { ...emptyMasukItem }] }));
 
-  const removeItem = (idx) => {
-    if (form.items.length === 1) return;
-    setForm({ ...form, items: form.items.filter((_, i) => i !== idx) });
-  };
-
-  const updateItem = (idx, field, value) => {
-    setForm({
-      ...form,
-      items: form.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
+  const removeItem = (idx) =>
+    setForm(prev => {
+      if (prev.items.length === 1) return prev;
+      return { ...prev, items: prev.items.filter((_, i) => i !== idx) };
     });
-  };
+
+  const updateItem = (idx, field, value) =>
+    setForm(prev => ({
+      ...prev,
+      items: prev.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
+    }));
 
   const handleSubmit = () => {
-    if (!form.noPengadaan || form.items.some(it => !it.nama)) return;
-    setData([...data, { ...form, id: data.length + 1 }]);
+    if (!form.noPengadaan || !form.asalHibah || form.items.some(it => !it.nama)) return;
+    setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
     setShowModal(false);
-    setForm({
-      noPengadaan: "",
-      tanggal: new Date().toISOString().slice(0, 10),
-      pemeriksa: defaultPemeriksa,
-      items: [{ ...emptyBarangItem }],
-    });
+    setForm(emptyForm());
   };
 
   const summary = {
-    total: data.length,
-    totalUnit: data.reduce((acc, d) => acc + hitungUnit(d.items), 0),
+    total:      data.length,
+    totalUnit:  data.reduce((acc, d) => acc + hitungUnit(d.items), 0),
     totalNilai: data.reduce((acc, d) => acc + hitungTotal(d.items), 0),
   };
-
-  // Style sel tabel
-  const tdBase = { padding: "10px 14px", textAlign: "left", borderBottom: "1px solid #f1f5f9", verticalAlign: "middle" };
-  const tdTop  = { ...tdBase, verticalAlign: "top" };
 
   return (
     <div>
       <AdminHeaderCard
-        title="Proses Barang Masuk"
-        subtitle="Pengecekan dan penerimaan barang pengadaan ke gudang"
+        title="Hibah Masuk"
+        subtitle="Pencatatan barang masuk melalui hibah dari instansi atau lembaga lain"
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Cari no. pengadaan, barang, pemeriksa..."
+        searchPlaceholder="Cari no. pengadaan, asal hibah, barang..."
         rightAction={
           <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
-            + Catat Barang Masuk
+            + Catat Hibah Masuk
           </AdminButton>
         }
       />
 
       <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
-        <AdminStatCard value={summary.total}               label="Total Pengadaan"   color="#2563eb" bg="#eff6ff" />
-        <AdminStatCard value={summary.totalUnit}           label="Total Unit Masuk"  color="#16a34a" bg="#f0fdf4" />
-        <AdminStatCard value={formatRupiah(summary.totalNilai)} label="Total Nilai Barang" color="#7c3aed" bg="#faf5ff" />
+        <AdminStatCard value={summary.total}                    label="Total Hibah Masuk"  color="#2563eb" bg="#eff6ff" />
+        <AdminStatCard value={summary.totalUnit}                label="Total Unit Masuk"   color="#16a34a" bg="#f0fdf4" />
+        <AdminStatCard value={formatRupiah(summary.totalNilai)} label="Total Nilai Hibah"  color="#7c3aed" bg="#faf5ff" />
       </div>
 
       {/* ── Tabel utama ── */}
       <AdminCard>
         <AdminTable headers={[
-          "No. Pengadaan", "Tanggal", "Nama Barang", "Kategori",
-          "Jumlah Per Barang", "Kondisi", "Harga Total", "Pemeriksa Barang", "Aksi"
+          "No. Pengadaan", "Tanggal", "Asal Hibah", "Nama Barang",
+          "Kategori", "Jumlah", "Kondisi", "Harga Total", "Pemeriksa Hibah", "Aksi",
         ]}>
           {filtered.map(d =>
             d.items.map((it, idx) => {
@@ -155,57 +158,41 @@ const BarangMasukAdmin = () => {
               const hargaTotal = parseRupiah(it.hargaUnit) * Number(it.jumlah);
               return (
                 <tr key={`${d.id}-${idx}`} style={{ borderBottom: "1px solid #f8fafc" }}>
-                  {/* No Pengadaan — rowspan, hanya di baris pertama */}
                   {idx === 0 && (
-                    <td style={{ ...tdTop, fontFamily: "monospace", fontSize: 12, color: "#64748b" }}
-                        rowSpan={d.items.length}>
+                    <td style={{ ...tdTop, fontFamily: "monospace", fontSize: 12, color: "#64748b" }} rowSpan={d.items.length}>
                       {d.noPengadaan}
                     </td>
                   )}
-                  {/* Tanggal — rowspan */}
                   {idx === 0 && (
-                    <td style={{ ...tdTop, color: "#64748b", whiteSpace: "nowrap" }}
-                        rowSpan={d.items.length}>
+                    <td style={{ ...tdTop, color: "#64748b", whiteSpace: "nowrap" }} rowSpan={d.items.length}>
                       {d.tanggal}
                     </td>
                   )}
-                  {/* Nama Barang */}
-                  <td style={{ ...tdBase, fontWeight: 600, color: "#1e293b" }}>
-                    {it.nama}
-                  </td>
-                  {/* Kategori */}
+                  {idx === 0 && (
+                    <td style={{ ...tdTop, color: "#374151", fontWeight: 600 }} rowSpan={d.items.length}>
+                      {d.asalHibah}
+                    </td>
+                  )}
+                  <td style={{ ...tdBase, fontWeight: 600, color: "#1e293b" }}>{it.nama}</td>
                   <td style={tdBase}>
                     <span style={{ background: kc.bg, color: kc.color, padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600 }}>
                       {it.kategori}
                     </span>
                   </td>
-                  {/* Jumlah Per Barang */}
-                  <td style={{ ...tdBase, fontWeight: 700, color: "#1e293b" }}>
-                    {it.jumlah} unit
-                  </td>
-                  {/* Kondisi */}
+                  <td style={{ ...tdBase, color: "#374151" }}>{it.jumlah} unit</td>
                   <td style={tdBase}>
                     <span style={{
                       background: it.kondisi === "Baik" ? "#dcfce7" : it.kondisi === "Rusak Ringan" ? "#fef9c3" : "#fee2e2",
                       color:      it.kondisi === "Baik" ? "#16a34a" : it.kondisi === "Rusak Ringan" ? "#a16207" : "#dc2626",
                       padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600,
-                    }}>
-                      {it.kondisi}
-                    </span>
+                    }}>{it.kondisi}</span>
                   </td>
-                  {/* Harga Total */}
-                  <td style={{ ...tdBase, fontWeight: 700, color: "#1e293b" }}>
-                    {formatRupiah(hargaTotal)}
-                  </td>
-                  {/* Pemeriksa Barang — rowspan */}
+                  <td style={{ ...tdBase, fontWeight: 700, color: "#1e293b" }}>{formatRupiah(hargaTotal)}</td>
                   {idx === 0 && (
-                    <td style={{ ...tdTop, color: "#374151" }} rowSpan={d.items.length}>
-                      {d.pemeriksa}
-                    </td>
+                    <td style={{ ...tdTop, color: "#374151" }} rowSpan={d.items.length}>{d.pemeriksa}</td>
                   )}
-                  {/* Aksi — rowspan */}
                   {idx === 0 && (
-                    <td style={tdTop} rowSpan={d.items.length}>
+                    <td style={{ ...tdTop }} rowSpan={d.items.length}>
                       <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
                     </td>
                   )}
@@ -218,30 +205,46 @@ const BarangMasukAdmin = () => {
 
       {/* ── Modal Detail ── */}
       {detailItem && (
-        <Modal title={`Detail Pengadaan — ${detailItem.noPengadaan}`} onClose={() => setDetailItem(null)} wide>
-          <div style={{ background: "#f8fafc", borderRadius: 8, padding: 14, marginBottom: 14, fontSize: 13 }}>
-            <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 8, textAlign: "center" }}>Info Pengadaan</div>
-            {[
-              ["No. Pengadaan", detailItem.noPengadaan],
-              ["Tanggal",       detailItem.tanggal],
-              ["Pemeriksa Barang", detailItem.pemeriksa],
-              ["Total Unit",    hitungUnit(detailItem.items) + " unit"],
-              ["Total Nilai",   formatRupiah(hitungTotal(detailItem.items))],
-            ].map(([k, v]) => (
-              <div key={k} style={{ display: "flex", gap: 8, fontSize: 13, marginBottom: 4 }}>
-                <span style={{ fontWeight: 600, width: 130, flexShrink: 0 }}>{k}</span>
-                <span style={{ flexShrink: 0 }}>:</span>
-                <span>{v}</span>
+        <Modal title={`Detail Hibah Masuk — ${detailItem.noPengadaan}`} onClose={() => setDetailItem(null)} wide>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+            <div style={{ background: "#f8fafc", borderRadius: 8, padding: 14, fontSize: 13 }}>
+              <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 8 }}>Info Hibah</div>
+              {[
+                ["No. Pengadaan", detailItem.noPengadaan],
+                ["Tanggal",       detailItem.tanggal],
+                ["Asal Hibah",    detailItem.asalHibah],
+                ["Pemeriksa Hibah", detailItem.pemeriksa],
+              ].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontWeight: 600, width: 120, flexShrink: 0 }}>{k}</span>
+                  <span style={{ flexShrink: 0 }}>:</span>
+                  <span>{v}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ background: "#eff6ff", borderRadius: 8, padding: 14, fontSize: 13 }}>
+              <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 8 }}>Ringkasan</div>
+              <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+                <span style={{ fontWeight: 600, width: 120, flexShrink: 0 }}>Total Barang</span>
+                <span>: {detailItem.items.length} jenis</span>
               </div>
-            ))}
+              <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+                <span style={{ fontWeight: 600, width: 120, flexShrink: 0 }}>Total Unit</span>
+                <span>: {hitungUnit(detailItem.items)} unit</span>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <span style={{ fontWeight: 600, width: 120, flexShrink: 0 }}>Total Nilai</span>
+                <span style={{ fontWeight: 700, color: "#2563eb" }}>: {formatRupiah(hitungTotal(detailItem.items))}</span>
+              </div>
+            </div>
           </div>
 
-          <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 8, textAlign: "center", fontSize: 13 }}>Daftar Barang</div>
+          <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 8, fontSize: 13 }}>Daftar Barang Hibah</div>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, border: "1px solid #e2e8f0" }}>
               <thead>
                 <tr style={{ background: "#f8fafc" }}>
-                  {["No", "Nama Barang", "Kategori", "Jumlah Per Barang", "Kondisi", "Harga/Unit", "Harga Total"].map(h => (
+                  {["No", "Nama Barang", "Kategori", "Jumlah", "Kondisi", "Harga/Unit", "Harga Total"].map(h => (
                     <th key={h} style={{ padding: "8px 12px", fontWeight: 700, color: "#374151", border: "1px solid #e2e8f0", textAlign: "left" }}>{h}</th>
                   ))}
                 </tr>
@@ -251,19 +254,19 @@ const BarangMasukAdmin = () => {
                   const hargaTotal = parseRupiah(it.hargaUnit) * Number(it.jumlah);
                   return (
                     <tr key={i}>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", color: "#64748b", textAlign: "left" }}>{i + 1}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: "#1e293b", textAlign: "left" }}>{it.nama}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left" }}>{it.kategori}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left" }}>{it.jumlah} unit</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left", color: it.kondisi === "Baik" ? "#16a34a" : "#a16207", fontWeight: 600 }}>{it.kondisi}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left" }}>{it.hargaUnit || "-"}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, color: "#1e293b", textAlign: "left" }}>{formatRupiah(hargaTotal)}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", color: "#64748b" }}>{i + 1}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: "#1e293b" }}>{it.nama}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}>{it.kategori}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}>{it.jumlah} unit</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: it.kondisi === "Baik" ? "#16a34a" : "#a16207" }}>{it.kondisi}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}>{it.hargaUnit || "-"}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, color: "#1e293b" }}>{formatRupiah(hargaTotal)}</td>
                     </tr>
                   );
                 })}
                 <tr style={{ background: "#f8fafc" }}>
-                  <td colSpan={6} style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, textAlign: "right", color: "#1e293b" }}>Total Nilai Pengadaan</td>
-                  <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 800, color: "#2563eb", textAlign: "left" }}>{formatRupiah(hitungTotal(detailItem.items))}</td>
+                  <td colSpan={6} style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, textAlign: "right", color: "#1e293b" }}>Total Nilai Hibah</td>
+                  <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 800, color: "#2563eb" }}>{formatRupiah(hitungTotal(detailItem.items))}</td>
                 </tr>
               </tbody>
             </table>
@@ -275,16 +278,16 @@ const BarangMasukAdmin = () => {
         </Modal>
       )}
 
-      {/* ── Modal Catat Barang Masuk ── */}
+      {/* ── Modal Catat Hibah Masuk ── */}
       {showModal && (
-        <Modal title="Catat Barang Masuk" onClose={() => setShowModal(false)} wide>
+        <Modal title="Catat Hibah Masuk" onClose={() => setShowModal(false)} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="Nomor Pengadaan">
               <input
                 style={inputStyle}
                 value={form.noPengadaan}
-                onChange={e => setForm({ ...form, noPengadaan: e.target.value })}
-                placeholder="PBJ-2026-XXX"
+                onChange={e => setForm(prev => ({ ...prev, noPengadaan: e.target.value }))}
+                placeholder="HBM-2026-XXX"
               />
             </FormGroup>
             <FormGroup label="Tanggal">
@@ -292,16 +295,25 @@ const BarangMasukAdmin = () => {
                 style={inputStyle}
                 type="date"
                 value={form.tanggal}
-                onChange={e => setForm({ ...form, tanggal: e.target.value })}
+                onChange={e => setForm(prev => ({ ...prev, tanggal: e.target.value }))}
               />
             </FormGroup>
           </div>
 
-          <FormGroup label="Pemeriksa Barang">
+          <FormGroup label="Asal Hibah">
+            <input
+              style={inputStyle}
+              value={form.asalHibah}
+              onChange={e => setForm(prev => ({ ...prev, asalHibah: e.target.value }))}
+              placeholder="Contoh: Kementerian Keuangan RI"
+            />
+          </FormGroup>
+
+          <FormGroup label="Pemeriksa Hibah">
             <select
               style={inputStyle}
               value={form.pemeriksa}
-              onChange={e => setForm({ ...form, pemeriksa: e.target.value })}
+              onChange={e => setForm(prev => ({ ...prev, pemeriksa: e.target.value }))}
             >
               {adminBMN.map(a => (
                 <option key={a.nama} value={a.nama}>
@@ -350,15 +362,13 @@ const BarangMasukAdmin = () => {
                         onChange={e => updateItem(idx, "jumlah", e.target.value)}
                       />
                     </td>
-                    <td style={{ padding: "4px 6px", border: "1px solid #cbd5e1", minWidth: 110 }}>
+                    <td style={{ padding: "4px 6px", border: "1px solid #cbd5e1", minWidth: 120 }}>
                       <select
                         style={{ ...inputStyle, border: "none", padding: "5px 6px", background: "transparent" }}
                         value={it.kondisi}
                         onChange={e => updateItem(idx, "kondisi", e.target.value)}
                       >
-                        <option>Baik</option>
-                        <option>Rusak Ringan</option>
-                        <option>Rusak Berat</option>
+                        {kondisiList.map(k => <option key={k}>{k}</option>)}
                       </select>
                     </td>
                     <td style={{ padding: "4px 6px", border: "1px solid #cbd5e1", minWidth: 120 }}>
@@ -399,4 +409,4 @@ const BarangMasukAdmin = () => {
   );
 };
 
-export default BarangMasukAdmin;
+export default HibahMasukAdmin;
