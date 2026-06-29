@@ -34,6 +34,15 @@ import DashboardHumas from "../pages/Humas/DashboardHumas";
 import Publikasi from "../pages/Humas/Publikasi";
 import DaftarPengajuan from "../pages/Humas/DaftarPengajuan";
 import FormPengajuan from "../pages/Humas/FormPengajuan";
+import PermintaanData from "../pages/Humas/PermintaanData";
+import DataInternal from "../pages/Humas/DataInternal";
+import StatusData from "../pages/Humas/StatusData";
+import Helpdesk from "../pages/Humas/Helpdesk";
+import FormHelpdesk from "../pages/Humas/FormHelpdesk";
+import StatusHelpdesk from "../pages/Humas/StatusHelpdesk";
+import PPID from "../pages/Humas/PPID";
+import Permohonan from "../pages/Humas/Permohonan";
+import StatusPermohonan from "../pages/Humas/StatusPermohonan";
  
 
 
@@ -215,29 +224,32 @@ function App() {
         />
 
         
-        {/* HUMAS - PARENT ROUTE DENGAN SIDEBAR */}
+        {/* HUMAS - PARENT ROUTE DENGAN SIDEBAR */} 
         <Route path="/humasdata" element={<HumasData />}>
-          {/* Default: DashboardHumas */}
+          {/* Default: DashboardHumas saat akses /humasdata */}
           <Route index element={<DashboardHumas />} />
-          
-          {/* Sub-halaman dengan komponen yang benar */}
+  
+          {/* Publikasi */}
           <Route path="publikasi" element={<Publikasi />} />
-          <Route path="publikasi/form-pengajuan" element={<FormPengajuan/>} />
-          <Route path="publikasi/daftar-pengajuan" element={<DaftarPengajuan/>} />
-          <Route path="permintaan" element={<h2>Permintaan Data Internal</h2>} />
-          <Route path="helpdesk" element={<h2>Helpdesk</h2>} />
-          <Route path="permohonan" element={<h2>Permohonan/Keberatan</h2>} />
+          <Route path="publikasi/form-pengajuan" element={<FormPengajuan />} />
+          <Route path="publikasi/daftar-pengajuan" element={<DaftarPengajuan />} />
+  
+          {/* Permintaan Data Internal */}
+          <Route path="PermintaanData" element={<PermintaanData/>} />
+          <Route path="PermintaanData/DataInternal" element={<DataInternal />} />
+          <Route path="PermintaanData/StatusData" element={<StatusData />} />
+  
+          {/* HelpDesk */}
+          <Route path="helpdesk" element={<Helpdesk />} />
+          <Route path="helpdesk/FormHelpdesk" element={<FormHelpdesk />} />
+          <Route path="helpdesk/StatusHelpdesk" element={<StatusHelpdesk />} />
+
+          {/* Permohonan/Keberatan */}
+          <Route path="PPID" element={<PPID />} />
+          <Route path="PPID/Permohonan" element={<Permohonan />} />
+          <Route path="PPID/StatusPermohonan" element={<StatusPermohonan />} />
         </Route>
 
-        <Route
-            path="Publikasi"
-            element={<Publikasi />}
-          />
-
-        <Route
-          path="/humasdata/publikasi"
-          element={<Publikasi />}
-        />
 
         {/* ADMIN */}
         <Route

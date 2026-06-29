@@ -9,7 +9,7 @@ export default function DaftarPengajuan() {
   const [pengajuanList, setPengajuanList] = useState([
     {
       id: 1,
-      judul: "Pelatihan Guru Madrasah 2024",
+      judul: "Pelatihan Guru Kristen 2024",
       tanggalPengajuan: "2024-06-20",
       tanggalTerbit: "2024-06-25",
       statusAtasan: "Disetujui",
@@ -36,7 +36,7 @@ export default function DaftarPengajuan() {
     },
     {
       id: 4,
-      judul: "Workshop Pendidikan Islam",
+      judul: "Workshop Pendidikan Kristen",
       tanggalPengajuan: "2024-06-10",
       tanggalTerbit: null,
       statusAtasan: "Revisi",
@@ -58,7 +58,7 @@ export default function DaftarPengajuan() {
   };
 
   const handleEdit = (id) => {
-    navigate(`/humas/form-pengajuan/${id}`);
+    navigate(`/humasdata/publikasi/FormPengajuan/${id}`);
   };
 
   return (
@@ -67,8 +67,8 @@ export default function DaftarPengajuan() {
       <div className="rekom-header">
         <button
           className="back-button"
-          onClick={() => navigate("/humas")}
-        >
+          onClick={() => navigate("/humasdata/publikasi/form-pengajuan")}  // ✅ Perbaiki path-nya
+          >
           ← Kembali
         </button>
       </div>
@@ -88,9 +88,9 @@ export default function DaftarPengajuan() {
       <div className="action-header">
         <button
           className="btn-primary"
-          onClick={() => navigate("/humas/form-pengajuan")}
-        >
-          + Ajukan Publikasi Baru
+          onClick={() => navigate("/humasdata/publikasi/form-pengajuan")}  // ✅ Huruf kecil semua
+       >
+        + Ajukan Publikasi Baru
         </button>
       </div>
 
@@ -143,10 +143,10 @@ export default function DaftarPengajuan() {
               <div className="pengajuan-actions">
                 {(item.statusAtasan === "Revisi" || item.statusHumas === "Revisi") && (
                   <button
-                    className="btn-edit"
-                    onClick={() => handleEdit(item.id)}
+                   className="btn-edit"
+                    onClick={() => navigate("/humasdata/publikasi/form-pengajuan")}  // ✅ Huruf kecil semua
                   >
-                    ️ Edit & Ajukan Ulang
+                  ✏️ Edit & Ajukan Ulang
                   </button>
                 )}
               </div>

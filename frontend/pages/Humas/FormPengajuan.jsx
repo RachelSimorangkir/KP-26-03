@@ -62,7 +62,7 @@ export default function FormPengajuan() {
       <div className="rekom-header">
         <button
           className="back-button"
-          onClick={() => navigate("/humas")}
+          onClick={() => navigate("/humasdata/publikasi")}
         >
           ← Kembali
         </button>

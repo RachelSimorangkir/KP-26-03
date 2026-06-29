@@ -14,17 +14,17 @@ function HumasData() {
     {
       icon: "📊",
       title: "Permintaan Data Internal",
-      path: "/humasdata/permintaan",
+      path: "/humasdata/PermintaanData",
     },
     {
       icon: "🛠️",
       title: "Helpdesk",
-      path: "/humasdata/helpdesk",
+      path: "/humasdata/Helpdesk",
     },
     {
       icon: "📨",
-      title: "Permohonan/Keberatan",
-      path: "/humasdata/permohonan",
+      title: "PPID Internal",
+      path: "/humasdata/PPID",
     },
   ];
 

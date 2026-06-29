@@ -1,0 +1,219 @@
+/* =====================================
+   FORM PERMOHONAN - STYLES
+===================================== */
+
+.form-pengajuan {
+  margin-top: 30px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #16324b;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.required {
+  color: #dc2626;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s;
+  background: white;
+  color: #16324b;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.readonly-input {
+  background: #f1f5f9 !important;
+  cursor: not-allowed;
+  color: #64748b !important;
+}
+
+.input-error {
+  border-color: #dc2626 !important;
+}
+
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+  display: block;
+}
+
+.form-group small {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* Hint Warning untuk field conditional */
+.hint-warning {
+  color: #d97706 !important;
+  background: #fef3c7;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #f59e0b;
+  display: block;
+  margin-top: 6px;
+}
+
+/* File List */
+.file-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-item {
+  padding: 10px 14px;
+  background: #eff6ff;
+  border-radius: 10px;
+  color: #1e40af;
+  font-size: 14px;
+  border: 1px solid #dbeafe;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-info {
+  flex: 1;
+}
+
+.btn-remove-file {
+  background: #fee2e2;
+  color: #991b1b;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-file:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Error Summary */
+.error-summary {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  color: #991b1b;
+}
+
+.error-summary ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.error-summary li {
+  margin-bottom: 6px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 2px solid #f1f5f9;
+}
+
+.btn-secondary,
+.btn-primary {
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: #16324b;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.btn-secondary:hover {
+  background: #16324b;
+  color: white;
+  transform: translateY(-3px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #16324b, #2563eb);
+  color: white;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
+  }
+}
