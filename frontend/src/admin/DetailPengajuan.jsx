@@ -3,7 +3,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function DetailPengajuan() {
   const navigate = useNavigate();
@@ -17,7 +17,32 @@ export default function DetailPengajuan() {
     .replace(/^./, (str) => str.toUpperCase());
 };
 
-  const data = location.state;
+  const [data, setData] = useState(location.state);
+  useEffect(() => {
+
+    if (!data?.id) return;
+
+    const loadData = () => {
+
+        fetch(`http://localhost:8080/api/pengajuan/detail/${data.id}`)
+            .then((res) => res.json())
+            .then((result) => {
+
+                setData(result);
+
+            })
+            .catch(console.error);
+
+    };
+
+    loadData();
+
+    const interval = setInterval(loadData, 5000);
+
+    return () => clearInterval(interval);
+
+}, [data?.id]);
+
   console.log("DATA =", data);
   console.log(JSON.parse(data.data_pengajuan));
 
@@ -74,11 +99,13 @@ Object.keys(detail).forEach((key) => {
     if(suratRespon){
 
         formData.append(
-            "surat",
+            "file_respon",
             suratRespon
         );
 
     }
+    console.log("ID =", data.id);
+console.log("STATUS =", status);
 
     const response=await fetch(
 
@@ -96,20 +123,35 @@ Object.keys(detail).forEach((key) => {
 
     const result=await response.json();
 
-    if(result.success){
+if(result.success){
 
-        setStatus(statusBaru);
+    setStatus(statusBaru);
 
-        setCatatanAdmin(catatan);
+    setCatatanAdmin(catatan);
 
-        alert("Berhasil");
+    // ambil data terbaru dari database
+    const res = await fetch(
+      `http://localhost:8080/api/pengajuan/detail/${data.id}`
+    );
 
-    }
+    const terbaru = await res.json();
+
+    setData(terbaru);
+
+    alert("Status berhasil diperbarui.");
+
+}
 
 }
   const [status, setStatus] = useState(
     data?.status || "Menunggu"
   );
+  useEffect(() => {
+  if (data) {
+    setStatus(data.status);
+    setCatatanAdmin(data.catatan_admin || "");
+  }
+}, [data]);
 
   const [catatanAdmin, setCatatanAdmin] =
     useState("");
@@ -126,7 +168,6 @@ Object.keys(detail).forEach((key) => {
 
           <button
             className="back-btn"
-            onClick={() => navigate("/admin")}
           >
             Kembali
           </button>
@@ -139,31 +180,21 @@ Object.keys(detail).forEach((key) => {
 
 const handleApprove = async () => {
 
-  if(window.confirm(`Setujui pengajuan ${data.nama}?`)){
+    if (!suratRespon) {
 
-    await updateStatus(
-      "Disetujui",
-      catatanAdmin
-    );
+        alert("Silakan upload surat balasan terlebih dahulu.");
 
-  }
-  if(!suratRespon){
+        return;
 
-    alert("Silakan upload surat hasil terlebih dahulu.");
+    }
 
-    return;
-
-}
-
-if(catatanAdmin.trim()===""){
-
-    alert("Catatan admin belum diisi.");
-
-    return;
-
-}
-
+        await updateStatus(
+    "Selesai",
+    catatanAdmin
+);
 };
+
+
 const handleProcess = async () => {
 
   await updateStatus(
@@ -196,7 +227,6 @@ const handleReject = async () => {
 
 <button
   className="back-btn"
-  onClick={() => navigate("/admin")}
 >
   ← Kembali
 </button>
@@ -233,7 +263,7 @@ const handleReject = async () => {
             ? "pending"
             : status === "Diproses"
             ? "process"
-            : status === "Disetujui"
+            : status === "Selesai"
             ? "approved"
             : "rejected"
         }`}
@@ -266,7 +296,7 @@ const handleReject = async () => {
     </div>
 
     {(status === "Diproses" ||
-      status === "Disetujui") && (
+      status === "Selesai") && (
       <div className="timeline-item">
         <div className="timeline-dot"></div>
 
@@ -279,14 +309,14 @@ const handleReject = async () => {
       </div>
     )}
 
-    {status === "Disetujui" && (
+    {status === "Selesai" && (
       <div className="timeline-item">
         <div className="timeline-dot"></div>
 
         <div className="timeline-content">
-          <h4>Disetujui</h4>
+          <h4>Selesai</h4>
           <p>
-            Pengajuan telah disetujui.
+            Pengajuan telah Selesai.
           </p>
         </div>
       </div>
@@ -660,7 +690,7 @@ suratRespon && (
   <button
     className="approve-btn"
     onClick={handleApprove}
-    disabled={status === "Disetujui"}
+    disabled={status === "Selesai"}
   >
     ✅ Setujui
   </button>
@@ -670,5 +700,4 @@ suratRespon && (
       </div>
 
     </div>
-  );
-}
+  )}

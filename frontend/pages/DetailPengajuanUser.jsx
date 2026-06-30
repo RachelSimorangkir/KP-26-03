@@ -4,89 +4,57 @@ import { useEffect, useState } from "react";
 
 export default function DetailPengajuanUser() {
 
-  const location = useLocation();
-const navigate = useNavigate();
+    const location = useLocation();
+    const navigate = useNavigate();
 
-const [data, setData] = useState(location.state);
+    const [data, setData] = useState(location.state);
 
-useEffect(() => {
+    useEffect(() => {
 
-    if (!location.state?.id) return;
+        if (!data?.id) return;
 
-    fetch(
-        `http://localhost:8080/api/pengajuan/detail/${location.state.id}`
-    )
-        .then((res) => res.json())
-        .then((hasil) => {
+        const loadData = () => {
 
-            setData(hasil);
+            fetch(
+                `http://localhost:8080/api/pengajuan/detail/${data.id}`
+            )
+            .then(res => res.json())
+            .then(result => {
 
-        })
-        .catch(console.error);
+                setData(result);
 
-}, [location.state]);
+                console.log(result.status);
 
-  if (!data) {
+            });
+
+        };
+
+        loadData();
+
+        const interval = setInterval(loadData, 5000);
+
+        return () => clearInterval(interval);
+
+    }, [data?.id]);
+
+if (!data) {
     return (
-      <div className="detail-user-page">
+        <div className="detail-user-page">
+            <div className="detail-user-card">
+                <h2>Data pengajuan tidak ditemukan</h2>
 
-        <div className="detail-user-card">
-
-          <h2>Data pengajuan tidak ditemukan</h2>
-
-          <button
-            className="back-btn"
-            onClick={() => navigate("/")}
-          >
-            Kembali
-          </button>
-
+                <button
+                    className="back-btn"
+                    onClick={() => navigate("/")}
+                >
+                    Kembali
+                </button>
+            </div>
         </div>
-
-        <div className="status-wrapper">
-
-    <div className="progress-card">
-
-        <div className="progress-step active">
-            <div className="circle">1</div>
-            <span>Pengajuan</span>
-        </div>
-
-        <div className="line"></div>
-
-        <div
-            className={`progress-step ${
-                data.status !== "Menunggu"
-                    ? "active"
-                    : ""
-            }`}
-        >
-            <div className="circle">2</div>
-            <span>Diproses</span>
-        </div>
-
-        <div className="line"></div>
-
-        <div
-            className={`progress-step ${
-                data.status === "Disetujui"
-                    ? "active"
-                    : ""
-            }`}
-        >
-            <div className="circle">3</div>
-            <span>Selesai</span>
-        </div>
-
-    </div>
-
-</div>
-
-      </div>
     );
-  }
+}
 
-return (
+  return (
 
   <div className="detail-user-page">
 
@@ -155,7 +123,7 @@ return (
 
           <div
             className={`progress-step ${
-              data.status === "Disetujui"
+              data.status === "Selesai"
                 ? "active"
                 : ""
             }`}
@@ -184,7 +152,7 @@ return (
               ? "pending"
               : data.status === "Diproses"
               ? "process"
-              : data.status === "Disetujui"
+              : data.status === "Selesai"
               ? "approved"
               : "rejected"
           }`}
@@ -260,36 +228,60 @@ return (
 
         <ul>
 
-          <li className="done">
-            ✔ Pengajuan berhasil dikirim
-          </li>
+<li className="done">
+✔ Pengajuan berhasil dikirim
+</li>
 
-          {data.status !== "Menunggu" && (
+<li
+className={
+data.status==="Diproses" ||
+data.status==="Selesai"
+? "done"
+: ""
+}
+>
 
-            <li className="done">
-              ✔ Sedang diproses Admin
-            </li>
+{
+data.status==="Menunggu"
+?
+"⏳ Menunggu verifikasi admin"
+:
+"✔ Sedang diproses admin"
+}
 
-          )}
+</li>
 
-          {data.status === "Disetujui" && (
+<li
+className={
+data.status==="Selesai"
+?
+"done"
+:
+""
+}
+>
 
-            <li className="done">
-              ✔ Pengajuan telah disetujui
-            </li>
+{
+data.status==="Selesai"
+?
+"✔ Pengajuan telah selesai"
+:
+"Menunggu penyelesaian"
+}
 
-          )}
+</li>
 
-          {data.status === "Ditolak" && (
+{data.status==="Ditolak" && (
 
-            <li className="reject">
-              ✖ Pengajuan ditolak
-            </li>
+<li className="reject">
 
-          )}
+✖ Pengajuan ditolak
 
-        </ul>
+</li>
 
+)}
+
+</ul>
       </div>
 
       {/* SURAT PERMOHONAN */}
@@ -315,7 +307,7 @@ return (
       )}
 
       {/* DOKUMEN PENDUKUNG */}
-      {data.drive_link && (
+      {data.link_drive && (
 
         <div className="detail-section">
 
@@ -324,7 +316,7 @@ return (
           </h3>
 
           <a
-            href={data.drive_link}
+            href={data.link_drive}
             target="_blank"
             rel="noopener noreferrer"
             className="download-btn"
@@ -337,21 +329,25 @@ return (
       )}
 
       {/* CATATAN ADMIN */}
-      <div className="detail-section">
+{data.catatan_admin && (
 
-        <h3>
-          💬 Catatan Admin
-        </h3>
+<div className="detail-section">
 
-        <p>
-          {data.catatan_admin ||
-            "Belum ada catatan dari admin."}
-        </p>
+<h3>
+💬 Catatan Admin
+</h3>
 
-      </div>
+<p>
+{data.catatan_admin}
+</p>
+
+</div>
+
+)}
 
       {/* SURAT BALASAN */}
-      {data.file_respon && (
+      {data.status==="Selesai" &&
+data.file_respon && (
 
         <div className="detail-section">
 

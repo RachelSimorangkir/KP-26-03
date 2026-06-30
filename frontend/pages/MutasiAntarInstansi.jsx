@@ -14,28 +14,21 @@ const [suratPermohonan, setSuratPermohonan] =
 const [driveLink, setDriveLink] =
   useState("");
 
-  const formData = new FormData();
+  const handleSubmit = async () => {
+     const formData = new FormData();
 
 formData.append("nip", nip);
 formData.append("nama", nama);
 formData.append("jabatan", jabatan);
 formData.append("unitKerja", unitKerja);
 
-formData.append("layanan","Cuti");
-
-formData.append("jenisCuti", jenisCuti);
-
-formData.append("tanggalMulai", tanggalMulai);
-
-formData.append("tanggalSelesai", tanggalSelesai);
+formData.append("layanan","Mutasi Antar Instansi");
 
 formData.append("status","Menunggu");
 
 formData.append("driveLink", driveLink);
 
 formData.append("suratPermohonan", suratPermohonan);
-
-  const handleSubmit = async () => {
 
   if (!suratPermohonan) {
     Swal.fire({
@@ -96,20 +89,15 @@ const handleNipChange = async (e) => {
 
   try {
     const response = await fetch(
-    "http://localhost:8080/api/pengajuan",
-    {
-        method:"POST",
-        body:formData
-    }
+`http://localhost:8080/api/pegawai/${value}`
 );
 
     const data = await response.json();
 
-    if (data) {
-      setNama(data.nama || "");
-      setJabatan(data.jabatan || "");
-      setUnitKerja(data.unit_organisasi || "");
-    }
+setNama(data.nama || "");
+setJabatan(data.jabatan || "");
+setUnitKerja(data.unit_organisasi || "");
+
   } catch (error) {
     console.error(error);
   }

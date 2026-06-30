@@ -22,10 +22,15 @@ $routes->get(
 $routes->options('api/(:any)', static function () {
     return service('response')->setStatusCode(200);
 });
-$routes->post(
-    'api/pengajuan',
-    'PengajuanController::create'
-);
+$routes->group('api', ['filter' => 'cors'], function($routes){
+
+    $routes->post('pengajuan','PengajuanController::create');
+
+    $routes->put('notifikasi/read/(:num)','NotifikasiController::read/$1');
+
+    $routes->get('pegawai/(:segment)','Pegawai::getPegawaiByNip/$1');
+
+});
 $routes->options(
     'api/(:any)',
     static function () {
@@ -73,4 +78,8 @@ $routes->options(
     static function () {
         return service('response')->setStatusCode(200);
     }
+);
+$routes->put(
+    'api/notifikasi/read-all/(:segment)',
+    'NotifikasiController::readAll/$1'
 );

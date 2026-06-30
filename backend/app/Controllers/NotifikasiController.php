@@ -13,6 +13,20 @@ class NotifikasiController extends BaseController
         $this->notifikasiModel = new NotifikasiModel();
     }
 
+    public function readAll($nip)
+{
+    $this->notifikasiModel
+        ->where("nip", $nip)
+        ->set([
+            "status" => "read"
+        ])
+        ->update();
+
+    return $this->response->setJSON([
+        "success" => true
+    ]);
+}
+
     // Ambil semua notifikasi user
     public function index($nip)
     {

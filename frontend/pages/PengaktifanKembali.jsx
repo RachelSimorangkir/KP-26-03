@@ -102,38 +102,28 @@ const handleSubmit = async () => {
 });
 
         const response = await fetch(
+    "http://localhost:8080/api/pengajuan",
+    {
+        method: "POST",
+        body: formData
+    }
+);
 
-            "http://localhost:8080/api/pengajuan",
+const result = await response.json();
 
-            {
+console.log(result);
 
-                method:"POST",
+if (!response.ok) {
+    throw new Error(result.error || result.message);
+}
+setSubmitted(true);
+setStatus("Menunggu");
 
-                body:formData
-
-            }
-
-        );
-
-        const result = await response.json();
-
-        if(result.success){
-
-            setSubmitted(true);
-
-            setStatus("Menunggu");
-
-            Swal.fire({
-
-                icon:"success",
-
-                title:"Berhasil",
-
-                text:"Pengajuan berhasil dikirim"
-
-            });
-
-        }
+await Swal.fire({
+    icon: "success",
+    title: "Berhasil",
+    text: result.message,
+});
 
     }
 

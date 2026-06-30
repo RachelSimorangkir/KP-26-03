@@ -18,20 +18,15 @@ const [suratPermohonan, setSuratPermohonan] =
 const [driveLink, setDriveLink] =
   useState("");
 
-const formData = new FormData();
+  const handleSubmit = async () => {
+    const formData = new FormData();
 
 formData.append("nip", nip);
 formData.append("nama", nama);
 formData.append("jabatan", jabatan);
 formData.append("unitKerja", unitKerja);
 
-formData.append("layanan","Cuti");
-
-formData.append("jenisCuti", jenisCuti);
-
-formData.append("tanggalMulai", tanggalMulai);
-
-formData.append("tanggalSelesai", tanggalSelesai);
+formData.append("layanan","Mutasi Internal");
 
 formData.append("status","Menunggu");
 
@@ -39,7 +34,6 @@ formData.append("driveLink", driveLink);
 
 formData.append("suratPermohonan", suratPermohonan);  
 
-  const handleSubmit = async () => {
 
   if (!suratPermohonan) {
     Swal.fire({

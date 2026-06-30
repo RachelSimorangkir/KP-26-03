@@ -10,32 +10,24 @@ class PengajuanModel extends Model
 
     protected $primaryKey = "id";
 
+    protected $returnType = "array";
+
+    protected $useAutoIncrement = true;
+
     protected $allowedFields = [
 
         "nip",
-
         "nama",
-
         "jabatan",
-
         "unit_kerja",
-
         "layanan",
-
         "status",
-
         "tanggal_pengajuan",
-
         "data_pengajuan",
-
-        "link_drive",
-
+        "drive_link",
         "surat_permohonan",
-
         "catatan_admin",
-
-        "file_respon"
-
+        "file_respon",
     ];
 
     protected $useTimestamps = false;

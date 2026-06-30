@@ -64,31 +64,41 @@ public function create()
             $filePath = "uploads/permohonan/" . $namaBaru;
         }
 
-        $this->pengajuanModel->insert([
+        $insertData = [
 
-            'nip' => $data['nip'] ?? '',
+    'nip' => $data['nip'] ?? '',
 
-            'nama' => $data['nama'] ?? '',
+    'nama' => $data['nama'] ?? '',
 
-            'jabatan' => $data['jabatan'] ?? '',
+    'jabatan' => $data['jabatan'] ?? '',
 
-            'unit_kerja' => $data['unitKerja'] ?? '',
+    'unit_kerja' => $data['unitKerja'] ?? '',
 
-            'layanan' => $data['layanan'] ?? '',
+    'layanan' => $data['layanan'] ?? '',
 
-            'status' => 'Menunggu',
+    'status' => 'Menunggu',
 
-            'tanggal_pengajuan' => date("Y-m-d H:i:s"),
+    'tanggal_pengajuan' => date("Y-m-d H:i:s"),
 
-            'surat_permohonan' => $filePath,
+    'surat_permohonan' => $filePath,
 
-            'drive_link' => $data['linkDrive'] ?? "",
+    'link_drive' => $data['linkDrive'] ?? "",
 
-            'data_pengajuan' => $data['dataPengajuan'] ?? "",
+    'data_pengajuan' => $data['dataPengajuan'] ?? ""
 
-            'pangkat' => $data['pangkat'] ?? ''
+];
 
-        ]);
+log_message('debug', json_encode($insertData));
+
+        $this->pengajuanModel->insert($insertData);
+
+$id = $this->pengajuanModel->insertID();
+
+return $this->response->setJSON([
+    "success" => true,
+    "message" => "Pengajuan berhasil dikirim",
+    "id" => $id
+]);
 
         return $this->response->setJSON([
             "success" => true,

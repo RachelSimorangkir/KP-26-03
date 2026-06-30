@@ -16,21 +16,15 @@ const [keperluan, setKeperluan] = useState("");
 const [email, setEmail] = useState("");
 const [noHp, setNoHp] = useState("");
 const [status, setStatus] = useState("Menunggu");
-
-const formData = new FormData();
+  const handleSubmit = async () => {
+    const formData = new FormData();
 
 formData.append("nip", nip);
 formData.append("nama", nama);
 formData.append("jabatan", jabatan);
 formData.append("unitKerja", unitKerja);
 
-formData.append("layanan","Cuti");
-
-formData.append("jenisCuti", jenisCuti);
-
-formData.append("tanggalMulai", tanggalMulai);
-
-formData.append("tanggalSelesai", tanggalSelesai);
+formData.append("layanan","SKBT Mandiri");
 
 formData.append("status","Menunggu");
 
@@ -38,7 +32,6 @@ formData.append("driveLink", driveLink);
 
 formData.append("suratPermohonan", suratPermohonan);
 
-  const handleSubmit = async () => {
   try {
     const response = await fetch(
       "http://localhost:8080/api/pengajuan",

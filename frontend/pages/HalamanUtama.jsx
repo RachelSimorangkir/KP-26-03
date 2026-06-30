@@ -22,6 +22,11 @@ export default function HalamanUtama() {
   
   const nip = localStorage.getItem("userNIP");
 
+const unreadCount =
+notifications.filter(
+    n=>n.status==="unread"
+).length;
+
   useEffect(() => {
 
   if (!nip) return;
@@ -58,11 +63,25 @@ export default function HalamanUtama() {
     window.location.reload();
   };
 
+  const markAllAsRead = async () => {
+  await fetch(
+    `http://localhost:8080/api/notifikasi/read-all/${nip}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  setNotifications((prev) =>
+    prev.map((item) => ({
+      ...item,
+      status: "read",
+    }))
+  );
+};
+
 const handleNotificationClick = async (notif) => {
 
-  console.log("NOTIF =", notif);
-  console.log("PENGAJUAN ID =", notif.pengajuan_id);
-
+  // tandai notif ini sudah dibaca
   await fetch(
     `http://localhost:8080/api/notifikasi/read/${notif.id}`,
     {
@@ -70,18 +89,24 @@ const handleNotificationClick = async (notif) => {
     }
   );
 
+  // ambil detail pengajuan
   const res = await fetch(
     `http://localhost:8080/api/pengajuan/detail/${notif.pengajuan_id}`
   );
 
   const pengajuan = await res.json();
 
-  console.log("PENGAJUAN", pengajuan);
-
-  setNotifications(
-    notifications.filter((n) => n.id !== notif.id)
+  // update state supaya notif berubah jadi read
+  setNotifications((prev) =>
+    prev.map((item) =>
+      item.id === notif.id
+        ? {
+            ...item,
+            status: "read",
+          }
+        : item
+    )
   );
-  
 
   setShowNotif(false);
 
@@ -137,78 +162,99 @@ const handleNotificationClick = async (notif) => {
               {/* NOTIFIKASI */}
 <div className="notif-wrapper">
 
-  <div
-    className="notif-icon"
-    onClick={() =>
-      setShowNotif(!showNotif)
-    }
-  >
-    🔔
+<div
+  className="notif-icon"
+  onClick={() => setShowNotif(!showNotif)}
+>
+  🔔
 
-<span className="notif-badge">
-  {
-    notifications.filter(
-      (item) => item.status === "unread"
-    ).length
-  }
-</span>
-  </div>
+  {unreadCount > 0 && (
+    <span className="notif-badge">
+      {unreadCount}
+    </span>
+  )}
+</div>
 
   {showNotif && (
-    <div className="notif-dropdown">
+<div className="notif-dropdown">
 
-      <div className="notif-header">
+    <div className="notif-header">
         Notifikasi
-      </div>
 
-{notifications.length === 0 ? (
-
-  <div className="notif-item">
-    Tidak ada notifikasi
-  </div>
-
-) : (
-
-notifications.map((notif) => (
-
-  <div
-    key={notif.id}
-    className="notif-item"
-    onClick={() =>
-      handleNotificationClick(notif)
-    }
-    style={{ cursor: "pointer" }}
-  >
-
-    <div className="notif-title">
-
-      <span className="notif-item-icon">
-        🔔
-      </span>
-
-      <span className="notif-item-text">
-        {notif.judul}
-      </span>
+        {unreadCount > 0 && (
+            <button
+                className="read-all-btn"
+                onClick={markAllAsRead}
+            >
+                Tandai semua
+            </button>
+        )}
 
     </div>
 
-    <div
-      style={{
-        fontSize: "13px",
-        color: "#64748b",
-        marginTop: "5px",
-      }}
-    >
-      {notif.pesan}
+    <div className="notif-body">
+
+        {notifications.length === 0 ? (
+
+            <div className="notif-item">
+                Tidak ada notifikasi
+            </div>
+
+        ) : (
+
+            notifications.map((notif) => (
+
+                <div
+                    key={notif.id}
+                    className={`notif-item ${
+                        notif.status === "unread"
+                            ? "unread"
+                            : "read"
+                    }`}
+                    onClick={() =>
+                        handleNotificationClick(notif)
+                    }
+                >
+
+                    <div className="notif-title">
+
+                        <span className="notif-item-icon">
+                            {notif.status === "unread"
+                                ? "🔵"
+                                : "⚪"}
+                        </span>
+
+                        <span className="notif-item-text">
+                            {notif.judul}
+                        </span>
+
+                    </div>
+
+                    <div className="notif-date">
+                        {new Date(
+                            notif.created_at
+                        ).toLocaleString("id-ID")}
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize: "13px",
+                            color: "#64748b",
+                            marginTop: "5px",
+                        }}
+                    >
+                        {notif.pesan}
+                    </div>
+
+                </div>
+
+            ))
+
+        )}
+
     </div>
 
-  </div>
-
-))
-
-)}
-
-    </div>
+</div>
   )}
 
 </div>

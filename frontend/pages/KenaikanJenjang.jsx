@@ -21,26 +21,6 @@ const [linkDrive, setLinkDrive] =
   useState("");
 const handleNipChange = async (e) => {
   const value = e.target.value;
-const formData = new FormData();
-
-formData.append("nip", nip);
-formData.append("nama", nama);
-formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitKerja);
-
-formData.append("layanan","Cuti");
-
-formData.append("jenisCuti", jenisCuti);
-
-formData.append("tanggalMulai", tanggalMulai);
-
-formData.append("tanggalSelesai", tanggalSelesai);
-
-formData.append("status","Menunggu");
-
-formData.append("driveLink", driveLink);
-
-formData.append("suratPermohonan", suratPermohonan);
 
   setNip(value);
 
@@ -48,6 +28,7 @@ formData.append("suratPermohonan", suratPermohonan);
 
   try {
     const response = await fetch(
+      
       `http://localhost:8080/api/pegawai/${value}`
     );
 
@@ -79,15 +60,38 @@ const handleSubmit = async () => {
 
     return;
   }
+  
 
   try {
+    const formData = new FormData();
+
+formData.append("nip", nip);
+formData.append("nama", nama);
+formData.append("jabatan", jabatan);
+formData.append("unitKerja", unitKerja);
+
+formData.append(
+  "layanan",
+  "Kenaikan Jenjang Jabatan"
+);
+
+formData.append("status", "Menunggu");
+
+formData.append("driveLink", linkDrive);
+
+formData.append(
+  "suratPermohonan",
+  suratPermohonan
+);
 
     const response = await fetch(
     "http://localhost:8080/api/pengajuan",
     {
         method:"POST",
         body:formData
+        
       }
+    
     );
 
     const result =
