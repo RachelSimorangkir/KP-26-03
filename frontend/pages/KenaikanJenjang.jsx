@@ -21,6 +21,26 @@ const [linkDrive, setLinkDrive] =
   useState("");
 const handleNipChange = async (e) => {
   const value = e.target.value;
+const formData = new FormData();
+
+formData.append("nip", nip);
+formData.append("nama", nama);
+formData.append("jabatan", jabatan);
+formData.append("unitKerja", unitKerja);
+
+formData.append("layanan","Cuti");
+
+formData.append("jenisCuti", jenisCuti);
+
+formData.append("tanggalMulai", tanggalMulai);
+
+formData.append("tanggalSelesai", tanggalSelesai);
+
+formData.append("status","Menunggu");
+
+formData.append("driveLink", driveLink);
+
+formData.append("suratPermohonan", suratPermohonan);
 
   setNip(value);
 
@@ -63,33 +83,10 @@ const handleSubmit = async () => {
   try {
 
     const response = await fetch(
-      "http://localhost:8080/api/pengajuan",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-
-        body: JSON.stringify({
-          nip,
-          nama,
-          unitKerja,
-          jabatan,
-
-          layanan:
-            "Rekomendasi",
-
-          subLayanan:
-            "Kenaikan Jenjang",
-
-          status:
-            "Menunggu",
-
-          dataPengajuan: {
-            linkDrive,
-          },
-        }),
+    "http://localhost:8080/api/pengajuan",
+    {
+        method:"POST",
+        body:formData
       }
     );
 

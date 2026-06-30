@@ -17,6 +17,26 @@ const [status, setStatus] = useState("Menunggu");
 const [email, setEmail] = useState("");
 const [noHp, setNoHp] = useState("");
 const [keperluan, setKeperluan] = useState("");
+const formData = new FormData();
+
+formData.append("nip", nip);
+formData.append("nama", nama);
+formData.append("jabatan", jabatan);
+formData.append("unitKerja", unitKerja);
+
+formData.append("layanan","Cuti");
+
+formData.append("jenisCuti", jenisCuti);
+
+formData.append("tanggalMulai", tanggalMulai);
+
+formData.append("tanggalSelesai", tanggalSelesai);
+
+formData.append("status","Menunggu");
+
+formData.append("driveLink", driveLink);
+
+formData.append("suratPermohonan", suratPermohonan);
 
   const handleSubmit = async () => {
   try {
@@ -24,27 +44,8 @@ const [keperluan, setKeperluan] = useState("");
       "http://localhost:8080/api/pengajuan",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+        body:formData
         },
-        body: JSON.stringify({
-          nip,
-          nama,
-          unitKerja: unitOrganisasi,
-          jabatan,
-          email,
-          noHp,
-
-          layanan: "SKBT",
-          subLayanan: "Organisasi",
-
-          status: "Menunggu",
-
-          dataPengajuan: {
-            keperluan,
-          },
-        }),
-      }
     );
 
     const result = await response.json();

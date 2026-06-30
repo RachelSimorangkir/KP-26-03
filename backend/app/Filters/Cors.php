@@ -8,26 +8,26 @@ use CodeIgniter\Filters\FilterInterface;
 
 class Cors implements FilterInterface
 {
-    public function before(
-        RequestInterface $request,
-        $arguments = null
-    ) {
-        header(
-            'Access-Control-Allow-Origin: *'
-        );
+public function before(RequestInterface $request, $arguments = null)
+{
+    $response = service('response');
 
-        header(
-            'Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'
-        );
+    $response->setHeader('Access-Control-Allow-Origin', '*');
+    $response->setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    $response->setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PUT, DELETE, OPTIONS'
+    );
 
-        header(
-            'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS'
-        );
-
-        if ($request->getMethod() === 'OPTIONS') {
-            exit();
-        }
+    if ($request->getMethod() === 'OPTIONS') {
+        return $response->setStatusCode(200);
     }
+
+    return null;
+}
 
     public function after(
         RequestInterface $request,

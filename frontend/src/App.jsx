@@ -25,6 +25,7 @@ import Cuti from "../pages/Cuti";
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
+import DetailPengajuanUser from "../pages/DetailPengajuanUser";
 
 /* ADMIN */
 import AdminDashboard from "./admin/AdminDashboard";
@@ -170,6 +171,11 @@ function App() {
         <Route
           path="/admin/cuti"
           element={<DashboardCuti />}
+        />
+
+        <Route
+          path="/kepegawaian/detail-pengajuan"
+          element={<DetailPengajuanUser />}
         />
 
       </Routes>

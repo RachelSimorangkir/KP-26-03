@@ -44,31 +44,31 @@ try {
     "http://localhost:8080/api/pengajuan",
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-
-        nip,
-        nama,
-        jabatan,
-        unitKerja,
-
-        layanan: "Cuti",
-
-        jenisCuti,
-
-        tanggalMulai,
-
-        tanggalSelesai,
-
-        status: "Menunggu",
-
-        driveLink,
-
-      }),
+      body:formData
     }
+      
   );
+
+  const formData = new FormData();
+
+formData.append("nip", nip);
+formData.append("nama", nama);
+formData.append("jabatan", jabatan);
+formData.append("unitKerja", unitKerja);
+
+formData.append("layanan","Cuti");
+
+formData.append("jenisCuti", jenisCuti);
+
+formData.append("tanggalMulai", tanggalMulai);
+
+formData.append("tanggalSelesai", tanggalSelesai);
+
+formData.append("status","Menunggu");
+
+formData.append("driveLink", driveLink);
+
+formData.append("suratPermohonan", suratPermohonan);
 
   const result = await response.json();
 

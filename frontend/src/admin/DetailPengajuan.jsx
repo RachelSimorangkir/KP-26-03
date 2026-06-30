@@ -8,27 +8,105 @@ import { useState } from "react";
 export default function DetailPengajuan() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [suratRespon, setSuratRespon] = useState(null);
+
+  const formatLabel = (text) => {
+  return text
+    .replace(/([A-Z])/g, " $1")
+    .replace(/_/g, " ")
+    .replace(/^./, (str) => str.toUpperCase());
+};
 
   const data = location.state;
+  console.log("DATA =", data);
+  console.log(JSON.parse(data.data_pengajuan));
 
-  const dokumen = [
-  {
-    nama: "Surat Permohonan.pdf",
-    file:
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    nama: "SK Terakhir.pdf",
-    file:
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    nama: "KTP.pdf",
-    file:
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-];
+  const detail =
+  data?.data_pengajuan
+    ? JSON.parse(data.data_pengajuan)
+    : {};
+  
+  const dokumen = [];
 
+Object.keys(detail).forEach((key) => {
+  const value = detail[key];
+
+  if (
+    typeof value === "string" &&
+    (
+      value.endsWith(".pdf") ||
+      value.endsWith(".jpg") ||
+      value.endsWith(".jpeg") ||
+      value.endsWith(".png")
+    )
+  ) {
+    dokumen.push({
+      nama: value.split("/").pop(),
+      file: `http://localhost:8080/${value}`
+    });
+  }
+});
+  
+  console.log(data);
+  console.log(detail);
+  
+  const formData = data?.data_pengajuan
+  ? JSON.parse(data.data_pengajuan)
+  : {};
+
+  const updateStatus = async (
+    statusBaru,
+    catatan=""
+)=>{
+
+    const formData = new FormData();
+
+    formData.append(
+        "status",
+        statusBaru
+    );
+
+    formData.append(
+        "catatan_admin",
+        catatan
+    );
+
+    if(suratRespon){
+
+        formData.append(
+            "surat",
+            suratRespon
+        );
+
+    }
+
+    const response=await fetch(
+
+        `http://localhost:8080/api/pengajuan/${data.id}`,
+
+        {
+
+            method:"PUT",
+
+            body:formData
+
+        }
+
+    );
+
+    const result=await response.json();
+
+    if(result.success){
+
+        setStatus(statusBaru);
+
+        setCatatanAdmin(catatan);
+
+        alert("Berhasil");
+
+    }
+
+}
   const [status, setStatus] = useState(
     data?.status || "Menunggu"
   );
@@ -59,38 +137,54 @@ export default function DetailPengajuan() {
     );
   }
 
-  const handleApprove = () => {
-    if (
-      window.confirm(
-        `Setujui pengajuan ${data.nama}?`
-      )
-    ) {
-      setStatus("Disetujui");
+const handleApprove = async () => {
 
-      setCatatanAdmin(
-        "Pengajuan telah disetujui oleh admin."
-      );
-    }
-  };
+  if(window.confirm(`Setujui pengajuan ${data.nama}?`)){
 
-  const handleProcess = () => {
-    setStatus("Diproses");
-
-    setCatatanAdmin(
-      "Pengajuan sedang diproses oleh admin."
-    );
-  };
-
-  const handleReject = () => {
-    const alasan = prompt(
-      "Masukkan alasan penolakan:"
+    await updateStatus(
+      "Disetujui",
+      catatanAdmin
     );
 
-    if (alasan) {
-      setStatus("Ditolak");
-      setCatatanAdmin(alasan);
-    }
-  };
+  }
+  if(!suratRespon){
+
+    alert("Silakan upload surat hasil terlebih dahulu.");
+
+    return;
+
+}
+
+if(catatanAdmin.trim()===""){
+
+    alert("Catatan admin belum diisi.");
+
+    return;
+
+}
+
+};
+const handleProcess = async () => {
+
+  await updateStatus(
+      "Diproses",
+      catatanAdmin
+  );
+
+};
+
+const handleReject = async () => {
+
+  if(window.confirm("Tolak pengajuan ini?")){
+
+    await updateStatus(
+      "Ditolak",
+      catatanAdmin
+    );
+
+  }
+
+};
 
   return (
     <div className="detail-page">
@@ -124,7 +218,7 @@ export default function DetailPengajuan() {
         <h2>{data.nama}</h2>
 
         <p>
-          {data.unitKerja || "-"} • {data.tanggal}
+          {data.unit_kerja || "-"} • {data.tanggal_pengajuan || "-"}
         </p>
 
       </div>
@@ -220,6 +314,21 @@ export default function DetailPengajuan() {
 
 </div>
 
+<div className="detail-section">
+
+<h3>💬 Catatan Admin</h3>
+
+<textarea
+rows="5"
+value={catatanAdmin}
+onChange={(e)=>
+setCatatanAdmin(e.target.value)
+}
+placeholder="Tulis catatan..."
+></textarea>
+
+</div>
+
         {/* DATA PEGAWAI */}
         <div className="detail-section">
 
@@ -242,7 +351,7 @@ export default function DetailPengajuan() {
             <div>
               <label>Unit Kerja</label>
               <p>
-                {data.unitKerja || "-"}
+                {data.unit_kerja || "-"}
               </p>
             </div>
 
@@ -271,25 +380,104 @@ export default function DetailPengajuan() {
 
             <div>
               <label>Tanggal Pengajuan</label>
-              <p>{data.tanggal}</p>
+              <p>
+{
+data.tanggal_pengajuan
+? new Date(data.tanggal_pengajuan)
+    .toLocaleString("id-ID")
+: "-"
+}
+</p>
             </div>
 
           </div>
+          <div className="detail-section">
+
+
+<div className="detail-section">
+
+  <h3>📝 Data Pengajuan</h3>
+
+  <div className="detail-grid">
+
+    {Object.entries(formData).map(([key, value]) => {
+
+      if (
+        key === "dataPengajuan"
+      ) {
+
+        return Object.entries(value).map(([k, v]) => (
+
+          <div key={k}>
+
+            <label>
+              {formatLabel(k)}
+            </label>
+
+            <p>
+              {String(v)}
+            </p>
+
+          </div>
+
+        ));
+
+      }
+
+      if (
+        [
+          "nama",
+          "nip",
+          "status",
+          "layanan",
+          "jabatan",
+          "unit_kerja"
+        ].includes(key)
+      ) {
+        return null;
+      }
+
+      if (
+        value === "" ||
+        value === null
+      ) {
+        return null;
+      }
+
+      return (
+
+        <div key={key}>
+
+          <label>
+            {formatLabel(key)}
+          </label>
+
+          <p>
+            {String(value)}
+          </p>
+
+        </div>
+
+      );
+
+    })}
+
+  </div>
+
+</div>
+</div>
 
         </div>
 
         {/* DOKUMEN */}
 <div className="detail-section">
 
-  <h3>📂 Dokumen Pendukung</h3>
+  <h3>📄 Surat Permohonan</h3>
 
-  <div className="document-list">
+  {
+    data.surat_permohonan ? (
 
-    {dokumen.map((doc, index) => (
-      <div
-        key={index}
-        className="document-card"
-      >
+      <div className="document-card">
 
         <div className="document-info">
 
@@ -299,10 +487,10 @@ export default function DetailPengajuan() {
 
           <div>
 
-            <h4>{doc.nama}</h4>
+            <h4>Surat Permohonan</h4>
 
             <p>
-              Dokumen pendukung pengajuan
+              File yang diunggah oleh pemohon
             </p>
 
           </div>
@@ -312,7 +500,7 @@ export default function DetailPengajuan() {
         <div className="document-actions">
 
           <a
-            href={doc.file}
+            href={`http://localhost:8080/${data.surat_permohonan}`}
             target="_blank"
             rel="noreferrer"
             className="view-doc-btn"
@@ -321,7 +509,7 @@ export default function DetailPengajuan() {
           </a>
 
           <a
-            href={doc.file}
+            href={`http://localhost:8080/${data.surat_permohonan}`}
             download
             className="download-doc-btn"
           >
@@ -331,9 +519,48 @@ export default function DetailPengajuan() {
         </div>
 
       </div>
-    ))}
 
-  </div>
+    ) : (
+
+      <p>Tidak ada surat permohonan.</p>
+
+    )
+  }
+
+</div>
+
+<div className="detail-section">
+
+  <h3>📂 Dokumen Pendukung</h3>
+
+  {
+    data.drive_link ? (
+
+      <a
+
+        href={data.drive_link}
+
+        target="_blank"
+
+        rel="noreferrer"
+
+        className="drive-button"
+
+      >
+
+        📁 Buka Folder Google Drive
+
+      </a>
+
+    ) : (
+
+      <p>
+        Tidak ada link Google Drive.
+      </p>
+
+    )
+
+  }
 
 </div>
 
@@ -373,6 +600,43 @@ export default function DetailPengajuan() {
 
           </div>
         )}
+
+        <div className="response-upload">
+
+<h3>📄 Surat Balasan Admin</h3>
+
+<label
+className="upload-response"
+>
+
+<input
+type="file"
+accept=".pdf"
+hidden
+onChange={(e)=>
+setSuratRespon(
+e.target.files[0]
+)
+}
+/>
+
+📤 Upload Surat Balasan
+
+</label>
+
+{
+suratRespon && (
+
+<p className="response-name">
+
+✅ {suratRespon.name}
+
+</p>
+
+)
+}
+
+</div>
 
         {/* AKSI */}
 <div className="action-buttons">

@@ -53,64 +53,96 @@ const handleNipChange = async (e) => {
 };
 
 const handleSubmit = async () => {
-  try {
 
-    const response = await fetch(
-      "http://localhost:8080/api/pengajuan",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    try {
 
-        body: JSON.stringify({
-          nip,
-          nama,
-          unitKerja,
-          jabatan,
+        const formData = new FormData();
 
-          layanan: "Rekomendasi",
+        formData.append("nip", nip);
+        formData.append("nama", nama);
+        formData.append("jabatan", jabatan);
+        formData.append("pangkat", pangkat);
+        formData.append("unitKerja", unitKerja);
 
-          subLayanan:
-            "Pengaktifan Kembali",
+        formData.append("layanan", "Rekomendasi");
+        formData.append("subLayanan", "Pengaktifan Kembali");
 
-          status: "Menunggu",
+        formData.append("status", "Menunggu");
 
-          dataPengajuan: {
-            tanggalPengaktifan,
-            nomorSK,
-            dasarPengaktifan,
-            keterangan,
-          },
-        }),
-      }
-    );
+        formData.append(
+            "dataPengajuan",
+            JSON.stringify({
 
-    const result =
-      await response.json();
+                tanggalPengaktifan,
+                nomorSK,
+                dasarPengaktifan,
+                keterangan
 
-    if (result.success) {
-      setSubmitted(true);
-      setStatus("Menunggu");
+            })
+        );
 
-      Swal.fire({
-        icon: "success",
-        title: "Berhasil!",
-        text:
-          "Pengajuan berhasil dikirim.",
-      });
+        formData.append(
+            "linkDrive",
+            linkDrive
+        );
+
+        if(suratPermohonan){
+
+            formData.append(
+                "suratPermohonan",
+                suratPermohonan
+            );
+
+        }
+        console.log({
+    nip,
+    nama,
+    jabatan,
+    unitKerja
+});
+
+        const response = await fetch(
+
+            "http://localhost:8080/api/pengajuan",
+
+            {
+
+                method:"POST",
+
+                body:formData
+
+            }
+
+        );
+
+        const result = await response.json();
+
+        if(result.success){
+
+            setSubmitted(true);
+
+            setStatus("Menunggu");
+
+            Swal.fire({
+
+                icon:"success",
+
+                title:"Berhasil",
+
+                text:"Pengajuan berhasil dikirim"
+
+            });
+
+        }
+
     }
 
-  } catch (error) {
-    console.error(error);
+    catch(error){
 
-    Swal.fire({
-      icon: "error",
-      title: "Gagal",
-      text:
-        "Pengajuan gagal dikirim.",
-    });
-  }
+        console.error(error);
+
+    }
+
 };
 
   const [submitted, setSubmitted] = useState(false);

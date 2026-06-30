@@ -679,3 +679,89 @@ body{
 
   line-height:1.8;
 }
+
+.drive-button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-weight:600;
+
+    text-decoration:none;
+
+    transition:.3s;
+
+}
+
+.drive-button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+.response-upload{
+
+margin-top:30px;
+
+padding:25px;
+
+border-radius:18px;
+
+background:#f8fafc;
+
+border:1px solid #e2e8f0;
+
+}
+
+.upload-response{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:14px 22px;
+
+background:#2563eb;
+
+color:white;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-weight:600;
+
+transition:.3s;
+
+}
+
+.upload-response:hover{
+
+background:#1d4ed8;
+
+}
+
+.response-name{
+
+margin-top:15px;
+
+font-weight:600;
+
+color:#16a34a;
+
+}

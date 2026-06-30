@@ -37,3 +37,40 @@ $routes->get(
     'api/pengajuan',
     'PengajuanController::index'
 );
+$routes->put(
+    'api/pengajuan/(:num)',
+    'PengajuanController::updateStatus/$1'
+);
+$routes->get(
+    'api/notifikasi/(:segment)',
+    'NotifikasiController::index/$1'
+);
+$routes->put(
+    'api/notifikasi/read/(:num)',
+    'NotifikasiController::read/$1'
+);
+
+$routes->get(
+    'api/pengajuan/detail/(:num)',
+    'PengajuanController::detail/$1'
+);
+$routes->options(
+    'api/notifikasi/read/(:num)',
+    static function () {
+        return service('response')->setStatusCode(200);
+    }
+);
+
+$routes->options(
+    'api/pengajuan/detail/(:num)',
+    static function () {
+        return service('response')->setStatusCode(200);
+    }
+);
+
+$routes->options(
+    'api/pengajuan/(:num)',
+    static function () {
+        return service('response')->setStatusCode(200);
+    }
+);

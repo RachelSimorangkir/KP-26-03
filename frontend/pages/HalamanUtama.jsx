@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HalamanUtama.css";
 
@@ -11,36 +11,31 @@ export default function HalamanUtama() {
   const [showNotif, setShowNotif] =
     useState(false);
 
-  const notifications = [
-    {
-      id: 1,
-      title: "Pengajuan Cuti Disetujui",
-      time: "2 jam yang lalu",
-      icon: "📄",
-      path: "/kepegawaian/cuti",
-    },
-    {
-      id: 2,
-      title: "SKBT Sedang Diproses",
-      time: "Kemarin",
-      icon: "📋",
-      path: "/kepegawaian/skbt",
-    },
-    {
-      id: 3,
-      title: "Usulan Kenaikan Pangkat Diverifikasi",
-      time: "3 hari yang lalu",
-      icon: "🎉",
-      path:
-        "/kepegawaian/rekomendasi/kenaikan-jenjang",
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
 
   const isLoggedIn =
     localStorage.getItem("isLoggedIn") === "true";
 
   const userName =
     localStorage.getItem("userName") || "Pegawai";
+  
+  
+  const nip = localStorage.getItem("userNIP");
+
+  useEffect(() => {
+
+  if (!nip) return;
+
+  fetch(`http://localhost:8080/api/notifikasi/${nip}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setNotifications(data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+
+}, [nip]);
 
   const handleAccess = (path) => {
     if (!isLoggedIn) {
@@ -63,13 +58,37 @@ export default function HalamanUtama() {
     window.location.reload();
   };
 
-  const handleNotificationClick = (
-    notif
-  ) => {
-    setShowNotif(false);
+const handleNotificationClick = async (notif) => {
 
-    navigate(notif.path);
-  };
+  console.log("NOTIF =", notif);
+  console.log("PENGAJUAN ID =", notif.pengajuan_id);
+
+  await fetch(
+    `http://localhost:8080/api/notifikasi/read/${notif.id}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  const res = await fetch(
+    `http://localhost:8080/api/pengajuan/detail/${notif.pengajuan_id}`
+  );
+
+  const pengajuan = await res.json();
+
+  console.log("PENGAJUAN", pengajuan);
+
+  setNotifications(
+    notifications.filter((n) => n.id !== notif.id)
+  );
+  
+
+  setShowNotif(false);
+
+  navigate("/kepegawaian/detail-pengajuan", {
+    state: pengajuan,
+  });
+};
 
   return (
     <div className="home-page">
@@ -126,9 +145,13 @@ export default function HalamanUtama() {
   >
     🔔
 
-    <span className="notif-badge">
-      {notifications.length}
-    </span>
+<span className="notif-badge">
+  {
+    notifications.filter(
+      (item) => item.status === "unread"
+    ).length
+  }
+</span>
   </div>
 
   {showNotif && (
@@ -138,33 +161,52 @@ export default function HalamanUtama() {
         Notifikasi
       </div>
 
-      {notifications.map((notif) => (
-        <div
-          key={notif.id}
-          className="notif-item"
-          onClick={() =>
-            handleNotificationClick(
-              notif
-            )
-          }
-        >
-          <div className="notif-title">
+{notifications.length === 0 ? (
 
-            <span className="notif-item-icon">
-              {notif.icon}
-            </span>
+  <div className="notif-item">
+    Tidak ada notifikasi
+  </div>
 
-            <span className="notif-item-text">
-              {notif.title}
-            </span>
+) : (
 
-          </div>
+notifications.map((notif) => (
 
-          <div className="notif-time">
-            {notif.time}
-          </div>
-        </div>
-      ))}
+  <div
+    key={notif.id}
+    className="notif-item"
+    onClick={() =>
+      handleNotificationClick(notif)
+    }
+    style={{ cursor: "pointer" }}
+  >
+
+    <div className="notif-title">
+
+      <span className="notif-item-icon">
+        🔔
+      </span>
+
+      <span className="notif-item-text">
+        {notif.judul}
+      </span>
+
+    </div>
+
+    <div
+      style={{
+        fontSize: "13px",
+        color: "#64748b",
+        marginTop: "5px",
+      }}
+    >
+      {notif.pesan}
+    </div>
+
+  </div>
+
+))
+
+)}
 
     </div>
   )}

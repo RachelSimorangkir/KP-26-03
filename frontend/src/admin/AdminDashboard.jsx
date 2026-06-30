@@ -161,9 +161,7 @@ const getCountdown = (mulai, selesai) => {
                 <th>Jenis Layanan</th>
                 <th>Tanggal</th>
                 <th>Status</th>
-                <th>Sisa Cuti</th>
                 <th>Aksi</th>
-                <th>Countdown</th>
               </tr>
             </thead>
 
@@ -196,53 +194,6 @@ const getCountdown = (mulai, selesai) => {
 </td>
 
 <td>
-  {item.sisaCuti ? item.sisaCuti : "-"}
-</td>
-
-<td>
-  {item.sisaCuti ? item.sisaCuti : "-"}
-</td>
-
-<td>
-  {item.layanan === "Cuti" ? (
-
-    <span
-      className={
-        getCountdown(
-          item.tanggalMulai,
-          item.tanggalSelesai
-        ).className
-      }
-    >
-      {
-        getCountdown(
-          item.tanggalMulai,
-          item.tanggalSelesai
-        ).text
-      }
-    </span>
-
-  ) : (
-    "-"
-  )}
-</td>
-
-<td>
-
-  <button
-    className="detail-btn"
-    onClick={() =>
-      navigate("/admin/detail-pengajuan", {
-        state: item,
-      })
-    }
-  >
-    Detail
-  </button>
-
-</td>
-
-<td>
 
             <button
               className="detail-btn"
@@ -269,7 +220,7 @@ const getCountdown = (mulai, selesai) => {
     <tr>
 
       <td
-        colSpan="6"
+        colSpan="5"
         style={{
           textAlign: "center",
           padding: "30px",

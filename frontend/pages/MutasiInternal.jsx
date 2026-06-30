@@ -18,6 +18,27 @@ const [suratPermohonan, setSuratPermohonan] =
 const [driveLink, setDriveLink] =
   useState("");
 
+const formData = new FormData();
+
+formData.append("nip", nip);
+formData.append("nama", nama);
+formData.append("jabatan", jabatan);
+formData.append("unitKerja", unitKerja);
+
+formData.append("layanan","Cuti");
+
+formData.append("jenisCuti", jenisCuti);
+
+formData.append("tanggalMulai", tanggalMulai);
+
+formData.append("tanggalSelesai", tanggalSelesai);
+
+formData.append("status","Menunggu");
+
+formData.append("driveLink", driveLink);
+
+formData.append("suratPermohonan", suratPermohonan);  
+
   const handleSubmit = async () => {
 
   if (!suratPermohonan) {
@@ -47,30 +68,8 @@ const [driveLink, setDriveLink] =
   const response = await fetch(
     "http://localhost:8080/api/pengajuan",
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        nip,
-        nama,
-
-        unitKerja,
-
-        jabatan,
-
-        layanan: "Mutasi Internal",
-
-        subLayanan:
-          "Mutasi Internal Kementerian Agama",
-
-        status: "Menunggu",
-
-        dataPengajuan: {
-          driveLink,
-        },
-      }),
+        method:"POST",
+        body:formData
     }
   );
 
