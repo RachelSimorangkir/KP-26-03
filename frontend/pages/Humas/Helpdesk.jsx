@@ -23,7 +23,7 @@ export default function Helpdesk() {
     <div className="rekom-page">
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📰</div>
+        <div className="banner-icon">🛠️</div>
 
         <div className="service-banner-content">
           <h1>Layanan Helpdesk</h1>

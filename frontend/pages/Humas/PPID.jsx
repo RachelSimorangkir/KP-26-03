@@ -6,13 +6,13 @@ export default function Permohonan() {
 
   const layanan = [
   {
-    icon: "🎫",
+    icon: "📮",
     title: "Form Pengajuan Permohonan",
     desc: "Ajukan permintaan informasi atau layanan.",
     path: "/humasdata/PPID/Permohonan",  // ✅ Tanpa dash
   },
   {
-    icon: "📑",
+    icon: "🔍",
     title: "Daftar & Status Pengajuan",
     desc: "Lihat status pengajuan permohonan Anda.",
     path: "/humasdata/PPID/StatusPermohonan",  // ✅ Tanpa dash
@@ -23,7 +23,7 @@ export default function Permohonan() {
     <div className="rekom-page">
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📰</div>
+        <div className="banner-icon">📨</div>
 
         <div className="service-banner-content">
           <h1>Layanan PPID Internal</h1>

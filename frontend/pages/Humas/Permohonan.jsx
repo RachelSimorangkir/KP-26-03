@@ -133,7 +133,7 @@ export default function Permohonan() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📨</div>
+        <div className="banner-icon">📮</div>
         <div className="service-banner-content">
           <h1>Permohonan / Keberatan Informasi</h1>
           <p>

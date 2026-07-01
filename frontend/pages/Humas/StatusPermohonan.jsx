@@ -145,7 +145,7 @@ export default function StatusPermohonan() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📨</div>
+        <div className="banner-icon">🔍</div>
         <div className="service-banner-content">
           <h1>Status Permohonan Saya</h1>
           <p>

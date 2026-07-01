@@ -99,7 +99,7 @@ export default function StatusHelpdesk() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📋</div>
+        <div className="banner-icon">📑</div>
         <div className="service-banner-content">
           <h1>Daftar & Detail Tiket Saya</h1>
           <p>
