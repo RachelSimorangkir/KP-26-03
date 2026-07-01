@@ -162,36 +162,43 @@
   line-height:1.8;
 }
 
-.submit-wrapper{
-  display:flex;
-  justify-content:center;
+/* =========================
+   SUBMIT AREA
+========================= */
 
-  margin-top:40px;
-  margin-bottom:30px;
+.submit-wrapper{
+    width:100% !important;
+
+    display:flex !important;
+    flex-direction:column !important;
+
+    align-items:center !important;
+    justify-content:center !important;
+
+    gap:20px !important;
+
+    margin-top:30px !important;
+}
+
+.submit-wrapper .form-card{
+    width:100% !important;
+    max-width:100% !important;
+
+    margin:0 !important;
+}
+
+.submit-wrapper .submit-btn{
+    width:320px !important;
+    max-width:320px !important;
+
+    margin:0 auto !important;
+
+    display:block !important;
 }
 
 .submit-btn{
-  border:none;
-
-  height:58px;
-
-  padding:0 30px;
-
-  border-radius:14px;
-
-  color:white;
-
-  cursor:pointer;
-
-  background:
-  linear-gradient(
-    135deg,
-    #16324b,
-    #2563eb
-  );
-
-  font-size:15px;
-  font-weight:600;
+    width:320px;
+    margin:0 auto;
 }
 
 @media(max-width:768px){

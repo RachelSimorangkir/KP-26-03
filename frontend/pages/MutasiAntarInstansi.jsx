@@ -14,67 +14,90 @@ const [suratPermohonan, setSuratPermohonan] =
 const [driveLink, setDriveLink] =
   useState("");
 
-  const handleSubmit = async () => {
-     const formData = new FormData();
-
-formData.append("nip", nip);
-formData.append("nama", nama);
-formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitKerja);
-
-formData.append("layanan","Mutasi Antar Instansi");
-
-formData.append("status","Menunggu");
-
-formData.append("driveLink", driveLink);
-
-formData.append("suratPermohonan", suratPermohonan);
+const handleSubmit = async () => {
 
   if (!suratPermohonan) {
     Swal.fire({
       icon: "warning",
-      title: "Surat Permohonan Belum Diupload",
-      text:
-        "Silakan upload Surat Permohonan terlebih dahulu.",
+      title: "Dokumen belum diupload",
+      text: "Upload Surat Permohonan terlebih dahulu.",
     });
-
-    return;
-  }
-
-  if (!driveLink) {
-    Swal.fire({
-      icon: "warning",
-      title: "Link Google Drive Kosong",
-      text:
-        "Silakan masukkan link folder Google Drive.",
-    });
-
     return;
   }
 
   try {
 
-    setSubmitted(true);
-    setStatus("Menunggu");
+    const formData = new FormData();
 
-    Swal.fire({
-      icon: "success",
-      title: "Berhasil",
-      text:
-        "Pengajuan Mutasi Internal berhasil dikirim.",
-    });
+    formData.append("nip", nip);
+    formData.append("nama", nama);
+    formData.append("jabatan", jabatan);
+    formData.append("unitKerja", unitKerja);
+
+    formData.append(
+      "layanan",
+      "Mutasi Antar Instansi"
+    );
+
+    formData.append(
+      "status",
+      "Menunggu"
+    );
+
+    formData.append(
+      "driveLink",
+      driveLink
+    );
+
+    formData.append(
+      "dataPengajuan",
+      JSON.stringify({
+        jenis: "Mutasi Antar Instansi"
+      })
+    );
+
+    formData.append(
+      "suratPermohonan",
+      suratPermohonan
+    );
+
+    const response = await fetch(
+      "http://localhost:8080/api/pengajuan",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+
+      setSubmitted(true);
+      setStatus("Menunggu");
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Pengajuan berhasil dikirim.",
+      });
+
+    }
 
   } catch (error) {
+
+    console.error(error);
 
     Swal.fire({
       icon: "error",
       title: "Gagal",
-      text:
-        "Pengajuan gagal dikirim.",
+      text: "Pengajuan gagal dikirim.",
     });
 
   }
+
 };
+
 const [nip, setNip] = useState("");
 const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
@@ -226,60 +249,94 @@ setUnitKerja(data.unit_organisasi || "");
 
   <h2>Status Pengajuan Mutasi Internal</h2>
 
-  <div className="timeline">
+<div className="timeline">
 
-    <div className="timeline-item completed">
-      <div className="timeline-dot"></div>
+  <div className="timeline-item completed">
 
-      <div className="timeline-content">
-        <h4>Pengajuan Dikirim</h4>
+    <div className="timeline-dot"></div>
 
-        <span>
-          {new Date().toLocaleString("id-ID")}
-        </span>
-      </div>
-    </div>
+    <div className="timeline-content">
 
-    <div
-      className={`timeline-item ${
-        status === "Menunggu"
-          ? "current"
-          : status === "Diproses" ||
-            status === "Selesai"
-          ? "completed"
-          : "pending"
-      }`}
-    >
-      <div className="timeline-dot"></div>
+      <h4>Pengajuan Dikirim</h4>
 
-      <div className="timeline-content">
-        <h4>Sedang Diproses</h4>
+      <span>
+        {new Date().toLocaleString("id-ID")}
+      </span>
 
-        <span>
-          Menunggu verifikasi admin
-        </span>
-      </div>
-    </div>
+      <p>
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : status==="Diproses"
+          ? "Sedang diverifikasi"
+          : "Verifikasi selesai"
+        }
+      </p>
 
-    <div
-      className={`timeline-item ${
-        status === "Selesai"
-          ? "completed"
-          : "pending"
-      }`}
-    >
-      <div className="timeline-dot"></div>
-
-      <div className="timeline-content">
-        <h4>Selesai</h4>
-
-        <span>
-          Menunggu penyelesaian
-        </span>
-      </div>
     </div>
 
   </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Menunggu"
+        ? "current"
+        : status==="Diproses" ||
+          status==="Selesai"
+        ? "completed"
+        : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Sedang Diproses</h4>
+
+      <span>
+
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : "Sedang diproses admin"
+        }
+
+      </span>
+
+    </div>
+
+  </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Selesai"
+      ? "completed"
+      : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Selesai</h4>
+
+      <span>
+
+        {
+          status==="Selesai"
+          ? "Permohonan telah selesai"
+          : "Menunggu penyelesaian"
+        }
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -408,32 +465,36 @@ setUnitKerja(data.unit_organisasi || "");
 
 </div>
 
-      <div className="submit-wrapper">
+{!submitted && (
 
-        <div className="form-card">
+<div className="submit-wrapper">
 
-  <label className="checkbox-wrapper">
+    <div className="form-card">
 
-    <input type="checkbox" />
+        <label className="checkbox-wrapper">
 
-    <span>
-      Saya menyatakan bahwa data dan
-      dokumen yang diunggah adalah benar
-      dan dapat dipertanggungjawabkan.
-    </span>
+            <input type="checkbox" />
 
-  </label>
+            <span>
+                Saya menyatakan bahwa data dan dokumen
+                yang diunggah adalah benar dan dapat
+                dipertanggungjawabkan.
+            </span>
+
+        </label>
+
+    </div>
+
+    <button
+        className="submit-btn"
+        onClick={handleSubmit}
+    >
+        Ajukan Permohonan
+    </button>
 
 </div>
 
-        <button
-  className="submit-btn"
-  onClick={handleSubmit}
->
-  Ajukan Permohonan
-</button>
-
-      </div>
+)}
 
     </div>
   );

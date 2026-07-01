@@ -29,6 +29,12 @@ formData.append("unitKerja", unitKerja);
 formData.append("layanan","Mutasi Internal");
 
 formData.append("status","Menunggu");
+formData.append(
+  "dataPengajuan",
+  JSON.stringify({
+    jenis: "Mutasi Internal",
+  })
+);
 
 formData.append("driveLink", driveLink);
 
@@ -67,10 +73,15 @@ formData.append("suratPermohonan", suratPermohonan);
     }
   );
 
-  const result =
-    await response.json();
+const result = await response.json();
 
-  if (result.success) {
+if (!response.ok) {
+  throw new Error(
+    result.error || result.message
+  );
+}
+
+if (result.success) {
 
     setSubmitted(true);
 
@@ -314,16 +325,20 @@ const handleNipChange = async (e) => {
 
     </div>
 
-    <div className="submit-wrapper">
+    {!submitted && (
 
-      <button
-        className="submit-btn"
-        onClick={handleSubmit}
-      >
-        Ajukan Permohonan
-      </button>
+  <div className="submit-wrapper">
 
-    </div>
+    <button
+      className="submit-btn"
+      onClick={handleSubmit}
+    >
+      Ajukan Permohonan
+    </button>
+
+  </div>
+
+)}
 
   </>
 
@@ -333,48 +348,94 @@ const handleNipChange = async (e) => {
 
     <h2>Status Pengajuan Mutasi Internal</h2>
 
-    <div className="timeline">
+<div className="timeline">
 
-      <div className="timeline-item completed">
+  <div className="timeline-item completed">
 
-        <div className="timeline-dot"></div>
+    <div className="timeline-dot"></div>
 
-        <div className="timeline-content">
-          <h4>Pengajuan Dikirim</h4>
-          <span>
-            {new Date().toLocaleString("id-ID")}
-          </span>
-        </div>
+    <div className="timeline-content">
 
-      </div>
+      <h4>Pengajuan Dikirim</h4>
 
-      <div className="timeline-item current">
+      <span>
+        {new Date().toLocaleString("id-ID")}
+      </span>
 
-        <div className="timeline-dot"></div>
-
-        <div className="timeline-content">
-          <h4>Sedang Diproses</h4>
-          <span>
-            Menunggu verifikasi admin
-          </span>
-        </div>
-
-      </div>
-
-      <div className="timeline-item pending">
-
-        <div className="timeline-dot"></div>
-
-        <div className="timeline-content">
-          <h4>Selesai</h4>
-          <span>
-            Menunggu penyelesaian
-          </span>
-        </div>
-
-      </div>
+      <p>
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : status==="Diproses"
+          ? "Sedang diverifikasi"
+          : "Verifikasi selesai"
+        }
+      </p>
 
     </div>
+
+  </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Menunggu"
+        ? "current"
+        : status==="Diproses" ||
+          status==="Selesai"
+        ? "completed"
+        : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Sedang Diproses</h4>
+
+      <span>
+
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : "Sedang diproses admin"
+        }
+
+      </span>
+
+    </div>
+
+  </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Selesai"
+      ? "completed"
+      : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Selesai</h4>
+
+      <span>
+
+        {
+          status==="Selesai"
+          ? "Permohonan telah selesai"
+          : "Menunggu penyelesaian"
+        }
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
 
   </div>
 

@@ -331,13 +331,33 @@
 ========================= */
 
 .submit-wrapper{
-  width:100%;
+    width:100% !important;
 
-  display:flex;
-  justify-content:center;
+    display:flex !important;
+    flex-direction:column !important;
 
-  margin-top:30px;
-  margin-bottom:40px;
+    align-items:center !important;
+    justify-content:center !important;
+
+    gap:20px !important;
+
+    margin-top:30px !important;
+}
+
+.submit-wrapper .form-card{
+    width:100% !important;
+    max-width:100% !important;
+
+    margin:0 !important;
+}
+
+.submit-wrapper .submit-btn{
+    width:320px !important;
+    max-width:320px !important;
+
+    margin:0 auto !important;
+
+    display:block !important;
 }
 
 .submit-btn{

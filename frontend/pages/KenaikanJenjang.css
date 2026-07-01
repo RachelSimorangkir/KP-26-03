@@ -535,112 +535,110 @@ option{
 ====================== */
 
 .tracking-card{
-  background:white;
-
-  border-radius:20px;
-
-  padding:32px;
-
-  margin-top:30px;
-
-  border:1px solid #e5e7eb;
-
-  box-shadow:
-    0 8px 24px rgba(15,23,42,.05);
+  background:#fff;
+  border-radius:24px;
+  padding:38px;
+  margin-top:32px;
+  border:1px solid #e6edf8;
+  box-shadow:0 15px 35px rgba(15,23,42,.08);
 }
 
 .tracking-card h2{
-  margin:0 0 30px 0;
-
+  margin:0 0 35px;
   color:#16324b;
-
-  font-size:28px;
+  font-size:30px;
+  font-weight:700;
 }
 
 .timeline{
   position:relative;
+  padding-left:70px;
 }
 
 .timeline::before{
   content:"";
-
   position:absolute;
-
-  left:14px;
-  top:0;
-  bottom:0;
-
-  width:3px;
-
-  background:#d1d5db;
+  left:18px;
+  top:12px;
+  bottom:12px;
+  width:4px;
+  border-radius:50px;
+  background:#dbe7ff;
 }
+
+/* ITEM */
 
 .timeline-item{
   position:relative;
-
-  display:flex;
-  gap:20px;
-
-  padding-bottom:30px;
+  margin-bottom:28px;
+  min-height:95px;
 }
 
 .timeline-item:last-child{
-  padding-bottom:0;
+  margin-bottom:0;
 }
+
+/* DOT */
 
 .timeline-dot{
-  width:28px;
-  height:28px;
+  position:absolute;
+  left:-61px;
+  top:20px;
+
+  width:20px;
+  height:20px;
 
   border-radius:50%;
+  border:5px solid #edf3ff;
+  background:#cbd5e1;
 
-  flex-shrink:0;
-
-  z-index:2;
-
-  border:4px solid white;
+  z-index:5;
 }
 
-/* HIJAU */
+/* CARD */
+
+.timeline-content{
+  background:#f8fbff;
+  border:1px solid #e2ebff;
+  border-radius:18px;
+  padding:18px 24px;
+  transition:.25s;
+}
+
+.timeline-content:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(37,99,235,.08);
+}
+
+/* JUDUL */
+
+.timeline-content h4{
+  margin:0;
+  font-size:20px;
+  font-weight:700;
+}
+
+/* DESKRIPSI */
+
+.timeline-content span{
+  display:block;
+  margin-top:7px;
+  color:#64748b;
+  font-size:15px;
+  line-height:1.6;
+}
+
+/* COMPLETED */
 
 .timeline-item.completed .timeline-dot{
   background:#22c55e;
 }
 
 .timeline-item.completed h4{
-  color:#15803d;
+  color:#16a34a;
 }
 
-/* ABU-ABU */
-
-.timeline-item.pending .timeline-dot{
-  background:#cbd5e1;
-}
-
-.timeline-item.pending h4{
-  color:#475569;
-}
-
-.timeline-content{
-  padding-top:2px;
-}
-
-.timeline-content h4{
-  margin:0 0 6px 0;
-
-  font-size:17px;
-  font-weight:600;
-}
-
-.timeline-content span{
-  color:#64748b;
-
-  font-size:14px;
-}
-
-.timeline-item.current{
-  background: transparent !important;
-}
+/* CURRENT */
 
 .timeline-item.current .timeline-dot{
   background:#2563eb;
@@ -648,6 +646,20 @@ option{
 
 .timeline-item.current h4{
   color:#2563eb;
+}
+
+/* PENDING */
+
+.timeline-item.pending .timeline-dot{
+  background:#d1d5db;
+}
+
+.timeline-item.pending h4{
+  color:#94a3b8;
+}
+
+.timeline-item.pending .timeline-content{
+  opacity:.75;
 }
 
 .uploaded-file{

@@ -17,8 +17,15 @@ const [unitKerja, setUnitKerja] = useState("");
 const [suratPermohonan, setSuratPermohonan] =
   useState(null);
 
-const [linkDrive, setLinkDrive] =
-  useState("");
+const [linkDrive, setLinkDrive] = useState("");
+const [klasifikasiJabatan, setKlasifikasiJabatan] = useState("");
+const [tempatLahir, setTempatLahir] = useState("");
+const [tanggalLahir, setTanggalLahir] = useState("");
+const [pendidikan, setPendidikan] = useState("");
+const [predikatSKP, setPredikatSKP] = useState("");
+const [jabatanTujuan, setJabatanTujuan] = useState("");
+const [jenjangUsulan, setJenjangUsulan] = useState("");
+const [nomorHP, setNomorHP] = useState("");
 const handleNipChange = async (e) => {
   const value = e.target.value;
 
@@ -54,71 +61,92 @@ const handleSubmit = async () => {
     Swal.fire({
       icon: "warning",
       title: "Dokumen belum diupload",
-      text:
-        "Upload Surat Permohonan terlebih dahulu.",
+      text: "Upload Surat Permohonan terlebih dahulu."
     });
-
     return;
   }
-  
 
   try {
+
     const formData = new FormData();
 
-formData.append("nip", nip);
-formData.append("nama", nama);
-formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitKerja);
+    formData.append("nip", nip);
+    formData.append("nama", nama);
+    formData.append("jabatan", jabatan);
+    formData.append("pangkat", pangkat);
+    formData.append("unitKerja", unitKerja);
 
-formData.append(
-  "layanan",
-  "Kenaikan Jenjang Jabatan"
-);
-
-formData.append("status", "Menunggu");
-
-formData.append("driveLink", linkDrive);
-
-formData.append(
-  "suratPermohonan",
-  suratPermohonan
-);
-
-    const response = await fetch(
-    "http://localhost:8080/api/pengajuan",
-    {
-        method:"POST",
-        body:formData
-        
-      }
-    
+    formData.append("layanan", "Rekomendasi");
+    formData.append(
+      "subLayanan",
+      "Kenaikan Jenjang Jabatan"
     );
 
-    const result =
-      await response.json();
+    formData.append("status", "Menunggu");
 
-    if (result.success) {
+    formData.append(
+      "dataPengajuan",
+      JSON.stringify({
 
-      setSubmitted(true);
+        klasifikasiJabatan,
+        tempatLahir,
+        tanggalLahir,
+        pendidikan,
+        predikatSKP,
+        jabatanTujuan,
+        jenjangUsulan,
+        nomorHP
 
-      Swal.fire({
-        icon: "success",
-        title: "Berhasil!",
-        text:
-          "Pengajuan berhasil dikirim.",
-      });
+      })
+    );
+
+    formData.append(
+      "linkDrive",
+      linkDrive
+    );
+
+    if (suratPermohonan) {
+      formData.append(
+        "suratPermohonan",
+        suratPermohonan
+      );
     }
 
+    const response = await fetch(
+      "http://localhost:8080/api/pengajuan",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || result.message);
+    }
+
+    setSubmitted(true);
+    setStatus("Menunggu");
+
+    await Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: result.message
+    });
+
   } catch (error) {
+
     console.error(error);
 
     Swal.fire({
       icon: "error",
-      title: "Gagal!",
-      text:
-        "Pengajuan gagal dikirim.",
+      title: "Gagal",
+      text: error.message
     });
+
   }
+
 };
 
   return (
@@ -235,30 +263,48 @@ formData.append(
 
           <div className="form-group">
             <label>Tempat Lahir *</label>
-            <input type="text" />
+            <input
+type="text"
+value={tempatLahir}
+onChange={(e)=>
+setTempatLahir(e.target.value)
+}
+/>
           </div>
 
           <div className="form-group">
             <label>Tanggal Lahir *</label>
-            <input type="date" />
+            <input
+type="date"
+value={tanggalLahir}
+onChange={(e)=>
+setTanggalLahir(e.target.value)
+}
+/>
           </div>
 
           <div className="form-group">
             <label>Pendidikan Terakhir *</label>
 
-            <input
-              type="text"
-              placeholder="Contoh: S1 Sistem Informasi"
-            />
+<input
+type="text"
+value={pendidikan}
+onChange={(e)=>
+setPendidikan(e.target.value)
+}
+/>
           </div>
 
           <div className="form-group">
             <label>Predikat SKP *</label>
 
-            <input
-              type="text"
-              placeholder="Baik / Sangat Baik"
-            />
+           <input
+type="text"
+value={predikatSKP}
+onChange={(e)=>
+setPredikatSKP(e.target.value)
+}
+/>
           </div>
 
           <div className="form-group">
@@ -280,10 +326,13 @@ formData.append(
           <div className="form-group">
             <label>Jenjang Yang Diusulkan *</label>
 
-            <input
-              type="text"
-              placeholder="Ahli Pertama / Ahli Muda / Ahli Madya"
-            />
+           <input
+type="text"
+value={jenjangUsulan}
+onChange={(e)=>
+setJenjangUsulan(e.target.value)
+}
+/>
           </div>
 
           <div className="form-group">
@@ -388,52 +437,98 @@ formData.append(
   </>
 ) : (
 
-  <div className="tracking-card">
-    <h2>Status Pengajuan</h2>
+<div className="tracking-card">
 
-    <div className="timeline">
+  <h2>Status Pengajuan</h2>
 
-      <div className="timeline-item completed">
-        <div className="timeline-dot"></div>
+  <div className="timeline">
 
-        <div className="timeline-content">
-          <h4>Pengajuan Dikirim</h4>
-          <span>
-            {new Date().toLocaleString("id-ID")}
-          </span>
-        </div>
-      </div>
+    {/* STEP 1 */}
+    <div className="timeline-item completed">
 
-      <div className="timeline-item current">
-        <div className="timeline-dot"></div>
+      <div className="timeline-dot"></div>
 
-        <div className="timeline-content">
-          <h4>Sedang Diproses</h4>
-          <span>Menunggu verifikasi admin</span>
-        </div>
-      </div>
+      <div className="timeline-content">
 
-      <div className="timeline-item pending">
-        <div className="timeline-dot"></div>
+        <h4>Pengajuan Dikirim</h4>
 
-        <div className="timeline-content">
-          <h4>Selesai</h4>
-          <span>Menunggu penyelesaian</span>
-        </div>
+        <span>
+          {new Date().toLocaleString("id-ID")}
+        </span>
+
       </div>
 
     </div>
+
+    {/* STEP 2 */}
+    <div
+      className={`timeline-item ${
+        status === "Menunggu"
+          ? "current"
+          : status === "Diproses" || status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+
+        <h4>Sedang Diproses</h4>
+
+        <span>
+          {status === "Menunggu"
+            ? "Menunggu verifikasi admin"
+            : status === "Diproses"
+            ? "Sedang diproses admin"
+            : "Verifikasi selesai"}
+        </span>
+
+      </div>
+
+    </div>
+
+    {/* STEP 3 */}
+    <div
+      className={`timeline-item ${
+        status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+
+        <h4>Selesai</h4>
+
+        <span>
+          {status === "Selesai"
+            ? "Permohonan telah selesai"
+            : "Menunggu penyelesaian"}
+        </span>
+
+      </div>
+
+    </div>
+
   </div>
+
+</div>
 
 )}
       {/* SUBMIT */}
-     <button
-  type="button"
-  className="submit-btn"
-  onClick={handleSubmit}
->
-        Ajukan Permohonan
-      </button>
+{!submitted && (
+  <button
+    type="button"
+    className="submit-btn"
+    onClick={handleSubmit}
+  >
+    Ajukan Permohonan
+  </button>
+)}
     </div> 
 
     
