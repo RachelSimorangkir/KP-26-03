@@ -167,8 +167,8 @@ const handleNipChange = async (e) => {
 
       
 
-      {/* PERSYARATAN */}
-      {!submitted ? (
+{/* PERSYARATAN */}
+{!submitted ? (
   <>
 
     <div className="info-card">
@@ -340,7 +340,7 @@ const handleNipChange = async (e) => {
 
 )}
 
-  </>
+</>
 
 ) : (
 

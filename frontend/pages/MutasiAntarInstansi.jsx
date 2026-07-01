@@ -156,11 +156,12 @@ setUnitKerja(data.unit_organisasi || "");
 
       </div>
       
-      {!submitted ? (
+{!submitted ? (
 <>
 
       {/* PERSYARATAN */}
-<div className="info-card">
+
+  <div className="info-card">
 
   <h2>Persyaratan Umum</h2>
 

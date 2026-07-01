@@ -36,6 +36,16 @@ formData.append(
 );
 
 formData.append(
+  "dataPengajuan",
+  JSON.stringify({
+    pendidikan,
+    nomorHP,
+    jabatanTujuan,
+    alasan,
+  })
+);
+
+formData.append(
   "suratPermohonan",
   suratPermohonan
 );
@@ -109,6 +119,11 @@ const [nip, setNip] = useState("");
 const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [unitKerja, setUnitKerja] = useState("");
+
+const [pendidikan, setPendidikan] = useState("");
+const [nomorHP, setNomorHP] = useState("");
+const [jabatanTujuan, setJabatanTujuan] = useState("");
+const [alasan, setAlasan] = useState("");
 const handleNipChange = async (e) => {
   const value = e.target.value;
 
@@ -213,36 +228,44 @@ const handleNipChange = async (e) => {
             <label>Pendidikan Terakhir *</label>
 
             <input
-              type="text"
-              placeholder="Contoh: S1 Sistem Informasi"
-            />
+  type="text"
+  value={pendidikan}
+  onChange={(e)=>setPendidikan(e.target.value)}
+  placeholder="Contoh: S1 Sistem Informasi"
+/>
           </div>
 
           <div className="form-group">
             <label>Nomor WhatsApp *</label>
 
-            <input
-              type="text"
-              placeholder="08xxxxxxxxxx"
-            />
+           <input
+  type="text"
+  value={nomorHP}
+  onChange={(e)=>setNomorHP(e.target.value)}
+  placeholder="08xxxxxxxxxx"
+/>
           </div>
 
           <div className="form-group full-width">
             <label>Jabatan / Fungsi Yang Dituju *</label>
 
             <input
-              type="text"
-              placeholder="Masukkan Jabatan atau Fungsi Yang Dituju"
-            />
+  type="text"
+  value={jabatanTujuan}
+  onChange={(e)=>setJabatanTujuan(e.target.value)}
+  placeholder="Masukkan Jabatan atau Fungsi Yang Dituju"
+/>
           </div>
 
           <div className="form-group full-width">
             <label>Alasan Pengajuan Alih Fungsi *</label>
 
             <textarea
-              rows="5"
-              placeholder="Jelaskan alasan pengajuan alih fungsi..."
-            />
+  rows="5"
+  value={alasan}
+  onChange={(e)=>setAlasan(e.target.value)}
+  placeholder="Jelaskan alasan pengajuan alih fungsi..."
+/>
           </div>
 
         </div>
@@ -313,7 +336,7 @@ const handleNipChange = async (e) => {
     <strong>Catatan:</strong>
 
     Upload seluruh dokumen persyaratan
-    mutasi internal ke Google Drive,
+    alih fungsi ke Google Drive,
     kemudian tempelkan link folder di atas.
 
   </div>
@@ -337,16 +360,20 @@ const handleNipChange = async (e) => {
 </div>
 
       {/* SUBMIT */}
-      <div className="submit-wrapper">
+      {!submitted && (
 
-       <button
-  className="submit-btn"
-  onClick={handleSubmit}
->
-  Ajukan Permohonan
-</button>
+<div className="submit-wrapper">
 
-      </div>
+    <button
+        className="submit-btn"
+        onClick={handleSubmit}
+    >
+        Ajukan Permohonan
+    </button>
+
+</div>
+
+)}
 
       </>
 
@@ -354,62 +381,91 @@ const handleNipChange = async (e) => {
 
 <div className="tracking-card">
 
-  <h2>Status Pengajuan Mutasi Internal</h2>
+  <h2>Status Pengajuan Alih Fungsi</h2>
 
-  <div className="timeline">
+ <div className="timeline">
 
-    <div className="timeline-item completed">
-      <div className="timeline-dot"></div>
+  <div className="timeline-item completed">
 
-      <div className="timeline-content">
-        <h4>Pengajuan Dikirim</h4>
+    <div className="timeline-dot"></div>
 
-        <span>
-          {new Date().toLocaleString("id-ID")}
-        </span>
-      </div>
-    </div>
+    <div className="timeline-content">
 
-    <div
-      className={`timeline-item ${
-        status === "Menunggu"
-          ? "current"
-          : status === "Diproses" ||
-            status === "Selesai"
-          ? "completed"
-          : "pending"
-      }`}
-    >
-      <div className="timeline-dot"></div>
+      <h4>Pengajuan Dikirim</h4>
 
-      <div className="timeline-content">
-        <h4>Sedang Diproses</h4>
+      <span>
+        {new Date().toLocaleString("id-ID")}
+      </span>
 
-        <span>
-          Menunggu verifikasi admin
-        </span>
-      </div>
-    </div>
+      <p>
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : status==="Diproses"
+          ? "Sedang diverifikasi"
+          : "Verifikasi selesai"
+        }
+      </p>
 
-    <div
-      className={`timeline-item ${
-        status === "Selesai"
-          ? "completed"
-          : "pending"
-      }`}
-    >
-      <div className="timeline-dot"></div>
-
-      <div className="timeline-content">
-        <h4>Selesai</h4>
-
-        <span>
-          Menunggu penyelesaian
-        </span>
-      </div>
     </div>
 
   </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Menunggu"
+      ? "current"
+      : status==="Diproses" || status==="Selesai"
+      ? "completed"
+      : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Sedang Diproses</h4>
+
+      <span>
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : "Sedang diproses admin"
+        }
+      </span>
+
+    </div>
+
+  </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Selesai"
+      ? "completed"
+      : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Selesai</h4>
+
+      <span>
+        {
+          status==="Selesai"
+          ? "Permohonan telah selesai"
+          : "Menunggu penyelesaian"
+        }
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
 
 </div>
 
