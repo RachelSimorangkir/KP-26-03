@@ -15,18 +15,13 @@ class PengajuanController extends BaseController
         $this->pengajuanModel = new PengajuanModel();
         $this->notifikasiModel = new NotifikasiModel();
     }
-    public function detail($id)
+public function detail($id)
 {
+    log_message("debug","DETAIL ID = ".$id);
+
     $data = $this->pengajuanModel->find($id);
 
-    if (!$data) {
-        return $this->response
-            ->setStatusCode(404)
-            ->setJSON([
-                'success' => false,
-                'message' => 'Pengajuan tidak ditemukan.'
-            ]);
-    }
+    log_message("debug",json_encode($data));
 
     return $this->response->setJSON($data);
 }
@@ -125,6 +120,15 @@ public function updateStatus($id)
         // Ambil data FormData
         $status = $this->request->getPost('status');
         $catatan = $this->request->getPost('catatan_admin');
+        log_message("error","STATUS DITERIMA = ".$status);
+        log_message(
+    "error",
+    json_encode([
+        "id"=>$id,
+        "status"=>$status,
+        "catatan"=>$catatan
+    ])
+);
 
         // Cari data pengajuan
         $pengajuan = $this->pengajuanModel->find($id);
@@ -157,15 +161,40 @@ if($file && $file->isValid()){
 }
 
         // Update database
-        $this->pengajuanModel->update($id, [
+$update = $this->pengajuanModel->update($id,[
 
-            'status' => $status,
+    'status'=>$status,
 
-            'catatan_admin' => $catatan,
+    'catatan_admin'=>$catatan,
 
-            'file_respon' => $filePath
+    'file_respon'=>$filePath
 
-        ]);
+]);
+$dataUpdate = [
+    'status' => $status,
+    'catatan_admin' => $catatan,
+    'file_respon' => $filePath
+];
+
+log_message("error", "UPDATE DATA = " . json_encode($dataUpdate));
+
+log_message(
+    "error",
+    "HASIL UPDATE = " .
+    ($this->pengajuanModel->db->affectedRows())
+);
+
+log_message(
+    'debug',
+    'UPDATE='.json_encode($update)
+);
+
+$dataBaru = $this->pengajuanModel->find($id);
+
+log_message(
+    'debug',
+    json_encode($dataBaru)
+);
 
         // Simpan notifikasi
        $this->notifikasiModel->insert([

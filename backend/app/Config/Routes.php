@@ -42,7 +42,7 @@ $routes->get(
     'api/pengajuan',
     'PengajuanController::index'
 );
-$routes->put(
+$routes->post(
     'api/pengajuan/(:num)',
     'PengajuanController::updateStatus/$1'
 );

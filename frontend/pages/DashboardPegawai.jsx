@@ -100,7 +100,7 @@ if (!pegawai) {
 
         <div className="stat-card">
           <h2>5</h2>
-          <p>Disetujui</p>
+          <p>Selesai</p>
         </div>
 
         <div className="stat-card">

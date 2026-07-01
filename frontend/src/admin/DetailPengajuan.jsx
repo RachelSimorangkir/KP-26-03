@@ -79,10 +79,21 @@ Object.keys(detail).forEach((key) => {
   ? JSON.parse(data.data_pengajuan)
   : {};
 
+  console.log("ID =", data.id);
+  console.log("STATUS SEKARANG =", data.status);
+
   const updateStatus = async (
     statusBaru,
     catatan=""
 )=>{
+
+  console.log("========== UPDATE ==========");
+  console.log("ID =", data.id);
+  console.log("UPDATE KE =", statusBaru);
+  console.log(
+    "URL =",
+    `http://localhost:8080/api/pengajuan/${data.id}`
+  );
 
     const formData = new FormData();
 
@@ -113,36 +124,42 @@ console.log("STATUS =", status);
 
         {
 
-            method:"PUT",
+            method:"POST",
 
             body:formData
 
         }
+        
 
     );
+    console.log(response.status);
+    console.log("HTTP =", response.status);
 
-    const result=await response.json();
+const result = await response.json();
 
-if(result.success){
+console.log(result);
 
-    setStatus(statusBaru);
+if (!result.success) {
+    alert(result.error || result.message);
+    return;
+}
+console.log(result);
 
-    setCatatanAdmin(catatan);
+setStatus(statusBaru);
+setCatatanAdmin(catatan);
 
-    // ambil data terbaru dari database
-    const res = await fetch(
-      `http://localhost:8080/api/pengajuan/detail/${data.id}`
-    );
+const res = await fetch(
+    `http://localhost:8080/api/pengajuan/detail/${data.id}`
+);
 
-    const terbaru = await res.json();
+const terbaru = await res.json();
 
-    setData(terbaru);
+setData(terbaru);
 
-    alert("Status berhasil diperbarui.");
+alert("Status berhasil diperbarui.");
 
 }
 
-}
   const [status, setStatus] = useState(
     data?.status || "Menunggu"
   );
@@ -180,18 +197,21 @@ if(result.success){
 
 const handleApprove = async () => {
 
+    console.log("TOMBOL SELESAI DIKLIK");
+
     if (!suratRespon) {
 
-        alert("Silakan upload surat balasan terlebih dahulu.");
+        alert("Silakan upload surat balasan.");
 
         return;
 
     }
 
-        await updateStatus(
-    "Selesai",
-    catatanAdmin
-);
+    await updateStatus(
+        "Selesai",
+        catatanAdmin
+    );
+
 };
 
 
@@ -692,7 +712,7 @@ suratRespon && (
     onClick={handleApprove}
     disabled={status === "Selesai"}
   >
-    ✅ Setujui
+    ✅ Selesai
   </button>
 
 </div>

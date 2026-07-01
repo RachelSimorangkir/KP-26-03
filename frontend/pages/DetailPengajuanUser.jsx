@@ -8,6 +8,7 @@ export default function DetailPengajuanUser() {
     const navigate = useNavigate();
 
     const [data, setData] = useState(location.state);
+    console.log("ID DARI LOCATION =", location.state?.id);
 
     useEffect(() => {
 
@@ -17,15 +18,18 @@ export default function DetailPengajuanUser() {
 
             fetch(
                 `http://localhost:8080/api/pengajuan/detail/${data.id}`
+                
             )
+            
             .then(res => res.json())
-            .then(result => {
+.then(result => {
 
-                setData(result);
+    console.log("DATA TERBARU");
+    console.log(result);
 
-                console.log(result.status);
+    setData(result);
 
-            });
+});
 
         };
 
