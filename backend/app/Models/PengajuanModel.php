@@ -16,19 +16,48 @@ class PengajuanModel extends Model
 
     protected $allowedFields = [
 
-        "nip",
-        "nama",
-        "jabatan",
-        "unit_kerja",
-        "layanan",
-        "status",
-        "tanggal_pengajuan",
-        "data_pengajuan",
-        "drive_link",
-        "surat_permohonan",
-        "catatan_admin",
-        "file_respon",
-    ];
+    "nip",
 
+    "nama",
+
+    "jabatan",
+
+    "unit_kerja",
+
+    "layanan",
+
+    "status",
+
+    "tanggal_pengajuan",
+
+    "surat_permohonan",
+
+    "link_drive",
+
+    "catatan_admin",
+
+    "file_respon",
+
+    //====================
+    // CUTI
+    //====================
+
+    "status_kepegawaian",
+
+    "jenis_cuti",
+
+    "alasan_cuti",
+
+    "tanggal_mulai",
+
+    "tanggal_selesai",
+
+    "durasi",
+
+    "alamat_cuti",
+
+    "no_hp"
+
+];
     protected $useTimestamps = false;
 }

@@ -83,3 +83,5 @@ $routes->put(
     'api/notifikasi/read-all/(:segment)',
     'NotifikasiController::readAll/$1'
 );
+$routes->get('pdf/test', 'PdfController::test');
+$routes->get('pdf/cuti/(:num)', 'PdfController::cuti/$1');

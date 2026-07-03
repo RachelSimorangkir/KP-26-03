@@ -67,9 +67,25 @@ public function create()
 
     'jabatan' => $data['jabatan'] ?? '',
 
-    'unit_kerja' => $data['unitKerja'] ?? '',
+    'unit_kerja' => $data['unit_kerja'] ?? '',
 
     'layanan' => $data['layanan'] ?? '',
+
+    'status_kepegawaian' => $data['status_kepegawaian'] ?? '',
+
+    'jenis_cuti' => $data['jenis_cuti'] ?? '',
+
+    'alasan_cuti' => $data['alasan_cuti'] ?? '',
+
+    'tanggal_mulai' => $data['tanggal_mulai'] ?? null,
+
+    'tanggal_selesai' => $data['tanggal_selesai'] ?? null,
+
+    'durasi' => $data['durasi'] ?? 0,
+
+    'alamat_cuti' => $data['alamat_cuti'] ?? '',
+
+    'no_hp' => $data['no_hp'] ?? '',
 
     'status' => 'Menunggu',
 
@@ -77,9 +93,7 @@ public function create()
 
     'surat_permohonan' => $filePath,
 
-    'link_drive' => $data['linkDrive'] ?? "",
-
-    'data_pengajuan' => $data['dataPengajuan'] ?? ""
+    'drive_link' => $data['drive_link'] ?? ''
 
 ];
 

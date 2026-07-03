@@ -1,137 +1,413 @@
 import "./Cuti.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 function Cuti() {
+
   const navigate = useNavigate();
+
+  // ===========================
+  // STATE
+  // ===========================
+
   const [submitted, setSubmitted] = useState(false);
-const [status, setStatus] = useState("Menunggu");
 
-const [suratPermohonan, setSuratPermohonan] =
-  useState(null);
+  const [pengajuanId, setPengajuanId] = useState(null);
 
-const [driveLink, setDriveLink] =
-  useState("");
-const handleSubmit = async () => {
-  console.log("Tombol Ajukan diklik");
+  const [status, setStatus] = useState("Menunggu");
 
-  if (!suratPermohonan) {
-    Swal.fire({
-      icon: "warning",
-      title: "Surat Permohonan Belum Diupload",
-      text:
-        "Silakan upload Surat Permohonan terlebih dahulu.",
-    });
+  //==========================
+  // DATA PEGAWAI
+  //==========================
 
-    return;
-  }
+  const [nip, setNip] = useState("");
+  const [nama, setNama] = useState("");
+  const [jabatan, setJabatan] = useState("");
+  const [unitKerja, setUnitKerja] = useState("");
 
-  if (!driveLink) {
-    Swal.fire({
-      icon: "warning",
-      title: "Link Google Drive Kosong",
-      text:
-        "Silakan masukkan link folder Google Drive.",
-    });
+  //==========================
+  // CUTI
+  //==========================
 
-    return;
-  }
+  const [statusKepegawaian, setStatusKepegawaian] =
+    useState("");
 
-try {
+  const [jenisCuti, setJenisCuti] =
+    useState("");
 
-  const response = await fetch(
-    "http://localhost:8080/api/pengajuan",
-    {
-      method: "POST",
-      body:formData
+  const [alasanCuti, setAlasanCuti] =
+    useState("");
+
+  const [tanggalMulai, setTanggalMulai] =
+    useState("");
+
+  const [tanggalSelesai, setTanggalSelesai] =
+    useState("");
+
+  const [durasi, setDurasi] =
+    useState("");
+
+  const [alamatCuti, setAlamatCuti] =
+    useState("");
+
+  const [noHp, setNoHp] =
+    useState("");
+
+  //==========================
+  // DOKUMEN
+  //==========================
+
+  const [suratPermohonan, setSuratPermohonan] =
+    useState(null);
+
+  const [driveLink, setDriveLink] =
+    useState("");
+
+      //==========================
+  // JENIS CUTI
+  //==========================
+
+  const jenisCutiOptions = {
+
+    PNS: [
+
+      "Cuti Tahunan",
+
+      "Cuti Besar",
+
+      "Cuti Sakit",
+
+      "Cuti Melahirkan",
+
+      "Cuti Karena Alasan Penting",
+
+      "Cuti di Luar Tanggungan Negara"
+
+    ],
+
+    PPPK: [
+
+      "Cuti Tahunan",
+
+      "Cuti Sakit",
+
+      "Cuti Melahirkan"
+
+    ]
+
+  };
+
+    //==========================
+  // HITUNG DURASI OTOMATIS
+  //==========================
+
+  useEffect(() => {
+
+    if (tanggalMulai && tanggalSelesai) {
+
+      const mulai = new Date(tanggalMulai);
+
+      const selesai = new Date(tanggalSelesai);
+
+      const hari =
+
+        (selesai - mulai) /
+
+          (1000 * 60 * 60 * 24) +
+
+        1;
+
+      if (hari > 0) {
+
+        setDurasi(hari);
+
+      }
+
     }
-      
-  );
 
-  const formData = new FormData();
+  }, [tanggalMulai, tanggalSelesai]);
 
-formData.append("nip", nip);
-formData.append("nama", nama);
-formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitKerja);
+    //========================================
+  // AMBIL DATA PEGAWAI BERDASARKAN NIP
+  //========================================
 
-formData.append("layanan","Cuti");
+  const handleNipChange = async (e) => {
 
-formData.append("jenisCuti", jenisCuti);
+    const value = e.target.value;
 
-formData.append("tanggalMulai", tanggalMulai);
+    setNip(value);
 
-formData.append("tanggalSelesai", tanggalSelesai);
+    if (value.length < 5) {
 
-formData.append("status","Menunggu");
+      setNama("");
+      setJabatan("");
+      setUnitKerja("");
 
-formData.append("driveLink", driveLink);
-
-formData.append("suratPermohonan", suratPermohonan);
-
-  const result = await response.json();
-
-  if (result.success) {
-
-    setSubmitted(true);
-
-    setStatus("Menunggu");
-
-    Swal.fire({
-      icon: "success",
-      title: "Berhasil",
-      text: "Pengajuan cuti berhasil dikirim.",
-    });
-
-  }
-
-} catch (error) {
-
-  console.error(error);
-
-  Swal.fire({
-    icon: "error",
-    title: "Gagal",
-    text: "Pengajuan gagal dikirim.",
-  });
-
-}
-};
-const [nip, setNip] = useState("");
-const [nama, setNama] = useState("");
-const [jabatan, setJabatan] = useState("");
-const [unitKerja, setUnitKerja] = useState("");
-const [jenisCuti, setJenisCuti] = useState("");
-
-const [tanggalMulai, setTanggalMulai] = useState("");
-
-const [tanggalSelesai, setTanggalSelesai] = useState("");
-const handleNipChange = async (e) => {
-  const value = e.target.value;
-
-  setNip(value);
-
-  if (value.length < 5) return;
-
-  try {
-    const response = await fetch(
-      `http://localhost:8080/api/pegawai/${value}`
-    );
-
-    const data = await response.json();
-
-    if (data) {
-      setNama(data.nama || "");
-      setJabatan(data.jabatan || "");
-      setUnitKerja(data.unit_organisasi || "");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+
+    try {
+
+      const response = await fetch(
+        `http://localhost:8080/api/pegawai/${value}`
+      );
+
+      const data = await response.json();
+
+      if (data) {
+
+        setNama(data.nama || "");
+
+        setJabatan(data.jabatan || "");
+
+        setUnitKerja(
+          data.unit_organisasi || ""
+        );
+
+      }
+
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  };
+
+    //========================================
+  // SUBMIT PENGAJUAN
+  //========================================
+
+  const handleSubmit = async () => {
+
+    //========================
+    // VALIDASI
+    //========================
+
+    if (!nip) {
+
+      Swal.fire(
+        "Peringatan",
+        "Masukkan NIP terlebih dahulu.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    if (!statusKepegawaian) {
+
+      Swal.fire(
+        "Peringatan",
+        "Pilih Status Kepegawaian.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    if (!jenisCuti) {
+
+      Swal.fire(
+        "Peringatan",
+        "Pilih Jenis Cuti.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    if (!alasanCuti) {
+
+      Swal.fire(
+        "Peringatan",
+        "Isi Alasan Cuti.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    if (!tanggalMulai || !tanggalSelesai) {
+
+      Swal.fire(
+        "Peringatan",
+        "Pilih tanggal cuti.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    if (!suratPermohonan) {
+
+      Swal.fire(
+        "Peringatan",
+        "Upload Surat Permohonan.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    if (!driveLink) {
+
+      Swal.fire(
+        "Peringatan",
+        "Masukkan Link Google Drive.",
+        "warning"
+      );
+
+      return;
+
+    }
+
+    try {
+
+      const formData = new FormData();
+
+            formData.append("nip", nip);
+
+      formData.append("nama", nama);
+
+      formData.append("jabatan", jabatan);
+
+      formData.append(
+        "unit_kerja",
+        unitKerja
+      );
+
+      formData.append(
+        "layanan",
+        "Cuti"
+      );
+
+      formData.append(
+        "status_kepegawaian",
+        statusKepegawaian
+      );
+
+      formData.append(
+        "jenis_cuti",
+        jenisCuti
+      );
+
+      formData.append(
+        "alasan_cuti",
+        alasanCuti
+      );
+
+      formData.append(
+        "tanggal_mulai",
+        tanggalMulai
+      );
+
+      formData.append(
+        "tanggal_selesai",
+        tanggalSelesai
+      );
+
+      formData.append(
+        "durasi",
+        durasi
+      );
+
+      formData.append(
+        "alamat_cuti",
+        alamatCuti
+      );
+
+      formData.append(
+        "no_hp",
+        noHp
+      );
+
+      formData.append(
+        "link_drive",
+        driveLink
+      );
+
+      formData.append(
+        "suratPermohonan",
+        suratPermohonan
+      );
+            const response = await fetch(
+
+        "http://localhost:8080/api/pengajuan",
+
+        {
+
+          method: "POST",
+
+          body: formData
+
+        }
+
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+
+        setPengajuanId(result.id);
+
+        setSubmitted(true);
+
+        Swal.fire({
+
+          icon: "success",
+
+          title: "Berhasil",
+
+          text: "Pengajuan berhasil dikirim."
+
+        });
+
+      } else {
+
+        Swal.fire({
+
+          icon: "error",
+
+          title: "Gagal",
+
+          text: result.message
+
+        });
+
+      }
+
+    } catch (err) {
+
+      console.error(err);
+
+      Swal.fire({
+
+        icon: "error",
+
+        title: "Error",
+
+        text: "Terjadi kesalahan."
+
+      });
+
+    }
+
+  };
+
+    //========================================
+  // RENDER
+  //========================================
 
   return (
+
     <div className="cuti-page">
 
       <button
@@ -143,450 +419,695 @@ const handleNipChange = async (e) => {
 
       {/* ================= HEADER ================= */}
 
-<div className="page-header">
+      <div className="page-header">
 
-  <div className="header-icon">
-    🏖️
-  </div>
+        <div className="header-icon">
+          🏖️
+        </div>
 
-  <div>
+        <div>
 
-    <h1>Pengajuan Cuti</h1>
+          <h1>Pengajuan Cuti</h1>
 
-    <p>
-      Pengajuan cuti pegawai secara elektronik
-      melalui Portal Layanan Internal BMBPSDM.
-    </p>
+          <p>
 
-  </div>
+            Pengajuan cuti pegawai secara elektronik
+            melalui Portal Layanan Internal BMBPSDM.
 
-</div>
+          </p>
 
-{/* ================= FORM / TIMELINE ================= */}
-
-{!submitted ? (
-
-<>
-
-{/* ================= PANDUAN ================= */}
-
-<div className="guide-card">
-
-  <h2>Panduan Penggunaan Sistem Pengajuan Cuti</h2>
-
-  <ol className="guide-list">
-
-    <li>
-      Klik <strong>Download Template</strong> untuk
-      mengunduh form cuti.
-    </li>
-
-    <li>
-      Upload dokumen cuti pada aplikasi
-      <strong> Srikandi </strong>
-      beserta lampirannya.
-    </li>
-
-    <li>
-      Isi data pegawai.
-    </li>
-
-    <li>
-      Ketik <strong>NIP</strong>, maka data pegawai
-      akan terisi otomatis.
-    </li>
-
-    <li>
-      Pilih jenis cuti, tanggal mulai,
-      tanggal selesai serta durasi cuti.
-    </li>
-
-    <li>
-      Upload Surat Permohonan yang sudah
-      ditandatangani.
-    </li>
-
-    <li>
-      Tempel link Google Drive yang berisi
-      seluruh dokumen pendukung.
-    </li>
-
-  </ol>
-
-</div>
-
-{/* ================= DATA PEGAWAI ================= */}
-
-<div className="form-card">
-
-  <h2>Data Pegawai</h2>
-
-  <div className="tips-box">
-
-    Isi data pegawai sebelum melakukan
-    pengajuan cuti.
-
-  </div>
-
-  <div className="form-grid">
-
-    <div className="form-group">
-
-      <label>NIP *</label>
-
-      <input
-        type="text"
-        placeholder="Masukkan NIP"
-        value={nip}
-        onChange={handleNipChange}
-      />
-
-    </div>
-
-    <div className="form-group">
-
-      <label>Nama Pegawai *</label>
-
-      <input
-        type="text"
-        value={nama}
-        readOnly
-      />
-
-    </div>
-
-    <div className="form-group">
-
-      <label>Jabatan *</label>
-
-      <input
-        type="text"
-        value={jabatan}
-        readOnly
-      />
-
-    </div>
-
-    <div className="form-group">
-
-      <label>Unit Kerja *</label>
-
-      <input
-        type="text"
-        value={unitKerja}
-        readOnly
-      />
-
-    </div>
-
-    <div className="form-group full-width">
-
-      <label>Status Kepegawaian *</label>
-
-      <select>
-
-        <option>Pilih Status Kepegawaian</option>
-
-        <option>PNS</option>
-
-        <option>PPPK</option>
-
-      </select>
-
-    </div>
-
-  </div>
-
-</div>
-
-{/* ================= DETAIL CUTI ================= */}
-
-<div className="form-card">
-
-  <h2>Detail Cuti</h2>
-
-  <div className="form-grid">
-
-    <div className="form-group full-width">
-
-      <label>Jenis Cuti *</label>
-
-      <select>
-
-        <option>Pilih Jenis Cuti</option>
-
-        <option>Cuti Tahunan</option>
-
-        <option>Cuti Besar</option>
-
-        <option>Cuti Sakit</option>
-
-        <option>Cuti Melahirkan</option>
-
-        <option>Cuti Karena Alasan Penting</option>
-
-        <option>Cuti di Luar Tanggungan Negara</option>
-
-      </select>
-
-    </div>
-
-    <div className="form-group">
-
-      <label>Tanggal Mulai *</label>
-
-      <input type="date" />
-
-    </div>
-
-    <div className="form-group">
-
-      <label>Tanggal Selesai *</label>
-
-      <input type="date" />
-
-    </div>
-
-    <div className="form-group">
-
-      <label>Durasi Cuti *</label>
-
-      <input
-        type="number"
-        placeholder="Jumlah Hari"
-      />
-
-    </div>
-
-  </div>
-
-</div>
-{/* ================= SURAT PERMOHONAN ================= */}
-
-<div className="form-card">
-
-  <h2>Surat Permohonan</h2>
-
-  <div className="upload-area">
-
-    <div className="upload-icon">
-      📄
-    </div>
-
-    <label htmlFor="surat">
-      Upload Surat Permohonan
-    </label>
-
-    <input
-      id="surat"
-      type="file"
-      accept=".pdf"
-      onChange={(e) =>
-        setSuratPermohonan(
-          e.target.files[0]
-        )
-      }
-    />
-
-    {suratPermohonan && (
-
-      <div className="uploaded-file">
-
-        ✅ {suratPermohonan.name}
+        </div>
 
       </div>
 
-    )}
+      {!submitted ? (
 
-    <span>
+      <>
 
-      PDF Maksimal 10 MB
+      {/* ================= PANDUAN ================= */}
 
-    </span>
+      <div className="guide-card">
 
-  </div>
+        <h2>Panduan Pengajuan</h2>
 
-</div>
+        <ol className="guide-list">
 
-{/* ================= DOKUMEN PENDUKUNG ================= */}
+          <li>Isi data pegawai.</li>
 
-<div className="form-card">
+          <li>Masukkan NIP.</li>
 
-  <h2>Dokumen Pendukung</h2>
+          <li>Data pegawai akan terisi otomatis.</li>
 
-  <div className="form-group">
+          <li>Pilih Status Kepegawaian.</li>
 
-    <label>
+          <li>Pilih Jenis Cuti.</li>
 
-      Link Folder Google Drive
+          <li>Lengkapi seluruh data.</li>
 
-    </label>
+          <li>Upload Surat Permohonan.</li>
 
-    <input
-      type="text"
-      placeholder="https://drive.google.com/drive/folders/..."
-      value={driveLink}
-      onChange={(e) =>
-        setDriveLink(e.target.value)
-      }
-    />
+          <li>Masukkan Link Google Drive.</li>
 
-  </div>
+          <li>Klik Ajukan Permohonan.</li>
 
-  <div className="drive-note">
-
-    <strong>Catatan :</strong>
-
-    <br /><br />
-
-    Upload seluruh dokumen pendukung
-    ke dalam satu folder Google Drive.
-
-    <br /><br />
-
-    Pastikan akses folder adalah
-
-    <strong>
-
-      {" "}
-      "Siapa saja yang memiliki link dapat melihat"
-
-    </strong>
-
-  </div>
-
-</div>
-
-{/* ================= PERNYATAAN ================= */}
-
-<div className="form-card">
-
-  <label className="checkbox-wrapper">
-
-    <input type="checkbox" />
-
-    <span>
-
-      Saya menyatakan bahwa seluruh data
-      dan dokumen yang saya unggah adalah
-      benar dan dapat dipertanggungjawabkan.
-
-    </span>
-
-  </label>
-
-</div>
-
-{/* ================= BUTTON ================= */}
-
-<div className="cuti-actions">
-
-  <button
-    className="submit-btn"
-    onClick={handleSubmit}
-  >
-
-    Ajukan Permohonan
-
-  </button>
-
-</div>
-
-</>
-
-) : (
-
-<div className="tracking-card">
-
-  <h2>Status Pengajuan Cuti</h2>
-
-  <div className="timeline">
-
-    <div className="timeline-item completed">
-
-      <div className="timeline-dot"></div>
-
-      <div className="timeline-content">
-
-        <h4>Pengajuan Dikirim</h4>
-
-        <span>
-          {new Date().toLocaleString("id-ID")}
-        </span>
+        </ol>
 
       </div>
 
-    </div>
+      {/* ================= DATA PEGAWAI ================= */}
 
-    <div
-      className={`timeline-item ${
-        status === "Menunggu"
-          ? "current"
-          : status === "Diproses" ||
-            status === "Selesai"
-          ? "completed"
-          : "pending"
-      }`}
-    >
+      <div className="form-card">
 
-      <div className="timeline-dot"></div>
+        <h2>Data Pegawai</h2>
 
-      <div className="timeline-content">
+        <div className="form-grid">
 
-        <h4>Sedang Diproses</h4>
+          <div className="form-group">
 
-        <span>
+            <label>NIP *</label>
 
-          {status === "Menunggu"
-            ? "Menunggu verifikasi admin"
-            : status === "Diproses"
-            ? "Sedang diverifikasi"
-            : "Verifikasi selesai"}
+            <input
 
-        </span>
+              type="text"
+
+              placeholder="Masukkan NIP"
+
+              value={nip}
+
+              onChange={handleNipChange}
+
+            />
+
+          </div>
+
+          <div className="form-group">
+
+            <label>Nama Pegawai *</label>
+
+            <input
+
+              type="text"
+
+              value={nama}
+
+              readOnly
+
+            />
+
+          </div>
+
+          <div className="form-group">
+
+            <label>Jabatan *</label>
+
+            <input
+
+              type="text"
+
+              value={jabatan}
+
+              readOnly
+
+            />
+
+          </div>
+
+          <div className="form-group">
+
+            <label>Unit Kerja *</label>
+
+            <input
+
+              type="text"
+
+              value={unitKerja}
+
+              readOnly
+
+            />
+
+          </div>
+
+          <div className="form-group full-width">
+
+            <label>Status Kepegawaian *</label>
+
+            <select
+
+              value={statusKepegawaian}
+
+              onChange={(e)=>{
+
+                setStatusKepegawaian(e.target.value);
+
+                setJenisCuti("");
+
+              }}
+
+            >
+
+              <option value="" disabled hidden>
+
+                Pilih Status Kepegawaian
+
+              </option>
+
+              <option value="PNS">
+
+                PNS
+
+              </option>
+
+              <option value="PPPK">
+
+                PPPK
+
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+            {/* ================= DETAIL CUTI ================= */}
+
+      <div className="form-card">
+
+        <h2>Detail Cuti</h2>
+
+        <div className="form-grid">
+
+          {/* Jenis Cuti */}
+
+          <div className="form-group full-width">
+
+            <label>Jenis Cuti *</label>
+
+            <select
+              value={jenisCuti}
+              onChange={(e) => setJenisCuti(e.target.value)}
+              disabled={!statusKepegawaian}
+            >
+
+              <option value="" disabled hidden>
+
+                {
+                  statusKepegawaian
+                    ? "Pilih Jenis Cuti"
+                    : "Pilih Status Kepegawaian terlebih dahulu"
+                }
+
+              </option>
+
+              {
+                statusKepegawaian &&
+                jenisCutiOptions[statusKepegawaian].map((item) => (
+
+                  <option
+                    key={item}
+                    value={item}
+                  >
+
+                    {item}
+
+                  </option>
+
+                ))
+              }
+
+            </select>
+
+          </div>
+
+
+          {/* Alasan */}
+
+          <div className="form-group full-width">
+
+            <label>Alasan Cuti *</label>
+
+            <textarea
+
+              rows="4"
+
+              value={alasanCuti}
+
+              onChange={(e)=>
+
+                setAlasanCuti(e.target.value)
+
+              }
+
+            />
+
+          </div>
+
+
+          {/* Tanggal Mulai */}
+
+          <div className="form-group">
+
+            <label>Tanggal Mulai *</label>
+
+            <input
+
+              type="date"
+
+              value={tanggalMulai}
+
+              onChange={(e)=>
+
+                setTanggalMulai(e.target.value)
+
+              }
+
+            />
+
+          </div>
+
+
+          {/* Tanggal Selesai */}
+
+          <div className="form-group">
+
+            <label>Tanggal Selesai *</label>
+
+            <input
+
+              type="date"
+
+              value={tanggalSelesai}
+
+              onChange={(e)=>
+
+                setTanggalSelesai(e.target.value)
+
+              }
+
+            />
+
+          </div>
+
+
+          {/* Durasi */}
+
+          <div className="form-group">
+
+            <label>Durasi (Hari)</label>
+
+            <input
+
+              type="number"
+
+              value={durasi}
+
+              readOnly
+
+            />
+
+          </div>
+
+
+          {/* Alamat */}
+
+          <div className="form-group full-width">
+
+            <label>
+
+              Alamat Selama Menjalankan Cuti *
+
+            </label>
+
+            <textarea
+
+              rows="4"
+
+              value={alamatCuti}
+
+              onChange={(e)=>
+
+                setAlamatCuti(e.target.value)
+
+              }
+
+            />
+
+          </div>
+
+
+          {/* Nomor HP */}
+
+          <div className="form-group">
+
+            <label>No. HP *</label>
+
+            <input
+
+              type="text"
+
+              placeholder="08xxxxxxxxxx"
+
+              value={noHp}
+
+              onChange={(e)=>
+
+                setNoHp(e.target.value)
+
+              }
+
+            />
+
+          </div>
+
+        </div>
+
+      </div>
+            {/* ================= SURAT PERMOHONAN ================= */}
+
+      <div className="form-card">
+
+        <h2>Surat Permohonan</h2>
+
+        <div className="upload-area">
+
+          <div className="upload-icon">
+
+            📄
+
+          </div>
+
+          <label htmlFor="surat">
+
+            Upload Surat Permohonan
+
+          </label>
+
+          <input
+
+            id="surat"
+
+            type="file"
+
+            accept=".pdf"
+
+            onChange={(e)=>
+
+              setSuratPermohonan(
+
+                e.target.files[0]
+
+              )
+
+            }
+
+          />
+
+          {
+
+            suratPermohonan && (
+
+              <div className="uploaded-file">
+
+                ✅ {suratPermohonan.name}
+
+              </div>
+
+            )
+
+          }
+
+          <span>
+
+            Format PDF (maksimal 10 MB)
+
+          </span>
+
+        </div>
 
       </div>
 
-    </div>
 
-    <div
-      className={`timeline-item ${
-        status === "Selesai"
-          ? "completed"
-          : "pending"
-      }`}
-    >
 
-      <div className="timeline-dot"></div>
+      {/* ================= DOKUMEN PENDUKUNG ================= */}
 
-      <div className="timeline-content">
+      <div className="form-card">
 
-        <h4>Selesai</h4>
+        <h2>Dokumen Pendukung</h2>
 
-        <span>
+        <div className="form-group">
 
-          {status === "Selesai"
-            ? "Pengajuan cuti telah selesai"
-            : "Menunggu penyelesaian"}
+          <label>
 
-        </span>
+            Link Folder Google Drive
+
+          </label>
+
+          <input
+
+            type="text"
+
+            placeholder="https://drive.google.com/drive/folders/..."
+
+            value={driveLink}
+
+            onChange={(e)=>
+
+              setDriveLink(e.target.value)
+
+            }
+
+          />
+
+        </div>
+
+        <div className="drive-note">
+
+          <strong>Catatan</strong>
+
+          <br /><br />
+
+          Upload seluruh dokumen pendukung
+          ke dalam satu folder Google Drive.
+
+          <br /><br />
+
+          Pastikan akses folder adalah
+
+          <strong>
+
+            {" "}
+
+            "Siapa saja yang memiliki link dapat melihat"
+
+          </strong>
+
+        </div>
 
       </div>
 
+
+
+      {/* ================= PERNYATAAN ================= */}
+
+      <div className="form-card">
+
+        <label className="checkbox-wrapper">
+
+          <input type="checkbox" required />
+
+          <span>
+
+            Saya menyatakan bahwa seluruh data
+            dan dokumen yang saya unggah adalah
+            benar dan dapat dipertanggungjawabkan.
+
+          </span>
+
+        </label>
+
+      </div>
+
+
+
+      {/* ================= BUTTON ================= */}
+
+      <div className="cuti-actions">
+
+        <button
+
+          className="submit-btn"
+
+          onClick={handleSubmit}
+
+        >
+
+          Ajukan Permohonan
+
+        </button>
+
+      </div>
+
+      </>
+      ) : (
+
+      <div className="tracking-card">
+
+        <h2>Status Pengajuan Cuti</h2>
+
+        {/* ================= DOWNLOAD PDF ================= */}
+
+        <div className="download-box">
+
+          <button
+
+            className="download-btn"
+
+            onClick={() =>
+
+              window.open(
+
+                `http://localhost:8080/pdf/cuti/${pengajuanId}`,
+
+                "_blank"
+
+              )
+
+            }
+
+          >
+
+            📄 Download Formulir Cuti
+
+          </button>
+
+        </div>
+
+        {/* ================= TIMELINE ================= */}
+
+        <div className="timeline">
+
+          {/* STEP 1 */}
+
+          <div className="timeline-item completed">
+
+            <div className="timeline-dot"></div>
+
+            <div className="timeline-content">
+
+              <h4>Pengajuan Dikirim</h4>
+
+              <span>
+
+                {new Date().toLocaleString("id-ID")}
+
+              </span>
+
+            </div>
+
+          </div>
+
+          {/* STEP 2 */}
+
+          <div
+
+            className={`timeline-item ${
+
+              status === "Menunggu"
+
+                ? "current"
+
+                : status === "Diproses" ||
+
+                  status === "Selesai"
+
+                ? "completed"
+
+                : "pending"
+
+            }`}
+
+          >
+
+            <div className="timeline-dot"></div>
+
+            <div className="timeline-content">
+
+              <h4>Sedang Diproses</h4>
+
+              <span>
+
+                {
+
+                  status === "Menunggu"
+
+                    ? "Menunggu verifikasi admin"
+
+                    : status === "Diproses"
+
+                    ? "Sedang diverifikasi"
+
+                    : "Verifikasi selesai"
+
+                }
+
+              </span>
+
+            </div>
+
+          </div>
+
+          {/* STEP 3 */}
+
+          <div
+
+            className={`timeline-item ${
+
+              status === "Selesai"
+
+                ? "completed"
+
+                : "pending"
+
+            }`}
+
+          >
+
+            <div className="timeline-dot"></div>
+
+            <div className="timeline-content">
+
+              <h4>Selesai</h4>
+
+              <span>
+
+                {
+
+                  status === "Selesai"
+
+                    ? "Pengajuan cuti telah selesai"
+
+                    : "Menunggu penyelesaian"
+
+                }
+
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      )}
+
     </div>
-
-  </div>
-
-</div>
-
-)}
-
-</div>
 
   );
+
 }
 
 export default Cuti;
-
-
-     
