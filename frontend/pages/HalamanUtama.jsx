@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HalamanUtama.css";
+import logo from "../src/assets/logo-kemenag.png";
 
 export default function HalamanUtama() {
   const navigate = useNavigate();
@@ -123,8 +124,9 @@ const handleNotificationClick = async (notif) => {
 
         <div className="logo-section">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
+            src={logo}
+            alt="Logo Kementerian Agama"
+            className="navbar-logo"
           />
 
           <h2>Portal Layanan Internal</h2>
@@ -300,8 +302,9 @@ const handleNotificationClick = async (notif) => {
         <div className="hero-content">
 
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
+            src={logo}
+            alt="Logo Kementerian Agama"
+            className="hero-logo"
           />
 
           <h1>PORTAL LAYANAN INTERNAL</h1>

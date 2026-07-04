@@ -11,7 +11,7 @@ const [status, setStatus] = useState("Menunggu");
 const [suratPermohonan, setSuratPermohonan] =
   useState(null);
 
-const [driveLink, setDriveLink] =
+const [linkDrive, setLinkDrive] =
   useState("");
 
 const handleSubmit = async () => {
@@ -45,8 +45,8 @@ const handleSubmit = async () => {
     );
 
     formData.append(
-      "driveLink",
-      driveLink
+      "linkDrive",
+      linkDrive
     );
 
     formData.append(
@@ -445,9 +445,9 @@ setUnitKerja(data.unit_organisasi || "");
 
     <input
       type="text"
-      value={driveLink}
+      value={linkDrive}
       onChange={(e) =>
-        setDriveLink(e.target.value)
+        setLinkDrive(e.target.value)
       }
       placeholder="https://drive.google.com/drive/folders/..."
     />

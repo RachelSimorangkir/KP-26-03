@@ -93,7 +93,7 @@ public function create()
 
     'surat_permohonan' => $filePath,
 
-    'drive_link' => $data['drive_link'] ?? ''
+    'link_drive' => $data['link_drive'] ?? ''
 
 ];
 

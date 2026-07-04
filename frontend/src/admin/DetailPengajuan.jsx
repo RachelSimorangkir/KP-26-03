@@ -44,6 +44,7 @@ export default function DetailPengajuan() {
 }, [data?.id]);
 
   console.log("DATA =", data);
+  console.log("LINK DRIVE =", data?.link_drive);
   console.log(JSON.parse(data.data_pengajuan));
 
   const detail =
@@ -247,6 +248,7 @@ const handleReject = async () => {
 
 <button
   className="back-btn"
+  onClick={() => navigate(-1)}
 >
   ← Kembali
 </button>
@@ -584,11 +586,11 @@ data.tanggal_pengajuan
   <h3>📂 Dokumen Pendukung</h3>
 
   {
-    data.drive_link ? (
+    data.link_drive? (
 
       <a
 
-        href={data.drive_link}
+        href={data.link_drive}
 
         target="_blank"
 

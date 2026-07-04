@@ -30,7 +30,7 @@ formData.append("layanan","SKBT Organisasi");
 
 formData.append("status","Menunggu");
 
-formData.append("driveLink", driveLink);
+formData.append("linkDrive", linkDrive);
 
 formData.append("suratPermohonan", suratPermohonan);
 

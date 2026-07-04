@@ -15,7 +15,7 @@ const [status, setStatus] = useState("Menunggu");
 const [suratPermohonan, setSuratPermohonan] =
   useState(null);
 
-const [driveLink, setDriveLink] =
+const [linkDrive, setLinkDrive] =
   useState("");
 
   const handleSubmit = async () => {
@@ -36,7 +36,7 @@ formData.append(
   })
 );
 
-formData.append("driveLink", driveLink);
+formData.append("linkDrive", linkDrive);
 
 formData.append("suratPermohonan", suratPermohonan);  
 
@@ -52,7 +52,7 @@ formData.append("suratPermohonan", suratPermohonan);
     return;
   }
 
-  if (!driveLink) {
+  if (!linkDrive) {
     Swal.fire({
       icon: "warning",
       title: "Link Google Drive Kosong",
@@ -288,9 +288,9 @@ const handleNipChange = async (e) => {
 
         <input
           type="text"
-          value={driveLink}
+          value={linkDrive}
           onChange={(e) =>
-            setDriveLink(e.target.value)
+            setLinkDrive(e.target.value)
           }
           placeholder="https://drive.google.com/drive/folders/..."
         />

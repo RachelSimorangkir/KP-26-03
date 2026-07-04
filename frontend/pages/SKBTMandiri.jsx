@@ -28,7 +28,7 @@ formData.append("layanan","SKBT Mandiri");
 
 formData.append("status","Menunggu");
 
-formData.append("driveLink", driveLink);
+formData.append("linkDrive", linkDrive);
 
 formData.append("suratPermohonan", suratPermohonan);
 

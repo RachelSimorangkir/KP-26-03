@@ -61,7 +61,7 @@ function Cuti() {
   const [suratPermohonan, setSuratPermohonan] =
     useState(null);
 
-  const [driveLink, setDriveLink] =
+  const [linkDrive, setLinkDrive] =
     useState("");
 
       //==========================
@@ -257,7 +257,7 @@ function Cuti() {
 
     }
 
-    if (!driveLink) {
+    if (!linkDrive) {
 
       Swal.fire(
         "Peringatan",
@@ -331,7 +331,7 @@ function Cuti() {
 
       formData.append(
         "link_drive",
-        driveLink
+        linkDrive
       );
 
       formData.append(
@@ -870,11 +870,11 @@ function Cuti() {
 
             placeholder="https://drive.google.com/drive/folders/..."
 
-            value={driveLink}
+            value={linkDrive}
 
             onChange={(e)=>
 
-              setDriveLink(e.target.value)
+              setLinkDrive(e.target.value)
 
             }
 
