@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginUser.css";
+import logo from "../src/assets/logo-kemenag.png";
+
 
 function LoginUser() {
   const navigate = useNavigate();
@@ -65,11 +67,13 @@ function LoginUser() {
       <div className="login-user-container">
 
         {/* KIRI */}
-        <div className="login-user-left">
+        <div className="login-left">
 
-          <div className="icon-box">
-            👤
-          </div>
+    <img
+        src={logo}
+        alt="Logo Kementerian Agama"
+        className="login-logo"
+    />
 
           <h1>Login Pegawai</h1>
 

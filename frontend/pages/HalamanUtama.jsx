@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HalamanUtama.css";
 import logo from "../src/assets/logo-kemenag.png";
+import Swal from "sweetalert2";
 
 export default function HalamanUtama() {
   const navigate = useNavigate();
@@ -43,16 +44,48 @@ notifications.filter(
 
 }, [nip]);
 
-  const handleAccess = (path) => {
-    if (!isLoggedIn) {
-      alert(
-        "Silakan login terlebih dahulu untuk mengakses layanan."
-      );
-      return;
-    }
+const handleAccess = (path) => {
 
-    navigate(path);
-  };
+  if (!isLoggedIn) {
+
+    Swal.fire({
+
+      icon: "warning",
+
+      title: "Akses Ditolak",
+
+      html: `
+        <b>Anda belum login.</b><br><br>
+        Silakan login terlebih dahulu untuk mengakses layanan.
+      `,
+
+      confirmButtonText: "Login Sekarang",
+
+      confirmButtonColor: "#2563eb",
+
+      showCancelButton: true,
+
+      cancelButtonText: "Nanti",
+
+      cancelButtonColor: "#94a3b8"
+
+    }).then((result)=>{
+
+      if(result.isConfirmed){
+
+        navigate("/login");
+
+      }
+
+    });
+
+    return;
+
+  }
+
+  navigate(path);
+
+};
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginAdmin.css";
+import logo from "../src/assets/logo-kemenag.png";
 
 function LoginAdmin() {
   const navigate = useNavigate();
@@ -95,11 +96,14 @@ const handleLogin = () => {
       <div className="login-admin-container">
 
         {/* KIRI */}
-        <div className="login-admin-left">
-
-          <div className="icon-box">
-            🔐
-          </div>
+        <div className="login-left">
+        
+            <img
+                src={logo}
+                alt="Logo Kementerian Agama"
+                className="login-logo"
+            />
+        
 
           <h1>Login Admin</h1>
 
