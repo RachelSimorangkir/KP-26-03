@@ -53,67 +53,9 @@ export default function DashboardCuti() {
 
 }, []);
 
-  function getCountdown(mulai, selesai){
+const filtered = cuti.filter(
 
-  if(!mulai || !selesai){
-
-    return{
-      text:"-",
-      className:"pending"
-    }
-
-  }
-
-  const sekarang=new Date();
-
-  const tMulai=new Date(mulai);
-
-  const tSelesai=new Date(selesai);
-
-  if(sekarang<tMulai){
-
-    const hari=Math.ceil(
-      (tMulai-sekarang)/(1000*60*60*24)
-    );
-
-    return{
-
-      text:`Mulai ${hari} hari lagi`,
-      className:"process"
-
-    }
-
-  }
-
-  if(sekarang>=tMulai && sekarang<=tSelesai){
-
-    const sisa=Math.ceil(
-      (tSelesai-sekarang)/(1000*60*60*24)
-    );
-
-    return{
-
-      text:`Sedang cuti (${sisa} hari lagi)`,
-
-      className:"approved"
-
-    }
-
-  }
-
-  return{
-
-    text:"Cuti selesai",
-
-    className:"pending"
-
-  }
-
-}
-
-const filtered=cuti.filter(
-
-item=>
+item =>
 
 item.nama
 .toLowerCase()
@@ -121,7 +63,7 @@ item.nama
 
 ||
 
-item.jenisCuti
+item.jenis_cuti
 ?.toLowerCase()
 .includes(search.toLowerCase())
 
@@ -214,7 +156,7 @@ onChange={(e)=>setSearch(e.target.value)}
 
 <th>Selesai</th>
 
-<th>Countdown</th>
+<th>Sisa Hak Cuti</th>
 
 <th>Status</th>
 
@@ -231,50 +173,38 @@ filtered.map((item,index)=>(
 
 <td>{item.nama}</td>
 
-<td>{item.jenisCuti}</td>
+<td>{item.jenis_cuti}</td>
 
-<td>{item.tanggalMulai}</td>
+<td>{item.tanggal_mulai}</td>
 
-<td>{item.tanggalSelesai}</td>
+<td>{item.tanggal_selesai}</td>
 
 <td>
-
-<span
-className={
-getCountdown(
-item.tanggalMulai,
-item.tanggalSelesai
-).className
-}
->
-
-{
-getCountdown(
-item.tanggalMulai,
-item.tanggalSelesai
-).text
-}
-
-</span>
-
+    <span
+        className={
+            item.sisa_cuti <= 3
+                ? "pending"
+                : item.sisa_cuti <= 6
+                ? "process"
+                : "approved"
+        }
+    >
+        {item.sisa_cuti} Hari
+    </span>
 </td>
 
 <td>
-
-<span
-className={`status ${
-item.status==="Menunggu"
-?"pending"
-:item.status==="Diproses"
-?"process"
-:"approved"
-}`}
->
-
-{item.status}
-
-</span>
-
+    <span
+        className={`status ${
+            item.status === "Menunggu"
+                ? "pending"
+                : item.status === "Diproses"
+                ? "process"
+                : "approved"
+        }`}
+    >
+        {item.status}
+    </span>
 </td>
 
 </tr>

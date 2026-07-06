@@ -85,3 +85,7 @@ $routes->put(
 );
 $routes->get('pdf/test', 'PdfController::test');
 $routes->get('pdf/cuti/(:num)', 'PdfController::cuti/$1');
+$routes->post(
+    "api/ganti-password",
+    "Auth::gantiPassword"
+);

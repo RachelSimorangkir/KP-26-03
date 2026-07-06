@@ -46,6 +46,7 @@ function LoginUser() {
     "userRole",
     data.user.role
   );
+  localStorage.setItem("userNIP", data.user.nip);
 
   navigate("/");
 } else {

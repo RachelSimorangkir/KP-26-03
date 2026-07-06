@@ -276,16 +276,22 @@ const handleNotificationClick = async (notif) => {
                 </div>
 
                 {showProfileMenu && (
-                  <div className="profile-dropdown">
+  <div className="profile-dropdown">
 
-                    <button
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </button>
+    <button
+      onClick={() => navigate("/ganti-password")}
+    >
+      🔒 Ganti Password
+    </button>
 
-                  </div>
-                )}
+    <button
+      onClick={handleLogout}
+    >
+      🚪 Logout
+    </button>
+
+  </div>
+)}
 
               </div>
 

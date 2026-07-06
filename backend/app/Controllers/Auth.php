@@ -68,4 +68,56 @@ class Auth extends BaseController
             'user' => $user
         ]);
     }
+    public function gantiPassword()
+{
+    $model = new UserModel();
+
+    $data = $this->request->getJSON(true);
+
+    $nip = $data["nip"];
+    $passwordLama = $data["passwordLama"];
+    $passwordBaru = $data["passwordBaru"];
+
+    $user = $model
+        ->where("nip", $nip)
+        ->first();
+
+    if (!$user) {
+
+        return $this->response->setJSON([
+            "status" => false,
+            "message" => "User tidak ditemukan."
+        ]);
+
+    }
+
+    if (
+        !password_verify(
+            $passwordLama,
+            $user["password"]
+        )
+    ) {
+
+        return $this->response->setJSON([
+            "status" => false,
+            "message" => "Password lama salah."
+        ]);
+
+    }
+
+    $model->update(
+        $user["id"],
+        [
+            "password" => password_hash(
+                $passwordBaru,
+                PASSWORD_DEFAULT
+            )
+        ]
+    );
+
+    return $this->response->setJSON([
+        "status" => true,
+        "message" => "Password berhasil diganti."
+    ]);
+}
 }

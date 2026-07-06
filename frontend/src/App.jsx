@@ -26,6 +26,7 @@ import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
 import DetailPengajuanUser from "../pages/DetailPengajuanUser";
+import GantiPassword from "../pages/GantiPassword";
 
 /* ADMIN */
 import AdminDashboard from "./admin/AdminDashboard";
@@ -67,6 +68,10 @@ function App() {
         <Route
           path="/dashboard-pegawai"
           element={<DashboardPegawai />}
+        />
+        <Route
+          path="/ganti-password"
+          element={<GantiPassword />}
         />
 
         {/* KEPEGAWAIAN */}

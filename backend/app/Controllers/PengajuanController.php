@@ -27,14 +27,38 @@ public function detail($id)
 }
 
     // Menampilkan seluruh pengajuan
-    public function index()
-    {
-        $data = $this->pengajuanModel
-            ->orderBy('id', 'DESC')
-            ->findAll();
+public function index()
+{
+    $data = $this->pengajuanModel
+        ->orderBy("id", "DESC")
+        ->findAll();
 
-        return $this->response->setJSON($data);
+    foreach ($data as &$item) {
+
+        // hanya untuk layanan cuti
+        if ($item["layanan"] == "Cuti") {
+
+            $hasil = $this->pengajuanModel
+                ->selectSum("durasi")
+                ->where("nip", $item["nip"])
+                ->whereIn("status", [
+                    "Disetujui",
+                    "Selesai"
+                ])
+                ->first();
+
+            $terpakai = (int)($hasil["durasi"] ?? 0);
+
+            $item["sisa_cuti"] = max(
+                0,
+                12 - $terpakai
+            );
+        }
+
     }
+
+    return $this->response->setJSON($data);
+}
 
     // Membuat pengajuan baru
 public function create()
