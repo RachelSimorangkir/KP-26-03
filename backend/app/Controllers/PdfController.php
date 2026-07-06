@@ -11,31 +11,39 @@ use App\Models\PegawaiModel;
 class PdfController extends Controller
 {
 
+    /*
+    |--------------------------------------------------------------------------
+    | ROUTER CUTI
+    |--------------------------------------------------------------------------
+    */
+
     public function cuti($id)
     {
+        $model = new PengajuanModel();
 
-        //==============================
-        // MODEL
-        //==============================
-
-        $pengajuanModel = new PengajuanModel();
-
-        $pegawaiModel = new PegawaiModel();
-
-
-        //==============================
-        // AMBIL DATA PENGAJUAN
-        //==============================
-
-        $pengajuan = $pengajuanModel->find($id);
+        $pengajuan = $model->find($id);
 
         if (!$pengajuan) {
-
             return "Data pengajuan tidak ditemukan.";
-
         }
 
+        if ($pengajuan["status_kepegawaian"] == "PNS") {
+            return $this->cutiPNS($id);
+        }
 
+        return $this->cutiPPPK($id);
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FORM CUTI PNS
+    |--------------------------------------------------------------------------
+    */
+
+    public function cutiPNS($id)
+    {
         //==============================
         // AMBIL DATA PEGAWAI
         //==============================
@@ -376,4 +384,299 @@ $pdf->Cell(
 
     }
 
+    public function cutiPPPK($id)
+{
+    //==============================
+    // MODEL
+    //==============================
+
+    $pengajuanModel = new PengajuanModel();
+    $pegawaiModel = new PegawaiModel();
+
+    //==============================
+    // AMBIL DATA PENGAJUAN
+    //==============================
+
+    $pengajuan = $pengajuanModel->find($id);
+
+    if (!$pengajuan) {
+        return "Data pengajuan tidak ditemukan.";
+    }
+
+    //==============================
+    // AMBIL DATA PEGAWAI
+    //==============================
+
+    $pegawai = $pegawaiModel
+        ->where("nip", $pengajuan["nip"])
+        ->first();
+
+    if (!$pegawai) {
+        return "Data pegawai tidak ditemukan.";
+    }
+
+    //==============================
+    // VARIABEL
+    //==============================
+
+    $nama = $pengajuan["nama"];
+
+    $nip = $pengajuan["nip"];
+
+    $jabatan = $pengajuan["jabatan"];
+
+    $unitKerja = $pegawai["unit_organisasi"];
+
+    // PPPK menggunakan Masa Kerja
+    $masaKerja = $pegawai["masa_kerja"] ?? "-";
+
+    $jenisCuti = $pengajuan["jenis_cuti"];
+
+    $alasan = $pengajuan["alasan_cuti"];
+
+    $tanggalMulai = date(
+        "d-m-Y",
+        strtotime($pengajuan["tanggal_mulai"])
+    );
+
+    $tanggalSelesai = date(
+        "d-m-Y",
+        strtotime($pengajuan["tanggal_selesai"])
+    );
+
+    $durasi = $pengajuan["durasi"];
+
+    $alamat = $pengajuan["alamat_cuti"];
+
+    $noHp = $pengajuan["no_hp"];
+
+    //==============================
+    // PDF
+    //==============================
+
+    $pdf = new Fpdi();
+
+    $template = WRITEPATH . "templates/pppk.pdf";
+
+    $pageCount = $pdf->setSourceFile($template);
+
+    $tpl = $pdf->importPage(1);
+
+    $size = $pdf->getTemplateSize($tpl);
+
+    $pdf->AddPage(
+        $size["orientation"],
+        [$size["width"], $size["height"]]
+    );
+
+    $pdf->useTemplate($tpl);
+
+    $pdf->SetFont("Arial", "", 11);
+
+    //=========================================
+// TANGGAL SURAT
+//=========================================
+
+$bulan = [
+    1 => "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+];
+
+$tanggalSurat = date(
+    "j",
+    strtotime($pengajuan["tanggal_pengajuan"])
+);
+
+$bulanSurat = $bulan[
+    date(
+        "n",
+        strtotime($pengajuan["tanggal_pengajuan"])
+    )
+];
+
+$tahunSurat = date(
+    "Y",
+    strtotime($pengajuan["tanggal_pengajuan"])
+);
+
+$pdf->SetFont("Arial","",11);
+
+// Sesuaikan nanti jika kurang pas
+$pdf->SetXY(137,58);
+
+$pdf->Write(
+    5,
+    "Jakarta, " .
+    $tanggalSurat .
+    " " .
+    $bulanSurat .
+    " " .
+    $tahunSurat
+);
+
+//=========================================
+// TUJUAN SURAT
+//=========================================
+
+$pdf->SetFont("Arial", "", 11);
+
+// Kepada Yth.
+$pdf->SetXY(133,70.5);
+
+$pdf->MultiCell(
+    90,     // lebar dibuat kecil supaya turun ke bawah
+    6,      // tinggi tiap baris
+    "Sekretaris Direktorat Jenderal\nBimbingan Masyarakat Kristen"
+);
+
+// "di"
+$pdf->SetXY(129,83.4);
+
+$pdf->Cell(
+    10,
+    5,
+    "Jakarta"
+);
+
+
+//=========================================
+// I. DATA PEGAWAI
+//=========================================
+
+$pdf->SetFont("Arial","",10);
+
+// Nama
+$pdf->SetXY(48.5,105.5);
+$pdf->Write(5,$nama);
+
+// NIP
+$pdf->SetXY(150,105.5);
+$pdf->Write(5,$nip);
+
+// Jabatan
+$pdf->SetXY(48.5,110);
+$pdf->Write(5,$jabatan);
+
+// Masa Kerja
+$pdf->SetXY(205,91);
+$pdf->Write(5,$masaKerja);
+
+// Unit Kerja
+$pdf->SetXY(48.5,114);
+
+$pdf->MultiCell(
+    200,
+    5,
+    $unitKerja
+);
+
+    //=========================================
+// II. JENIS CUTI
+//=========================================
+
+$pdf->SetFont("ZapfDingbats","",10);
+
+switch ($jenisCuti) {
+
+    case "Cuti Tahunan":
+        $pdf->SetXY(178,127); //178,127
+        $pdf->Cell(5,5,"4");
+        break;
+
+    case "Cuti Sakit":
+        $pdf->SetXY(178,131); //178,131
+        $pdf->Cell(5,5,"4");
+        break;
+
+    case "Cuti Melahirkan":
+        $pdf->SetXY(178,135); //178,129
+        $pdf->Cell(5,5,"4");
+        break;
+}
+
+$pdf->SetFont("Arial","",10);
+
+//=========================================
+// III. ALASAN CUTI
+//=========================================
+
+$pdf->SetXY(23.5,149);
+
+$pdf->MultiCell(
+    170,
+    5,
+    $alasan
+);
+
+//=========================================
+// IV. LAMA CUTI
+//=========================================
+
+$pdf->SetXY(41,168.7);
+$pdf->Cell(20,5,$durasi);
+
+$pdf->SetXY(129,168.7);
+$pdf->Cell(35,5,$tanggalMulai);
+
+$pdf->SetXY(170,168.7);
+$pdf->Cell(35,5,$tanggalSelesai);
+
+//=========================================
+// V. ALAMAT
+//=========================================
+
+$pdf->SetXY(23.5,208);
+
+$pdf->MultiCell(
+    100,
+    5,
+    $alamat
+);
+
+$pdf->SetXY(160,203);
+
+$pdf->Cell(
+    50,
+    5,
+    $noHp
+);
+
+//=========================================
+// TANDA TANGAN
+//=========================================
+
+$pdf->SetXY(128.5,219);
+
+$pdf->Cell(
+    55,
+    5,
+    $nama
+);
+
+$pdf->SetXY(145,224);
+
+$pdf->Cell(
+    55,
+    5,
+    $nip
+);
+
+//=========================================
+// OUTPUT
+//=========================================
+
+return $this->response
+    ->setHeader("Content-Type","application/pdf")
+    ->setBody($pdf->Output("S"));
+}
 }
