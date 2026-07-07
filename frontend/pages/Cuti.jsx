@@ -47,6 +47,8 @@ function Cuti() {
 
   const [durasi, setDurasi] =
     useState("");
+  const [lamaCuti, setLamaCuti] = useState("");
+  const [satuanCuti, setSatuanCuti] = useState("");
 
   const [alamatCuti, setAlamatCuti] =
     useState("");
@@ -104,29 +106,58 @@ function Cuti() {
 
   useEffect(() => {
 
-    if (tanggalMulai && tanggalSelesai) {
+    if (!tanggalMulai || !tanggalSelesai) {
+        setDurasi("");
+        setLamaCuti("");
+        setSatuanCuti("");
+        return;
+    }
 
-      const mulai = new Date(tanggalMulai);
+    const mulai = new Date(tanggalMulai);
+    const selesai = new Date(tanggalSelesai);
 
-      const selesai = new Date(tanggalSelesai);
+    if (selesai < mulai) return;
 
-      const hari =
+    // Total hari
+    const totalHari =
+        Math.floor((selesai - mulai) / (1000 * 60 * 60 * 24)) + 1;
 
-        (selesai - mulai) /
+    setDurasi(totalHari);
 
-          (1000 * 60 * 60 * 24) +
+    // Hitung tahun, bulan, hari
+    let tahun = selesai.getFullYear() - mulai.getFullYear();
+    let bulan = selesai.getMonth() - mulai.getMonth();
+    let hari = selesai.getDate() - mulai.getDate();
 
-        1;
+    if (hari < 0) {
+        bulan--;
+    }
 
-      if (hari > 0) {
+    if (bulan < 0) {
+        tahun--;
+        bulan += 12;
+    }
 
-        setDurasi(hari);
+    if (tahun >= 1 && bulan === 0 && hari === 0) {
 
-      }
+        setLamaCuti(tahun);
+        setSatuanCuti("Tahun");
+
+    }
+    else if (bulan >= 1 && hari === 0) {
+
+        setLamaCuti(bulan);
+        setSatuanCuti("Bulan");
+
+    }
+    else {
+
+        setLamaCuti(totalHari);
+        setSatuanCuti("Hari");
 
     }
 
-  }, [tanggalMulai, tanggalSelesai]);
+}, [tanggalMulai, tanggalSelesai]);
 
     //========================================
   // AMBIL DATA PEGAWAI BERDASARKAN NIP
@@ -314,10 +345,9 @@ function Cuti() {
         tanggalSelesai
       );
 
-      formData.append(
-        "durasi",
-        durasi
-      );
+      formData.append("durasi", durasi);
+      formData.append("lama_cuti", lamaCuti);
+      formData.append("satuan_cuti", satuanCuti);
 
       formData.append(
         "alamat_cuti",
@@ -713,21 +743,41 @@ function Cuti() {
 
           {/* Durasi */}
 
-          <div className="form-group">
+<div className="form-group">
 
-            <label>Durasi (Hari)</label>
+    <label>Total Hari</label>
 
-            <input
+    <input
+        type="number"
+        value={durasi}
+        readOnly
+    />
 
-              type="number"
+</div>
 
-              value={durasi}
+<div className="form-group">
 
-              readOnly
+    <label>Lama Cuti</label>
 
-            />
+    <input
+        type="number"
+        value={lamaCuti}
+        readOnly
+    />
 
-          </div>
+</div>
+
+<div className="form-group">
+
+    <label>Satuan</label>
+
+    <input
+        type="text"
+        value={satuanCuti}
+        readOnly
+    />
+
+</div>
 
 
           {/* Alamat */}

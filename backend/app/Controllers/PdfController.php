@@ -116,8 +116,9 @@ class PdfController extends Controller
                 )
             );
 
-        $durasi =
-            $pengajuan["durasi"];
+        $durasi      = $pengajuan["durasi"];
+$lamaCuti    = $pengajuan["lama_cuti"];
+$satuanCuti  = strtolower($pengajuan["satuan_cuti"]);
 
         $alamat =
             $pengajuan["alamat_cuti"];
@@ -328,19 +329,68 @@ $pdf->Cell(
             $alasan
         );
 
+        $lama = $pengajuan["durasi"];
+$satuan = "Hari";
+
+// Contoh sederhana
+if ($lama >= 365) {
+    $lama = round($lama / 365);
+    $satuan = "tahun";
+} elseif ($lama >= 30) {
+    $lama = round($lama / 30);
+    $satuan = "bulan";
+}
+
 
         //=========================================
         // IV. LAMANYA CUTI
         //=========================================
-
-        $pdf->SetXY(57,201.5);
-        $pdf->Cell(18,5,$durasi);
-
         $pdf->SetXY(217,201.5);
         $pdf->Cell(28,5,$tanggalMulai);
 
         $pdf->SetXY(265,201.5);
         $pdf->Cell(28,5,$tanggalSelesai);
+
+        $pdf->SetXY(57,201.5);
+        $pdf->Cell(18,5,$lama);
+
+       $lama = $lamaCuti;
+
+$pdf->SetDrawColor(255,0,0);
+$pdf->SetLineWidth(0.6);
+
+switch (ucfirst($satuanCuti)) {
+
+    case "Hari":
+
+        // Coret BULAN
+        $pdf->Line(115,203.5,129,203.5);
+
+        // Coret TAHUN
+        $pdf->Line(130,203.5,146,203.5);
+
+        break;
+
+    case "Bulan":
+
+        // Coret HARI
+        $pdf->Line(103,203.5,114,203.5);
+
+        // Coret TAHUN
+        $pdf->Line(130,203.5,146,203.5);
+
+        break;
+
+    case "Tahun":
+
+        // Coret HARI
+        $pdf->Line(100,203.5,114,203.5);
+
+        // Coret BULAN
+        $pdf->Line(115,203.5,129,203.5);
+
+        break;
+}
 
 
         //=========================================
@@ -460,8 +510,36 @@ $pdf->Cell(
         "d-m-Y",
         strtotime($pengajuan["tanggal_selesai"])
     );
+    $mulai = new DateTime($pengajuan["tanggal_mulai"]);
+$selesai = new DateTime($pengajuan["tanggal_selesai"]);
+
+$interval = $mulai->diff($selesai);
+
+$lama = $pengajuan["durasi"];
+
+if ($interval->y > 0){
+
+    $satuan = "Tahun";
+    $lama = $interval->y;
+
+}
+elseif($interval->m > 0){
+
+    $satuan = "Bulan";
+    $lama = $interval->m;
+
+}
+else{
+
+    $satuan = "Hari";
+
+}
 
     $durasi = $pengajuan["durasi"];
+
+    $lamaCuti = $pengajuan["lama_cuti"];
+
+    $satuanCuti = strtolower($pengajuan["satuan_cuti"]);
 
     $alamat = $pengajuan["alamat_cuti"];
 
@@ -640,7 +718,10 @@ $pdf->MultiCell(
 //=========================================
 
 $pdf->SetXY(41,168.7);
-$pdf->Cell(20,5,$durasi);
+$pdf->Cell(20,5,$lamaCuti);
+
+$pdf->SetXY(73,168.7);
+$pdf->Cell(30,5,$satuanCuti);
 
 $pdf->SetXY(129,168.7);
 $pdf->Cell(35,5,$tanggalMulai);

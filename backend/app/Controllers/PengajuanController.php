@@ -107,7 +107,11 @@ public function create()
 
     'durasi' => $data['durasi'] ?? 0,
 
-    'alamat_cuti' => $data['alamat_cuti'] ?? '',
+    'lama_cuti' => $data['lama_cuti'] ?? 0,
+
+    'satuan_cuti' => $data['satuan_cuti'] ?? '',
+
+    'alamat_cuti' => $data['alamat_cuti'] ?? '',        
 
     'no_hp' => $data['no_hp'] ?? '',
 

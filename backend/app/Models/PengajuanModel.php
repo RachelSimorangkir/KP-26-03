@@ -54,6 +54,12 @@ class PengajuanModel extends Model
 
     "durasi",
 
+    'lama_cuti',
+
+    'satuan_cuti',
+
+    
+
     "alamat_cuti",
 
     "no_hp"
