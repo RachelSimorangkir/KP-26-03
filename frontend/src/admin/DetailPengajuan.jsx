@@ -702,7 +702,7 @@ suratRespon && (
     onClick={handleReject}
     disabled={status === "Ditolak"}
   >
-    ❌ Tolak
+    Tolak
   </button>
 
   <button
@@ -710,7 +710,7 @@ suratRespon && (
     onClick={handleProcess}
     disabled={status === "Diproses"}
   >
-    ⏳ Proses
+    Proses
   </button>
 
   <button
@@ -718,7 +718,7 @@ suratRespon && (
     onClick={handleApprove}
     disabled={status === "Selesai"}
   >
-    ✅ Selesai
+    Selesai
   </button>
 
 </div>
