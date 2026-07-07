@@ -98,15 +98,15 @@ const handleNipChange = async (e) => {
         className="back-button"
         onClick={() => navigate("/kepegawaian/skbt")}
       >
-        ← Kembali
+        <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
       </button>
 
       {/* HEADER */}
       <div className="page-header">
-
-        <div className="header-icon">
-          📋
-        </div>
 
         <div className="header-text">
           <h1>Pengajuan SKBT Mandiri</h1>

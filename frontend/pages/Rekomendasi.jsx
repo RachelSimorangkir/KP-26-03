@@ -6,25 +6,21 @@ export default function Rekomendasi() {
 
   const layanan = [
     {
-      icon: "🔄",
       title: "Pengaktifan Kembali",
       desc: "Pengaktifan kembali jabatan fungsional setelah pemberhentian sementara.",
       path: "/kepegawaian/rekomendasi/pengaktifan-kembali",
     },
     {
-      icon: "📈",
       title: "Kenaikan Jenjang & Perpindahan Jabatan",
       desc: "Pengajuan kenaikan jenjang jabatan fungsional atau perpindahan dari jabatan lain.",
       path: "/kepegawaian/rekomendasi/kenaikan-jenjang",
     },
     {
-      icon: "🚀",
       title: "Mutasi / Promosi",
       desc: "Pengajuan mutasi pegawai maupun promosi jabatan.",
       path: "/kepegawaian/rekomendasi/mutasi-promosi",
     },
     {
-      icon: "🧩",
       title: "Alih Fungsi",
       desc: "Pengajuan alih fungsi sesuai kebutuhan organisasi.",
       path: "/kepegawaian/rekomendasi/alih-fungsi",
@@ -39,13 +35,16 @@ export default function Rekomendasi() {
           className="back-button"
           onClick={() => navigate("/kepegawaian")}
         >
-          ← Kembali
+          <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
         </button>
       </div>
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📄</div>
 
         <div className="service-banner-content">
           <h1>Layanan Rekomendasi</h1>

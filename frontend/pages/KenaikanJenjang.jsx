@@ -157,7 +157,11 @@ const handleSubmit = async () => {
         className="back-button"
         onClick={() => navigate("/kepegawaian/rekomendasi")}
       >
-        ← Kembali
+        <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
       </button>
 
       {/* HEADER */}

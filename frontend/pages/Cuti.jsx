@@ -414,16 +414,16 @@ function Cuti() {
         className="back-button"
         onClick={() => navigate("/kepegawaian")}
       >
-        ← Kembali
+        <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
       </button>
 
       {/* ================= HEADER ================= */}
 
       <div className="page-header">
-
-        <div className="header-icon">
-          🏖️
-        </div>
 
         <div>
 
@@ -791,12 +791,6 @@ function Cuti() {
         <h2>Surat Permohonan</h2>
 
         <div className="upload-area">
-
-          <div className="upload-icon">
-
-            📄
-
-          </div>
 
           <label htmlFor="surat">
 

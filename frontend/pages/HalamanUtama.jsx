@@ -314,13 +314,13 @@ const handleNotificationClick = async (notif) => {
     <button
       onClick={() => navigate("/ganti-password")}
     >
-      🔒 Ganti Password
+      Ganti Password
     </button>
 
     <button
       onClick={handleLogout}
     >
-      🚪 Logout
+      Logout
     </button>
 
   </div>

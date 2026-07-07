@@ -143,7 +143,11 @@ const handleNipChange = async (e) => {
           navigate("/kepegawaian/rekomendasi/mutasi-promosi")
         }
       >
-        ← Kembali
+        <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
       </button>
 
       {/* HEADER */}

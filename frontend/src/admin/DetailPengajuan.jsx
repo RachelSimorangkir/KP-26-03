@@ -187,7 +187,11 @@ alert("Status berhasil diperbarui.");
           <button
             className="back-btn"
           >
-            Kembali
+            <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
           </button>
 
         </div>
