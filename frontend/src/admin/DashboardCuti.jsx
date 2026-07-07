@@ -89,13 +89,13 @@ return(
 onClick={()=>navigate("/admin")}
 >
 
-📥 Semua Pengajuan
+Semua Pengajuan
 
 </li>
 
 <li className="active-menu">
 
-🌴 Pengajuan Cuti
+Pengajuan Cuti
 
 </li>
 
@@ -104,7 +104,7 @@ className="logout-menu"
 onClick={handleLogout}
 >
 
-🚪 Logout
+Logout
 
 </li>
 

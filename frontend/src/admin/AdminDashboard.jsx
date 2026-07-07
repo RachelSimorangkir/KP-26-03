@@ -106,20 +106,20 @@ const getCountdown = (mulai, selesai) => {
     className="active-menu"
     onClick={() => navigate("/admin")}
   >
-    📥 Semua Pengajuan
+    Semua Pengajuan
   </li>
 
   <li
     onClick={() => navigate("/admin/cuti")}
   >
-    🌴 Pengajuan Cuti
+    Pengajuan Cuti
   </li>
 
   <li
     className="logout-menu"
     onClick={handleLogout}
   >
-    🚪 Logout
+    Logout
   </li>
 
 </ul>

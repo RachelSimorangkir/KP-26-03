@@ -161,14 +161,20 @@ const handleLogin = () => {
                 Admin Humas & Data
               </button>
 
-              <button
-                className="back-btn"
-                onClick={() =>
-                  navigate("/login")
-                }
-              >
-                ← Kembali
-              </button>
+{/* BUTTON KEMBALI */}
+<div className="back-home-wrapper">
+  <button
+    className="back-home-btn"
+    onClick={() => navigate("/")}
+  >
+    <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
+    <span>Kembali ke Beranda</span>
+  </button>
+</div>
 
             </div>
 
@@ -240,7 +246,8 @@ const handleLogin = () => {
                   setPassword("");
                 }}
               >
-                ← Ganti Divisi
+                
+                Ganti Divisi
               </button>
 
             </form>

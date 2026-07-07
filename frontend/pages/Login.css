@@ -421,3 +421,26 @@
     text-decoration: none !important;
     color: inherit;
 }
+
+.back-home-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #ededed;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.back-home-btn:hover {
+  background: #1b3954;
+}
+
+.back-icon {
+  width: 22px;
+  height: 22px;
+}

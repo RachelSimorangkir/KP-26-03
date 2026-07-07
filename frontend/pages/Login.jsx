@@ -71,17 +71,20 @@ function Login() {
 
             </div>
 
-            {/* BUTTON KEMBALI */}
-            <div className="back-home-wrapper">
-
-              <button
-                className="back-home-btn"
-                onClick={() => navigate("/")}
-              >
-                ← Kembali ke Beranda
-              </button>
-
-            </div>
+{/* BUTTON KEMBALI */}
+<div className="back-home-wrapper">
+  <button
+    className="back-home-btn"
+    onClick={() => navigate("/")}
+  >
+    <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
+    <span>Kembali ke Beranda</span>
+  </button>
+</div>
 
           </div>
 

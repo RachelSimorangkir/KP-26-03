@@ -374,9 +374,6 @@ const handleNotificationClick = async (notif) => {
               handleAccess("/kepegawaian")
             }
           >
-            <div className="service-icon">
-              👥
-            </div>
 
             <h3>Kepegawaian & SDM</h3>
 
@@ -393,9 +390,6 @@ const handleNotificationClick = async (notif) => {
               handleAccess("/bmn")
             }
           >
-            <div className="service-icon">
-              🏢
-            </div>
 
             <h3>Barang Milik Negara</h3>
 
@@ -412,9 +406,6 @@ const handleNotificationClick = async (notif) => {
               handleAccess("/humas-data")
             }
           >
-            <div className="service-icon">
-              📊
-            </div>
 
             <h3>Humas & Data</h3>
 

@@ -7,17 +7,14 @@ function Kepegawaian() {
 
   const menus = [
     {
-      icon: "📄",
       title: "Rekomendasi",
       path: "/kepegawaian/rekomendasi",
     },
     {
-      icon: "🏖️",
       title: "Cuti",
       path: "/kepegawaian/cuti",
     },
     {
-      icon: "📋",
       title: "SKBT",
       path: "/kepegawaian/skbt",
     },
