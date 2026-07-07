@@ -777,3 +777,58 @@
 
   word-break:break-word;
 }
+
+/* ==========================
+   STATUS PENGAJUAN
+========================== */
+
+.status-section{
+    margin-top:35px;
+    padding:28px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(15,45,80,.08);
+    border:1px solid #eef3f8;
+}
+
+.status-section h2{
+    margin:0 0 20px;
+    font-size:28px;
+    font-weight:700;
+    color:#163b67;
+}
+
+/* ==========================
+   DOWNLOAD BUTTON
+========================== */
+
+.download-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:14px 22px;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+
+    text-decoration:none;
+    font-weight:600;
+    font-size:15px;
+
+    border-radius:12px;
+
+    box-shadow:0 8px 18px rgba(37,99,235,.25);
+
+    transition:.25s ease;
+}
+
+.download-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 24px rgba(37,99,235,.35);
+    background:linear-gradient(135deg,#1d4ed8,#163b67);
+}
+
+.download-btn:active{
+    transform:scale(.98);
+}

@@ -211,15 +211,17 @@ if (!data) {
 
         <div>
 
-          <label>Tanggal Pengajuan</label>
+<label>Tanggal Pengajuan</label>
 
-          <p>
-            {data.tanggal_pengajuan
-              ? new Date(
-                  data.tanggal_pengajuan
-                ).toLocaleString("id-ID")
-              : "-"}
-          </p>
+<p>
+  {data.tanggal_pengajuan
+    ? new Date(data.tanggal_pengajuan).toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "-"}
+</p>
 
         </div>
 
@@ -233,7 +235,7 @@ if (!data) {
         <ul>
 
 <li className="done">
-✔ Pengajuan berhasil dikirim
+Pengajuan berhasil dikirim
 </li>
 
 <li
@@ -250,7 +252,7 @@ data.status==="Menunggu"
 ?
 "⏳ Menunggu verifikasi admin"
 :
-"✔ Sedang diproses admin"
+"Sedang diproses admin"
 }
 
 </li>
@@ -268,7 +270,7 @@ data.status==="Selesai"
 {
 data.status==="Selesai"
 ?
-"✔ Pengajuan telah selesai"
+"Pengajuan telah selesai"
 :
 "Menunggu penyelesaian"
 }

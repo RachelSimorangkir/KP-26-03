@@ -45,6 +45,23 @@ class PdfController extends Controller
     public function cutiPNS($id)
     {
         //==============================
+        // MODEL
+        //==============================
+
+        $pengajuanModel = new PengajuanModel();
+        $pegawaiModel   = new PegawaiModel();
+
+        //==============================
+        // AMBIL DATA PENGAJUAN
+        //==============================
+
+        $pengajuan = $pengajuanModel->find($id);
+
+        if (!$pengajuan) {
+            return "Data pengajuan tidak ditemukan.";
+        }
+
+        //==============================
         // AMBIL DATA PEGAWAI
         //==============================
 
