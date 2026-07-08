@@ -298,6 +298,15 @@ $pdf->Cell(
     $tanggalSurat . " " . $bulanSurat . " " . $tahunSurat
 );
 
+// Kepada Yth.
+$pdf->SetXY(200,56.5);
+
+$pdf->MultiCell(
+    90,     // lebar dibuat kecil supaya turun ke bawah
+    6,      // tinggi tiap baris
+    "Sekretaris Dirjen Bimas Kristen"
+);
+
 
 
         //==============================
@@ -451,7 +460,7 @@ switch (ucfirst($satuanCuti)) {
 //=========================================
 
 // N-3
-$pdf->SetXY(69,235);
+$pdf->SetXY(69,236);
 $pdf->Cell(15,5,$sisaN3);
 
 // N-1
@@ -459,7 +468,7 @@ $pdf->SetXY(69,243);
 $pdf->Cell(15,5,$sisaN1);
 
 // N
-$pdf->SetXY(72,332);
+$pdf->SetXY(67.5,250);
 $pdf->Cell(15,5,$sisaN);
 
 
@@ -559,8 +568,8 @@ $pdf->Cell(15,5,$sisaN);
         "d-m-Y",
         strtotime($pengajuan["tanggal_selesai"])
     );
-    $mulai = new DateTime($pengajuan["tanggal_mulai"]);
-$selesai = new DateTime($pengajuan["tanggal_selesai"]);
+$mulai = new \DateTime($pengajuan["tanggal_mulai"]);
+$selesai = new \DateTime($pengajuan["tanggal_selesai"]);
 
 $interval = $mulai->diff($selesai);
 
@@ -769,14 +778,47 @@ $pdf->MultiCell(
 $pdf->SetXY(41,168.7);
 $pdf->Cell(20,5,$lamaCuti);
 
-$pdf->SetXY(73,168.7);
-$pdf->Cell(30,5,$satuanCuti);
-
 $pdf->SetXY(129,168.7);
 $pdf->Cell(35,5,$tanggalMulai);
 
 $pdf->SetXY(170,168.7);
 $pdf->Cell(35,5,$tanggalSelesai);
+
+$pdf->SetDrawColor(255,0,0);
+$pdf->SetLineWidth(0.6);
+
+switch (ucfirst($satuanCuti)) {
+
+    case "Hari":
+
+        // Coret BULAN
+        $pdf->Line(59,171,68,171);
+
+        // Coret TAHUN
+        $pdf->Line(70,171,79,171);
+
+        break;
+
+    case "Bulan":
+
+        // Coret HARI
+        $pdf->Line(50.5,171,57,171);
+
+        // Coret TAHUN
+        $pdf->Line(70,171,79,171);
+
+        break;
+
+    case "Tahun":
+
+        // Coret HARI
+        $pdf->Line(50.5,171,57,171);
+
+        // Coret BULAN
+        $pdf->Line(59,171,68,171);
+
+        break;
+}
 
 //=========================================
 // V. ALAMAT
@@ -790,7 +832,7 @@ $pdf->MultiCell(
     $alamat
 );
 
-$pdf->SetXY(160,203);
+$pdf->SetXY(155,203);
 
 $pdf->Cell(
     50,
