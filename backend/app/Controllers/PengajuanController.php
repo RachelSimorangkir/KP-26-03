@@ -38,14 +38,18 @@ public function index()
         // hanya untuk layanan cuti
         if ($item["layanan"] == "Cuti") {
 
-            $hasil = $this->pengajuanModel
-                ->selectSum("durasi")
-                ->where("nip", $item["nip"])
-                ->whereIn("status", [
-                    "Disetujui",
-                    "Selesai"
-                ])
-                ->first();
+            $tahun = date("Y");
+
+$hasil = $this->pengajuanModel
+    ->selectSum("durasi")
+    ->where("nip", $item["nip"])
+    ->where("jenis_cuti", "Cuti Tahunan")
+    ->whereIn("status", [
+        "Disetujui",
+        "Selesai"
+    ])
+    ->where("YEAR(tanggal_mulai)", $tahun, false)
+    ->first();
 
             $terpakai = (int)($hasil["durasi"] ?? 0);
 

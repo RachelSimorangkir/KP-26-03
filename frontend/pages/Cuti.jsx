@@ -301,6 +301,19 @@ function Cuti() {
     }
 
     try {
+      //=========================
+// HITUNG SISA CUTI
+//=========================
+
+let sisaCuti = 12;
+
+if (jenisCuti === "Cuti Tahunan") {
+    sisaCuti = 12 - Number(durasi);
+
+    if (sisaCuti < 0) {
+        sisaCuti = 0;
+    }
+}
 
       const formData = new FormData();
 
@@ -346,6 +359,7 @@ function Cuti() {
       );
 
       formData.append("durasi", durasi);
+      formData.append("sisa_cuti", sisaCuti);
       formData.append("lama_cuti", lamaCuti);
       formData.append("satuan_cuti", satuanCuti);
 

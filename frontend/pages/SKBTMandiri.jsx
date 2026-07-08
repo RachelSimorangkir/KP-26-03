@@ -7,11 +7,13 @@ function SKBTMandiri() {
   const navigate = useNavigate();
 
   const [submitted, setSubmitted] = useState(false);
+  const [suratPermohonan, setSuratPermohonan] = useState(null);
+const [linkDrive, setLinkDrive] = useState("");
 const [nip, setNip] = useState("");
 const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [pangkat, setPangkat] = useState("");
-const [unitOrganisasi, setUnitOrganisasi] = useState("");
+const [unitMandiri, setUnitMandiri] = useState("");
 const [keperluan, setKeperluan] = useState("");
 const [email, setEmail] = useState("");
 const [noHp, setNoHp] = useState("");
@@ -22,7 +24,7 @@ const [status, setStatus] = useState("Menunggu");
 formData.append("nip", nip);
 formData.append("nama", nama);
 formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitKerja);
+formData.append("unitKerja", unitMandiri);
 
 formData.append("layanan","SKBT Mandiri");
 
@@ -84,7 +86,7 @@ const handleNipChange = async (e) => {
       setNama(data.nama || "");
       setJabatan(data.jabatan || "");
       setPangkat(data.pangkat_golongan || "");
-      setUnitOrganisasi(data.unit_organisasi || "");
+      setUnitMandiri(data.unit_mandiri || "");
     }
   } catch (error) {
     console.error(error);
@@ -152,7 +154,7 @@ const handleNipChange = async (e) => {
             <label>Unit Kerja</label>
             <input
   type="text"
-  value={unitOrganisasi}
+  value={unitMandiri}
   readOnly
 />
           </div>
@@ -218,31 +220,71 @@ const handleNipChange = async (e) => {
 
       </div>
 
-      {/* UPLOAD */}
       <div className="form-card">
 
-        <h2>Upload Dokumen</h2>
+  <h2>Surat Permohonan</h2>
 
-        <div className="upload-grid">
+  <div className="upload-area">
 
-          <div className="upload-box">
-            <label>SK Pengangkatan</label>
-            <input type="file" />
-          </div>
+    <div className="upload-icon">
+      📄
+    </div>
 
-          <div className="upload-box">
-            <label>Surat Permohonan</label>
-            <input type="file" />
-          </div>
+    <label htmlFor="surat">
+      Upload Surat Permohonan
+    </label>
 
-          <div className="upload-box">
-            <label>Dokumen Pendukung</label>
-            <input type="file" />
-          </div>
+    <input
+      id="surat"
+      type="file"
+      accept=".pdf"
+      onChange={(e) =>
+        setSuratPermohonan(e.target.files[0])
+      }
+    />
 
-        </div>
-
+    {suratPermohonan && (
+      <div className="uploaded-file">
+        ✅ {suratPermohonan.name}
       </div>
+    )}
+
+    <span>PDF Maks. 10 MB</span>
+
+  </div>
+
+</div>
+
+<div className="form-card">
+
+  <h2>Dokumen Pendukung</h2>
+
+  <div className="form-group">
+
+    <label>Link Folder Google Drive</label>
+
+    <input
+      type="text"
+      placeholder="https://drive.google.com/drive/folders/..."
+      value={linkDrive}
+      onChange={(e) =>
+        setLinkDrive(e.target.value)
+      }
+    />
+
+  </div>
+
+  <div className="drive-note">
+
+    <strong>Catatan:</strong>
+
+    Upload seluruh dokumen pendukung
+    ke Google Drive, kemudian tempelkan
+    link folder di atas.
+
+  </div>
+
+</div>
 
       {/* BUTTON */}
       <div className="button-group">
