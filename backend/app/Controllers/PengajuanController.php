@@ -40,6 +40,11 @@ public function index()
 
             $tahun = date("Y");
 
+$tahun = date("Y");
+
+$awalTahun = $tahun . "-01-01";
+$akhirTahun = $tahun . "-12-31";
+
 $hasil = $this->pengajuanModel
     ->selectSum("durasi")
     ->where("nip", $item["nip"])
@@ -48,9 +53,9 @@ $hasil = $this->pengajuanModel
         "Disetujui",
         "Selesai"
     ])
-    ->where("YEAR(tanggal_mulai)", $tahun, false)
+    ->where("tanggal_mulai >=", $awalTahun)
+    ->where("tanggal_mulai <=", $akhirTahun)
     ->first();
-
             $terpakai = (int)($hasil["durasi"] ?? 0);
 
             $item["sisa_cuti"] = max(

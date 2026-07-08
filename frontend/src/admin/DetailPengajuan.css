@@ -42,7 +42,7 @@ body{
 .back-btn{
   border:none;
 
-  background:#ffffff;
+  background:transparent;
 
   color:#16324b;
 
@@ -215,7 +215,15 @@ body{
 ========================= */
 
 .status-section{
-  flex-shrink:0;
+
+    background:transparent;
+
+    padding:0;
+
+    border:none;
+
+    box-shadow:none;
+
 }
 
 .status-badge{
@@ -276,18 +284,24 @@ body{
   transition:.3s ease;
 }
 
-.detail-section:hover{
-  transform:translateY(-3px);
+.detail-section h3{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-size:22px;
+
+    color:#17345c;
+
+    margin-bottom:20px;
+
 }
 
-.detail-section h3{
-  color:#17345c;
-
-  font-size:18px;
-
-  margin-bottom:20px;
-
-  font-weight:700;
+.detail-section:hover{
+  transform:translateY(-3px);
 }
 
 /* =========================
@@ -467,74 +481,69 @@ body{
   font-weight:600;
 }
 
-/* =========================
-   NOTE
-========================= */
-
-.note-box,
-.admin-note{
-  background:#f8fafc;
-
-  border:1px solid #e2e8f0;
-
-  border-radius:14px;
-
-  padding:18px;
-
-  line-height:1.8;
-
-  color:#475569;
-}
 
 /* =========================
    BUTTONS
 ========================= */
 
 .action-buttons{
-  display:flex;
-  justify-content:flex-end;
-  gap:15px;
 
-  margin-top:30px;
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:16px;
+
+    margin-top:30px;
+
+    padding-top:24px;
+
+    border-top:1px solid #edf2f7;
 }
 
 .action-buttons button{
-  min-width:170px;
 
-  height:52px;
+    width:170px;
 
-  border:none;
+    height:50px;
 
-  border-radius:14px;
+    border:none;
 
-  font-size:14px;
-  font-weight:700;
+    border-radius:14px;
 
-  cursor:pointer;
+    font-size:15px;
 
-  transition:.3s ease;
+    font-weight:700;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.25s;
+
 }
 
 .action-buttons button:hover{
-  transform:translateY(-3px);
 
-  box-shadow:
-    0 10px 25px rgba(0,0,0,.12);
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 24px rgba(0,0,0,.15);
+
 }
 
 .reject-btn{
-  background:#dc2626;
-  color:white;
+
+    background:#ef4444;
 }
 
 .process-btn{
-  background:#f59e0b;
-  color:white;
+
+    background:#f59e0b;
 }
 
 .approve-btn{
-  background:#16a34a;
-  color:white;
+
+    background:#22c55e;
 }
 
 /* =========================
@@ -686,6 +695,75 @@ body{
 
     align-items:center;
 
+    justify-content:center;
+
+    gap:10px;
+
+    height:48px;
+
+    padding:0 24px;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    box-shadow:0 8px 20px rgba(37,99,235,.15);
+
+}
+
+.drive-button:hover{
+
+    transform:translateY(-2px);
+
+    background:#1d4ed8;
+
+}
+
+.response-upload{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:22px 26px;
+
+    border-radius:18px;
+
+    border:1px dashed #cbd5e1;
+
+    background:linear-gradient(
+        135deg,
+        #f8fbff,
+        #ffffff
+    );
+
+    transition:.3s;
+}
+
+.response-upload:hover{
+
+    border-color:#2563eb;
+
+    box-shadow:0 10px 24px rgba(37,99,235,.08);
+
+}
+
+.upload-response{
+
+    display:flex;
+
+    align-items:center;
+
     gap:10px;
 
     padding:14px 22px;
@@ -698,13 +776,15 @@ body{
 
     font-weight:600;
 
-    text-decoration:none;
+    cursor:pointer;
 
     transition:.3s;
 
+    box-shadow:0 8px 18px rgba(37,99,235,.18);
+
 }
 
-.drive-button:hover{
+.upload-response:hover{
 
     background:#1d4ed8;
 
@@ -712,56 +792,17 @@ body{
 
 }
 
-.response-upload{
-
-margin-top:30px;
-
-padding:25px;
-
-border-radius:18px;
-
-background:#f8fafc;
-
-border:1px solid #e2e8f0;
-
-}
-
-.upload-response{
-
-display:inline-flex;
-
-align-items:center;
-
-justify-content:center;
-
-padding:14px 22px;
-
-background:#2563eb;
-
-color:white;
-
-border-radius:12px;
-
-cursor:pointer;
-
-font-weight:600;
-
-transition:.3s;
-
-}
-
-.upload-response:hover{
-
-background:#1d4ed8;
-
-}
-
 .response-name{
 
-margin-top:15px;
+    display:flex;
 
-font-weight:600;
+    align-items:center;
 
-color:#16a34a;
+    gap:10px;
 
+    color:#16a34a;
+
+    font-weight:600;
+
+    font-size:15px;
 }

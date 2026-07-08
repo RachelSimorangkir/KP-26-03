@@ -446,81 +446,7 @@ data.tanggal_pengajuan
 </p>
             </div>
 
-          </div>
-          <div className="detail-section">
-
-
-<div className="detail-section">
-
-  <h3>📝 Data Pengajuan</h3>
-
-  <div className="detail-grid">
-
-    {Object.entries(formData).map(([key, value]) => {
-
-      if (
-        key === "dataPengajuan"
-      ) {
-
-        return Object.entries(value).map(([k, v]) => (
-
-          <div key={k}>
-
-            <label>
-              {formatLabel(k)}
-            </label>
-
-            <p>
-              {String(v)}
-            </p>
-
-          </div>
-
-        ));
-
-      }
-
-      if (
-        [
-          "nama",
-          "nip",
-          "status",
-          "layanan",
-          "jabatan",
-          "unit_kerja"
-        ].includes(key)
-      ) {
-        return null;
-      }
-
-      if (
-        value === "" ||
-        value === null
-      ) {
-        return null;
-      }
-
-      return (
-
-        <div key={key}>
-
-          <label>
-            {formatLabel(key)}
-          </label>
-
-          <p>
-            {String(value)}
-          </p>
-
-        </div>
-
-      );
-
-    })}
-
-  </div>
-
-</div>
+          
 </div>
 
         </div>
@@ -617,30 +543,6 @@ data.tanggal_pengajuan
     )
 
   }
-
-</div>
-
-        {/* CATATAN PEMOHON */}
-<div className="detail-section">
-
-  <h3>📝 Catatan Pemohon</h3>
-
-  <div className="note-box">
-
-    <strong>
-      Keterangan:
-    </strong>
-
-    <br />
-
-    Pengajuan layanan
-    {" "}
-    {data.layanan}
-    {" "}
-    untuk kebutuhan administrasi
-    kepegawaian.
-
-  </div>
 
 </div>
 
