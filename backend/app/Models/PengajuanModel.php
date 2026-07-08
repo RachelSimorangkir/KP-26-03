@@ -38,6 +38,10 @@ class PengajuanModel extends Model
 
     "file_respon",
 
+    "sub_layanan",
+
+    "link_drive",
+
     //====================
     // CUTI
     //====================

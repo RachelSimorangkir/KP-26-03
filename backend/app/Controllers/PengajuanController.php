@@ -76,6 +76,9 @@ public function create()
 
         $data = $this->request->getPost();
 
+log_message("error", "DATA POST:");
+log_message("error", json_encode($data));
+
         $file = $this->request->getFile("suratPermohonan");
 
         $filePath = "";
@@ -92,6 +95,18 @@ public function create()
             $filePath = "uploads/permohonan/" . $namaBaru;
         }
 
+        log_message(
+    'error',
+    'LINK DRIVE = ' .
+    $this->request->getVar('linkDrive')
+);
+
+log_message(
+    'error',
+    'UNIT KERJA = ' .
+    $this->request->getVar('unit_kerja')
+);
+
         $insertData = [
 
     'nip' => $data['nip'] ?? '',
@@ -102,7 +117,9 @@ public function create()
 
     'unit_kerja' => $data['unit_kerja'] ?? '',
 
-    'layanan' => $data['layanan'] ?? '',
+'layanan' => $this->request->getVar('layanan'),
+
+'sub_layanan' => $this->request->getVar('subLayanan'),
 
     'status_kepegawaian' => $data['status_kepegawaian'] ?? '',
 
@@ -130,9 +147,12 @@ public function create()
 
     'surat_permohonan' => $filePath,
 
-    'link_drive' => $data['link_drive'] ?? ''
+'link_drive' =>
+    $this->request->getVar('linkDrive')
+    ?: $this->request->getVar('link_drive'),
 
 ];
+log_message('error', json_encode($insertData));
 
 log_message('debug', json_encode($insertData));
 

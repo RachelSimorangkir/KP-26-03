@@ -48,7 +48,7 @@ const handleNipChange = async (e) => {
         data.pangkat_golongan || ""
       );
       setUnitKerja(
-        data.unit_organisasi || ""
+        data.unit_kerja || ""
       );
     }
   } catch (error) {
@@ -68,13 +68,16 @@ const handleSubmit = async () => {
 
   try {
 
+    console.log("UNIT KERJA STATE =", unitKerja);
+console.log("LINK DRIVE STATE =", linkDrive);
+
     const formData = new FormData();
 
     formData.append("nip", nip);
     formData.append("nama", nama);
     formData.append("jabatan", jabatan);
     formData.append("pangkat", pangkat);
-    formData.append("unitKerja", unitKerja);
+    formData.append("unit_kerja", unitKerja);
 
     formData.append("layanan", "Rekomendasi");
     formData.append(
@@ -111,6 +114,11 @@ const handleSubmit = async () => {
         suratPermohonan
       );
     }
+    console.log("===== FORM DATA =====");
+
+for (const pair of formData.entries()) {
+  console.log(pair[0], "=", pair[1]);
+}
 
     const response = await fetch(
       "http://localhost:8080/api/pengajuan",
@@ -315,6 +323,12 @@ setPredikatSKP(e.target.value)
             <label>Jabatan Fungsional Yang Dituju *</label>
 
             <select>
+<select
+  value={klasifikasiJabatan}
+  onChange={(e) =>
+    setKlasifikasiJabatan(e.target.value)
+  }
+></select>
               <option>Pilih Jabatan Fungsional</option>
               <option>JF Widyaiswara</option>
               <option>JF Pranata Komputer</option>
@@ -352,9 +366,13 @@ setJenjangUsulan(e.target.value)
             <label>Nomor WhatsApp *</label>
 
             <input
-              type="text"
-              placeholder="08xxxxxxxxxx"
-            />
+  type="text"
+  placeholder="08xxxxxxxxxx"
+  value={nomorHP}
+  onChange={(e) =>
+    setNomorHP(e.target.value)
+  }
+/>
           </div>
 
         </div>

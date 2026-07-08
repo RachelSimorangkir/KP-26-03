@@ -57,15 +57,29 @@ const handleSubmit = async () => {
     try {
 
         const formData = new FormData();
+        formData.append(
+    "link_drive",
+    linkDrive
+);
 
         formData.append("nip", nip);
         formData.append("nama", nama);
         formData.append("jabatan", jabatan);
         formData.append("pangkat", pangkat);
-        formData.append("unitKerja", unitKerja);
+        formData.append(
+    "unit_kerja",
+    unitKerja
+);
 
-        formData.append("layanan", "Rekomendasi");
-        formData.append("subLayanan", "Pengaktifan Kembali");
+formData.append(
+    "layanan",
+    "Rekomendasi"
+);
+
+formData.append(
+    "subLayanan",
+    "Pengaktifan Kembali"
+);
 
         formData.append("status", "Menunggu");
 
@@ -82,26 +96,25 @@ const handleSubmit = async () => {
         );
 
         formData.append(
-            "linkDrive",
+            "link_drive",
             linkDrive
         );
 
-        if(suratPermohonan){
+       if (suratPermohonan) {
+    formData.append(
+        "suratPermohonan",
+        suratPermohonan
+    );
+}
 
-            formData.append(
-                "suratPermohonan",
-                suratPermohonan
-            );
+// CEK DATA YANG AKAN DIKIRIM
+console.log("===== FORM DATA =====");
 
-        }
-        console.log({
-    nip,
-    nama,
-    jabatan,
-    unitKerja
-});
+for (const pair of formData.entries()) {
+  console.log(pair[0], "=", pair[1]);
+}
 
-        const response = await fetch(
+const response = await fetch(
     "http://localhost:8080/api/pengajuan",
     {
         method: "POST",

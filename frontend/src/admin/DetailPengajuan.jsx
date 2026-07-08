@@ -18,28 +18,55 @@ export default function DetailPengajuan() {
 };
 
   const [data, setData] = useState(location.state);
-  useEffect(() => {
+useEffect(() => {
 
-    if (!data?.id) return;
+  if (!data?.id) return;
 
-    const loadData = () => {
+  const loadData = async () => {
 
-        fetch(`http://localhost:8080/api/pengajuan/detail/${data.id}`)
-            .then((res) => res.json())
-            .then((result) => {
+    try {
 
-                setData(result);
+      // ambil data pengajuan
+      const resPengajuan = await fetch(
+        `http://localhost:8080/api/pengajuan/detail/${data.id}`
+      );
 
-            })
-            .catch(console.error);
+      const pengajuan = await resPengajuan.json();
 
-    };
+      // ambil data pegawai
+      const resPegawai = await fetch(
+        `http://localhost:8080/api/pegawai/${pengajuan.nip}`
+      );
 
-    loadData();
+      const pegawai = await resPegawai.json();
 
-    const interval = setInterval(loadData, 5000);
+      setData({
+        ...pengajuan,
 
-    return () => clearInterval(interval);
+        unit_kerja:
+          pengajuan.unit_kerja ||
+          pegawai.unit_organisasi ||
+          "-",
+
+        jabatan:
+          pengajuan.jabatan ||
+          pegawai.jabatan,
+
+      });
+
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  };
+
+  loadData();
+
+  const interval = setInterval(loadData, 5000);
+
+  return () => clearInterval(interval);
 
 }, [data?.id]);
 
@@ -430,19 +457,24 @@ placeholder="Tulis catatan..."
           <div className="detail-grid">
 
             <div>
-              <label>Jenis Layanan</label>
-              <p>{data.layanan}</p>
+              <div>
+  <label>Jenis Layanan</label>
+  <p>
+    {data.sub_layanan || data.layanan}
+  </p>
+</div>
             </div>
 
             <div>
               <label>Tanggal Pengajuan</label>
-              <p>
-{
-data.tanggal_pengajuan
-? new Date(data.tanggal_pengajuan)
-    .toLocaleString("id-ID")
-: "-"
-}
+<p>
+  {data.tanggal_pengajuan
+    ? new Date(data.tanggal_pengajuan).toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "-"}
 </p>
             </div>
 

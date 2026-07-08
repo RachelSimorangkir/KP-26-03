@@ -175,7 +175,7 @@ const getCountdown = (mulai, selesai) => {
 
           <td>{item.nama}</td>
 
-          <td>{item.layanan}</td>
+          <td>{item.sub_layanan || item.layanan}</td>
 
           <td>{item.tanggal_pengajuan}</td>
 
