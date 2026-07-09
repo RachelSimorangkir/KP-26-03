@@ -25,7 +25,7 @@ const parseRupiah = (str) => {
 const formatRupiah = (num) =>
   "Rp " + Number(num).toLocaleString("id-ID");
 
-const emptyBarangItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
+const emptyBarangItem = { nama: "", kategori: "Alat Tulis Kantor", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
 
 // Konversi data lama (single-barang) → format baru (multi-barang per pengadaan)
 const normalizeData = (raw) =>
@@ -43,13 +43,14 @@ const normalizeData = (raw) =>
     }],
   }));
 
-const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kategoriList = ["Alat Tulis Kantor", "Perangkat Lunak", "Lisensi Perangkat Lunak", "Peralatan Kantor", "Lainnya"];
 
 const kategoriColor = {
-  "Peralatan IT": { bg: "#eff6ff", color: "#2563eb" },
-  "Perabot":      { bg: "#faf5ff", color: "#7c3aed" },
-  "Kendaraan":    { bg: "#fffbeb", color: "#d97706" },
-  "Lainnya":      { bg: "#f8fafc", color: "#475569" },
+  "Alat Tulis Kantor": { bg: "#eff6ff", color: "#2563eb" },
+  "Perangkat Lunak":      { bg: "#faf5ff", color: "#7c3aed" },
+  "Lisensi Perangkat Lunak":    { bg: "#fffbeb", color: "#d97706" },
+  "Peralatan Kantor":      { bg: "#f8fafc", color: "#475569" },
+  "Lainnya":      { bg: "#f8fafc", color: "#17976a" },
 };
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
@@ -58,17 +59,47 @@ const BarangMasukAdmin = () => {
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [editId, setEditId] = useState(null); // null = mode tambah, selain itu = mode edit
+  const [formError, setFormError] = useState("");
+  const [toast, setToast] = useState(null); // { type: 'success' | 'error', message }
+
+  const showToast = (message, type = "success") => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   // Cari nama admin yang login; kalau tidak ketemu gunakan admin pertama
   const defaultPemeriksa =
     adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
 
-  const [form, setForm] = useState({
+  const emptyForm = () => ({
     noPengadaan: "",
     tanggal: new Date().toISOString().slice(0, 10),
     pemeriksa: defaultPemeriksa,
     items: [{ ...emptyBarangItem }],
   });
+
+  const [form, setForm] = useState(emptyForm());
+
+  // Buka modal dalam mode edit, isi form dengan data yang sudah tersimpan
+  const openEdit = (d) => {
+    setForm({
+      noPengadaan: d.noPengadaan,
+      tanggal: d.tanggal,
+      pemeriksa: d.pemeriksa,
+      items: d.items.map(it => ({ ...it })),
+    });
+    setEditId(d.id);
+    setFormError("");
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditId(null);
+    setFormError("");
+    setForm(emptyForm());
+  };
 
   const filtered = data.filter(d =>
     d.noPengadaan.toLowerCase().includes(search.toLowerCase()) ||
@@ -100,16 +131,39 @@ const BarangMasukAdmin = () => {
     });
   };
 
+  // Validasi form sebelum disimpan. Mengembalikan pesan error, atau "" jika valid.
+  const validateForm = () => {
+    if (!form.noPengadaan.trim()) return "Nomor Pengadaan wajib diisi.";
+    // Nomor pengadaan tidak boleh sama dengan data lain (kecuali data yang sedang diedit sendiri)
+    const duplikat = data.some(d => d.noPengadaan.trim().toLowerCase() === form.noPengadaan.trim().toLowerCase() && d.id !== editId);
+    if (duplikat) return "Nomor Pengadaan sudah digunakan pada data lain.";
+    if (!form.tanggal) return "Tanggal wajib diisi.";
+    if (form.items.length === 0) return "Minimal harus ada 1 barang.";
+    for (const it of form.items) {
+      if (!it.nama.trim()) return "Nama barang tidak boleh kosong.";
+      if (!it.jumlah || Number(it.jumlah) <= 0) return `Jumlah untuk "${it.nama || "barang"}" harus lebih dari 0.`;
+      if (parseRupiah(it.hargaUnit) < 0) return `Harga/unit untuk "${it.nama}" tidak valid.`;
+    }
+    return "";
+  };
+
   const handleSubmit = () => {
-    if (!form.noPengadaan || form.items.some(it => !it.nama)) return;
-    setData([...data, { ...form, id: data.length + 1 }]);
-    setShowModal(false);
-    setForm({
-      noPengadaan: "",
-      tanggal: new Date().toISOString().slice(0, 10),
-      pemeriksa: defaultPemeriksa,
-      items: [{ ...emptyBarangItem }],
-    });
+    const error = validateForm();
+    if (error) {
+      setFormError(error);
+      return;
+    }
+    if (editId !== null) {
+      // Mode edit: update data yang sudah ada
+      setData(data.map(d => d.id === editId ? { ...form, id: editId } : d));
+      closeModal();
+      showToast("Barang berhasil diperbarui!");
+    } else {
+      // Mode tambah: masukkan data baru
+      setData([...data, { ...form, id: data.length + 1 }]);
+      closeModal();
+      showToast("Barang berhasil ditambahkan!");
+    }
   };
 
   const summary = {
@@ -119,7 +173,7 @@ const BarangMasukAdmin = () => {
   };
 
   // Style sel tabel
-  const tdBase = { padding: "10px 14px", textAlign: "left", borderBottom: "1px solid #f1f5f9", verticalAlign: "middle" };
+  const tdBase = { padding: "10px 14px", textAlign: "left", borderBottom: "1px solid #f1f5f9", verticalAlign: "middle", whiteSpace: "nowrap" };
   const tdTop  = { ...tdBase, verticalAlign: "top" };
 
   return (
@@ -131,7 +185,7 @@ const BarangMasukAdmin = () => {
         onSearchChange={setSearch}
         searchPlaceholder="Cari no. pengadaan, barang, pemeriksa..."
         rightAction={
-          <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
+          <AdminButton onClick={() => { setFormError(""); setShowModal(true); }} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
             + Catat Barang Masuk
           </AdminButton>
         }
@@ -145,9 +199,10 @@ const BarangMasukAdmin = () => {
 
       {/* ── Tabel utama ── */}
       <AdminCard>
+        <div style={{ overflowX: "auto" }}>
         <AdminTable headers={[
           "No. Pengadaan", "Tanggal", "Nama Barang", "Kategori",
-          "Jumlah Per Barang", "Kondisi", "Harga Total", "Pemeriksa Barang", "Aksi"
+          "Jumlah", "Kondisi", "Harga Total", "Pemeriksa Barang", "Aksi"
         ]}>
           {filtered.map(d =>
             d.items.map((it, idx) => {
@@ -205,8 +260,11 @@ const BarangMasukAdmin = () => {
                   )}
                   {/* Aksi — rowspan */}
                   {idx === 0 && (
-                    <td style={tdTop} rowSpan={d.items.length}>
-                      <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                    <td style={{ ...tdTop, whiteSpace: "nowrap" }} rowSpan={d.items.length}>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
+                        <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                        <AdminButton variant="outline" onClick={() => openEdit(d)}>Edit</AdminButton>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -214,6 +272,7 @@ const BarangMasukAdmin = () => {
             })
           )}
         </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail ── */}
@@ -252,18 +311,18 @@ const BarangMasukAdmin = () => {
                   return (
                     <tr key={i}>
                       <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", color: "#64748b", textAlign: "left" }}>{i + 1}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: "#1e293b", textAlign: "left" }}>{it.nama}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left" }}>{it.kategori}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left" }}>{it.jumlah} unit</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: "#1e293b", textAlign: "left", whiteSpace: "nowrap"}}>{it.nama}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left", whiteSpace: "nowrap"}}>{it.kategori}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left", whiteSpace: "nowrap"}}>{it.jumlah} unit</td>
                       <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left", color: it.kondisi === "Baik" ? "#16a34a" : "#a16207", fontWeight: 600 }}>{it.kondisi}</td>
-                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left" }}>{it.hargaUnit || "-"}</td>
+                      <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left", whiteSpace: "nowrap" }}>{it.hargaUnit || "-"}</td>
                       <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, color: "#1e293b", textAlign: "left" }}>{formatRupiah(hargaTotal)}</td>
                     </tr>
                   );
                 })}
                 <tr style={{ background: "#f8fafc" }}>
-                  <td colSpan={6} style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, textAlign: "right", color: "#1e293b" }}>Total Nilai Pengadaan</td>
-                  <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 800, color: "#2563eb", textAlign: "left" }}>{formatRupiah(hitungTotal(detailItem.items))}</td>
+                  <td colSpan={6} style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, textAlign: "right", color: "#1e293b", whiteSpace: "nowrap", verticalAlign: "middle"}}>Total Nilai Pengadaan</td>
+                  <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 800, color: "#2563eb", textAlign: "left", whiteSpace: "nowrap", verticalAlign: "middle"}}>{formatRupiah(hitungTotal(detailItem.items))}</td>
                 </tr>
               </tbody>
             </table>
@@ -277,7 +336,7 @@ const BarangMasukAdmin = () => {
 
       {/* ── Modal Catat Barang Masuk ── */}
       {showModal && (
-        <Modal title="Catat Barang Masuk" onClose={() => setShowModal(false)} wide>
+        <Modal title={editId !== null ? "Edit Barang Masuk" : "Catat Barang Masuk"} onClose={closeModal} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="Nomor Pengadaan">
               <input
@@ -389,11 +448,34 @@ const BarangMasukAdmin = () => {
             <IconPlus /> Tambah Barang
           </button>
 
+          {formError && (
+            <div style={{
+              background: "#fee2e2", color: "#dc2626", border: "1px solid #fecaca",
+              borderRadius: 6, padding: "8px 12px", fontSize: 12.5, fontWeight: 600,
+              marginBottom: 12,
+            }}>
+              ⚠ {formError}
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <AdminButton variant="outline" onClick={() => setShowModal(false)}>Batal</AdminButton>
-            <AdminButton variant="success" onClick={handleSubmit}>Simpan</AdminButton>
+            <AdminButton variant="outline" onClick={closeModal}>Batal</AdminButton>
+            <AdminButton variant="success" onClick={handleSubmit}>{editId !== null ? "Update" : "Simpan"}</AdminButton>
           </div>
         </Modal>
+      )}
+
+      {/* ── Toast Notifikasi ── */}
+      {toast && (
+        <div style={{
+          position: "fixed", top: 20, right: 20, zIndex: 9999,
+          background: toast.type === "success" ? "#16a34a" : "#dc2626",
+          color: "#fff", padding: "12px 18px", borderRadius: 8,
+          fontSize: 13, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          {toast.type === "success" ? "✓" : "⚠"} {toast.message}
+        </div>
       )}
     </div>
   );

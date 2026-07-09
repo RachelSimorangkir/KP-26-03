@@ -12,11 +12,33 @@ const emptyItem = { nama: "", stokAwal: "", jumlahMinta: 1, stokAkhir: "", keter
 const PreviewSurat = ({ items, nomorSurat, petugasGudang, today, onClose, onSubmit }) => (
   <Modal title="Preview Formulir Permintaan Barang" onClose={onClose} wide>
     <div id="surat-permintaan-print" style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontSize: 13 }}>
-      <div style={{ textAlign: "center", borderBottom: "2px solid #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-        <div style={{ fontWeight: 800, fontSize: 13 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-        <div style={{ fontSize: 11, color: "#64748b" }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-        <div style={{ fontSize: 11, color: "#64748b" }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
-        <div style={{ fontWeight: 800, fontSize: 14, marginTop: 8, letterSpacing: 1 }}>PEMESANAN/PERMINTAAN BARANG</div>
+
+      {/* KOP SURAT */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
+        <img
+          src="/logo-kemenag.png"
+          alt="Logo Kemenag"
+          style={{ width:150, height: "auto", objectFit: "contain", flexShrink: 0 }}
+        />
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <div style={{ fontWeight: 800, fontSize: 15 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+          <div style={{ fontWeight: 800, fontSize: 13 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>
+            Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+          </div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>
+            Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+          </div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>
+            Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+          </div>
+        </div>
+      </div>
+
+      {/* JUDUL SURAT */}
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>PEMESANAN/PERMINTAAN BARANG</div>
         <div style={{ fontSize: 12 }}>Nomor : {nomorSurat}</div>
       </div>
 

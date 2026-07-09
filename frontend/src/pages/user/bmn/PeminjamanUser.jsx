@@ -18,12 +18,27 @@ const PreviewSurat = ({ form, barangDipilih, onClose, onSubmit }) => {
     <Modal title="Preview Surat Peminjaman" onClose={onClose} wide>
       <div id="surat-peminjaman-print" style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 13, lineHeight: 1.7, color: "#1e293b" }}>
         {/* Kop Surat */}
-        <div style={{ textAlign: "center", borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-          <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-          <div style={{ fontSize: 11 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-          <div style={{ fontSize: 11 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
+        <img
+          src="/logo-kemenag.png"
+          alt="Logo Kemenag"
+          style={{ width:150, height: "auto", objectFit: "contain", flexShrink: 0 }}
+        />
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <div style={{ fontWeight: 800, fontSize: 15 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+          <div style={{ fontWeight: 800, fontSize: 13 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>
+            Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+          </div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>
+            Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+          </div>
+          <div style={{ fontSize: 10.5, color: "#374151" }}>
+            Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+          </div>
         </div>
-
+      </div>
         {/* Judul */}
         <div style={{ textAlign: "center", marginBottom: 16 }}>
           <div style={{ fontWeight: 700, fontSize: 14, textDecoration: "underline", letterSpacing: 1 }}>SURAT PEMINJAMAN BARANG</div>

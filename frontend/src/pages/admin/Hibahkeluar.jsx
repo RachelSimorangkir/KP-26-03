@@ -18,18 +18,19 @@ const adminBMN = [
 ];
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
-const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kategoriList = ["Perlengkapan Kantor", "Meubelier", "Lemari Besi/Kayu", "Kendaraan Roda Dua", "Kendaraan Roda Empat", "Tanah", "Gedung"];
 const kondisiList  = ["Baik", "Rusak Ringan", "Rusak Berat"];
 
 const tdBase = {
   padding: "10px 14px", textAlign: "left",
   borderBottom: "1px solid #f1f5f9", verticalAlign: "middle",
+  whiteSpace: "nowrap",
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HIBAH KELUAR
 // ─────────────────────────────────────────────────────────────────────────────
-const emptyKeluarItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", keterangan: "" };
+const emptyKeluarItem = { nama: "", kategori: "Perlengkapan Kantor", jumlah: 1, kondisi: "Baik", keterangan: "" };
 
 const dummyHibahKeluar = [
   {
@@ -41,8 +42,7 @@ const dummyHibahKeluar = [
     tujuan: "Hibah barang inventaris tidak terpakai",
     status: "Selesai",
     items: [
-      { nama: "Monitor LG 19 inch", kategori: "Peralatan IT", jumlah: 2, kondisi: "Baik", keterangan: "Diganti monitor baru" },
-      { nama: "Kursi Plastik Lama",  kategori: "Perabot",      jumlah: 5, kondisi: "Rusak Ringan", keterangan: "" },
+      { nama: "Meja Kayu", kategori: "Meubelier", jumlah: 2, kondisi: "Baik", keterangan: "Diganti monitor baru" },
     ],
   },
   {
@@ -54,7 +54,7 @@ const dummyHibahKeluar = [
     tujuan: "Hibah sarana pendidikan",
     status: "Proses",
     items: [
-      { nama: "Proyektor Epson Lama", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", keterangan: "Masih berfungsi baik" },
+      { nama: "Meja Kerja Kayu", kategori: "Meubelier", jumlah: 1, kondisi: "Baik", keterangan: "Masih berfungsi baik" },
     ],
   },
 ];
@@ -76,6 +76,14 @@ const HibahKeluarAdmin = () => {
   const [filter, setFilter]         = useState("Semua");
   const [showModal, setShowModal]   = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [editId, setEditId]         = useState(null); // null = mode tambah, selain itu = mode edit
+  const [formError, setFormError]   = useState("");
+  const [toast, setToast]           = useState(null); // { type: 'success' | 'error', message }
+
+  const showToast = (message, type = "success") => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const defaultPemeriksa =
     adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
@@ -91,6 +99,29 @@ const HibahKeluarAdmin = () => {
   });
 
   const [form, setForm] = useState(emptyForm());
+
+  // Buka modal dalam mode edit, isi form dengan data yang sudah tersimpan
+  const openEdit = (d) => {
+    setForm({
+      noSurat:   d.noSurat,
+      tanggal:   d.tanggal,
+      pemeriksa: d.pemeriksa,
+      penerima:  { ...d.penerima },
+      tujuan:    d.tujuan,
+      status:    d.status,
+      items:     d.items.map(it => ({ ...it })),
+    });
+    setEditId(d.id);
+    setFormError("");
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditId(null);
+    setFormError("");
+    setForm(emptyForm());
+  };
 
   const filtered = data.filter(d => {
     const matchSearch =
@@ -116,11 +147,38 @@ const HibahKeluarAdmin = () => {
       items: prev.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
     }));
 
+  // Validasi form sebelum disimpan. Mengembalikan pesan error, atau "" jika valid.
+  const validateForm = () => {
+    if (!form.penerima.nama.trim()) return "Nama / Instansi Penerima wajib diisi.";
+    if (!form.tanggal) return "Tanggal wajib diisi.";
+    // Nomor surat tidak boleh sama dengan data lain (kecuali data yang sedang diedit sendiri)
+    const duplikat = data.some(d => d.noSurat.trim().toLowerCase() === form.noSurat.trim().toLowerCase() && d.id !== editId);
+    if (duplikat) return "Nomor Surat sudah digunakan pada data lain.";
+    if (form.items.length === 0) return "Minimal harus ada 1 barang.";
+    for (const it of form.items) {
+      if (!it.nama.trim()) return "Nama barang tidak boleh kosong.";
+      if (!it.jumlah || Number(it.jumlah) <= 0) return `Jumlah untuk "${it.nama || "barang"}" harus lebih dari 0.`;
+    }
+    return "";
+  };
+
   const handleSubmit = () => {
-    if (!form.penerima.nama || form.items.some(it => !it.nama)) return;
-    setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
-    setShowModal(false);
-    setForm(emptyForm());
+    const error = validateForm();
+    if (error) {
+      setFormError(error);
+      return;
+    }
+    if (editId !== null) {
+      // Mode edit: update data yang sudah ada
+      setData(prev => prev.map(d => d.id === editId ? { ...form, id: editId } : d));
+      closeModal();
+      showToast("Hibah keluar berhasil diperbarui!");
+    } else {
+      // Mode tambah: masukkan data baru
+      setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
+      closeModal();
+      showToast("Hibah keluar berhasil ditambahkan!");
+    }
   };
 
   const summary = {
@@ -138,7 +196,7 @@ const HibahKeluarAdmin = () => {
         onSearchChange={setSearch}
         searchPlaceholder="Cari no. surat, penerima, atau barang..."
         rightAction={
-          <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
+          <AdminButton onClick={() => { setFormError(""); setShowModal(true); }} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
             + Catat Hibah Keluar
           </AdminButton>
         }
@@ -167,6 +225,7 @@ const HibahKeluarAdmin = () => {
 
       {/* ── Tabel utama ── */}
       <AdminCard>
+        <div style={{ overflowX: "auto" }}>
         <AdminTable headers={[
           "No. Surat", "Tanggal", "Penerima Hibah", "Unit / Instansi",
           "Barang", "Pemeriksa Hibah", "Status", "Aksi",
@@ -182,7 +241,7 @@ const HibahKeluarAdmin = () => {
                 <td style={tdBase}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     {d.items.map((it, i) => (
-                      <span key={i} style={{ fontSize: 11, color: "#374151" }}>
+                      <span key={i} style={{ fontSize: 11, color: "#374151", whiteSpace: "nowrap" }}>
                         {it.nama} <span style={{ color: "#94a3b8" }}>({it.jumlah} unit)</span>
                       </span>
                     ))}
@@ -195,12 +254,16 @@ const HibahKeluarAdmin = () => {
                   </span>
                 </td>
                 <td style={tdBase}>
-                  <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
+                    <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                    <AdminButton variant="outline" onClick={() => openEdit(d)}>Edit</AdminButton>
+                  </div>
                 </td>
               </tr>
             );
           })}
         </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail ── */}
@@ -275,7 +338,7 @@ const HibahKeluarAdmin = () => {
 
       {/* ── Modal Catat Hibah Keluar ── */}
       {showModal && (
-        <Modal title="Catat Hibah Keluar" onClose={() => setShowModal(false)} wide>
+        <Modal title={editId !== null ? "Edit Hibah Keluar" : "Catat Hibah Keluar"} onClose={closeModal} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="No. Surat">
               <input style={{ ...inputStyle, background: "#f8fafc", color: "#94a3b8" }} value={form.noSurat} readOnly />
@@ -417,11 +480,34 @@ const HibahKeluarAdmin = () => {
             <IconPlus /> Tambah Barang
           </button>
 
+          {formError && (
+            <div style={{
+              background: "#fee2e2", color: "#dc2626", border: "1px solid #fecaca",
+              borderRadius: 6, padding: "8px 12px", fontSize: 12.5, fontWeight: 600,
+              marginBottom: 12,
+            }}>
+              ⚠ {formError}
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <AdminButton variant="outline" onClick={() => setShowModal(false)}>Batal</AdminButton>
-            <AdminButton variant="success" onClick={handleSubmit}>Simpan</AdminButton>
+            <AdminButton variant="outline" onClick={closeModal}>Batal</AdminButton>
+            <AdminButton variant="success" onClick={handleSubmit}>{editId !== null ? "Update" : "Simpan"}</AdminButton>
           </div>
         </Modal>
+      )}
+
+      {/* ── Toast Notifikasi ── */}
+      {toast && (
+        <div style={{
+          position: "fixed", top: 20, right: 20, zIndex: 9999,
+          background: toast.type === "success" ? "#16a34a" : "#dc2626",
+          color: "#fff", padding: "12px 18px", borderRadius: 8,
+          fontSize: 13, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          {toast.type === "success" ? "✓" : "⚠"} {toast.message}
+        </div>
       )}
     </div>
   );

@@ -64,6 +64,11 @@ export const IconReturn = () => (
     <polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
   </svg>
 );
+export const IconMenu = () => (
+  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+  </svg>
+);
 
 // ─── STATUS BADGE ─────────────────────────────────────────────────────────────
 export const StatusBadge = ({ status }) => {
@@ -129,55 +134,73 @@ export const StokCard = ({ items, title = "Informasi Stok" }) => (
 );
 
 // ─── SIDEBAR LAYOUT ───────────────────────────────────────────────────────────
-export const SidebarLayout = ({ menuItems, activePage, setActivePage, role, userName, onBack, onLogout, children }) => (
-  <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Segoe UI', sans-serif", background: "#f1f5f9" }}>
-    <aside style={{ width: 200, background: "#1e293b", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto" }}>
-      <div style={{ padding: "18px 16px 12px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <div style={{ fontWeight: 800, fontSize: 14, color: "#fff", textAlign: "left" }}>Portal BMN</div>
-        <div style={{ fontSize: 10, color: "#94a3b8", textAlign: "left" }}>Bimas Kristen — Kemenag RI</div>
-      </div>
-      <nav style={{ padding: "12px 10px 0", flex: 1 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: "#64748b", padding: "4px 8px 6px", letterSpacing: 1, textAlign: "left" }}>
-          {role === "admin" ? "MENU ADMIN BMN" : "MENU LAYANAN BMN"}
-        </div>
-        {menuItems.map(m => (
-          <button key={m.key} onClick={() => setActivePage(m.key)}
-            style={{
-              display: "flex", alignItems: "center", gap: 8, width: "100%",
-              padding: "8px 10px", border: "none", borderRadius: 6, cursor: "pointer",
-              fontSize: 12, fontWeight: 600, textAlign: "left", marginBottom: 3,
-              background: activePage === m.key ? "#2563eb" : "transparent",
-              color: activePage === m.key ? "#fff" : "#cbd5e1",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={e => { if (activePage !== m.key) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
-            onMouseLeave={e => { if (activePage !== m.key) e.currentTarget.style.background = "transparent"; }}
+export const SidebarLayout = ({ menuItems, activePage, setActivePage, role, userName, onBack, onLogout, children }) => {
+  const [collapsed, setCollapsed] = React.useState(false);
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Segoe UI', sans-serif", background: "#f1f5f9" }}>
+      <aside style={{ width: collapsed ? 64 : 230, transition: "width 0.2s", background: "#1e293b", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", overflowX: "hidden" }}>
+        <div style={{ padding: collapsed ? "18px 10px 12px" : "18px 16px 12px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", gap: 8 }}>
+          {!collapsed && (
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 14, color: "#fff", textAlign: "left" }}>Portal BMN</div>
+              <div style={{ fontSize: 10, color: "#94a3b8", textAlign: "left", whiteSpace: "nowrap" }}>Bimas Kristen — Kemenag RI</div>
+            </div>
+          )}
+          <button
+            onClick={() => setCollapsed(c => !c)}
+            aria-label="Toggle sidebar"
+            style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 6, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#cbd5e1", flexShrink: 0 }}
           >
-            <span style={{ color: activePage === m.key ? "#fff" : "#94a3b8", display: "flex" }}>{m.icon}</span>
-            {m.label}
+            <IconMenu />
           </button>
-        ))}
-      </nav>
-      {(onBack || onLogout) && (
-        <div style={{ padding: 10, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          {onBack && (
-            <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#cbd5e1", background: "transparent", marginBottom: 2 }}>
-              ← Kembali ke Menu
-            </button>
-          )}
-          {onLogout && (
-            <button onClick={onLogout} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#f87171", background: "transparent" }}>
-              ⏻ Keluar
-            </button>
-          )}
         </div>
-      )}
-    </aside>
-    <main style={{ flex: 1, padding: 20, overflowY: "auto", fontSize: 13, textAlign: "left" }}>
-      {children}
-    </main>
-  </div>
-);
+        <nav style={{ padding: "12px 10px 0", flex: 1 }}>
+          {!collapsed && (
+            <div style={{ fontSize: 9, fontWeight: 700, color: "#64748b", padding: "4px 8px 6px", letterSpacing: 1, textAlign: "left" }}>
+              {role === "admin" ? "MENU ADMIN BMN" : "MENU LAYANAN BMN"}
+            </div>
+          )}
+          {menuItems.map(m => (
+            <button key={m.key} onClick={() => setActivePage(m.key)}
+              title={collapsed ? m.label : undefined}
+              style={{
+                display: "flex", alignItems: "center", gap: 8, width: "100%",
+                padding: collapsed ? "8px 0" : "8px 10px", border: "none", borderRadius: 6, cursor: "pointer",
+                fontSize: 12, fontWeight: 600, textAlign: "left", marginBottom: 3,
+                justifyContent: collapsed ? "center" : "flex-start",
+                background: activePage === m.key ? "#2563eb" : "transparent",
+                color: activePage === m.key ? "#fff" : "#cbd5e1",
+                transition: "background 0.15s",
+              }}
+              onMouseEnter={e => { if (activePage !== m.key) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+              onMouseLeave={e => { if (activePage !== m.key) e.currentTarget.style.background = "transparent"; }}
+            >
+              <span style={{ color: activePage === m.key ? "#fff" : "#94a3b8", display: "flex", flexShrink: 0 }}>{m.icon}</span>
+              {!collapsed && m.label}
+            </button>
+          ))}
+        </nav>
+        {(onBack || onLogout) && (
+          <div style={{ padding: 10, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            {onBack && (
+              <button onClick={onBack} title={collapsed ? "Kembali ke Menu" : undefined} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: collapsed ? "8px 0" : "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#cbd5e1", background: "transparent", marginBottom: 2, justifyContent: collapsed ? "center" : "flex-start" }}>
+                {collapsed ? "←" : "← Kembali ke Menu"}
+              </button>
+            )}
+            {onLogout && (
+              <button onClick={onLogout} title={collapsed ? "Keluar" : undefined} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: collapsed ? "8px 0" : "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#f87171", background: "transparent", justifyContent: collapsed ? "center" : "flex-start" }}>
+                {collapsed ? "⏻" : "⏻ Keluar"}
+              </button>
+            )}
+          </div>
+        )}
+      </aside>
+      <main style={{ flex: 1, padding: 20, overflowY: "auto", fontSize: 13, textAlign: "left" }}>
+        {children}
+      </main>
+    </div>
+  );
+};
 
 // ─── ICON TAMBAHAN ────────────────────────────────────────────────────────────
 export const IconTool = () => (
@@ -248,55 +271,73 @@ export const downloadAsPDF = async (elementId, filename = "dokumen") => {
 };
 
 // ─── ADMIN SIDEBAR LAYOUT ─────────────────────────────────────────────────────
-export const AdminSidebarLayout = ({ menuItems, activePage, setActivePage, userName, onBack, onLogout, children }) => (
-  <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Segoe UI', sans-serif", background: "#f1f5f9" }}>
-    <aside style={{ width: 200, background: "#1e293b", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto" }}>
-      <div style={{ padding: "18px 16px 12px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <div style={{ fontWeight: 800, fontSize: 14, color: "#fff", textAlign: "left" }}>Portal BMN</div>
-        <div style={{ fontSize: 10, color: "#94a3b8", textAlign: "left" }}>Bimas Kristen — Kemenag RI</div>
-      </div>
-      <nav style={{ padding: "12px 10px 0", flex: 1 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: "#64748b", padding: "4px 8px 6px", letterSpacing: 1, textAlign: "left" }}>
-          MENU ADMIN BMN
-        </div>
-        {menuItems.map(m => (
-          <button key={m.key} onClick={() => setActivePage(m.key)}
-            style={{
-              display: "flex", alignItems: "center", gap: 8, width: "100%",
-              padding: "8px 10px", border: "none", borderRadius: 6, cursor: "pointer",
-              fontSize: 12, fontWeight: 600, textAlign: "left", marginBottom: 3,
-              background: activePage === m.key ? "#2563eb" : "transparent",
-              color: activePage === m.key ? "#fff" : "#cbd5e1",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={e => { if (activePage !== m.key) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
-            onMouseLeave={e => { if (activePage !== m.key) e.currentTarget.style.background = "transparent"; }}
+export const AdminSidebarLayout = ({ menuItems, activePage, setActivePage, userName, onBack, onLogout, children }) => {
+  const [collapsed, setCollapsed] = React.useState(false);
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Segoe UI', sans-serif", background: "#f1f5f9" }}>
+      <aside style={{ width: collapsed ? 64 : 230, transition: "width 0.2s", background: "#1e293b", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", overflowX: "hidden" }}>
+        <div style={{ padding: collapsed ? "18px 10px 12px" : "18px 16px 12px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", gap: 8 }}>
+          {!collapsed && (
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 14, color: "#fff", textAlign: "left" }}>Portal BMN</div>
+              <div style={{ fontSize: 10, color: "#94a3b8", textAlign: "left", whiteSpace: "nowrap" }}>Bimas Kristen — Kemenag RI</div>
+            </div>
+          )}
+          <button
+            onClick={() => setCollapsed(c => !c)}
+            aria-label="Toggle sidebar"
+            style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 6, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#cbd5e1", flexShrink: 0 }}
           >
-            <span style={{ color: activePage === m.key ? "#fff" : "#94a3b8", display: "flex" }}>{m.icon}</span>
-            {m.label}
+            <IconMenu />
           </button>
-        ))}
-      </nav>
-      {(onBack || onLogout) && (
-        <div style={{ padding: 10, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          {onBack && (
-            <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#cbd5e1", background: "transparent", marginBottom: 2 }}>
-              ← Kembali ke Menu
-            </button>
-          )}
-          {onLogout && (
-            <button onClick={onLogout} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#f87171", background: "transparent" }}>
-              ⏻ Keluar
-            </button>
-          )}
         </div>
-      )}
-    </aside>
-    <main style={{ flex: 1, padding: 20, overflowY: "auto", fontSize: 13, textAlign: "left" }}>
-      {children}
-    </main>
-  </div>
-);
+        <nav style={{ padding: "12px 10px 0", flex: 1 }}>
+          {!collapsed && (
+            <div style={{ fontSize: 9, fontWeight: 700, color: "#64748b", padding: "4px 8px 6px", letterSpacing: 1, textAlign: "left" }}>
+              MENU ADMIN BMN
+            </div>
+          )}
+          {menuItems.map(m => (
+            <button key={m.key} onClick={() => setActivePage(m.key)}
+              title={collapsed ? m.label : undefined}
+              style={{
+                display: "flex", alignItems: "center", gap: 8, width: "100%",
+                padding: collapsed ? "8px 0" : "8px 10px", border: "none", borderRadius: 6, cursor: "pointer",
+                fontSize: 12, fontWeight: 600, textAlign: "left", marginBottom: 3,
+                justifyContent: collapsed ? "center" : "flex-start",
+                background: activePage === m.key ? "#2563eb" : "transparent",
+                color: activePage === m.key ? "#fff" : "#cbd5e1",
+                transition: "background 0.15s",
+              }}
+              onMouseEnter={e => { if (activePage !== m.key) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+              onMouseLeave={e => { if (activePage !== m.key) e.currentTarget.style.background = "transparent"; }}
+            >
+              <span style={{ color: activePage === m.key ? "#fff" : "#94a3b8", display: "flex", flexShrink: 0 }}>{m.icon}</span>
+              {!collapsed && m.label}
+            </button>
+          ))}
+        </nav>
+        {(onBack || onLogout) && (
+          <div style={{ padding: 10, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            {onBack && (
+              <button onClick={onBack} title={collapsed ? "Kembali ke Menu" : undefined} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: collapsed ? "8px 0" : "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#cbd5e1", background: "transparent", marginBottom: 2, justifyContent: collapsed ? "center" : "flex-start" }}>
+                {collapsed ? "←" : "← Kembali ke Menu"}
+              </button>
+            )}
+            {onLogout && (
+              <button onClick={onLogout} title={collapsed ? "Keluar" : undefined} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: collapsed ? "8px 0" : "8px 10px", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 600, textAlign: "left", color: "#f87171", background: "transparent", justifyContent: collapsed ? "center" : "flex-start" }}>
+                {collapsed ? "⏻" : "⏻ Keluar"}
+              </button>
+            )}
+          </div>
+        )}
+      </aside>
+      <main style={{ flex: 1, padding: 20, overflowY: "auto", fontSize: 13, textAlign: "left" }}>
+        {children}
+      </main>
+    </div>
+  );
+};
 
 // ─── ADMIN HEADER CARD ────────────────────────────────────────────────────────
 export const AdminHeaderCard = ({ title, subtitle, search, onSearchChange, searchPlaceholder, rightAction }) => (

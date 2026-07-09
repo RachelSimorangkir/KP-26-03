@@ -105,14 +105,12 @@ const PemeliharaanAdmin = () => {
               </td>
               {/* Barang */}
               <td style={tdBase}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {d.barang.map((b, i) => (
-                    <span key={i} style={{ fontSize: 12, color: "#1e293b" }}>
-                      {b.nama}
-                      <span style={{ fontSize: 10, color: "#94a3b8", fontFamily: "monospace", marginLeft: 4 }}>
-                        {b.nup}
-                      </span>
-                    </span>
+                    <div key={i}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b" }}>{b.nama}</div>
+                      <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "monospace" }}>{b.nup}</div>
+                    </div>
                   ))}
                 </div>
               </td>
@@ -146,10 +144,31 @@ const PemeliharaanAdmin = () => {
             id="pemeliharaan-detail-print"
             style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 13, lineHeight: 1.7, color: "#1e293b" }}
           >
-            <div style={{ textAlign: "center", borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-              <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-              <div style={{ fontSize: 11 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-              <div style={{ fontSize: 11 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+            {/* KOP SURAT */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 10 }}>
+                <img
+                  src="/logo-kemenag.png"
+                  alt="Logo Kemenag"
+                  style={{ width: 150, height: "auto", objectFit: "contain", flexShrink: 0 }}
+                />
+                <div style={{ flex: 1, textAlign: "center" }}>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: "#000" }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: "#000", marginBottom: 4 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+                  <div style={{ fontSize: 11, color: "#000", marginBottom: 2 }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+                  <div style={{ fontSize: 11, color: "#000", marginBottom: 2 }}>
+                    Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+                  </div>
+                  <div style={{ fontSize: 11, color: "#000", marginBottom: 2 }}>
+                    Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+                  </div>
+                  <div style={{ fontSize: 11, color: "#000" }}>
+                    Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+                  </div>
+                </div>
+              </div>
+              {/* garis di bawah SELURUH blok kop, bukan cuma sejajar logo */}
+              <div style={{ borderBottom: "3px solid #000", marginTop: 6 }} />
             </div>
 
             <div style={{ textAlign: "center", marginBottom: 16 }}>

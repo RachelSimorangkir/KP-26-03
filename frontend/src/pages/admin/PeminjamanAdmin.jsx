@@ -11,11 +11,32 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
   return (
     <Modal title="Preview Surat Peminjaman" onClose={onClose} wide>
       <div id={`surat-admin-print-${item.id}`} style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 13, lineHeight: 1.7, color: "#1e293b" }}>
+
         {/* Kop Surat */}
-        <div style={{ textAlign: "center", borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-          <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-          <div style={{ fontSize: 11 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-          <div style={{ fontSize: 11 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 10 }}>
+            <img
+              src="/logo-kemenag.png"
+              alt="Logo Kemenag"
+              style={{ width: 150, height: "auto", objectFit: "contain", flexShrink: 0 }}
+            />
+            <div style={{ flex: 1, textAlign: "center" }}>
+              <div style={{ fontWeight: 800, fontSize: 16, color: "#000" }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+              <div style={{ fontWeight: 800, fontSize: 14, color: "#000", marginBottom: 4 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+              <div style={{ fontSize: 11, color: "#000", marginBottom: 2 }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+              <div style={{ fontSize: 11, color: "#000", marginBottom: 2 }}>
+                Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+              </div>
+              <div style={{ fontSize: 11, color: "#000", marginBottom: 2 }}>
+                Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+              </div>
+              <div style={{ fontSize: 11, color: "#000" }}>
+                Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+              </div>
+            </div>
+          </div>
+          {/* garis di bawah SELURUH blok kop, bukan cuma sejajar logo */}
+          <div style={{ borderBottom: "3px solid #000", marginTop: 6 }} />
         </div>
 
         {/* Judul */}
@@ -199,18 +220,18 @@ const PeminjamanAdmin = () => {
         <AdminTable headers={["No. Surat", "Peminjam", "Barang", "Lokasi", "Tgl Pinjam", "Tgl Kembali", "Status", "Aksi"]}>
           {filtered.map(d => (
             <tr key={d.id} style={{ borderBottom: "1px solid #f8fafc" }}>
-              <td style={{ padding: "12px 16px", fontFamily: "monospace", fontSize: 12, color: "#64748b", textAlign: "left" }}>{d.nomorSurat}</td>
-              <td style={{ padding: "12px 16px", textAlign: "left" }}>
+              <td style={{ padding: "12px 16px", fontFamily: "monospace", fontSize: 12, color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.nomorSurat}</td>
+              <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>
                 <div style={{ fontWeight: 600, color: "#1e293b" }}>{d.peminjam.nama}</div>
                 <div style={{ fontSize: 11, color: "#94a3b8" }}>{d.peminjam.nip}</div>
               </td>
-              <td style={{ padding: "12px 16px", color: "#1e293b", textAlign: "left" }}>{d.barang.nama}</td>
-              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left" }}>{d.lokasi}</td>
-              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left" }}>{d.tglPinjam}</td>
-              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left" }}>{d.tglKembali}</td>
-              <td style={{ padding: "12px 16px", textAlign: "left" }}><StatusBadge status={d.status} /></td>
+              <td style={{ padding: "12px 16px", color: "#1e293b", textAlign: "left", whiteSpace: "nowrap" }}>{d.barang.nama}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.lokasi}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.tglPinjam}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.tglKembali}</td>
+              <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}><StatusBadge status={d.status} /></td>
               <td style={{ padding: "12px 16px", textAlign: "left" }}>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
                   <AdminButton variant="outline" onClick={() => setDetailItem(d)}><IconEye /> Detail</AdminButton>
                   {d.status === "Diajukan" && (
                     <>

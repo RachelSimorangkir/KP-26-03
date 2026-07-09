@@ -231,7 +231,7 @@ const DBRAdmin = () => {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, marginBottom: 16 }}>
               <thead>
                 <tr style={{ background: "#f8fafc" }}>
-                  {["No", "Nama Barang", "Kondisi"].map(h => (
+                  {["No", "Nama Barang", "NUP", "Kondisi"].map(h => (
                     <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontWeight: 700, color: "#374151", borderBottom: "1.5px solid #e2e8f0" }}>{h}</th>
                   ))}
                 </tr>
@@ -241,6 +241,7 @@ const DBRAdmin = () => {
                   <tr key={b.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
                     <td style={{ padding: "8px 12px", color: "#64748b" }}>{b.no || i + 1}</td>
                     <td style={{ padding: "8px 12px", color: "#1e293b", fontWeight: 600 }}>{b.nama}</td>
+                    <td style={{ padding: "8px 12px", color: "#64748b", fontFamily: "monospace", fontSize: 12, whiteSpace: "nowrap" }}>{b.nup || "-"}</td>
                     <td style={{ padding: "8px 12px" }}><StatusBadge status={b.kondisi} /></td>
                   </tr>
                 ))}

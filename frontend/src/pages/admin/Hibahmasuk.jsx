@@ -21,26 +21,31 @@ const adminBMN = [
 const parseRupiah = (str) => parseInt((str || "").replace(/[^0-9]/g, "")) || 0;
 const formatRupiah = (num) => "Rp " + Number(num).toLocaleString("id-ID");
 
-const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kategoriList = ["Perlengkapan Kantor", "Meubelier", "Lemari Besi/Kayu", "Kendaraan Roda Dua", "Kendaraan Roda Empat", "Tanah", "Gedung"];
 const kondisiList  = ["Baik", "Rusak Ringan", "Rusak Berat"];
 
 const kategoriColor = {
-  "Peralatan IT": { bg: "#eff6ff", color: "#2563eb" },
-  "Perabot":      { bg: "#faf5ff", color: "#7c3aed" },
-  "Kendaraan":    { bg: "#fffbeb", color: "#d97706" },
-  "Lainnya":      { bg: "#f8fafc", color: "#475569" },
+  "Perlengkapan Kantor": { bg: "#eff6ff", color: "#2563eb" },
+  "Meubelier":      { bg: "#faf5ff", color: "#7c3aed" },
+  "Lemari Besi/Kayu":    { bg: "#fffbeb", color: "#d97706" },
+  "Kendaraan Roda Dua":      { bg: "#f8fafc", color: "#475569" },
+  "Kendaraan Roda Empat":      { bg: "#f8fafc", color: "#23b766" },
+  "Tanah":      { bg: "#f8fafc", color: "#bdbb3d" },
+  "Gedung":      { bg: "#f8fafc", color: "#188c88" },
+  "Lainnya":     { bg: "#f1f5f9", color: "#64748b" },
 };
 
 const tdBase = {
   padding: "10px 14px", textAlign: "left",
   borderBottom: "1px solid #f1f5f9", verticalAlign: "middle",
+  whiteSpace: "nowrap",
 };
 const tdTop = { ...tdBase, verticalAlign: "top" };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HIBAH MASUK
 // ─────────────────────────────────────────────────────────────────────────────
-const emptyMasukItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
+const emptyMasukItem = { nama: "", kategori: "Perlengkapan Kantor", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
 
 const dummyHibahMasuk = [
   {
@@ -50,8 +55,7 @@ const dummyHibahMasuk = [
     pemeriksa: "Olin Mawar Kristianty",
     asalHibah: "Kementerian Keuangan RI",
     items: [
-      { nama: "Laptop Lenovo ThinkPad", kategori: "Peralatan IT", jumlah: 3, kondisi: "Baik", hargaUnit: "Rp 12.000.000" },
-      { nama: "Printer Canon G3010",    kategori: "Peralatan IT", jumlah: 2, kondisi: "Baik", hargaUnit: "Rp 2.500.000" },
+      { nama: "Lemari Kayu", kategori: "Lemari Besi/Kayu", jumlah: 3, kondisi: "Baik", hargaUnit: "Rp 12.000.000" },
     ],
   },
   {
@@ -61,7 +65,7 @@ const dummyHibahMasuk = [
     pemeriksa: "Tabita Marselia Silaen",
     asalHibah: "USAID Indonesia",
     items: [
-      { nama: "Kursi Ergonomis", kategori: "Perabot", jumlah: 10, kondisi: "Baik", hargaUnit: "Rp 1.800.000" },
+      { nama: "Kursi Ergonomis", kategori: "Meubelier", jumlah: 10, kondisi: "Baik", hargaUnit: "Rp 1.800.000" },
     ],
   },
 ];
@@ -71,6 +75,14 @@ const HibahMasukAdmin = () => {
   const [search, setSearch]         = useState("");
   const [showModal, setShowModal]   = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [editId, setEditId]         = useState(null); // null = mode tambah, selain itu = mode edit
+  const [formError, setFormError]   = useState("");
+  const [toast, setToast]           = useState(null); // { type: 'success' | 'error', message }
+
+  const showToast = (message, type = "success") => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const defaultPemeriksa =
     adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
@@ -84,6 +96,27 @@ const HibahMasukAdmin = () => {
   });
 
   const [form, setForm] = useState(emptyForm());
+
+  // Buka modal dalam mode edit, isi form dengan data yang sudah tersimpan
+  const openEdit = (d) => {
+    setForm({
+      noPengadaan: d.noPengadaan,
+      tanggal:     d.tanggal,
+      pemeriksa:   d.pemeriksa,
+      asalHibah:   d.asalHibah,
+      items:       d.items.map(it => ({ ...it })),
+    });
+    setEditId(d.id);
+    setFormError("");
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditId(null);
+    setFormError("");
+    setForm(emptyForm());
+  };
 
   const filtered = data.filter(d =>
     d.noPengadaan.toLowerCase().includes(search.toLowerCase()) ||
@@ -112,11 +145,40 @@ const HibahMasukAdmin = () => {
       items: prev.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
     }));
 
+  // Validasi form sebelum disimpan. Mengembalikan pesan error, atau "" jika valid.
+  const validateForm = () => {
+    if (!form.noPengadaan.trim()) return "Nomor Pengadaan wajib diisi.";
+    // Nomor pengadaan tidak boleh sama dengan data lain (kecuali data yang sedang diedit sendiri)
+    const duplikat = data.some(d => d.noPengadaan.trim().toLowerCase() === form.noPengadaan.trim().toLowerCase() && d.id !== editId);
+    if (duplikat) return "Nomor Pengadaan sudah digunakan pada data lain.";
+    if (!form.asalHibah.trim()) return "Asal Hibah wajib diisi.";
+    if (!form.tanggal) return "Tanggal wajib diisi.";
+    if (form.items.length === 0) return "Minimal harus ada 1 barang.";
+    for (const it of form.items) {
+      if (!it.nama.trim()) return "Nama barang tidak boleh kosong.";
+      if (!it.jumlah || Number(it.jumlah) <= 0) return `Jumlah untuk "${it.nama || "barang"}" harus lebih dari 0.`;
+      if (parseRupiah(it.hargaUnit) < 0) return `Harga/unit untuk "${it.nama}" tidak valid.`;
+    }
+    return "";
+  };
+
   const handleSubmit = () => {
-    if (!form.noPengadaan || !form.asalHibah || form.items.some(it => !it.nama)) return;
-    setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
-    setShowModal(false);
-    setForm(emptyForm());
+    const error = validateForm();
+    if (error) {
+      setFormError(error);
+      return;
+    }
+    if (editId !== null) {
+      // Mode edit: update data yang sudah ada
+      setData(prev => prev.map(d => d.id === editId ? { ...form, id: editId } : d));
+      closeModal();
+      showToast("Hibah masuk berhasil diperbarui!");
+    } else {
+      // Mode tambah: masukkan data baru
+      setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
+      closeModal();
+      showToast("Hibah masuk berhasil ditambahkan!");
+    }
   };
 
   const summary = {
@@ -134,7 +196,7 @@ const HibahMasukAdmin = () => {
         onSearchChange={setSearch}
         searchPlaceholder="Cari no. pengadaan, asal hibah, barang..."
         rightAction={
-          <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
+          <AdminButton onClick={() => { setFormError(""); setShowModal(true); }} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
             + Catat Hibah Masuk
           </AdminButton>
         }
@@ -148,6 +210,7 @@ const HibahMasukAdmin = () => {
 
       {/* ── Tabel utama ── */}
       <AdminCard>
+        <div style={{ overflowX: "auto" }}>
         <AdminTable headers={[
           "No. Pengadaan", "Tanggal", "Asal Hibah", "Nama Barang",
           "Kategori", "Jumlah", "Kondisi", "Harga Total", "Pemeriksa Hibah", "Aksi",
@@ -193,7 +256,10 @@ const HibahMasukAdmin = () => {
                   )}
                   {idx === 0 && (
                     <td style={{ ...tdTop }} rowSpan={d.items.length}>
-                      <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
+                        <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                        <AdminButton variant="outline" onClick={() => openEdit(d)}>Edit</AdminButton>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -201,6 +267,7 @@ const HibahMasukAdmin = () => {
             })
           )}
         </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail ── */}
@@ -280,7 +347,7 @@ const HibahMasukAdmin = () => {
 
       {/* ── Modal Catat Hibah Masuk ── */}
       {showModal && (
-        <Modal title="Catat Hibah Masuk" onClose={() => setShowModal(false)} wide>
+        <Modal title={editId !== null ? "Edit Hibah Masuk" : "Catat Hibah Masuk"} onClose={closeModal} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="Nomor Pengadaan">
               <input
@@ -399,11 +466,34 @@ const HibahMasukAdmin = () => {
             <IconPlus /> Tambah Barang
           </button>
 
+          {formError && (
+            <div style={{
+              background: "#fee2e2", color: "#dc2626", border: "1px solid #fecaca",
+              borderRadius: 6, padding: "8px 12px", fontSize: 12.5, fontWeight: 600,
+              marginBottom: 12,
+            }}>
+              ⚠ {formError}
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <AdminButton variant="outline" onClick={() => setShowModal(false)}>Batal</AdminButton>
-            <AdminButton variant="success" onClick={handleSubmit}>Simpan</AdminButton>
+            <AdminButton variant="outline" onClick={closeModal}>Batal</AdminButton>
+            <AdminButton variant="success" onClick={handleSubmit}>{editId !== null ? "Update" : "Simpan"}</AdminButton>
           </div>
         </Modal>
+      )}
+
+      {/* ── Toast Notifikasi ── */}
+      {toast && (
+        <div style={{
+          position: "fixed", top: 20, right: 20, zIndex: 9999,
+          background: toast.type === "success" ? "#16a34a" : "#dc2626",
+          color: "#fff", padding: "12px 18px", borderRadius: 8,
+          fontSize: 13, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          {toast.type === "success" ? "✓" : "⚠"} {toast.message}
+        </div>
       )}
     </div>
   );

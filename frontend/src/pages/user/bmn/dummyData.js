@@ -18,14 +18,9 @@ export const setCurrentUserOverride = (userData) => {
 
 // ─── STOK BARANG ─────────────────────────────────────────────────────────────
 export const stokBarang = [
-  { id: 1, kategori: "Elektronik", nama: "Printer HP LaserJet Pro M404n", kode: "PRN-001", stok: 3 },
-  { id: 2, kategori: "Elektronik", nama: "Proyektor Epson EB-X41", kode: "PRY-001", stok: 2 },
-  { id: 3, kategori: "Elektronik", nama: "Laptop Dell Latitude 5540", kode: "LPT-001", stok: 5 },
-  { id: 4, kategori: "Elektronik", nama: "LCD Monitor LG 24 inch", kode: "MON-001", stok: 4 },
-  { id: 5, kategori: "Elektronik", nama: "Kamera Canon EOS M50", kode: "KMR-001", stok: 1 },
-  { id: 6, kategori: "Furnitur", nama: "Kursi Kerja Ergonomis", kode: "KRS-001", stok: 8 },
-  { id: 7, kategori: "Furnitur", nama: "Meja Lipat Portable", kode: "MJL-001", stok: 6 },
-  { id: 8, kategori: "Ruangan", nama: "Ruang Meeting Lt. 2", kode: "RMT-001", stok: 1 },
+  { id: 1, kategori: "Alat Tulis Kantor", nama: "Kertas HVS", kode: "PRN-001", stok: 3 },
+  { id: 2, kategori: "Peralatan Kantor", nama: "Lapyop", kode: "PRY-001", stok: 2 },
+  { id: 3, kategori: "Meubelier", nama: "Kursi Kantor", kode: "LPT-001", stok: 5 },
   { id: 9, kategori: "Ruangan", nama: "Aula Serbaguna", kode: "AUL-001", stok: 1 },
 ];
 
@@ -103,9 +98,9 @@ export const dummyPermintaan = [
 
 // ─── DATA BARANG MASUK ────────────────────────────────────────────────────────
 export const dummyBarangMasuk = [
-  { id: 1, noPengadaan: "PBJ-2026-001", namaBarang: "Laptop Dell Latitude 5540", kategori: "Peralatan IT", jumlah: 5, kondisi: "Baik", nilaiUnit: "Rp 15.000.000", pj: "Ahmad Fauzi", nipPj: "198505102010011003", tanggal: "2026-05-28" },
-  { id: 2, noPengadaan: "PBJ-2026-002", namaBarang: "Kursi Kerja Ergonomis", kategori: "Perabot", jumlah: 10, kondisi: "Baik", nilaiUnit: "Rp 3.500.000", pj: "Dewi Kusuma", nipPj: "199001012015032003", tanggal: "2026-05-29" },
-  { id: 3, noPengadaan: "PBJ-2026-003", namaBarang: "Proyektor Epson EB-X41", kategori: "Peralatan IT", jumlah: 2, kondisi: "Baik", nilaiUnit: "Rp 8.000.000", pj: "Ahmad Fauzi", nipPj: "198505102010011003", tanggal: "2026-06-02" },
+  { id: 1, noPengadaan: "PBJ-2026-001", namaBarang: "Laptop Dell Latitude 5540", kategori: "Peralatan Kantor", jumlah: 5, kondisi: "Baik", nilaiUnit: "Rp 15.000.000", pj: "Ahmad Fauzi", nipPj: "198505102010011003", tanggal: "2026-05-28" },
+  { id: 2, noPengadaan: "PBJ-2026-002", namaBarang: "Kursi Kerja Ergonomis", kategori: "Meubelier", jumlah: 10, kondisi: "Baik", nilaiUnit: "Rp 3.500.000", pj: "Dewi Kusuma", nipPj: "199001012015032003", tanggal: "2026-05-29" },
+  { id: 3, noPengadaan: "PBJ-2026-003", namaBarang: "Proyektor Epson EB-X41", kategori: "Peralatan Kantor", jumlah: 2, kondisi: "Baik", nilaiUnit: "Rp 8.000.000", pj: "Ahmad Fauzi", nipPj: "198505102010011003", tanggal: "2026-06-02" },
 ];
 
 // ─── DATA DBR (Struktur: Unit Eselon 2 → Divisi/Bagian → Ruangan → Barang) ────
