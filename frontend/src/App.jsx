@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-/* eslint-disable no-undef */
-import "./App.css";
+﻿import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "../components/ScrollToTop";
 import HalamanUtama from "../pages/HalamanUtama";
@@ -21,6 +19,8 @@ import Cuti from "../pages/Cuti";
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
+import BMNUser from "./pages/user/bmn/BMNUser";
+import BMNAdmin from "./pages/admin/BMNAdmin";
 
 /* ADMIN */
 import AdminDashboard from "./admin/AdminDashboard";
@@ -54,23 +54,13 @@ import UploadDip from "../pages/Humas/UploadDip";
 import Tiket from "../pages/Humas/Tiket";
 import Keberatan from "../pages/Humas/Keberatan";
 import Rekap from "../pages/Humas/Rekap";
- 
+
+const currentUser = JSON.parse(
+  localStorage.getItem("currentUser")
+);
 
 
-=======
-﻿import { useState } from "react";
-import Login from "./pages/auth/Login";
-import ServiceSelection from "./pages/auth/ServiceSelection";
-import BMNUser from "./pages/user/bmn/BMNUser";
-import BMNAdmin from "./pages/admin/BMNAdmin";
->>>>>>> origin/bmn
-
-// Tahapan alur aplikasi:
-// "login"   -> halaman login (input NIP)
-// "select"  -> halaman pilih layanan (Kepegawaian/BMN/Data)
-// "bmn"     -> halaman BMN (otomatis User atau Admin sesuai role)
 function App() {
-<<<<<<< HEAD
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -237,14 +227,24 @@ function App() {
         />
 
         {/* BMN */}
-        <Route
-          path="/bmn"
-          element={
-            <h2>
-              Halaman BMN Sedang Dikembangkan
-            </h2>
-          }
-        />
+<Route
+  path="/bmn"
+  element={
+    <BMNUser
+      user={currentUser}
+      onBack={() => window.history.back()}
+      onLogout={() => {
+        localStorage.clear();
+        window.location.href = "/";
+      }}
+    />
+  }
+/>
+
+<Route
+  path="/bmn-admin"
+  element={<BMNAdmin />}
+/>
 
         
         {/* HUMAS - PARENT ROUTE DENGAN SIDEBAR */} 
@@ -299,53 +299,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
-=======
-  const [stage, setStage] = useState("login");
-  const [user, setUser] = useState(null);
-
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-    setStage("select");
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setStage("login");
-  };
-
-  const handleSelectBMN = () => {
-    setStage("bmn");
-  };
-
-  const handleBackToSelection = () => {
-    setStage("select");
-  };
-
-  if (stage === "login") {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
-  }
-
-  if (stage === "select") {
-    return (
-      <ServiceSelection
-        user={user}
-        onSelectBMN={handleSelectBMN}
-        onLogout={handleLogout}
-      />
-    );
-  }
-
-  if (stage === "bmn") {
-    // Routing otomatis berdasarkan role yang didapat dari database
-    return user.role === "admin" ? (
-      <BMNAdmin user={user} onBack={handleBackToSelection} onLogout={handleLogout} />
-    ) : (
-      <BMNUser user={user} onBack={handleBackToSelection} onLogout={handleLogout} />
-    );
-  }
-
-  return null;
->>>>>>> origin/bmn
 }
 
 export default App;

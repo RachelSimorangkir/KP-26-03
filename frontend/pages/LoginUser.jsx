@@ -29,6 +29,11 @@ function LoginUser() {
 
     if (data.status) {
 
+      localStorage.setItem(
+  "currentUser",
+  JSON.stringify(data.user)
+);
+
   localStorage.setItem(
     "isLoggedIn",
     "true"
@@ -48,7 +53,15 @@ function LoginUser() {
     "userRole",
     data.user.role
   );
+
+  localStorage.setItem(
+    "currentUser",
+    JSON.stringify(data.user)
+  );
+
   localStorage.setItem("userNIP", data.user.nip);
+
+  console.log(data.user);
 
   navigate("/");
 } else {

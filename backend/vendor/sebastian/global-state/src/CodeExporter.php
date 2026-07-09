@@ -24,9 +24,9 @@ final class CodeExporter
 
         foreach ($snapshot->constants() as $name => $value) {
             $result .= sprintf(
-                'if (!defined(%s)) define(%s, %s);' . "\n",
-                $this->exportVariable($name),
-                $this->exportVariable($name),
+                'if (!defined(\'%s\')) define(\'%s\', %s);' . "\n",
+                $name,
+                $name,
                 $this->exportVariable($value),
             );
         }
@@ -85,9 +85,6 @@ EOT;
         return 'unserialize(' . var_export(serialize($variable), true) . ')';
     }
 
-    /**
-     * @param array<mixed> $array
-     */
     private function arrayOnlyContainsScalars(array $array): bool
     {
         $result = true;

@@ -16,15 +16,15 @@ const menuItems = [
 const BMNUser = ({ user, onBack, onLogout }) => {
   const [activePage, setActivePage] = useState("peminjaman");
 
-  // Set data user yang sedang login (dari hasil API login) agar dipakai
-  // oleh semua halaman lain (Peminjaman, Permintaan, DBR, Pemeliharaan)
-  // tanpa perlu ubah satu-satu import currentUser di file-file tersebut.
-  setCurrentUserOverride({
-    nama: user.nama,
-    nip: user.nip,
-    jabatan: user.jabatan,
-    unitKerja: user.unitKerja || "Bimas Kristen",
-  });
+  // User sementara kalau belum login
+  const currentUser = user ?? {
+    nama: "Pegawai",
+    nip: "000000000",
+    jabatan: "Staff",
+    unitKerja: "Bimas Kristen",
+  };
+
+  setCurrentUserOverride(currentUser);
 
   const renderPage = () => {
     switch (activePage) {
@@ -42,7 +42,7 @@ const BMNUser = ({ user, onBack, onLogout }) => {
       activePage={activePage}
       setActivePage={setActivePage}
       role="user"
-      userName={user.nama}
+      userName={currentUser.nama}
       onBack={onBack}
       onLogout={onLogout}
     >
