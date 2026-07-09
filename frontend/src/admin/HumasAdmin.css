@@ -90,8 +90,8 @@
 }
 
 .menu-icon {
-  font-size: 27px;
-  width: 48px;
+  font-size: 20px;
+  width: 24px;
   text-align: center;
 }
 
@@ -125,7 +125,7 @@
 .main-content {
   flex: 1;
   margin-left: 280px;
-  padding: 32px;
+  padding: 24px;
   min-height: 100vh;
   background: #f8fafc;
 }
@@ -169,7 +169,7 @@
 }
 
 .header-menu-btn:hover {
-  background: #f1f5f9;
+  background: #ffffff;
   border-color: #cbd5e1;
 }
 
@@ -180,14 +180,14 @@
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 32px;
 }
 
 .metric-card {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 18px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.3s;
@@ -216,7 +216,7 @@
 }
 
 .metric-value {
-  font-size: 48px;
+  font-size: 36px;
   font-weight: 700;
   color: #16324b;
   line-height: 1;
@@ -245,7 +245,7 @@
 .panel {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 18px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }

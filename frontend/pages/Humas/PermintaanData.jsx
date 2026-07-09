@@ -5,19 +5,19 @@ export default function PermintaanData() {
   const navigate = useNavigate();
 
   const layanan = [
-  {
-    icon: "💾",
-    title: "Permintaan Data Internal",
-    desc: "Ajukan permintaan data yang diperlukan.",
-    path: "/humasdata/PermintaanData/DataInternal",  // ✅ Tanpa dash
-  },
-  {
-    icon: "🕐",
-    title: "Status Permintaan Data Internal",
-    desc: "Lihat status pengajuan permintaan data Anda.",
-    path: "/humasdata/PermintaanData/StatusData",  // ✅ Tanpa dash
-  },
-];
+    {
+      icon: "💾",
+      title: "Permintaan Data Internal",
+      desc: "Ajukan permintaan data yang diperlukan.",
+      path: "/humasdata/PermintaanData/DataInternal",
+    },
+    {
+      icon: "🕐",
+      title: "Status Permintaan Data Internal",
+      desc: "Lihat status pengajuan permintaan data Anda.",
+      path: "/humasdata/PermintaanData/StatusData",
+    },
+  ];
 
   return (
     <div className="rekom-page">
@@ -53,14 +53,54 @@ export default function PermintaanData() {
             key={item.path}
             className="layanan-card"
             onClick={() => navigate(item.path)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              padding: "25px 30px",
+              cursor: "pointer",
+            }}
           >
-            <div className="layanan-icon">{item.icon}</div>
+            <div
+              className="layanan-icon"
+              style={{
+                width: "60px",
+                height: "60px",
+                minWidth: "60px",
+                marginBottom: "0",
+              }}
+            >
+              {item.icon}
+            </div>
 
-            <h3>{item.title}</h3>
+            <div
+              className="layanan-content"
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 600 }}>
+                {item.title}
+              </h3>
 
-            <p>{item.desc}</p>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#64748b" }}>
+                {item.desc}
+              </p>
 
-            <span>Ajukan Permohonan →</span>
+              <span
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#2563eb",
+                  fontWeight: 500,
+                  marginTop: "4px",
+                }}
+              >
+                Ajukan Permohonan →
+              </span>
+            </div>
           </div>
         ))}
       </section>

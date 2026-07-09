@@ -1,13 +1,9 @@
 import "./DashboardHumas.css";
 
 function DashboardHumas() {
-
-
   return (
     <div className="dashboard-humas">
-
       <div className="welcome-container">
-
         <div className="welcome-badge">
           Portal Internal Humas & Data
         </div>
@@ -15,7 +11,7 @@ function DashboardHumas() {
         <h1 className="welcome-title">
           Selamat Datang di Layanan
           <br />
-            Humas & Data
+          Humas & Data
         </h1>
 
         <p className="welcome-desc">
@@ -24,11 +20,7 @@ function DashboardHumas() {
           Balai Manajemen dan Pengembangan Sumber Daya Manusia
           Kementerian Agama Republik Indonesia.
         </p>
-
-        
-
       </div>
-
     </div>
   );
 }

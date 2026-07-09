@@ -1,57 +1,52 @@
+/* =====================================
+   DASHBOARD HUMAS - FULL WIDTH
+===================================== */
+
 .dashboard-humas {
   min-height: 100vh;
   background: #f8fafc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 10px;
-  padding-right: 20px;
-  padding-bottom: 30px;
-  padding-left: 40px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .welcome-container {
   background: white;
-  padding: 30px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 32px 40px;;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   text-align: center;
-  max-width: 100% !important;
-  width: 100% !important;
+  width: 100%;
+  max-width: 800px;
+  margin: 0;
 }
 
 .welcome-badge {
   display: inline-block;
   background: #e0f2fe;
   color: #0369a1;
-  padding: 10px 24px;
-  border-radius: 24px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 30px;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 24px;
 }
 
 .welcome-title {
-  font-size: 2.8rem;
-  color: #1e293b;
+  font-size: 26px;
+  color: #16324b;
   margin: 0 0 24px 0;
   line-height: 1.3;
   font-weight: 700;
 }
 
 .welcome-desc {
-  font-size: 1.1rem;
+  font-size: 13px;
   color: #64748b;
   line-height: 1.7;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 800px;
 }
 
-@media (max-width: 768px) {
-  .welcome-title {
-    font-size: 2rem;
-  }
-  
-  .welcome-container {
-    padding: 40px 24px;
-  }
-}
+

@@ -19,7 +19,7 @@ function HumasData() {
     {
       icon: "🛠️",
       title: "Helpdesk",
-      path: "/humasdata/Helpdesk",
+      path: "/humasdata/helpdesk",
     },
     {
       icon: "📨",
@@ -50,9 +50,7 @@ function HumasData() {
         </div>
 
         {!collapsed && (
-          <div className="menu-title">
-            MENU HUMAS & DATA
-          </div>
+          <div className="menu-title">MENU HUMAS & DATA</div>
         )}
 
         <nav className="menu-list">
@@ -64,25 +62,14 @@ function HumasData() {
                 isActive ? "menu-item active" : "menu-item"
               }
             >
-              <span className="icon">
-                {menu.icon}
-              </span>
-
-              {!collapsed && (
-                <span className="text">
-                  {menu.title}
-                </span>
-              )}
+              <span className="icon">{menu.icon}</span>
+              {!collapsed && <span className="text">{menu.title}</span>}
             </NavLink>
           ))}
         </nav>
       </aside>
 
-      <main
-        className={`content ${
-          collapsed ? "content-expanded" : "content-normal"
-        }`}
-      >
+      <main className={`content ${collapsed ? "content-expanded" : "content-normal"}`}>
         <Outlet />
       </main>
     </div>

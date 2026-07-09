@@ -27,6 +27,7 @@ import DetailPengajuan from "./admin/DetailPengajuan";
 import DataRequest from "../pages/DataRequest";
 import PPIDRequest from "../pages/PPIDRequest";
 import PPIDAdminDashboard from "../pages/PPIDAdminDashboard";
+import HumasLayout from "./admin/HumasLayout";
 import HumasAdmin from "./admin/HumasAdmin";
 
 
@@ -50,6 +51,8 @@ import BeritaTerbit from "../pages/Humas/BeritaTerbit";
 import DataPermintaan from "../pages/Humas/DataPermintaan";
 import UploadDip from "../pages/Humas/UploadDip";
 import Tiket from "../pages/Humas/Tiket";
+import Keberatan from "../pages/Humas/Keberatan";
+import Rekap from "../pages/Humas/Rekap";
  
 
 
@@ -267,17 +270,16 @@ function App() {
         />
 
         ///* Admin Humas/*
-        <Route path="/admin" element={<HumasAdmin />} />
-        <Route path="/admin/dashboard" element={<HumasAdmin />} />  
-        <Route path="/admin/berita-masuk" element={<BeritaMasuk />} />
-        <Route path="/admin/berita-terbit" element={<BeritaTerbit />} />
-        <Route path="/admin/permintaan-data" element={<DataPermintaan />} />
-        <Route path="/admin/upload-dip" element={<UploadDip />} />
-        <Route path="/admin/tiket-helpdesk" element={<Tiket />} />
-        <Route path="/admin/tiket-helpdesk" element={<h2>Tiket Helpdesk</h2>} />
-        <Route path="/admin/keberatan-ppid" element={<h2>Keberatan PPID</h2>} />
-        <Route path="/admin/laporan" element={<h2>Laporan</h2>} />
-        <Route path="/admin/pengaturan" element={<h2>Pengaturan</h2>} />  
+<Route path="/admin" element={<HumasLayout />}>
+  <Route index element={<HumasAdmin />} />
+  <Route path="berita-masuk" element={<BeritaMasuk />} />
+  <Route path="berita-terbit" element={<BeritaTerbit />} />
+  <Route path="permintaan-data" element={<DataPermintaan />} />
+  <Route path="upload-dip" element={<UploadDip />} />
+  <Route path="tiket-helpdesk" element={<Tiket />} />
+  <Route path="keberatan-ppid" element={<Keberatan />} />
+  <Route path="laporan" element={<Rekap />} />
+</Route> 
          
 
 
