@@ -4,6 +4,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 export default function DetailPengajuan() {
   const navigate = useNavigate();
@@ -168,7 +169,12 @@ const result = await response.json();
 console.log(result);
 
 if (!result.success) {
-    alert(result.error || result.message);
+    Swal.fire({
+  icon: "error",
+  title: "Gagal",
+  text: result.error || result.message,
+  confirmButtonColor: "#dc2626",
+});
     return;
 }
 console.log(result);
@@ -184,7 +190,12 @@ const terbaru = await res.json();
 
 setData(terbaru);
 
-alert("Status berhasil diperbarui.");
+Swal.fire({
+  icon: "success",
+  title: "Berhasil",
+  text: "Status pengajuan berhasil diperbarui.",
+  confirmButtonColor: "#2563eb",
+});
 
 }
 
@@ -233,8 +244,12 @@ const handleApprove = async () => {
 
     if (!suratRespon) {
 
-        alert("Silakan upload surat balasan.");
-
+        Swal.fire({
+  icon: "warning",
+  title: "Surat Belum Diunggah",
+  text: "Silakan upload Surat Balasan Admin terlebih dahulu.",
+  confirmButtonColor: "#f59e0b",
+});
         return;
 
     }
@@ -258,13 +273,22 @@ const handleProcess = async () => {
 
 const handleReject = async () => {
 
-  if(window.confirm("Tolak pengajuan ini?")){
+  const result = await Swal.fire({
+    title: "Tolak Pengajuan?",
+    text: "Status pengajuan akan diubah menjadi Ditolak.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Tolak",
+    cancelButtonText: "Batal",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280",
+  });
 
+  if (result.isConfirmed) {
     await updateStatus(
       "Ditolak",
       catatanAdmin
     );
-
   }
 
 };

@@ -69,12 +69,24 @@ $hasil = $this->pengajuanModel
     return $this->response->setJSON($data);
 }
 
+
     // Membuat pengajuan baru
 public function create()
 {
     try {
 
         $data = $this->request->getPost();
+        $durasi = 0;
+
+if (
+    !empty($data["tanggal_mulai"]) &&
+    !empty($data["tanggal_selesai"])
+) {
+    $durasi = $this->hitungHariKerja(
+        $data["tanggal_mulai"],
+        $data["tanggal_selesai"]
+    );
+}
 
 log_message("error", "DATA POST:");
 log_message("error", json_encode($data));
@@ -106,6 +118,39 @@ log_message(
     'UNIT KERJA = ' .
     $this->request->getVar('unit_kerja')
 );
+if (($data["jenis_cuti"] ?? "") == "Cuti Tahunan") {
+
+    $tahun = date("Y");
+
+    $awal = "$tahun-01-01";
+    $akhir = "$tahun-12-31";
+
+    $hasil = $this->pengajuanModel
+        ->selectSum("durasi")
+        ->where("nip", $data["nip"])
+        ->where("jenis_cuti", "Cuti Tahunan")
+        ->whereIn("status", [
+            "Disetujui",
+            "Selesai"
+        ])
+        ->where("tanggal_mulai >=", $awal)
+        ->where("tanggal_mulai <=", $akhir)
+        ->first();
+
+    $terpakai = (int)($hasil["durasi"] ?? 0);
+
+    if ($terpakai + $durasi > 12) {
+
+        return $this->response
+            ->setJSON([
+                "success" => false,
+                "message" =>
+                    "Sisa cuti tahunan tidak mencukupi."
+            ]);
+
+    }
+
+}
 
         $insertData = [
 
@@ -131,7 +176,7 @@ log_message(
 
     'tanggal_selesai' => $data['tanggal_selesai'] ?? null,
 
-    'durasi' => $data['durasi'] ?? 0,
+    'durasi' => $durasi,
 
     'lama_cuti' => $data['lama_cuti'] ?? 0,
 
@@ -303,5 +348,31 @@ log_message(
 
             ]);
     }
+    
+}
+private function hitungHariKerja($mulai, $selesai)
+{
+    $start = new \DateTime($mulai);
+    $end = new \DateTime($selesai);
+
+    $end->modify("+1 day");
+
+    $interval = new \DateInterval("P1D");
+    $periode = new \DatePeriod($start, $interval, $end);
+
+    $hariKerja = 0;
+
+    foreach ($periode as $tanggal) {
+
+        $hari = $tanggal->format("N");
+
+        // Senin=1 ... Jumat=5
+        if ($hari <= 5) {
+            $hariKerja++;
+        }
+
+    }
+
+    return $hariKerja;
 }
 }

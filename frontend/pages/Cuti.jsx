@@ -119,10 +119,27 @@ function Cuti() {
     if (selesai < mulai) return;
 
     // Total hari
-    const totalHari =
-        Math.floor((selesai - mulai) / (1000 * 60 * 60 * 24)) + 1;
+// Hitung hari kerja (Senin–Jumat)
+let totalHari = 0;
 
-    setDurasi(totalHari);
+let current = new Date(mulai);
+
+while (current <= selesai) {
+
+  const hari = current.getDay();
+
+  // Minggu = 0
+  // Sabtu = 6
+
+  if (hari !== 0 && hari !== 6) {
+    totalHari++;
+  }
+
+  current.setDate(current.getDate() + 1);
+
+}
+
+setDurasi(totalHari);
 
     // Hitung tahun, bulan, hari
     let tahun = selesai.getFullYear() - mulai.getFullYear();
