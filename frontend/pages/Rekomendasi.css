@@ -2,7 +2,7 @@
    PAGE
 ===================================== */
 
-.rekom-page{
+.rekomendasi-page{
   width:100%;
   max-width:1450px;
 
@@ -14,7 +14,7 @@
   animation:pageFade .8s ease;
 }
 
-.rekom-page::before{
+.rekomendasi-page::before{
   content:"";
 
   position:fixed;
@@ -33,7 +33,7 @@
   z-index:-1;
 }
 
-.rekom-page::after{
+.rekomendasi-page::after{
   content:"";
 
   position:fixed;
@@ -293,25 +293,23 @@
 ===================================== */
 
 .layanan-card{
-  background:white;
-  border:none;
-  border-radius:26px;
+    background:#fff;
+    border-radius:22px;
+    padding:32px;
 
-  padding:32px;
+    display:flex;
+    flex-direction:column;
 
-  position:relative;
-  overflow:hidden;
+    min-height:340px;
 
-  box-shadow:
-    0 12px 30px rgba(15,23,42,.06);
+    box-shadow:0 10px 25px rgba(0,0,0,.06);
 
-  transition:.35s;
-  animation:cardUp .7s ease both;
+    transition:.3s;
+}
 
-  /* TAMBAHAN */
-  display:flex;
-  flex-direction:column;
-  height:100%;
+.layanan-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 18px 35px rgba(0,0,0,.12);
 }
 
 .layanan-card::before{
@@ -435,7 +433,7 @@
 
 @media(max-width:768px){
 
-  .rekom-page{
+  .rekomendasi-page{
     padding:20px;
   }
 
@@ -450,7 +448,145 @@
     font-size:34px;
   }
 
-  .layanan-grid{
-    grid-template-columns:1fr;
-  }
+  /* =====================================
+   GRID
+===================================== */
+
+.layanan-grid{
+    display:grid !important;
+    grid-template-columns:repeat(4,1fr) !important;
+    gap:28px !important;
+    width:100% !important;
+    align-items:stretch !important;
+}
+
+/* =====================================
+   CARD
+===================================== */
+
+.layanan-card{
+    background:#fff !important;
+    border-radius:24px !important;
+
+    padding:30px !important;
+
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:space-between !important;
+
+    min-height:330px !important;
+    width:100% !important;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.06) !important;
+
+    transition:.3s !important;
+}
+
+.layanan-card:hover{
+    transform:translateY(-6px) !important;
+    box-shadow:0 18px 40px rgba(0,0,0,.10) !important;
+}
+
+/* =====================================
+   ICON
+===================================== */
+
+.layanan-icon{
+    width:74px !important;
+    height:74px !important;
+
+    margin:0 auto 26px !important;
+
+    border-radius:20px !important;
+
+    background:#edf5ff !important;
+
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+}
+
+/* =====================================
+   TITLE
+===================================== */
+
+.layanan-card h3{
+    font-size:20px !important;
+    font-weight:700 !important;
+
+    color:#16324b !important;
+
+    line-height:1.4 !important;
+
+    text-align:center !important;
+
+    min-height:82px !important;
+
+    margin-bottom:18px !important;
+}
+
+/* =====================================
+   DESC
+===================================== */
+
+.layanan-card p{
+    flex:1 !important;
+
+    text-align:center !important;
+
+    color:#64748b !important;
+
+    font-size:15px !important;
+
+    line-height:1.8 !important;
+
+    margin-bottom:25px !important;
+}
+
+/* =====================================
+   BUTTON
+===================================== */
+
+.layanan-card span{
+    margin-top:auto !important;
+
+    align-self:center !important;
+
+    background:#eef5ff !important;
+
+    color:#2563eb !important;
+
+    padding:12px 20px !important;
+
+    border-radius:12px !important;
+
+    font-weight:700 !important;
+
+    transition:.3s !important;
+}
+
+.layanan-card:hover span{
+    background:#2563eb !important;
+    color:#fff !important;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media(max-width:1200px){
+
+    .layanan-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .layanan-grid{
+        grid-template-columns:1fr !important;
+    }
+
+}
 }

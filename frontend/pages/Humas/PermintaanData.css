@@ -2,55 +2,6 @@
    PAGE
 ===================================== */
 
-.rekom-page{
-  width:100%;
-  max-width:1450px;
-
-  margin:0 auto;
-  padding:35px;
-
-  position:relative;
-
-  animation:pageFade .8s ease;
-}
-
-.rekom-page::before{
-  content:"";
-
-  position:fixed;
-
-  top:-150px;
-  right:-150px;
-
-  width:400px;
-  height:400px;
-
-  border-radius:50%;
-
-  background:
-    rgba(37,99,235,.05);
-
-  z-index:-1;
-}
-
-.rekom-page::after{
-  content:"";
-
-  position:fixed;
-
-  bottom:-150px;
-  left:-100px;
-
-  width:320px;
-  height:320px;
-
-  border-radius:50%;
-
-  background:
-    rgba(22,50,75,.05);
-
-  z-index:-1;
-}
 
 *{
   box-sizing:border-box;
@@ -480,9 +431,6 @@
 
 @media(max-width:768px){
 
-  .rekom-page{
-    padding:20px;
-  }
 
   .service-banner{
     flex-direction:column;

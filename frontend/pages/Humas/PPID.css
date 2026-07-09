@@ -200,7 +200,6 @@
 /* Main Content */
 .main-content {
   flex: 1;
-  margin-left: 280px;
   min-height: 100vh;
   padding: 40px; /* Tambah padding untuk ruang napas */
   width: calc(100% - 280px); /* Pastikan lebar penuh setelah sidebar */
@@ -257,7 +256,6 @@
 
 .content {
   flex: 1;
-  margin-left: 280px;
   min-height: 100vh;
   padding: 40px;
   width: calc(100% - 280px);
@@ -267,11 +265,6 @@
 .content-expanded {
   margin-left: 80px;
   width: calc(100% - 80px);
-}
-
-.content-normal {
-  margin-left: 280px;
-  width: calc(100% - 280px);
 }
 
 
