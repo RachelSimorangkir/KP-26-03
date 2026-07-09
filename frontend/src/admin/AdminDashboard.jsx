@@ -4,13 +4,13 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import { useState } from "react";
+import {
+  useState,
+  useEffect,
+} from "react";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-
-  const [search, setSearch] =
-  useState("");
 
   const isLoggedIn =
     localStorage.getItem("isLoggedIn") === "true";
@@ -27,53 +27,19 @@ export default function AdminDashboard() {
     navigate("/login-admin");
   };
 
-  const pengajuan = [
-    {
-      nama: "Rachel Simorangkir",
-      layanan: "SKBT",
-      tanggal: "17 Juni 2026",
-      status: "Menunggu",
-      nip: "1987654321",
-      unitKerja: "BMBPSDM",
-      jabatan: "Analis Kepegawaian",
-    },
-    {
-      nama: "Budi Santoso",
-      layanan: "Cuti Tahunan",
-      tanggal: "17 Juni 2026",
-      status: "Diproses",
-      nip: "1987654322",
-      unitKerja: "Ditjen Bimas Kristen",
-      jabatan: "Staf Kepegawaian",
-    },
-    {
-      nama: "Sinta Lestari",
-      layanan: "Kenaikan Pangkat",
-      tanggal: "16 Juni 2026",
-      status: "Disetujui",
-      nip: "1987654323",
-      unitKerja: "BMBPSDM",
-      jabatan: "Analis SDM",
-    },
-    {
-      nama: "Andi Wijaya",
-      layanan: "PMK",
-      tanggal: "15 Juni 2026",
-      status: "Menunggu",
-      nip: "1987654324",
-      unitKerja: "Sekretariat",
-      jabatan: "Pelaksana",
-    },
-    {
-      nama: "Maria Hutagalung",
-      layanan: "Mutasi Internal",
-      tanggal: "15 Juni 2026",
-      status: "Diproses",
-      nip: "1987654325",
-      unitKerja: "BMBPSDM",
-      jabatan: "Analis Organisasi",
-    },
-  ];
+  const [search, setSearch] = useState("");
+const [pengajuan, setPengajuan] = useState([]);
+
+useEffect(() => {
+  fetch("http://localhost:8080/api/pengajuan")
+    .then((res) => res.json())
+    .then((data) => {
+      setPengajuan(data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}, []);
 
   const filteredPengajuan = pengajuan.filter(
   (item) =>
@@ -84,6 +50,45 @@ export default function AdminDashboard() {
       .toLowerCase()
       .includes(search.toLowerCase())
 );
+const getCountdown = (mulai, selesai) => {
+
+  const today = new Date();
+
+  const start = new Date(mulai);
+
+  const end = new Date(selesai);
+
+  if (today < start) {
+
+    const diff = Math.ceil(
+      (start - today) /
+      (1000 * 60 * 60 * 24)
+    );
+
+    return {
+      text: `${diff} Hari Lagi`,
+      className: "countdown-wait",
+    };
+  }
+
+  if (today >= start && today <= end) {
+
+    const diff = Math.ceil(
+      (today - start) /
+      (1000 * 60 * 60 * 24)
+    );
+
+    return {
+      text: `Hari ke-${diff}`,
+      className: "countdown-active",
+    };
+  }
+
+  return {
+    text: "Selesai",
+    className: "countdown-finish",
+  };
+};
 
   return (
     <div className="admin-page">
@@ -95,20 +100,29 @@ export default function AdminDashboard() {
     <p>BMBPSDM</p>
   </div>
 
-  <ul>
+<ul>
 
-    <li className="active-menu">
-      📥 Semua Pengajuan
-    </li>
+  <li
+    className="active-menu"
+    onClick={() => navigate("/admin")}
+  >
+    Semua Pengajuan
+  </li>
 
-    <li
-      className="logout-menu"
-      onClick={handleLogout}
-    >
-      🚪 Logout
-    </li>
+  <li
+    onClick={() => navigate("/admin/cuti")}
+  >
+    Pengajuan Cuti
+  </li>
 
-  </ul>
+  <li
+    className="logout-menu"
+    onClick={handleLogout}
+  >
+    Logout
+  </li>
+
+</ul>
 
 </aside>
 
@@ -161,27 +175,25 @@ export default function AdminDashboard() {
 
           <td>{item.nama}</td>
 
-          <td>{item.layanan}</td>
+          <td>{item.sub_layanan || item.layanan}</td>
 
-          <td>{item.tanggal}</td>
-
-          <td>
-
-            <span
-              className={`status ${
-                item.status === "Menunggu"
-                  ? "pending"
-                  : item.status === "Diproses"
-                  ? "process"
-                  : "approved"
-              }`}
-            >
-              {item.status}
-            </span>
-
-          </td>
+          <td>{item.tanggal_pengajuan}</td>
 
           <td>
+  <span
+    className={`status ${
+      item.status === "Menunggu"
+        ? "pending"
+        : item.status === "Diproses"
+        ? "process"
+        : "approved"
+    }`}
+  >
+    {item.status}
+  </span>
+</td>
+
+<td>
 
             <button
               className="detail-btn"

@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HalamanUtama.css";
+import logo from "../src/assets/logo-kemenag.png";
+import Swal from "sweetalert2";
 
 export default function HalamanUtama() {
   const navigate = useNavigate();
@@ -11,63 +13,141 @@ export default function HalamanUtama() {
   const [showNotif, setShowNotif] =
     useState(false);
 
-  const notifications = [
-    {
-      id: 1,
-      title: "Pengajuan Cuti Disetujui",
-      time: "2 jam yang lalu",
-      icon: "📄",
-      path: "/kepegawaian/cuti",
-    },
-    {
-      id: 2,
-      title: "SKBT Sedang Diproses",
-      time: "Kemarin",
-      icon: "📋",
-      path: "/kepegawaian/skbt",
-    },
-    {
-      id: 3,
-      title: "Usulan Kenaikan Pangkat Diverifikasi",
-      time: "3 hari yang lalu",
-      icon: "🎉",
-      path:
-        "/kepegawaian/rekomendasi/kenaikan-jenjang",
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
 
   const isLoggedIn =
     localStorage.getItem("isLoggedIn") === "true";
 
   const userName =
     localStorage.getItem("userName") || "Pegawai";
+  
+  
+  const nip = localStorage.getItem("userNIP");
 
-  const handleAccess = (path) => {
-    if (!isLoggedIn) {
-      alert(
-        "Silakan login terlebih dahulu untuk mengakses layanan."
-      );
-      return;
-    }
+const unreadCount =
+notifications.filter(
+    n=>n.status==="unread"
+).length;
 
-    navigate(path);
-  };
+  useEffect(() => {
+
+  if (!nip) return;
+
+  fetch(`http://localhost:8080/api/notifikasi/${nip}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setNotifications(data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+
+}, [nip]);
+
+const handleAccess = (path) => {
+
+  if (!isLoggedIn) {
+
+    Swal.fire({
+
+      icon: "warning",
+
+      title: "Akses Ditolak",
+
+      html: `
+        <b>Anda belum login.</b><br><br>
+        Silakan login terlebih dahulu untuk mengakses layanan.
+      `,
+
+      confirmButtonText: "Login Sekarang",
+
+      confirmButtonColor: "#2563eb",
+
+      showCancelButton: true,
+
+      cancelButtonText: "Nanti",
+
+      cancelButtonColor: "#94a3b8"
+
+    }).then((result)=>{
+
+      if(result.isConfirmed){
+
+        navigate("/login");
+
+      }
+
+    });
+
+    return;
+
+  }
+
+  navigate(path);
+
+};
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userNIP");
 
     navigate("/");
     window.location.reload();
   };
 
-  const handleNotificationClick = (
-    notif
-  ) => {
-    setShowNotif(false);
+  const markAllAsRead = async () => {
+  await fetch(
+    `http://localhost:8080/api/notifikasi/read-all/${nip}`,
+    {
+      method: "PUT",
+    }
+  );
 
-    navigate(notif.path);
-  };
+  setNotifications((prev) =>
+    prev.map((item) => ({
+      ...item,
+      status: "read",
+    }))
+  );
+};
+
+const handleNotificationClick = async (notif) => {
+
+  // tandai notif ini sudah dibaca
+  await fetch(
+    `http://localhost:8080/api/notifikasi/read/${notif.id}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  // ambil detail pengajuan
+  const res = await fetch(
+    `http://localhost:8080/api/pengajuan/detail/${notif.pengajuan_id}`
+  );
+
+  const pengajuan = await res.json();
+
+  // update state supaya notif berubah jadi read
+  setNotifications((prev) =>
+    prev.map((item) =>
+      item.id === notif.id
+        ? {
+            ...item,
+            status: "read",
+          }
+        : item
+    )
+  );
+
+  setShowNotif(false);
+
+  navigate("/kepegawaian/detail-pengajuan", {
+    state: pengajuan,
+  });
+};
 
   return (
     <div className="home-page">
@@ -77,8 +157,9 @@ export default function HalamanUtama() {
 
         <div className="logo-section">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
+            src={logo}
+            alt="Logo Kementerian Agama"
+            className="navbar-logo"
           />
 
           <h2>Portal Layanan Internal</h2>
@@ -116,55 +197,99 @@ export default function HalamanUtama() {
               {/* NOTIFIKASI */}
 <div className="notif-wrapper">
 
-  <div
-    className="notif-icon"
-    onClick={() =>
-      setShowNotif(!showNotif)
-    }
-  >
-    🔔
+<div
+  className="notif-icon"
+  onClick={() => setShowNotif(!showNotif)}
+>
+  🔔
 
+  {unreadCount > 0 && (
     <span className="notif-badge">
-      {notifications.length}
+      {unreadCount}
     </span>
-  </div>
+  )}
+</div>
 
   {showNotif && (
-    <div className="notif-dropdown">
+<div className="notif-dropdown">
 
-      <div className="notif-header">
-        🔔 Notifikasi
-      </div>
+    <div className="notif-header">
+        Notifikasi
 
-      {notifications.map((notif) => (
-        <div
-          key={notif.id}
-          className="notif-item"
-          onClick={() =>
-            handleNotificationClick(
-              notif
-            )
-          }
-        >
-          <div className="notif-title">
-
-            <span className="notif-item-icon">
-              {notif.icon}
-            </span>
-
-            <span className="notif-item-text">
-              {notif.title}
-            </span>
-
-          </div>
-
-          <div className="notif-time">
-            {notif.time}
-          </div>
-        </div>
-      ))}
+        {unreadCount > 0 && (
+            <button
+                className="read-all-btn"
+                onClick={markAllAsRead}
+            >
+                Tandai semua
+            </button>
+        )}
 
     </div>
+
+    <div className="notif-body">
+
+        {notifications.length === 0 ? (
+
+            <div className="notif-item">
+                Tidak ada notifikasi
+            </div>
+
+        ) : (
+
+            notifications.map((notif) => (
+
+                <div
+                    key={notif.id}
+                    className={`notif-item ${
+                        notif.status === "unread"
+                            ? "unread"
+                            : "read"
+                    }`}
+                    onClick={() =>
+                        handleNotificationClick(notif)
+                    }
+                >
+
+                    <div className="notif-title">
+
+                        <span className="notif-item-icon">
+                            {notif.status === "unread"
+                                ? "🔵"
+                                : "⚪"}
+                        </span>
+
+                        <span className="notif-item-text">
+                            {notif.judul}
+                        </span>
+
+                    </div>
+
+                    <div className="notif-date">
+                        {new Date(
+                            notif.created_at
+                        ).toLocaleString("id-ID")}
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize: "13px",
+                            color: "#64748b",
+                            marginTop: "5px",
+                        }}
+                    >
+                        {notif.pesan}
+                    </div>
+
+                </div>
+
+            ))
+
+        )}
+
+    </div>
+
+</div>
   )}
 
 </div>
@@ -180,20 +305,26 @@ export default function HalamanUtama() {
                     )
                   }
                 >
-                  👤 {userName}
+                   {userName}
                 </div>
 
                 {showProfileMenu && (
-                  <div className="profile-dropdown">
+  <div className="profile-dropdown">
 
-                    <button
-                      onClick={handleLogout}
-                    >
-                      🚪 Logout
-                    </button>
+    <button
+      onClick={() => navigate("/ganti-password")}
+    >
+      Ganti Password
+    </button>
 
-                  </div>
-                )}
+    <button
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+
+  </div>
+)}
 
               </div>
 
@@ -210,8 +341,9 @@ export default function HalamanUtama() {
         <div className="hero-content">
 
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
+            src={logo}
+            alt="Logo Kementerian Agama"
+            className="hero-logo"
           />
 
           <h1>PORTAL LAYANAN INTERNAL</h1>
@@ -242,9 +374,6 @@ export default function HalamanUtama() {
               handleAccess("/kepegawaian")
             }
           >
-            <div className="service-icon">
-              👥
-            </div>
 
             <h3>Kepegawaian & SDM</h3>
 
@@ -261,9 +390,6 @@ export default function HalamanUtama() {
               handleAccess("/bmn")
             }
           >
-            <div className="service-icon">
-              🏢
-            </div>
 
             <h3>Barang Milik Negara</h3>
 
@@ -280,9 +406,6 @@ export default function HalamanUtama() {
               handleAccess("/humasdata")
             }
           >
-            <div className="service-icon">
-              📊
-            </div>
 
             <h3>Humas & Data</h3>
 

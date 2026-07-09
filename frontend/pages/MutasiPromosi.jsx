@@ -13,7 +13,11 @@ function MutasiPromosi() {
           navigate("/kepegawaian/rekomendasi")
         }
       >
-        ← Kembali
+        <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
       </button>
 
       {/* HEADER */}

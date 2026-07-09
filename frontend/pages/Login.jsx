@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import logo from "../src/assets/logo-kemenag.png";
 
 function Login() {
   const navigate = useNavigate();
@@ -13,9 +14,9 @@ function Login() {
         <div className="login-left">
 
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_Kementerian_Agama.svg/512px-Logo_Kementerian_Agama.svg.png"
-            alt="logo"
-          />
+    src={logo}
+    alt="logo"
+/>
 
           <h1>Portal Layanan Internal</h1>
 
@@ -70,17 +71,20 @@ function Login() {
 
             </div>
 
-            {/* BUTTON KEMBALI */}
-            <div className="back-home-wrapper">
-
-              <button
-                className="back-home-btn"
-                onClick={() => navigate("/")}
-              >
-                ← Kembali ke Beranda
-              </button>
-
-            </div>
+{/* BUTTON KEMBALI */}
+<div className="back-home-wrapper">
+  <button
+    className="back-home-btn"
+    onClick={() => navigate("/")}
+  >
+    <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
+    <span>Kembali ke Beranda</span>
+  </button>
+</div>
 
           </div>
 

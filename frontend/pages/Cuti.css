@@ -646,3 +646,189 @@
   color:#000000;
   font-weight:700;
 }
+
+/* ======================
+   TRACKING STATUS
+====================== */
+
+.tracking-card{
+  background:white;
+
+  border-radius:20px;
+
+  padding:32px;
+
+  margin-top:30px;
+
+  border:1px solid #e5e7eb;
+
+  box-shadow:
+    0 8px 24px rgba(15,23,42,.05);
+}
+
+.tracking-card h2{
+  margin:0 0 30px 0;
+
+  color:#16324b;
+
+  font-size:28px;
+}
+
+.timeline{
+  position:relative;
+}
+
+.timeline::before{
+  content:"";
+
+  position:absolute;
+
+  left:14px;
+  top:0;
+  bottom:0;
+
+  width:3px;
+
+  background:#d1d5db;
+}
+
+.timeline-item{
+  position:relative;
+
+  display:flex;
+  gap:20px;
+
+  padding-bottom:30px;
+}
+
+.timeline-item:last-child{
+  padding-bottom:0;
+}
+
+.timeline-dot{
+  width:28px;
+  height:28px;
+
+  border-radius:50%;
+
+  flex-shrink:0;
+
+  z-index:2;
+
+  border:4px solid white;
+}
+
+/* HIJAU */
+
+.timeline-item.completed .timeline-dot{
+  background:#22c55e;
+}
+
+.timeline-item.completed h4{
+  color:#15803d;
+}
+
+/* ABU-ABU */
+
+.timeline-item.pending .timeline-dot{
+  background:#cbd5e1;
+}
+
+.timeline-item.pending h4{
+  color:#475569;
+}
+
+.timeline-content{
+  padding-top:2px;
+}
+
+.timeline-content h4{
+  margin:0 0 6px 0;
+
+  font-size:17px;
+  font-weight:600;
+}
+
+.timeline-content span{
+  color:#64748b;
+
+  font-size:14px;
+}
+
+.timeline-item.current{
+  background: transparent !important;
+}
+
+.timeline-item.current .timeline-dot{
+  background:#2563eb;
+}
+
+.timeline-item.current h4{
+  color:#2563eb;
+}
+
+.uploaded-file{
+  margin-top:10px;
+
+  color:#16a34a;
+
+  font-size:14px;
+  font-weight:600;
+
+  word-break:break-word;
+}
+
+/* ==========================
+   STATUS PENGAJUAN
+========================== */
+
+.status-section{
+    margin-top:35px;
+    padding:28px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(15,45,80,.08);
+    border:1px solid #eef3f8;
+}
+
+.status-section h2{
+    margin:0 0 20px;
+    font-size:28px;
+    font-weight:700;
+    color:#163b67;
+}
+
+/* ==========================
+   DOWNLOAD BUTTON
+========================== */
+
+.download-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:14px 22px;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+
+    text-decoration:none;
+    font-weight:600;
+    font-size:15px;
+
+    border-radius:12px;
+
+    box-shadow:0 8px 18px rgba(37,99,235,.25);
+
+    transition:.25s ease;
+}
+
+.download-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 24px rgba(37,99,235,.35);
+    background:linear-gradient(135deg,#1d4ed8,#163b67);
+}
+
+.download-btn:active{
+    transform:scale(.98);
+}

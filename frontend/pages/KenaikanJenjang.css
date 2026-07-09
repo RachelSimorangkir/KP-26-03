@@ -530,3 +530,145 @@ option{
   font-weight:700 !important;
 }
 
+/* ======================
+   TRACKING STATUS
+====================== */
+
+.tracking-card{
+  background:#fff;
+  border-radius:24px;
+  padding:38px;
+  margin-top:32px;
+  border:1px solid #e6edf8;
+  box-shadow:0 15px 35px rgba(15,23,42,.08);
+}
+
+.tracking-card h2{
+  margin:0 0 35px;
+  color:#16324b;
+  font-size:30px;
+  font-weight:700;
+}
+
+.timeline{
+  position:relative;
+  padding-left:70px;
+}
+
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:18px;
+  top:12px;
+  bottom:12px;
+  width:4px;
+  border-radius:50px;
+  background:#dbe7ff;
+}
+
+/* ITEM */
+
+.timeline-item{
+  position:relative;
+  margin-bottom:28px;
+  min-height:95px;
+}
+
+.timeline-item:last-child{
+  margin-bottom:0;
+}
+
+/* DOT */
+
+.timeline-dot{
+  position:absolute;
+  left:-61px;
+  top:20px;
+
+  width:20px;
+  height:20px;
+
+  border-radius:50%;
+  border:5px solid #edf3ff;
+  background:#cbd5e1;
+
+  z-index:5;
+}
+
+/* CARD */
+
+.timeline-content{
+  background:#f8fbff;
+  border:1px solid #e2ebff;
+  border-radius:18px;
+  padding:18px 24px;
+  transition:.25s;
+}
+
+.timeline-content:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(37,99,235,.08);
+}
+
+/* JUDUL */
+
+.timeline-content h4{
+  margin:0;
+  font-size:20px;
+  font-weight:700;
+}
+
+/* DESKRIPSI */
+
+.timeline-content span{
+  display:block;
+  margin-top:7px;
+  color:#64748b;
+  font-size:15px;
+  line-height:1.6;
+}
+
+/* COMPLETED */
+
+.timeline-item.completed .timeline-dot{
+  background:#22c55e;
+}
+
+.timeline-item.completed h4{
+  color:#16a34a;
+}
+
+/* CURRENT */
+
+.timeline-item.current .timeline-dot{
+  background:#2563eb;
+}
+
+.timeline-item.current h4{
+  color:#2563eb;
+}
+
+/* PENDING */
+
+.timeline-item.pending .timeline-dot{
+  background:#d1d5db;
+}
+
+.timeline-item.pending h4{
+  color:#94a3b8;
+}
+
+.timeline-item.pending .timeline-content{
+  opacity:.75;
+}
+
+.uploaded-file{
+  margin-top:10px;
+
+  color:#16a34a;
+
+  font-size:14px;
+  font-weight:600;
+
+  word-break:break-word;
+}

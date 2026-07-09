@@ -3,35 +3,211 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 export default function DetailPengajuan() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [suratRespon, setSuratRespon] = useState(null);
 
-  const data = location.state;
+  const formatLabel = (text) => {
+  return text
+    .replace(/([A-Z])/g, " $1")
+    .replace(/_/g, " ")
+    .replace(/^./, (str) => str.toUpperCase());
+};
 
-  const dokumen = [
-  {
-    nama: "Surat Permohonan.pdf",
-    file:
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    nama: "SK Terakhir.pdf",
-    file:
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-  {
-    nama: "KTP.pdf",
-    file:
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-  },
-];
+  const [data, setData] = useState(location.state);
+useEffect(() => {
+
+  if (!data?.id) return;
+
+  const loadData = async () => {
+
+    try {
+
+      // ambil data pengajuan
+      const resPengajuan = await fetch(
+        `http://localhost:8080/api/pengajuan/detail/${data.id}`
+      );
+
+      const pengajuan = await resPengajuan.json();
+
+      // ambil data pegawai
+      const resPegawai = await fetch(
+        `http://localhost:8080/api/pegawai/${pengajuan.nip}`
+      );
+
+      const pegawai = await resPegawai.json();
+
+      setData({
+        ...pengajuan,
+
+        unit_kerja:
+          pengajuan.unit_kerja ||
+          pegawai.unit_organisasi ||
+          "-",
+
+        jabatan:
+          pengajuan.jabatan ||
+          pegawai.jabatan,
+
+      });
+
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  };
+
+  loadData();
+
+  const interval = setInterval(loadData, 5000);
+
+  return () => clearInterval(interval);
+
+}, [data?.id]);
+
+  console.log("DATA =", data);
+  console.log("LINK DRIVE =", data?.link_drive);
+  console.log(JSON.parse(data.data_pengajuan));
+
+  const detail =
+  data?.data_pengajuan
+    ? JSON.parse(data.data_pengajuan)
+    : {};
+  
+  const dokumen = [];
+
+Object.keys(detail).forEach((key) => {
+  const value = detail[key];
+
+  if (
+    typeof value === "string" &&
+    (
+      value.endsWith(".pdf") ||
+      value.endsWith(".jpg") ||
+      value.endsWith(".jpeg") ||
+      value.endsWith(".png")
+    )
+  ) {
+    dokumen.push({
+      nama: value.split("/").pop(),
+      file: `http://localhost:8080/${value}`
+    });
+  }
+});
+  
+  console.log(data);
+  console.log(detail);
+  
+  const formData = data?.data_pengajuan
+  ? JSON.parse(data.data_pengajuan)
+  : {};
+
+  console.log("ID =", data.id);
+  console.log("STATUS SEKARANG =", data.status);
+
+  const updateStatus = async (
+    statusBaru,
+    catatan=""
+)=>{
+
+  console.log("========== UPDATE ==========");
+  console.log("ID =", data.id);
+  console.log("UPDATE KE =", statusBaru);
+  console.log(
+    "URL =",
+    `http://localhost:8080/api/pengajuan/${data.id}`
+  );
+
+    const formData = new FormData();
+
+    formData.append(
+        "status",
+        statusBaru
+    );
+
+    formData.append(
+        "catatan_admin",
+        catatan
+    );
+
+    if(suratRespon){
+
+        formData.append(
+            "file_respon",
+            suratRespon
+        );
+
+    }
+    console.log("ID =", data.id);
+console.log("STATUS =", status);
+
+    const response=await fetch(
+
+        `http://localhost:8080/api/pengajuan/${data.id}`,
+
+        {
+
+            method:"POST",
+
+            body:formData
+
+        }
+        
+
+    );
+    console.log(response.status);
+    console.log("HTTP =", response.status);
+
+const result = await response.json();
+
+console.log(result);
+
+if (!result.success) {
+    Swal.fire({
+  icon: "error",
+  title: "Gagal",
+  text: result.error || result.message,
+  confirmButtonColor: "#dc2626",
+});
+    return;
+}
+console.log(result);
+
+setStatus(statusBaru);
+setCatatanAdmin(catatan);
+
+const res = await fetch(
+    `http://localhost:8080/api/pengajuan/detail/${data.id}`
+);
+
+const terbaru = await res.json();
+
+setData(terbaru);
+
+Swal.fire({
+  icon: "success",
+  title: "Berhasil",
+  text: "Status pengajuan berhasil diperbarui.",
+  confirmButtonColor: "#2563eb",
+});
+
+}
 
   const [status, setStatus] = useState(
     data?.status || "Menunggu"
   );
+  useEffect(() => {
+  if (data) {
+    setStatus(data.status);
+    setCatatanAdmin(data.catatan_admin || "");
+  }
+}, [data]);
 
   const [catatanAdmin, setCatatanAdmin] =
     useState("");
@@ -48,9 +224,12 @@ export default function DetailPengajuan() {
 
           <button
             className="back-btn"
-            onClick={() => navigate("/admin")}
           >
-            Kembali
+            <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
           </button>
 
         </div>
@@ -59,38 +238,60 @@ export default function DetailPengajuan() {
     );
   }
 
-  const handleApprove = () => {
-    if (
-      window.confirm(
-        `Setujui pengajuan ${data.nama}?`
-      )
-    ) {
-      setStatus("Disetujui");
+const handleApprove = async () => {
 
-      setCatatanAdmin(
-        "Pengajuan telah disetujui oleh admin."
-      );
+    console.log("TOMBOL SELESAI DIKLIK");
+
+    if (!suratRespon) {
+
+        Swal.fire({
+  icon: "warning",
+  title: "Surat Belum Diunggah",
+  text: "Silakan upload Surat Balasan Admin terlebih dahulu.",
+  confirmButtonColor: "#f59e0b",
+});
+        return;
+
     }
-  };
 
-  const handleProcess = () => {
-    setStatus("Diproses");
-
-    setCatatanAdmin(
-      "Pengajuan sedang diproses oleh admin."
-    );
-  };
-
-  const handleReject = () => {
-    const alasan = prompt(
-      "Masukkan alasan penolakan:"
+    await updateStatus(
+        "Selesai",
+        catatanAdmin
     );
 
-    if (alasan) {
-      setStatus("Ditolak");
-      setCatatanAdmin(alasan);
-    }
-  };
+};
+
+
+const handleProcess = async () => {
+
+  await updateStatus(
+      "Diproses",
+      catatanAdmin
+  );
+
+};
+
+const handleReject = async () => {
+
+  const result = await Swal.fire({
+    title: "Tolak Pengajuan?",
+    text: "Status pengajuan akan diubah menjadi Ditolak.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Tolak",
+    cancelButtonText: "Batal",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280",
+  });
+
+  if (result.isConfirmed) {
+    await updateStatus(
+      "Ditolak",
+      catatanAdmin
+    );
+  }
+
+};
 
   return (
     <div className="detail-page">
@@ -102,7 +303,7 @@ export default function DetailPengajuan() {
 
 <button
   className="back-btn"
-  onClick={() => navigate("/admin")}
+  onClick={() => navigate(-1)}
 >
   ← Kembali
 </button>
@@ -124,7 +325,7 @@ export default function DetailPengajuan() {
         <h2>{data.nama}</h2>
 
         <p>
-          {data.unitKerja || "-"} • {data.tanggal}
+          {data.unit_kerja || "-"} • {data.tanggal_pengajuan || "-"}
         </p>
 
       </div>
@@ -139,7 +340,7 @@ export default function DetailPengajuan() {
             ? "pending"
             : status === "Diproses"
             ? "process"
-            : status === "Disetujui"
+            : status === "Selesai"
             ? "approved"
             : "rejected"
         }`}
@@ -172,7 +373,7 @@ export default function DetailPengajuan() {
     </div>
 
     {(status === "Diproses" ||
-      status === "Disetujui") && (
+      status === "Selesai") && (
       <div className="timeline-item">
         <div className="timeline-dot"></div>
 
@@ -185,14 +386,14 @@ export default function DetailPengajuan() {
       </div>
     )}
 
-    {status === "Disetujui" && (
+    {status === "Selesai" && (
       <div className="timeline-item">
         <div className="timeline-dot"></div>
 
         <div className="timeline-content">
-          <h4>Disetujui</h4>
+          <h4>Selesai</h4>
           <p>
-            Pengajuan telah disetujui.
+            Pengajuan telah Selesai.
           </p>
         </div>
       </div>
@@ -220,6 +421,21 @@ export default function DetailPengajuan() {
 
 </div>
 
+<div className="detail-section">
+
+<h3>💬 Catatan Admin</h3>
+
+<textarea
+rows="5"
+value={catatanAdmin}
+onChange={(e)=>
+setCatatanAdmin(e.target.value)
+}
+placeholder="Tulis catatan..."
+></textarea>
+
+</div>
+
         {/* DATA PEGAWAI */}
         <div className="detail-section">
 
@@ -242,7 +458,7 @@ export default function DetailPengajuan() {
             <div>
               <label>Unit Kerja</label>
               <p>
-                {data.unitKerja || "-"}
+                {data.unit_kerja || "-"}
               </p>
             </div>
 
@@ -265,31 +481,41 @@ export default function DetailPengajuan() {
           <div className="detail-grid">
 
             <div>
-              <label>Jenis Layanan</label>
-              <p>{data.layanan}</p>
+              <div>
+  <label>Jenis Layanan</label>
+  <p>
+    {data.sub_layanan || data.layanan}
+  </p>
+</div>
             </div>
 
             <div>
               <label>Tanggal Pengajuan</label>
-              <p>{data.tanggal}</p>
+<p>
+  {data.tanggal_pengajuan
+    ? new Date(data.tanggal_pengajuan).toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "-"}
+</p>
             </div>
 
-          </div>
+          
+</div>
 
         </div>
 
         {/* DOKUMEN */}
 <div className="detail-section">
 
-  <h3>📂 Dokumen Pendukung</h3>
+  <h3>📄 Surat Permohonan</h3>
 
-  <div className="document-list">
+  {
+    data.surat_permohonan ? (
 
-    {dokumen.map((doc, index) => (
-      <div
-        key={index}
-        className="document-card"
-      >
+      <div className="document-card">
 
         <div className="document-info">
 
@@ -299,10 +525,10 @@ export default function DetailPengajuan() {
 
           <div>
 
-            <h4>{doc.nama}</h4>
+            <h4>Surat Permohonan</h4>
 
             <p>
-              Dokumen pendukung pengajuan
+              File yang diunggah oleh pemohon
             </p>
 
           </div>
@@ -312,7 +538,7 @@ export default function DetailPengajuan() {
         <div className="document-actions">
 
           <a
-            href={doc.file}
+            href={`http://localhost:8080/${data.surat_permohonan}`}
             target="_blank"
             rel="noreferrer"
             className="view-doc-btn"
@@ -321,7 +547,7 @@ export default function DetailPengajuan() {
           </a>
 
           <a
-            href={doc.file}
+            href={`http://localhost:8080/${data.surat_permohonan}`}
             download
             className="download-doc-btn"
           >
@@ -331,33 +557,48 @@ export default function DetailPengajuan() {
         </div>
 
       </div>
-    ))}
 
-  </div>
+    ) : (
+
+      <p>Tidak ada surat permohonan.</p>
+
+    )
+  }
 
 </div>
 
-        {/* CATATAN PEMOHON */}
 <div className="detail-section">
 
-  <h3>📝 Catatan Pemohon</h3>
+  <h3>📂 Dokumen Pendukung</h3>
 
-  <div className="note-box">
+  {
+    data.link_drive? (
 
-    <strong>
-      Keterangan:
-    </strong>
+      <a
 
-    <br />
+        href={data.link_drive}
 
-    Pengajuan layanan
-    {" "}
-    {data.layanan}
-    {" "}
-    untuk kebutuhan administrasi
-    kepegawaian.
+        target="_blank"
 
-  </div>
+        rel="noreferrer"
+
+        className="drive-button"
+
+      >
+
+        Folder Google Drive
+
+      </a>
+
+    ) : (
+
+      <p>
+        Tidak ada link Google Drive.
+      </p>
+
+    )
+
+  }
 
 </div>
 
@@ -374,6 +615,43 @@ export default function DetailPengajuan() {
           </div>
         )}
 
+        <div className="response-upload">
+
+<h3>📄 Surat Balasan Admin</h3>
+
+<label
+className="upload-response"
+>
+
+<input
+type="file"
+accept=".pdf"
+hidden
+onChange={(e)=>
+setSuratRespon(
+e.target.files[0]
+)
+}
+/>
+
+📤 Upload Surat Balasan
+
+</label>
+
+{
+suratRespon && (
+
+<p className="response-name">
+
+✅ {suratRespon.name}
+
+</p>
+
+)
+}
+
+</div>
+
         {/* AKSI */}
 <div className="action-buttons">
 
@@ -382,7 +660,7 @@ export default function DetailPengajuan() {
     onClick={handleReject}
     disabled={status === "Ditolak"}
   >
-    ❌ Tolak
+    Tolak
   </button>
 
   <button
@@ -390,15 +668,15 @@ export default function DetailPengajuan() {
     onClick={handleProcess}
     disabled={status === "Diproses"}
   >
-    ⏳ Proses
+    Proses
   </button>
 
   <button
     className="approve-btn"
     onClick={handleApprove}
-    disabled={status === "Disetujui"}
+    disabled={status === "Selesai"}
   >
-    ✅ Setujui
+    Selesai
   </button>
 
 </div>
@@ -406,5 +684,4 @@ export default function DetailPengajuan() {
       </div>
 
     </div>
-  );
-}
+  )}

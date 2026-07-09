@@ -123,26 +123,6 @@
   }
 }
 
-.header-icon{
-  width:80px;
-  height:80px;
-
-  border-radius:20px;
-
-  background:
-    rgba(255,255,255,.15);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:36px;
-
-  flex-shrink:0;
-
-  animation:iconFloat 4s ease-in-out infinite;
-}
-
 @keyframes iconFloat{
   0%{
     transform:translateY(0);
@@ -289,27 +269,6 @@
   animation:fadeUp .5s ease;
 }
 
-.detail-icon{
-  width:100px;
-  height:100px;
-
-  margin:0 auto 25px;
-
-  border-radius:24px;
-
-  background:#eff6ff;
-
-  color:#2563eb;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:48px;
-
-  animation:iconFloat 4s ease-in-out infinite;
-}
-
 .service-detail h2{
   color:#16324b;
 
@@ -412,13 +371,6 @@
 
   .service-detail h2{
     font-size:26px;
-  }
-
-  .detail-icon{
-    width:80px;
-    height:80px;
-
-    font-size:38px;
   }
 
   .service-btn{

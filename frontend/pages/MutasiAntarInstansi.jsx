@@ -1,9 +1,130 @@
 import "./MutasiInternal.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 function MutasiInternal() {
   const navigate = useNavigate();
+  const [submitted, setSubmitted] = useState(false);
+const [status, setStatus] = useState("Menunggu");
 
+const [suratPermohonan, setSuratPermohonan] =
+  useState(null);
+
+const [linkDrive, setLinkDrive] =
+  useState("");
+
+const handleSubmit = async () => {
+
+  if (!suratPermohonan) {
+    Swal.fire({
+      icon: "warning",
+      title: "Dokumen belum diupload",
+      text: "Upload Surat Permohonan terlebih dahulu.",
+    });
+    return;
+  }
+
+  try {
+
+    const formData = new FormData();
+
+    formData.append("nip", nip);
+    formData.append("nama", nama);
+    formData.append("jabatan", jabatan);
+    formData.append("unitKerja", unitKerja);
+
+    formData.append(
+      "layanan",
+      "Mutasi Antar Instansi"
+    );
+
+    formData.append(
+      "status",
+      "Menunggu"
+    );
+
+    formData.append(
+      "link_drive",
+      linkDrive
+    );
+
+    formData.append(
+      "dataPengajuan",
+      JSON.stringify({
+        jenis: "Mutasi Antar Instansi"
+      })
+    );
+
+    formData.append(
+      "suratPermohonan",
+      suratPermohonan
+    );
+
+    const response = await fetch(
+      "http://localhost:8080/api/pengajuan",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+
+      setSubmitted(true);
+      setStatus("Menunggu");
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Pengajuan berhasil dikirim.",
+      });
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Gagal",
+      text: "Pengajuan gagal dikirim.",
+    });
+
+  }
+
+};
+
+const [nip, setNip] = useState("");
+const [nama, setNama] = useState("");
+const [jabatan, setJabatan] = useState("");
+const [unitKerja, setUnitKerja] = useState("");
+
+const handleNipChange = async (e) => {
+  const value = e.target.value;
+
+  setNip(value);
+
+  if (value.length < 5) return;
+
+  try {
+    const response = await fetch(
+`http://localhost:8080/api/pegawai/${value}`
+);
+
+    const data = await response.json();
+
+setNama(data.nama || "");
+setJabatan(data.jabatan || "");
+setUnitKerja(data.unit_organisasi || "");
+
+  } catch (error) {
+    console.error(error);
+  }
+};
   return (
     <div className="mutasiinternal-page">
 
@@ -13,7 +134,11 @@ function MutasiInternal() {
           navigate("/kepegawaian/rekomendasi/mutasi-promosi")
         }
       >
-        ← Kembali
+        <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
       </button>
 
       {/* HEADER */}
@@ -34,9 +159,13 @@ function MutasiInternal() {
         </div>
 
       </div>
+      
+{!submitted ? (
+<>
 
       {/* PERSYARATAN */}
-<div className="info-card">
+
+  <div className="info-card">
 
   <h2>Persyaratan Umum</h2>
 
@@ -117,9 +246,130 @@ function MutasiInternal() {
 </ol>
 
 </div>
+</>
+
+) : (
+
+<div className="tracking-card">
+
+  <h2>Status Pengajuan Mutasi Internal</h2>
+
+<div className="timeline">
+
+  <div className="timeline-item completed">
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Pengajuan Dikirim</h4>
+
+      <span>
+        {new Date().toLocaleString("id-ID")}
+      </span>
+
+      <p>
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : status==="Diproses"
+          ? "Sedang diverifikasi"
+          : "Verifikasi selesai"
+        }
+      </p>
+
+    </div>
+
+  </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Menunggu"
+        ? "current"
+        : status==="Diproses" ||
+          status==="Selesai"
+        ? "completed"
+        : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Sedang Diproses</h4>
+
+      <span>
+
+        {
+          status==="Menunggu"
+          ? "Menunggu verifikasi admin"
+          : "Sedang diproses admin"
+        }
+
+      </span>
+
+    </div>
+
+  </div>
+
+  <div
+    className={`timeline-item ${
+      status==="Selesai"
+      ? "completed"
+      : "pending"
+    }`}
+  >
+
+    <div className="timeline-dot"></div>
+
+    <div className="timeline-content">
+
+      <h4>Selesai</h4>
+
+      <span>
+
+        {
+          status==="Selesai"
+          ? "Permohonan telah selesai"
+          : "Menunggu penyelesaian"
+        }
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+)}
 
       {/* FORM DATA PEGAWAI */}
-<div className="form-card">
+
+
+{!submitted && (
+
+<div className="submit-wrapper">
+
+    <div className="form-card">
+
+        <label className="checkbox-wrapper">
+
+            <input type="checkbox" />
+
+            <span>
+                Saya menyatakan bahwa data dan dokumen
+                yang diunggah adalah benar dan dapat
+                dipertanggungjawabkan.
+            </span>
+
+        </label>
+
+    </div>
+    <div className="form-card">
 
   <h2>Data Pegawai</h2>
 
@@ -129,36 +379,41 @@ function MutasiInternal() {
       <label>NIP *</label>
 
       <input
-        type="text"
-        placeholder="Masukkan NIP"
-      />
+  type="text"
+  placeholder="Masukkan NIP"
+  value={nip}
+  onChange={handleNipChange}
+/>
     </div>
 
     <div className="form-group">
       <label>Nama + Gelar Akademik *</label>
 
       <input
-        type="text"
-        placeholder="Contoh: Rachel C.P Simorangkir, S.Kom."
-      />
+  type="text"
+  value={nama}
+  readOnly
+/>
     </div>
 
     <div className="form-group">
       <label>Jabatan *</label>
 
-      <input
-        type="text"
-        placeholder="Masukkan Jabatan"
-      />
+     <input
+  type="text"
+  value={jabatan}
+  readOnly
+/>
     </div>
 
     <div className="form-group">
       <label>Unit / Satuan Kerja Asal *</label>
 
       <input
-        type="text"
-        placeholder="Masukkan Unit Kerja"
-      />
+  type="text"
+  value={unitKerja}
+  readOnly
+/>
     </div>
 
   </div>
@@ -166,45 +421,86 @@ function MutasiInternal() {
 </div>
       {/* UPLOAD */}
 
-      <div className="upload-card">
+      <div className="form-card">
 
-        <div className="upload-header">
-          <span></span>
-          <h2>Upload Berkas Persyaratan</h2>
-        </div>
+  <h2>Surat Permohonan</h2>
 
-        <input
-          type="text"
-          className="drive-input"
-          placeholder="https://drive.google.com/drive/folders/..."
-        />
+  <div className="upload-area">
 
-        <div className="upload-info">
+    <div className="upload-icon">
+      📄
+    </div>
 
-          <p>
-            Tempel link Google Drive yang berisi seluruh
-            dokumen persyaratan mutasi.
-          </p>
+    <label htmlFor="surat">
+      Upload Surat Permohonan
+    </label>
 
-          <p>
-            Pastikan akses folder diatur menjadi
-            <strong>
-              {" "}
-              "Siapa saja yang memiliki link dapat melihat"
-            </strong>
-          </p>
+    <input
+      id="surat"
+      type="file"
+      accept=".pdf"
+      onChange={(e) =>
+        setSuratPermohonan(
+          e.target.files[0]
+        )
+      }
+    />
 
-        </div>
-
+    {suratPermohonan && (
+      <div className="uploaded-file">
+        ✅ {suratPermohonan.name}
       </div>
+    )}
 
-      <div className="submit-wrapper">
+    <span>PDF Maks. 10 MB</span>
 
-        <button className="submit-btn">
-          Ajukan Permohonan
-        </button>
+  </div>
 
-      </div>
+</div>
+
+<div className="form-card">
+
+  <h2>Dokumen Pendukung</h2>
+
+  <div className="form-group">
+
+    <label>
+      Link Folder Google Drive
+    </label>
+
+    <input
+      type="text"
+      value={linkDrive}
+      onChange={(e) =>
+        setLinkDrive(e.target.value)
+      }
+      placeholder="https://drive.google.com/drive/folders/..."
+    />
+
+  </div>
+
+  <div className="drive-note">
+
+    <strong>Catatan:</strong>
+
+    Upload seluruh dokumen persyaratan
+    mutasi internal ke Google Drive,
+    kemudian tempelkan link folder di atas.
+
+  </div>
+
+</div>
+
+    <button
+        className="submit-btn"
+        onClick={handleSubmit}
+    >
+        Ajukan Permohonan
+    </button>
+
+</div>
+
+)}
 
     </div>
   );

@@ -68,24 +68,6 @@
     0 15px 35px rgba(37,99,235,.25);
 }
 
-.header-icon{
-  width:80px;
-  height:80px;
-
-  flex-shrink:0;
-
-  border-radius:18px;
-
-  background:
-    rgba(255,255,255,.15);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:36px;
-}
-
 .page-header h1{
   margin:0;
   font-size:42px;
@@ -441,4 +423,16 @@
   color:#64748b;
 
   font-size:14px;
+}
+
+.timeline-item.current{
+  background: transparent !important;
+}
+
+.timeline-item.current .timeline-dot{
+  background:#2563eb;
+}
+
+.timeline-item.current h4{
+  color:#2563eb;
 }

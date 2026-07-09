@@ -377,3 +377,70 @@
     font-size:34px;
   }
 }
+
+.login-logo{
+
+    width:180px;
+
+    height:180px;
+
+    object-fit:contain;
+
+    margin-bottom:25px;
+
+    filter:drop-shadow(
+        0 10px 20px rgba(0,0,0,.18)
+    );
+
+    transition:.3s;
+
+}
+
+.login-logo:hover{
+
+    transform:scale(1.05);
+
+}
+
+/* Tombol kembali */
+.back-btn,
+.back-btn:link,
+.back-btn:visited,
+.back-btn:hover,
+.back-btn:active{
+    text-decoration: none !important;
+    color: #173b72;
+}
+
+/* Jika ada tag <a> di dalam button */
+.back-btn a,
+.back-btn a:link,
+.back-btn a:visited,
+.back-btn a:hover,
+.back-btn a:active{
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.back-home-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #ededed;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.back-home-btn:hover {
+  background: #1b3954;
+}
+
+.back-icon {
+  width: 22px;
+  height: 22px;
+}
