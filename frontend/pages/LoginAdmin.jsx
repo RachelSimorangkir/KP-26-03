@@ -200,7 +200,7 @@ const handleLogin = () => {
 
                 <input
                   type="text"
-                  placeholder="Masukkan NIP"
+                  placeholder="Masukkan Username"
                   value={nip}
                   onChange={(e) =>
                     setNip(
