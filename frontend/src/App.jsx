@@ -56,7 +56,7 @@ import Keberatan from "../pages/Humas/Keberatan";
 import Rekap from "../pages/Humas/Rekap";
 
 const currentUser = JSON.parse(
-  localStorage.getItem("currentUser")
+  localStorage.getItem("currentUser") || "null"
 );
 
 

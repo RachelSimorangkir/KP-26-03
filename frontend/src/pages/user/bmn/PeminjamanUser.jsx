@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { stokBarang, currentUser } from "./dummyData";
+import { useState, useEffect } from "react";
+import { stokBarang } from "./dummyData";
 import { Modal, inputStyle, FormGroup, IconSearch, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
 
 // Generate nomor surat otomatis
@@ -108,6 +108,37 @@ const PreviewSurat = ({ form, barangDipilih, onClose, onSubmit }) => {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const PeminjamanUser = () => {
+  const [currentUser, setCurrentUser] = useState({
+  nama: "",
+  nip: "",
+  jabatan: "",
+  unitKerja: "",
+});
+useEffect(() => {
+  const loginUser = JSON.parse(
+    localStorage.getItem("currentUser")
+  );
+
+  if (!loginUser) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${loginUser.nip}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setCurrentUser({
+        nama: data.nama,
+        nip: data.nip,
+        jabatan: data.jabatan,
+        unitKerja: data.unit_organisasi,
+      });
+
+      setForm((prev) => ({
+        ...prev,
+        jabatan: data.jabatan,
+        unitKerja: data.unit_organisasi,
+      }));
+    })
+    .catch((err) => console.error(err));
+}, []);
   const [keyword, setKeyword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [barangDipilih, setBarangDipilih] = useState(null);
@@ -115,8 +146,8 @@ const PeminjamanUser = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const [form, setForm] = useState({
-    unitKerja: currentUser.unitKerja,
-    jabatan: currentUser.jabatan,
+  unitKerja: "",
+  jabatan: "",
     lokasi: "",
     tglPinjam: "",
     tglKembali: "",

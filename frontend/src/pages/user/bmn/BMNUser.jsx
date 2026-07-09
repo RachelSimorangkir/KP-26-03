@@ -17,12 +17,7 @@ const BMNUser = ({ user, onBack, onLogout }) => {
   const [activePage, setActivePage] = useState("peminjaman");
 
   // User sementara kalau belum login
-  const currentUser = user ?? {
-    nama: "Pegawai",
-    nip: "000000000",
-    jabatan: "Staff",
-    unitKerja: "Bimas Kristen",
-  };
+ const currentUser = user || {};
 
   setCurrentUserOverride(currentUser);
 

@@ -207,7 +207,7 @@ const PemeliharaanUser = () => {
     const fetchDBR = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/pegawai/nip/${currentUser.nip}`);
+        const res = await fetch(`http://localhost:8080/api/pegawai/${nip}`)
         if (!res.ok) {
           if (res.status === 404) { setMyDBR(null); return; }
           throw new Error("Gagal mengambil data DBR");

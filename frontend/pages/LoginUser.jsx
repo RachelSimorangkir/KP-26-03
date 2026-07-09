@@ -29,39 +29,16 @@ function LoginUser() {
 
     if (data.status) {
 
-      localStorage.setItem(
-  "currentUser",
-  JSON.stringify(data.user)
-);
-
-  localStorage.setItem(
-    "isLoggedIn",
-    "true"
-  );
-
-  localStorage.setItem(
-    "userName",
-    data.user.nama
-  );
-
-  localStorage.setItem(
-    "userNIP",
-    data.user.nip
-  );
-
-  localStorage.setItem(
-    "userRole",
-    data.user.role
-  );
+  localStorage.setItem("isLoggedIn", "true");
 
   localStorage.setItem(
     "currentUser",
     JSON.stringify(data.user)
   );
 
+  localStorage.setItem("userName", data.user.nama);
   localStorage.setItem("userNIP", data.user.nip);
-
-  console.log(data.user);
+  localStorage.setItem("userRole", data.user.role);
 
   navigate("/");
 } else {
