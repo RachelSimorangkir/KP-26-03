@@ -806,3 +806,41 @@ body{
 
     font-size:15px;
 }
+
+/* Card Catatan Admin */
+.catatan-card textarea,
+textarea[name="catatan_admin"],
+textarea {
+  width: 100%;
+  min-height: 130px;
+  padding: 14px 16px;
+
+  border: 1px solid #d8e2f1;
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-family: inherit;
+  color: #1f2937;
+
+  background: #fff;
+
+  resize: vertical;
+  outline: none;
+
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+/* Saat diklik */
+.catatan-card textarea:focus,
+textarea[name="catatan_admin"]:focus,
+textarea:focus {
+  border-color: #2f6fed;
+  box-shadow: 0 0 0 4px rgba(47, 111, 237, 0.12);
+}
+
+/* Placeholder */
+.catatan-card textarea::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}

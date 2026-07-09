@@ -45,7 +45,7 @@ const handleSubmit = async () => {
     );
 
     formData.append(
-      "linkDrive",
+      "link_drive",
       linkDrive
     );
 
@@ -348,7 +348,28 @@ setUnitKerja(data.unit_organisasi || "");
 )}
 
       {/* FORM DATA PEGAWAI */}
-<div className="form-card">
+
+
+{!submitted && (
+
+<div className="submit-wrapper">
+
+    <div className="form-card">
+
+        <label className="checkbox-wrapper">
+
+            <input type="checkbox" />
+
+            <span>
+                Saya menyatakan bahwa data dan dokumen
+                yang diunggah adalah benar dan dapat
+                dipertanggungjawabkan.
+            </span>
+
+        </label>
+
+    </div>
+    <div className="form-card">
 
   <h2>Data Pegawai</h2>
 
@@ -469,26 +490,6 @@ setUnitKerja(data.unit_organisasi || "");
   </div>
 
 </div>
-
-{!submitted && (
-
-<div className="submit-wrapper">
-
-    <div className="form-card">
-
-        <label className="checkbox-wrapper">
-
-            <input type="checkbox" />
-
-            <span>
-                Saya menyatakan bahwa data dan dokumen
-                yang diunggah adalah benar dan dapat
-                dipertanggungjawabkan.
-            </span>
-
-        </label>
-
-    </div>
 
     <button
         className="submit-btn"

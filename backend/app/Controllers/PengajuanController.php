@@ -117,9 +117,9 @@ log_message(
 
     'unit_kerja' => $data['unit_kerja'] ?? '',
 
-'layanan' => $this->request->getVar('layanan'),
+'layanan' => $data['layanan'] ?? '',
 
-'sub_layanan' => $this->request->getVar('subLayanan'),
+'sub_layanan' => $data['subLayanan'] ?? '',
 
     'status_kepegawaian' => $data['status_kepegawaian'] ?? '',
 
@@ -147,9 +147,7 @@ log_message(
 
     'surat_permohonan' => $filePath,
 
-'link_drive' =>
-    $this->request->getVar('linkDrive')
-    ?: $this->request->getVar('link_drive'),
+'link_drive' => $data['link_drive'] ?? '',
 
 ];
 log_message('error', json_encode($insertData));

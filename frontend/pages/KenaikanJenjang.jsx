@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./KenaikanJenjang.css";
@@ -13,6 +13,25 @@ const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [pangkat, setPangkat] = useState("");
 const [unitKerja, setUnitKerja] = useState("");
+useEffect(() => {
+  const nipLogin = localStorage.getItem("nip");
+
+  console.log("NIP LOGIN =", nipLogin);
+
+  if (!nipLogin) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${nipLogin}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("DATA PEGAWAI =", data);
+
+      setNip(data.nip || "");
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    });
+}, []);
 
 const [suratPermohonan, setSuratPermohonan] =
   useState(null);
@@ -26,6 +45,7 @@ const [predikatSKP, setPredikatSKP] = useState("");
 const [jabatanTujuan, setJabatanTujuan] = useState("");
 const [jenjangUsulan, setJenjangUsulan] = useState("");
 const [nomorHP, setNomorHP] = useState("");
+console.log("STATE UNIT KERJA =", unitKerja);
 const handleNipChange = async (e) => {
   const value = e.target.value;
 
@@ -40,6 +60,8 @@ const handleNipChange = async (e) => {
     );
 
     const data = await response.json();
+    console.log("DATA =", data);
+    console.log("UNIT ORGANISASI =", data.unit_organisasi);
 
     if (data) {
       setNama(data.nama || "");
@@ -48,8 +70,9 @@ const handleNipChange = async (e) => {
         data.pangkat_golongan || ""
       );
       setUnitKerja(
-        data.unit_kerja || ""
+        data.unit_organisasi || ""
       );
+      console.log("SET UNIT =", data.unit_organisasi);
     }
   } catch (error) {
     console.error(error);
@@ -104,7 +127,7 @@ console.log("LINK DRIVE STATE =", linkDrive);
     );
 
     formData.append(
-      "linkDrive",
+      "link_drive",
       linkDrive
     );
 
@@ -322,13 +345,12 @@ setPredikatSKP(e.target.value)
           <div className="form-group">
             <label>Jabatan Fungsional Yang Dituju *</label>
 
-            <select>
 <select
   value={klasifikasiJabatan}
   onChange={(e) =>
     setKlasifikasiJabatan(e.target.value)
   }
-></select>
+>
               <option>Pilih Jabatan Fungsional</option>
               <option>JF Widyaiswara</option>
               <option>JF Pranata Komputer</option>

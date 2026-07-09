@@ -562,7 +562,7 @@ placeholder="Tulis catatan..."
 
       >
 
-        📁 Buka Folder Google Drive
+        Folder Google Drive
 
       </a>
 

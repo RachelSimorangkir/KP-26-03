@@ -24,9 +24,10 @@ const [linkDrive, setLinkDrive] =
 formData.append("nip", nip);
 formData.append("nama", nama);
 formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitKerja);
+formData.append("unit_kerja", unitKerja);
 
 formData.append("layanan","Mutasi Internal");
+formData.append("subLayanan", "Mutasi Internal");
 
 formData.append("status","Menunggu");
 formData.append(
@@ -36,7 +37,7 @@ formData.append(
   })
 );
 
-formData.append("linkDrive", linkDrive);
+formData.append("link_drive", linkDrive);
 
 formData.append("suratPermohonan", suratPermohonan);  
 
@@ -64,6 +65,11 @@ formData.append("suratPermohonan", suratPermohonan);
   }
 
   try {
+console.log("===== FORM DATA =====");
+
+for (const pair of formData.entries()) {
+  console.log(pair[0], "=", pair[1]);
+}
 
   const response = await fetch(
     "http://localhost:8080/api/pengajuan",
