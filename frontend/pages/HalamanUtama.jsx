@@ -149,6 +149,7 @@ const handleNotificationClick = async (notif) => {
   });
 };
 
+
   return (
     <div className="home-page">
 
