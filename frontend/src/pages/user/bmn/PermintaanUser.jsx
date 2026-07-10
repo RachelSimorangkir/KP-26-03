@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { stokHabisPakai, currentUser } from "./dummyData";
 import { Modal, inputStyle, IconPlus, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
+import { useNavigate } from "react-router-dom";
+import "./PermintaanUser.css";
 
 const generateNomor = () => {
   const now = new Date();
@@ -93,6 +95,7 @@ const PreviewSurat = ({ items, nomorSurat, petugasGudang, today, onClose, onSubm
 );
 
 const PermintaanUser = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([{ ...emptyItem }]);
   const [submitted, setSubmitted] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -133,8 +136,50 @@ const PermintaanUser = () => {
   };
 
   if (submitted) {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 320 }}>
+   return (
+  <div className="rekomendasi-page">
+
+    <button
+      className="back-button"
+      onClick={() => navigate("/bmn")}
+    >
+      <img
+        src="/logo-back.png"
+        alt="Back"
+        className="back-icon"
+      />
+    </button>
+
+    <div className="service-banner">
+
+      <div className="service-banner-content">
+
+        <h1>Permintaan Barang</h1>
+
+        <p>
+          Ajukan permintaan barang habis pakai
+          secara online melalui Portal Internal
+          BMBPSDM.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div className="description-card">
+
+      <h2>Tentang Layanan</h2>
+
+      <p>
+        Layanan ini digunakan untuk mengajukan
+        permintaan barang habis pakai seperti
+        ATK, perlengkapan kantor, dan kebutuhan
+        operasional lainnya. Seluruh permintaan
+        akan diverifikasi oleh Admin BMN sebelum
+        diproses.
+      </p>
+
+    </div>
         <div style={{ fontSize: 36, marginBottom: 12 }}>✅</div>
         <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>Permintaan Berhasil Dikirim!</div>
         <div style={{ color: "#64748b", marginBottom: 18, fontSize: 12 }}>Permintaan barang sedang diproses oleh Admin BMN.</div>
@@ -147,27 +192,78 @@ const PermintaanUser = () => {
 
   return (
     <div>
-      <AdminHeaderCard title="Permintaan Barang" subtitle="Formulir permintaan/pemesanan barang habis pakai" />
+      <button
+    className="back-button"
+    onClick={() => navigate("/bmn")}
+>
+    <img
+        src="/logo-back.png"
+        alt="Back"
+        className="back-icon"
+    />
+</button>
+
+<div className="service-banner">
+    <div className="service-banner-content">
+
+        <h1>Permintaan Barang</h1>
+
+        <p>
+            Ajukan permintaan barang habis pakai secara online
+            melalui Portal Internal BMBPSDM.
+        </p>
+
+    </div>
+</div>
+
+<div className="description-card">
+
+    <h2>Tentang Layanan</h2>
+
+    <p>
+        Layanan ini digunakan untuk mengajukan permintaan
+        barang habis pakai seperti ATK, perlengkapan kantor,
+        dan kebutuhan operasional lainnya.
+    </p>
+
+</div>
 
       {/* Stok Info */}
-      <AdminCard style={{ marginBottom: 14 }}>
-        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 12, marginBottom: 10 }}>Stok Barang Habis Pakai</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 8 }}>
+      <div className="rekom-card">
+        <h2>Stok Barang Habis Pakai</h2>
+        <div className="stok-grid">
           {stokHabisPakai.map((s, i) => (
-            <div key={i} style={{ background: s.stok === 0 ? "#fef2f2" : s.stok <= 2 ? "#fffbeb" : "#f8fafc", borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", marginBottom: 3, lineHeight: 1.25 }}>{s.nama}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: s.stok === 0 ? "#dc2626" : s.stok <= 2 ? "#d97706" : "#2563eb" }}>{s.stok}</div>
-              <div style={{ fontSize: 9, color: "#94a3b8" }}>{s.satuan}</div>
-            </div>
+            <div key={i} className="stok-item">
+
+    <div className="stok-nama">
+        {s.nama}
+    </div>
+
+    <div
+        className={
+            s.stok === 0
+                ? "stok-angka merah"
+                : s.stok <= 2
+                ? "stok-angka kuning"
+                : "stok-angka"
+        }
+    >
+        {s.stok}
+    </div>
+
+    <div className="stok-satuan">
+        {s.satuan}
+    </div>
+
+</div>
           ))}
         </div>
-      </AdminCard>
+      </div>
 
       {/* Form Input */}
-      <AdminCard>
-        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 13, marginBottom: 12 }}>Isi Daftar Barang yang Diminta</div>
-
-        <div style={{ overflowX: "auto", marginBottom: 14 }}>
+      <div className="rekom-card">
+        <h2>Form Permintaan Barang</h2>
+        <div className="table-card">
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, border: "1px solid #cbd5e1" }}>
             <thead>
               <tr style={{ background: "#f8fafc" }}>
@@ -227,6 +323,7 @@ const PermintaanUser = () => {
             </tbody>
           </table>
         </div>
+        </div>
 
         <button onClick={addItem} style={{ display: "flex", alignItems: "center", gap: 5, border: "1.5px dashed #2563eb", borderRadius: 6, background: "#eff6ff", color: "#2563eb", padding: "6px 14px", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>
           <IconPlus /> Tambah Barang
@@ -240,7 +337,6 @@ const PermintaanUser = () => {
             👁 Preview & Kirim Permintaan
           </button>
         </div>
-      </AdminCard>
 
       {showPreview && (
         <PreviewSurat

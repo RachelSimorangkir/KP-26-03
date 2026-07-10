@@ -1,6 +1,14 @@
+import {
+  Modal,
+  inputStyle,
+  FormGroup,
+  IconSearch,
+  downloadAsPDF,
+  AdminButton
+} from "./components";
 import { useState, useEffect } from "react";
 import { stokBarang } from "./dummyData";
-import { Modal, inputStyle, FormGroup, IconSearch, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
+import { useNavigate } from "react-router-dom";
 
 // Generate nomor surat otomatis
 const generateNomor = () => {
@@ -108,12 +116,14 @@ const PreviewSurat = ({ form, barangDipilih, onClose, onSubmit }) => {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const PeminjamanUser = () => {
+  const navigate = useNavigate();
+
   const [currentUser, setCurrentUser] = useState({
-  nama: "",
-  nip: "",
-  jabatan: "",
-  unitKerja: "",
-});
+    nama: "",
+    nip: "",
+    jabatan: "",
+    unitKerja: "",
+  });
 useEffect(() => {
   const loginUser = JSON.parse(
     localStorage.getItem("currentUser")
@@ -172,7 +182,7 @@ useEffect(() => {
 
   if (submitted) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 320 }}>
+      <div className="rekomendasi-page">
         <div style={{ fontSize: 36, marginBottom: 12 }}>✅</div>
         <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>Permohonan Berhasil Dikirim!</div>
         <div style={{ color: "#64748b", marginBottom: 18, fontSize: 12 }}>Permohonan peminjaman sedang diproses oleh Admin BMN.</div>
@@ -183,14 +193,57 @@ useEffect(() => {
     );
   }
 
-  return (
-    <div>
-      <AdminHeaderCard title="Peminjaman Barang" subtitle="Ajukan permohonan peminjaman barang milik negara" />
+  
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 14 }}>
+  return (
+  <div className="rekomendasi-page">
+
+    <button
+      className="back-button"
+      onClick={() => navigate("/bmn")}
+    >
+      <img
+        src="/logo-back.png"
+        alt="Back"
+        className="back-icon"
+      />
+    </button>
+
+    <div className="service-banner">
+
+    <div className="service-banner-content">
+        <h1>Peminjaman Barang</h1>
+
+        <p>
+            Ajukan permohonan peminjaman Barang Milik Negara
+            secara online melalui Portal Internal BMBPSDM.
+        </p>
+    </div>
+
+</div>
+
+<div className="description-card">
+
+    <h2>Tentang Layanan</h2>
+
+    <p>
+        Layanan ini digunakan oleh pegawai untuk mengajukan
+        peminjaman Barang Milik Negara yang tersedia di
+        lingkungan BMBPSDM.
+        Seluruh permohonan akan diverifikasi oleh Admin BMN
+        sebelum barang dapat dipinjam.
+    </p>
+
+</div>
+
+<div className="bmn-grid">
+
+
         {/* Form */}
-        <AdminCard>
-          <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 12, fontSize: 13 }}>Data Pemohon</div>
+        <div className="rekom-card">
+          <div className="section-title">
+    Data Pemohon
+</div>
 
           <div style={{ display: "flex", gap: 10 }}>
             <FormGroup label="Unit Kerja" half>
@@ -201,7 +254,9 @@ useEffect(() => {
             </FormGroup>
           </div>
 
-          <div style={{ fontWeight: 700, color: "#1e293b", margin: "14px 0 10px", fontSize: 13 }}>Detail Peminjaman</div>
+          <div className="section-title">
+    Detail Peminjaman
+</div>
 
           <FormGroup label="Cari Barang yang Dipinjam">
             <div style={{ position: "relative" }}>
@@ -274,10 +329,10 @@ useEffect(() => {
             style={{ width: "100%", padding: "9px 0", background: (!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali) ? "#94a3b8" : "#2563eb", color: "#fff", border: "none", borderRadius: 6, fontWeight: 700, fontSize: 12, cursor: (!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali) ? "not-allowed" : "pointer" }}>
             👁 Preview & Kirim Surat
           </button>
-        </AdminCard>
+        </div>
 
         {/* Stok Panel */}
-        <AdminCard>
+        <div className="rekom-card">
           <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 12, marginBottom: 10, textAlign: "left" }}>Ketersediaan Barang</div>
           {stokBarang.map(b => (
             <div key={b.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: "1px solid #f8fafc", textAlign: "left" }}>
@@ -294,12 +349,18 @@ useEffect(() => {
               </span>
             </div>
           ))}
-        </AdminCard>
+        </div>
       </div>
 
-      {showPreview && (
-        <PreviewSurat form={form} barangDipilih={barangDipilih} onClose={() => setShowPreview(false)} onSubmit={handleSubmit} />
+            {showPreview && (
+        <PreviewSurat
+          form={form}
+          barangDipilih={barangDipilih}
+          onClose={() => setShowPreview(false)}
+          onSubmit={handleSubmit}
+        />
       )}
+
     </div>
   );
 };

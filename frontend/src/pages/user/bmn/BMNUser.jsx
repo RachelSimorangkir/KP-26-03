@@ -14,7 +14,6 @@ const menuItems = [
 ];
 
 const BMNUser = ({ user, onBack, onLogout }) => {
-  const [activePage, setActivePage] = useState("peminjaman");
 
   // User sementara kalau belum login
  const currentUser = user || {};
@@ -30,20 +29,6 @@ const BMNUser = ({ user, onBack, onLogout }) => {
       default:           return <PeminjamanUser />;
     }
   };
-
-  return (
-    <SidebarLayout
-      menuItems={menuItems}
-      activePage={activePage}
-      setActivePage={setActivePage}
-      role="user"
-      userName={currentUser.nama}
-      onBack={onBack}
-      onLogout={onLogout}
-    >
-      {renderPage()}
-    </SidebarLayout>
-  );
 };
 
 export default BMNUser;

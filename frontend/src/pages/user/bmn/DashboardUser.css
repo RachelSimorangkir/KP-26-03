@@ -1,0 +1,276 @@
+.dashboard-kpg{
+  width:100%;
+}
+
+.welcome-container{
+  width:100%;
+
+  min-height:70vh;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  text-align:center;
+
+  padding:40px;
+}
+
+.welcome-badge{
+  background:#e8eefc;
+  color:#214a8a;
+
+  padding:10px 22px;
+
+  border-radius:999px;
+
+  font-size:14px;
+  font-weight:600;
+
+  margin-bottom:30px;
+}
+
+.content{
+    flex:1;
+    padding:24px;
+    overflow:auto;
+    box-sizing:border-box;
+}
+
+.welcome-title{
+  color:#16324b;
+
+  font-size:clamp(48px,5vw,82px);
+  font-weight:800;
+
+  line-height:1.15;
+
+  text-align:center;
+
+  margin-bottom:28px;
+}
+
+.welcome-desc{
+  max-width:900px;
+
+  color:#64748b;
+
+  font-size:20px;
+  line-height:1.9;
+
+  text-align:center;
+}
+
+/* Animasi */
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* Tablet */
+
+@media(max-width:1024px){
+
+  .welcome-title{
+    font-size:56px;
+  }
+
+  .welcome-desc{
+    font-size:18px;
+  }
+
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+  .welcome-container{
+    padding:20px;
+  }
+
+  .welcome-title{
+    font-size:38px;
+  }
+
+  .welcome-desc{
+    font-size:16px;
+  }
+
+}
+
+/* =========================
+   CONTAINER MASUK
+========================= */
+
+.welcome-container{
+  animation:containerFade 1s ease;
+}
+
+/* =========================
+   BADGE
+========================= */
+
+.welcome-badge{
+  animation:
+    fadeUp .8s ease,
+    badgeFloat 4s ease-in-out infinite;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.welcome-title{
+  animation:
+    fadeUp .9s ease .2s both;
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.welcome-desc{
+  animation:
+    fadeUp .9s ease .4s both;
+}
+
+/* =========================
+   FLOATING HALUS
+========================= */
+
+.welcome-container > *{
+  transition:all .3s ease;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes containerFade{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes badgeFloat{
+
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+
+}
+
+/* =========================
+   TITLE EFFECT
+========================= */
+
+.welcome-title:hover{
+  transform:translateY(-3px);
+  transition:.3s ease;
+}
+
+/* =========================
+   DESC EFFECT
+========================= */
+
+.welcome-desc:hover{
+  transform:translateY(-2px);
+  transition:.3s ease;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+  width:280px;
+  min-width:280px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #163b67,
+      #0f2d50
+    );
+
+  color:white;
+
+  display:flex;
+  flex-direction:column;
+
+  border-right:none;
+
+  box-shadow:
+    8px 0 25px rgba(0,0,0,.12);
+
+  transition:.3s ease;
+}
+
+.sidebar.collapsed{
+  width:90px;
+  min-width:90px;
+}
+
+/* ===========================
+   BMN CONTENT
+=========================== */
+
+.bmn-container{
+    width:100%;
+    padding:24px;
+    box-sizing:border-box;
+    background:#eef4ff;
+    min-height:100vh;
+}
+
+/* Header */
+.bmn-container > div:first-child{
+    border-radius:24px;
+    overflow:hidden;
+    margin-bottom:24px;
+}
+
+/* Card form */
+.bmn-container .admin-card{
+    border-radius:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* Panel kanan */
+.bmn-container .admin-card:last-child{
+    border-radius:24px;
+}

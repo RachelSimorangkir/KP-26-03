@@ -1,0 +1,441 @@
+/* =====================================
+   PAGE
+===================================== */
+
+.dashboard-user{
+    padding-top:0 !important;
+}
+
+.rekomendasi-page{
+    padding-top:0 !important;
+    margin-top:0 !important;
+}
+
+.back-button{
+    margin-top:0 !important;
+    margin-bottom:14px !important;
+}
+
+.service-banner{
+    margin-top:0 !important;
+}
+
+.dashboard-user::before{
+    content:"";
+    position:fixed;
+    top:-150px;
+    right:-150px;
+    width:400px;
+    height:400px;
+    border-radius:50%;
+    background:rgba(37,99,235,.05);
+    z-index:-1;
+}
+
+.dashboard-user::after{
+    content:"";
+    position:fixed;
+    bottom:-150px;
+    left:-100px;
+    width:320px;
+    height:320px;
+    border-radius:50%;
+    background:rgba(22,50,75,.05);
+    z-index:-1;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+/* =====================================
+   BANNER
+===================================== */
+
+.bmn-header{
+    width:100%;
+    background:linear-gradient(135deg,#16324b,#2563eb);
+    border-radius:30px;
+    padding:45px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:30px;
+    box-shadow:0 20px 45px rgba(37,99,235,.25);
+}
+
+.bmn-header::before{
+    content:"";
+    position:absolute;
+    top:-80px;
+    right:-80px;
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+}
+
+.bmn-header::after{
+    content:"";
+    position:absolute;
+    bottom:-100px;
+    left:-50px;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(255,255,255,.05);
+}
+
+.bmn-header h1{
+    margin:0;
+    font-size:52px;
+    font-weight:800;
+    line-height:1.1;
+}
+
+.bmn-header p{
+    margin-top:14px;
+    font-size:18px;
+    color:rgba(255,255,255,.95);
+}
+
+/* =====================================
+   CARD
+===================================== */
+
+.admin-card{
+    background:#fff;
+    border-radius:24px !important;
+    border:none !important;
+    box-shadow:0 12px 30px rgba(15,23,42,.06) !important;
+    transition:.3s;
+}
+
+.admin-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 45px rgba(15,23,42,.10) !important;
+}
+
+/* =====================================
+   HEADER CARD
+===================================== */
+
+.admin-header-card{
+    border-radius:24px !important;
+    overflow:hidden;
+    margin-bottom:28px;
+}
+
+/* =====================================
+   CONTENT
+===================================== */
+
+.content{
+    flex:1;
+    padding:12px 24px 24px;
+    overflow:auto;
+    background:#eef4ff;
+}
+
+/* =====================================
+   SIDEBAR
+===================================== */
+
+.sidebar{
+    width:280px;
+    min-width:280px;
+    background:linear-gradient(180deg,#163b67,#0f2d50);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    box-shadow:8px 0 25px rgba(0,0,0,.12);
+    transition:.3s;
+}
+
+.sidebar.collapsed{
+    width:90px;
+    min-width:90px;
+}
+
+/* =====================================
+   ANIMATION
+===================================== */
+
+@keyframes pageFade{
+    from{
+        opacity:0;
+    }
+    to{
+        opacity:1;
+    }
+}
+
+.rekomendasi-page{
+    width:100%;
+    max-width:1450px;
+
+    margin:0 auto;
+    padding:20px 35px 35px;
+
+    position:relative;
+}
+
+.service-banner{
+    width:100%;
+
+    display:grid;
+    grid-template-columns:420px 1fr;
+    gap:32px;
+
+    align-items:center;
+
+    padding:42px;
+
+    border-radius:30px;
+
+    background:linear-gradient(
+        135deg,
+        #16324b,
+        #2563eb
+    );
+
+    box-shadow:0 18px 40px rgba(37,99,235,.20);
+
+    margin-bottom:30px;
+
+    position:relative;
+    overflow:hidden;
+}
+
+.service-banner::before{
+    content:"";
+    position:absolute;
+    top:-90px;
+    right:-70px;
+
+    width:220px;
+    height:220px;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+}
+
+.service-banner::after{
+    content:"";
+    position:absolute;
+    left:-70px;
+    bottom:-90px;
+
+    width:220px;
+    height:220px;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.05);
+}
+
+.service-banner-content h1{
+    color:#fff;
+    font-size:64px;
+    font-weight:800;
+    line-height:1.05;
+    margin-bottom:20px;
+}
+
+.service-banner-content p{
+    color:rgba(255,255,255,.95);
+    line-height:1.8;
+    font-size:18px;
+}
+
+.description-card{
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:36px 40px;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+}
+
+.description-card h2{
+    color:#16324b;
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.description-card p{
+    color:#64748b;
+    font-size:18px;
+    line-height:2;
+}
+
+.bmn-grid{
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:28px;
+    align-items:start;
+}
+
+.rekom-card{
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:32px;
+
+    box-shadow:0 10px 30px rgba(15,23,42,.06);
+
+    transition:.3s;
+}
+
+.rekom-card:hover{
+    transform:translateY(-4px);
+
+    box-shadow:0 20px 45px rgba(15,23,42,.10);
+}
+.rekom-card h3{
+    color:#16324b;
+    font-size:30px;
+    margin-bottom:24px;
+}
+
+@media(max-width:1100px){
+
+    .service-banner{
+        grid-template-columns:1fr;
+    }
+
+    .bmn-grid{
+        grid-template-columns:1fr;
+    }
+
+    .service-banner-content h1{
+        font-size:48px;
+    }
+
+}
+
+/* Judul card */
+.rekom-card h3{
+    font-size:32px;
+    font-weight:700;
+}
+
+/* Label form */
+.rekom-card label{
+    font-size:16px;
+    font-weight:600;
+    color:#16324b;
+}
+
+/* Input */
+.rekom-card input,
+.rekom-card textarea,
+.rekom-card select{
+    font-size:16px !important;
+    padding:14px 16px !important;
+}
+
+/* Placeholder */
+.rekom-card input::placeholder,
+.rekom-card textarea::placeholder{
+    font-size:15px;
+}
+
+/* Judul "Data Pemohon" & "Detail Peminjaman" */
+.section-title{
+    font-size:22px;
+    font-weight:700;
+    color:#16324b;
+    margin-bottom:18px;
+}
+
+.stock-title{
+    font-size:24px;
+    font-weight:700;
+    color:#16324b;
+    margin-bottom:24px;
+}
+
+.stock-name{
+    font-size:17px;
+    font-weight:600;
+    color:#16324b;
+}
+
+.stock-category{
+    font-size:14px;
+    color:#64748b;
+}
+
+.stock-badge{
+    font-size:15px;
+    font-weight:700;
+    padding:6px 14px;
+    border-radius:999px;
+}
+
+.back-button{
+    width:52px;
+    height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#fff;
+    border:none;
+    border-radius:16px;
+
+    cursor:pointer;
+
+    margin-bottom:24px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+}
+
+.back-button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
+}
+
+.back-icon{
+    width:26px;
+    height:26px;
+    object-fit:contain;
+}
+
+.back-button{
+    margin-top:0;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.service-banner{
+    margin-top:0;
+}
+
+.content{
+    padding-top:0 !important;
+}
+
+.content-normal{
+    padding-top:0 !important;
+}
+
+.rekomendasi-page{
+    padding-top:0 !important;
+    margin-top:0 !important;
+}
+
+.back-button{
+    margin-top:0 !important;
+}
+
+.service-banner{
+    margin-top:0 !important;
+}

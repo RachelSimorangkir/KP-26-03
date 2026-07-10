@@ -19,8 +19,14 @@ import Cuti from "../pages/Cuti";
 import SKBT from "../pages/SKBT";
 import SKBTMandiri from "../pages/SKBTMandiri";
 import SKBTOrganisasi from "../pages/SKBTOrganisasi";
-import BMNUser from "./pages/user/bmn/BMNUser";
 import BMNAdmin from "./pages/admin/BMNAdmin";
+import BMN from "./pages/user/bmn/BMN";
+import DashboardUser from "./pages/user/bmn/DashboardUser";
+import PeminjamanUser from "./pages/user/bmn/PeminjamanUser";
+import PermintaanUser from "./pages/user/bmn/PermintaanUser";
+import DBRUser from "./pages/user/bmn/DBRUser";
+import PemeliharaanUser from "./pages/user/bmn/PemeliharaanUser";
+
 
 /* ADMIN */
 import AdminDashboard from "./admin/AdminDashboard";
@@ -226,25 +232,29 @@ function App() {
           element={<PPIDAdminDashboard />}
         />
 
-        {/* BMN */}
-<Route
-  path="/bmn"
-  element={
-    <BMNUser
-      user={currentUser}
-      onBack={() => window.history.back()}
-      onLogout={() => {
-        localStorage.clear();
-        window.location.href = "/";
-      }}
-    />
-  }
-/>
+        <Route path="/bmn" element={<DashboardUser />}>
 
-<Route
-  path="/bmn-admin"
-  element={<BMNAdmin />}
-/>
+  <Route
+    path="peminjaman"
+    element={<PeminjamanUser />}
+  />
+
+  <Route
+    path="permintaan"
+    element={<PermintaanUser />}
+  />
+
+  <Route
+    path="dbr"
+    element={<DBRUser />}
+  />
+
+  <Route
+    path="pemeliharaan"
+    element={<PemeliharaanUser />}
+  />
+
+</Route>
 
         
         {/* HUMAS - PARENT ROUTE DENGAN SIDEBAR */} 
