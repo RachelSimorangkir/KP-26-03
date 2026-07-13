@@ -340,3 +340,7 @@ textarea{
     font-size:30px;
   }
 }
+
+html {
+  overflow-y: scroll;
+}

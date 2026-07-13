@@ -11,54 +11,12 @@
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-<<<<<<< HEAD
 }
 
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-=======
-}
-
-@media (max-width: 1024px) {
-  :root {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 900px) {
-  :root {
-    font-size: 14.5px;
-  }
-}
-
-@media (max-width: 600px) {
-  :root {
-    font-size: 13.5px;
-  }
-}
-
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
->>>>>>> origin/bmn
 }
 
 html,
@@ -71,7 +29,6 @@ body{
   overflow-x:hidden;
 }
 
-<<<<<<< HEAD
 body{
   font-family:"Segoe UI", sans-serif;
 }
@@ -99,18 +56,6 @@ select{
 img{
   max-width:100%;
   display:block;
-=======
-#root {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  text-align: center;
-  border-inline: none;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
->>>>>>> origin/bmn
 }
 
 h1,
@@ -160,32 +105,23 @@ h4 {
   font-size: 1rem;
 }
 
-<<<<<<< HEAD
 /* Kurangi padding global */
 * {
   letter-spacing: -0.01em;
 }
-=======
-/* Make dashboard content feel less "big" on small screens */
-@media (max-width: 900px) {
-  main.app-main {
-    padding: 12px !important;
-  }
 
-  .sidebar-layout-aside {
-    width: 170px !important;
-  }
+html,
+body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-gutter: auto !important;
 }
 
-@media (max-width: 600px) {
-  main.app-main {
-    padding: 10px !important;
-    max-width: 100% !important;
-  }
-
-  .sidebar-layout-aside {
-    width: 140px !important;
-  }
+body.swal2-shown {
+    padding-right: 0 !important;
+    overflow-y: auto !important;
 }
 
->>>>>>> origin/bmn
+.swal2-height-auto {
+    height: auto !important;
+}
