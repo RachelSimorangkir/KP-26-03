@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginAdmin.css";
+import logo from "../src/assets/logo-kemenag.png";
 
 function LoginAdmin() {
   const navigate = useNavigate();
@@ -16,67 +17,63 @@ function LoginAdmin() {
 
   const adminAccounts = [
     {
-      nip: "198701012010011001",
+      nip: "adminkpg",
       password: "admin123",
       division: "kepegawaian",
       name: "Admin Kepegawaian",
     },
     {
-      nip: "198702022011011002",
+      nip: "adminbmn",
       password: "admin123",
       division: "bmn",
       name: "Admin BMN",
     },
     {
-      nip: "198703032012011003",
+      nip: "adminhumas",
       password: "admin123",
       division: "humas",
       name: "Admin Humas & Data",
     },
   ];
 
-  const handleLogin = () => {
-    const admin = adminAccounts.find(
-      (item) =>
-        item.nip === nip &&
-        item.password === password &&
-        item.division === selectedRole
+const handleLogin = () => {
+  const admin = adminAccounts.find(
+    (item) =>
+      item.nip === nip &&
+      item.password === password &&
+      item.division === selectedRole
+  );
+
+ if (admin) {
+  localStorage.setItem("isLoggedIn", "true");
+  localStorage.setItem("userRole", "admin");
+  localStorage.setItem("adminDivision", admin.division);
+  localStorage.setItem("userName", admin.name);
+  localStorage.setItem("userNIP", admin.nip);
+
+  switch (admin.division) {
+    case "kepegawaian":
+      console.log("NAVIGATE KE /admin-kepegawaian");
+      navigate("/admin-kepegawaian");
+    break;
+
+    case "bmn":
+      navigate("/admin-bmn");
+      break;
+
+    case "humas":
+      navigate("/admin-humas");
+      break;
+
+    default:
+      navigate("/");
+  }
+  } else {
+    alert(
+      "NIP atau Password salah!"
     );
-
-    if (admin) {
-      localStorage.setItem(
-        "isLoggedIn",
-        "true"
-      );
-
-      localStorage.setItem(
-        "userRole",
-        "admin"
-      );
-
-      localStorage.setItem(
-        "adminDivision",
-        admin.division
-      );
-
-      localStorage.setItem(
-        "userName",
-        admin.name
-      );
-
-      localStorage.setItem(
-        "userNIP",
-        admin.nip
-      );
-
-      navigate("/admin");
-    } else {
-      alert(
-        "NIP atau Password salah!"
-      );
-    }
-  };
-    
+  }
+};
 
   const getRoleTitle = () => {
     switch (selectedRole) {
@@ -96,11 +93,14 @@ function LoginAdmin() {
       <div className="login-admin-container">
 
         {/* KIRI */}
-        <div className="login-admin-left">
-
-          <div className="icon-box">
-            🔐
-          </div>
+        <div className="login-left">
+        
+            <img
+                src={logo}
+                alt="Logo Kementerian Agama"
+                className="login-logo"
+            />
+        
 
           <h1>Login Admin</h1>
 
@@ -158,14 +158,20 @@ function LoginAdmin() {
                 Admin Humas & Data
               </button>
 
-              <button
-                className="back-btn"
-                onClick={() =>
-                  navigate("/login")
-                }
-              >
-                ← Kembali
-              </button>
+{/* BUTTON KEMBALI */}
+<div className="back-home-wrapper">
+  <button
+    className="back-home-btn"
+    onClick={() => navigate("/")}
+  >
+    <img
+      src="/logo-back.png"
+      alt="Back"
+      className="back-icon"
+    />
+    <span>Kembali ke Beranda</span>
+  </button>
+</div>
 
             </div>
 
@@ -191,7 +197,7 @@ function LoginAdmin() {
 
                 <input
                   type="text"
-                  placeholder="Masukkan NIP"
+                  placeholder="Masukkan Username"
                   value={nip}
                   onChange={(e) =>
                     setNip(
@@ -237,7 +243,8 @@ function LoginAdmin() {
                   setPassword("");
                 }}
               >
-                ← Ganti Divisi
+                
+                Ganti Divisi
               </button>
 
             </form>

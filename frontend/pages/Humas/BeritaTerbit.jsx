@@ -88,7 +88,7 @@ export default function BeritaTerbit() {
     <div className="berita-terbit-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin")}>
+        <button className="back-button" onClick={() => navigate("/admin-humas")}>
           ← Kembali
         </button>
         <div className="header-text">

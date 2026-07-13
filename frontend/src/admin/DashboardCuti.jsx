@@ -86,7 +86,7 @@ return(
 <ul>
 
 <li
-onClick={()=>navigate("/admin")}
+onClick={()=>navigate("/admin-kepegawaian")}
 >
 
 Semua Pengajuan

@@ -161,7 +161,7 @@ export default function DataPermintaan() {
     <div className="data-permintaan-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin")}>
+        <button className="back-button" onClick={() => navigate("/admin-humas")}>
           ← Kembali
         </button>
         <div className="header-text">

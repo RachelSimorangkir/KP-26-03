@@ -26,10 +26,10 @@ import PeminjamanUser from "./pages/user/bmn/PeminjamanUser";
 import PermintaanUser from "./pages/user/bmn/PermintaanUser";
 import DBRUser from "./pages/user/bmn/DBRUser";
 import PemeliharaanUser from "./pages/user/bmn/PemeliharaanUser";
-
+import DashboardCuti from "./admin/DashboardCuti";
+import AdminDashboard from "./admin/AdminDashboard";
 
 /* ADMIN */
-import AdminDashboard from "./admin/AdminDashboard";
 import DetailPengajuan from "./admin/DetailPengajuan";
 import DataRequest from "../pages/DataRequest";
 import PPIDRequest from "../pages/PPIDRequest";
@@ -102,6 +102,23 @@ function App() {
           path="/dashboard-pegawai"
           element={<DashboardPegawai />}
         />
+
+        {/* ADMIN KEPEGAWAIAN */}
+<Route
+  path="/admin-kepegawaian"
+  element={<AdminDashboard />}
+/>
+
+{/* ADMIN BMN */}
+<Route
+  path="/admin-bmn"
+  element={<BMNAdmin />}
+/>
+
+<Route
+  path="/admin-kepegawaian/cuti"
+  element={<DashboardCuti />}
+/>
 
         {/* KEPEGAWAIAN */}
         <Route
@@ -186,11 +203,11 @@ function App() {
           element={<HumasMySubmissions />}
         />
         <Route
-          path="/humas/admin/penyetuju"
+          path="/humas/admin-humas/penyetuju"
           element={<HumasAdminPenyetuju />}
         />
         <Route
-          path="/humas/admin/verifikator"
+          path="/humas/admin-humas/verifikator"
           element={<HumasAdminVerifikator />}
         />
         <Route
@@ -228,7 +245,7 @@ function App() {
         */}
 
         <Route
-          path="/ppid/admin/dip"
+          path="/ppid/admin-humas/dip"
           element={<PPIDAdminDashboard />}
         />
 
@@ -284,16 +301,27 @@ function App() {
         </Route>
 
 
-        {/* ADMIN */}
-        
-
         <Route
-          path="/admin/detail-pengajuan"
-          element={<DetailPengajuan />}
-        />
+  path="/admin-kepegawaian"
+  element={<AdminDashboard />}
+/>
 
-        ///* Admin Humas/*
-<Route path="/admin" element={<HumasLayout />}>
+<Route
+  path="/admin-kepegawaian/cuti"
+  element={<DashboardCuti />}
+/>
+
+<Route
+  path="/admin-kepegawaian/detail-pengajuan"
+  element={<DetailPengajuan />}
+/>
+
+<Route
+  path="/admin-bmn"
+  element={<BMNAdmin />}
+/>
+
+<Route path="/admin-humas" element={<HumasLayout />}>
   <Route index element={<HumasAdmin />} />
   <Route path="berita-masuk" element={<BeritaMasuk />} />
   <Route path="berita-terbit" element={<BeritaTerbit />} />
@@ -302,7 +330,7 @@ function App() {
   <Route path="tiket-helpdesk" element={<Tiket />} />
   <Route path="keberatan-ppid" element={<Keberatan />} />
   <Route path="laporan" element={<Rekap />} />
-</Route> 
+</Route>
          
 
 

@@ -159,7 +159,7 @@ export default function Tiket() {
     <div className="tiket-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin")}>
+        <button className="back-button" onClick={() => navigate("/admin-humas")}>
           ← Kembali
         </button>
         <div className="header-text">

@@ -11,6 +11,9 @@ import {
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  console.log("AdminDashboard dirender");
+  console.log("URL:", window.location.pathname);
+  console.log("Division:", localStorage.getItem("adminDivision"));
 
   const isLoggedIn =
     localStorage.getItem("isLoggedIn") === "true";
@@ -21,6 +24,16 @@ export default function AdminDashboard() {
   if (!isLoggedIn || role !== "admin") {
     return <Navigate to="/login-admin" />;
   }
+
+  const division = localStorage.getItem("adminDivision");
+
+if (
+  !isLoggedIn ||
+  role !== "admin" ||
+  division !== "kepegawaian"
+) {
+  return <Navigate to="/login-admin" />;
+}
 
   const handleLogout = () => {
     localStorage.clear();
@@ -103,14 +116,14 @@ const getCountdown = (mulai, selesai) => {
 <ul>
 
   <li
-    className="active-menu"
-    onClick={() => navigate("/admin")}
-  >
-    Semua Pengajuan
-  </li>
+  className="active-menu"
+  onClick={() => navigate("/admin-kepegawaian")}
+>
+  Semua Pengajuan
+</li>
 
   <li
-    onClick={() => navigate("/admin/cuti")}
+    onClick={() => navigate("/admin-kepegawaian/cuti")}
   >
     Pengajuan Cuti
   </li>
@@ -199,7 +212,7 @@ const getCountdown = (mulai, selesai) => {
               className="detail-btn"
               onClick={() =>
                 navigate(
-                  "/admin/detail-pengajuan",
+                  "/admin-kepegawaian/detail-pengajuan",
                   {
                     state: item,
                   }
