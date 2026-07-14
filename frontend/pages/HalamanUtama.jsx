@@ -163,7 +163,7 @@ const handleNotificationClick = async (notif) => {
             className="navbar-logo"
           />
 
-          <h2>Portal Layanan Internal</h2>
+          <h2>Jendela Layanan Internal Bimas Kristen</h2>
         </div>
 
         <div className="menu">
@@ -347,11 +347,11 @@ const handleNotificationClick = async (notif) => {
             className="hero-logo"
           />
 
-          <h1>PORTAL LAYANAN INTERNAL</h1>
+          <h1>JENDELA LAYANAN INTERNAL BIMAS KRISTEN</h1>
 
           <p>
-            Sistem Informasi Terintegrasi
-            Kementerian Agama Republik Indonesia
+            Sistem Informasi Terintegrasi Direktorat Jenderal
+            Bimas Kristen Kementerian Agama Republik Indonesia
           </p>
 
           <span>
@@ -427,10 +427,10 @@ const handleNotificationClick = async (notif) => {
   id="kontak"
 >
 
-  <h3>Portal Layanan Internal</h3>
+  <h3>Jendela Layanan Internal Bimas Kristen</h3>
 
   <p>
-    Kementerian Agama Republik Indonesia
+    Direktorat Jenderal Bimas Kristen Kementerian Agama Republik Indonesia
   </p>
 
   <p>

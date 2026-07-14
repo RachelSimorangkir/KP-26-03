@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { stokHabisPakai, currentUser } from "./dummyData";
+import { useState, useEffect } from "react";
+import { stokHabisPakai } from "./dummyData";
 import { Modal, inputStyle, IconPlus, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
 import { useNavigate } from "react-router-dom";
 import "./PermintaanUser.css";
@@ -11,7 +11,15 @@ const generateNomor = () => {
 
 const emptyItem = { nama: "", stokAwal: "", jumlahMinta: 1, stokAkhir: "", keterangan: "" };
 
-const PreviewSurat = ({ items, nomorSurat, petugasGudang, today, onClose, onSubmit }) => (
+const PreviewSurat = ({
+    items,
+    nomorSurat,
+    petugasGudang,
+    today,
+    currentUser,
+    onClose,
+    onSubmit
+}) => (
   <Modal title="Preview Formulir Permintaan Barang" onClose={onClose} wide>
     <div id="surat-permintaan-print" style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontSize: 13 }}>
       <div style={{ textAlign: "center", borderBottom: "2px solid #1e293b", paddingBottom: 10, marginBottom: 16 }}>
@@ -96,6 +104,34 @@ const PreviewSurat = ({ items, nomorSurat, petugasGudang, today, onClose, onSubm
 
 const PermintaanUser = () => {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser")) || {}
+);
+
+useEffect(() => {
+
+    if (!currentUser?.nip) return;
+
+    fetch(`http://localhost:8080/api/pegawai/${currentUser.nip}`)
+        .then(res => res.json())
+        .then(data => {
+
+            setCurrentUser(prev => ({
+
+                ...prev,
+
+                nama: data.nama,
+                nip: data.nip,
+                jabatan: data.jabatan,
+                unitKerja: data.unit_organisasi,
+
+            }));
+
+        })
+        .catch(console.error);
+
+}, []);
+
   const [items, setItems] = useState([{ ...emptyItem }]);
   const [submitted, setSubmitted] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -130,65 +166,88 @@ const PermintaanUser = () => {
 
   const canSubmit = items.some(i => i.nama && i.jumlahMinta);
 
-  const handleSubmit = () => {
+const handleSubmit = async () => {
+  try {
+
+    for (const item of items) {
+
+      await fetch("http://localhost:8080/api/permintaan", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+
+          nip: currentUser.nip,
+
+          nama: currentUser.nama,
+
+          jabatan: currentUser.jabatan,
+
+          unit_kerja: currentUser.unitKerja,
+
+          nama_barang: item.nama,
+
+          jumlah: item.jumlahMinta,
+
+          alasan: item.keterangan,
+
+        }),
+
+      });
+
+    }
+
     setShowPreview(false);
+
     setSubmitted(true);
-  };
 
-  if (submitted) {
-   return (
-  <div className="rekomendasi-page">
+  } catch (err) {
 
-    <button
-      className="back-button"
-      onClick={() => navigate("/bmn")}
-    >
-      <img
-        src="/logo-back.png"
-        alt="Back"
-        className="back-icon"
-      />
-    </button>
+    console.log(err);
 
-    <div className="service-banner">
+    alert("Gagal mengirim permintaan.");
 
-      <div className="service-banner-content">
-
-        <h1>Permintaan Barang</h1>
-
-        <p>
-          Ajukan permintaan barang habis pakai
-          secara online melalui Portal Internal
-          BMBPSDM.
-        </p>
-
-      </div>
-
-    </div>
-
-    <div className="description-card">
-
-      <h2>Tentang Layanan</h2>
-
-      <p>
-        Layanan ini digunakan untuk mengajukan
-        permintaan barang habis pakai seperti
-        ATK, perlengkapan kantor, dan kebutuhan
-        operasional lainnya. Seluruh permintaan
-        akan diverifikasi oleh Admin BMN sebelum
-        diproses.
-      </p>
-
-    </div>
-        <div style={{ fontSize: 36, marginBottom: 12 }}>✅</div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>Permintaan Berhasil Dikirim!</div>
-        <div style={{ color: "#64748b", marginBottom: 18, fontSize: 12 }}>Permintaan barang sedang diproses oleh Admin BMN.</div>
-        <AdminButton onClick={() => { setSubmitted(false); setItems([{ ...emptyItem }]); }}>
-          Buat Permintaan Baru
-        </AdminButton>
-      </div>
-    );
   }
+};
+
+if (submitted) {
+    return (
+        <div className="success-wrapper">
+
+            <div className="success-card">
+
+                <div className="success-icon">
+                    ✅
+                </div>
+
+                <div className="success-title">
+                    Permintaan Berhasil Dikirim!
+                </div>
+
+                <div className="success-desc">
+                    Permintaan barang Anda telah berhasil dikirim
+                    dan sedang diproses oleh Admin BMN.
+                </div>
+
+                <AdminButton
+                    className="success-btn"
+                    onClick={()=>{
+                        setSubmitted(false);
+                        setItems([{...emptyItem}]);
+                    }}
+                >
+                    Buat Permintaan Baru
+                </AdminButton>
+
+            </div>
+
+        </div>
+    );
+}
 
   return (
     <div>
@@ -340,13 +399,14 @@ const PermintaanUser = () => {
 
       {showPreview && (
         <PreviewSurat
-          items={items}
-          nomorSurat={nomorSurat}
-          petugasGudang={petugasGudang}
-          today={today}
-          onClose={() => setShowPreview(false)}
-          onSubmit={handleSubmit}
-        />
+    items={items}
+    nomorSurat={nomorSurat}
+    petugasGudang={petugasGudang}
+    today={today}
+    currentUser={currentUser}
+    onClose={() => setShowPreview(false)}
+    onSubmit={handleSubmit}
+/>
       )}
     </div>
   );

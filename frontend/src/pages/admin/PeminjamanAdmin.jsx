@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { dummyPeminjaman, stokBarang } from "../user/bmn/dummyData";
 import { Modal, StatusBadge, inputStyle, FormGroup, IconEye, IconReturn, downloadAsPDF, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
 
@@ -101,7 +101,69 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const PeminjamanAdmin = () => {
-  const [data, setData] = useState(dummyPeminjaman);
+
+  const [data, setData] = useState([]);
+
+  const loadData = async () => {
+
+      try{
+
+          const response = await fetch(
+              "http://localhost:8080/api/peminjaman"
+          );
+
+          const result = await response.json();
+
+          const dataBaru = result.map(item => ({
+
+              id:item.id,
+
+              nomorSurat:`PMJ-${String(item.id).padStart(4,"0")}`,
+
+              peminjam:{
+                  nama:item.nama,
+                  nip:item.nip,
+                  jabatan:item.jabatan,
+                  unitKerja:item.unit_kerja
+              },
+
+              barang:{
+                  id:item.barang_id,
+                  nama:item.nama_barang,
+                  kode:item.kode_barang
+              },
+
+              lokasi:item.lokasi_penggunaan,
+
+              tglPinjam:item.tanggal_pinjam,
+
+              tglKembali:item.tanggal_kembali,
+
+              keperluan:item.keperluan,
+
+              status:
+                  item.status === "Menunggu"
+                      ? "Diajukan"
+                      : item.status
+
+          }));
+
+          setData(dataBaru);
+
+      }catch(err){
+
+          console.log(err);
+
+      }
+
+  };
+  useEffect(() => {
+
+    loadData();
+
+}, []);
+
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("Semua");
   const [detailItem, setDetailItem] = useState(null);
@@ -125,13 +187,77 @@ const PeminjamanAdmin = () => {
     return s ? s.stok : 0;
   };
 
-  const handleSetujui = (id) => {
-    setData(data.map(d => d.id === id ? { ...d, status: "Dipinjam" } : d));
-  };
+  const handleSetujui = async(id)=>{
 
-  const handleTolak = (id) => {
-    setData(data.map(d => d.id === id ? { ...d, status: "Ditolak" } : d));
-  };
+    try{
+
+        await fetch(
+
+            `http://localhost:8080/api/peminjaman/${id}`,
+
+            {
+
+                method:"PUT",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    status:"Dipinjam"
+
+                })
+
+            }
+
+        );
+
+        loadData();
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+
+};
+
+  const handleTolak = async(id)=>{
+
+    try{
+
+        await fetch(
+
+            `http://localhost:8080/api/peminjaman/${id}`,
+
+            {
+
+                method:"PUT",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    status:"Ditolak"
+
+                })
+
+            }
+
+        );
+
+        loadData();
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+
+};
 
   const handleKembali = () => {
     setData(data.map(d => d.id === showKembali.id ? { ...d, status: "Dikembalikan", kondisiKembali: kondisi } : d));

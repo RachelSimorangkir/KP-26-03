@@ -1,6 +1,19 @@
-import { useState } from "react";
-import { dummyPermintaan, stokHabisPakai } from "../user/bmn/dummyData";
-import { Modal, StatusBadge, inputStyle, FormGroup, IconEye, downloadAsPDF, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
+import { useState, useEffect } from "react";
+import { stokHabisPakai } from "../user/bmn/dummyData";
+
+import {
+    Modal,
+    StatusBadge,
+    inputStyle,
+    FormGroup,
+    IconEye,
+    downloadAsPDF,
+    AdminHeaderCard,
+    AdminCard,
+    AdminStatCard,
+    AdminTable,
+    AdminButton
+} from "../user/bmn/components";
 
 // ─── PREVIEW SURAT (Admin view) ───────────────────────────────────────────────
 const PreviewSuratAdmin = ({ item, onClose }) => {
@@ -230,11 +243,68 @@ const DetailModal = ({ item, onClose, onSetujui, onUpdate, onShowSurat }) => {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const PermintaanAdmin = () => {
-  const [data, setData] = useState(dummyPermintaan);
+  const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("Semua");
   const [detailItem, setDetailItem] = useState(null);
   const [showSurat, setShowSurat] = useState(null);
+  useEffect(() => {
+
+    fetch("http://localhost:8080/api/permintaan")
+        .then(res => res.json())
+        .then(result => {
+
+            const grouped = {};
+
+            result.forEach(r => {
+
+                if (!grouped[r.nomor_surat]) {
+
+                    grouped[r.nomor_surat] = {
+
+                        id: r.id,
+
+                        nomorSurat: r.nomor_surat,
+
+                        tanggal: r.created_at.substring(0,10),
+
+                        status: r.status,
+
+                        pemohon: {
+
+                            nama: r.nama,
+
+                            nip: r.nip,
+
+                            unitKerja: r.unit_kerja,
+
+                        },
+
+                        items: []
+
+                    };
+
+                }
+
+                grouped[r.nomor_surat].items.push({
+
+                    nama: r.nama_barang,
+
+                    jumlahMinta: r.jumlah,
+
+                    jumlahAkhir: 0,
+
+                    keterangan: r.alasan
+
+                });
+
+            });
+
+            setData(Object.values(grouped));
+
+        });
+
+}, []);
 
   const filtered = data.filter(d => {
     const matchSearch =

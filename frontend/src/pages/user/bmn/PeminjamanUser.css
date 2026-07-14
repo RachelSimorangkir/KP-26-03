@@ -439,3 +439,83 @@
 .service-banner{
     margin-top:0 !important;
 }
+
+/* ===========================
+   SUCCESS PAGE
+=========================== */
+
+.success-wrapper{
+    position:fixed !important;
+    top:0;
+    left:275px;           /* sesuaikan dengan lebar sidebar */
+    right:0;
+    bottom:0;
+
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+
+    padding:40px;
+
+    background:#eef3fb;
+    z-index:5;
+}
+
+.success-card{
+    width:100%;
+    max-width:620px;
+
+    background:#fff !important;
+
+    border-radius:22px;
+
+    padding:55px 50px;
+
+    text-align:center !important;
+
+    box-shadow:
+        0 25px 60px rgba(15,23,42,.10),
+        0 5px 15px rgba(15,23,42,.05);
+
+    border:1px solid #e2e8f0;
+}
+
+.success-icon{
+    width:95px;
+    height:95px;
+
+    margin:0 auto 28px;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+
+    color:#fff;
+
+    font-size:46px;
+    font-weight:bold;
+
+    box-shadow:0 15px 35px rgba(34,197,94,.35);
+}
+
+.success-card h2{
+    margin:0 0 16px;
+    font-size:30px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.success-card p{
+    margin:0 0 30px;
+    color:#64748b;
+    font-size:15px;
+    line-height:1.8;
+}
+
+.success-card button{
+    min-width:260px;
+}

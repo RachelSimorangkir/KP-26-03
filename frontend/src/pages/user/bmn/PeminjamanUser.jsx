@@ -17,7 +17,13 @@ const generateNomor = () => {
 };
 
 // Preview surat peminjaman
-const PreviewSurat = ({ form, barangDipilih, onClose, onSubmit }) => {
+const PreviewSurat = ({
+  form,
+  barangDipilih,
+  currentUser,
+  onClose,
+  onSubmit,
+}) => {
   const tglPinjam = new Date(form.tglPinjam).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
   const tglKembali = new Date(form.tglKembali).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
   const today = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -175,10 +181,95 @@ useEffect(() => {
     setShowDropdown(false);
   };
 
-  const handleSubmit = () => {
-    setShowPreview(false);
-    setSubmitted(true);
-  };
+  const handleSubmit = async () => {
+
+  try {
+    console.log({
+
+    barang_id: barangDipilih.id,
+
+    nama_barang: barangDipilih.nama,
+
+    kode_barang: barangDipilih.kode,
+
+    nip: currentUser.nip,
+
+    nama: currentUser.nama,
+
+    jabatan: currentUser.jabatan,
+
+    unit_kerja: currentUser.unitKerja,
+
+    lokasi_penggunaan: form.lokasi,
+
+    tanggal_pinjam: form.tglPinjam,
+
+    tanggal_kembali: form.tglKembali,
+
+    keperluan: form.keperluan
+
+});
+
+    const response = await fetch(
+      "http://localhost:8080/api/peminjaman",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+    barang_id: barangDipilih.id,
+
+    nama_barang: barangDipilih.nama,
+
+    kode_barang: barangDipilih.kode,
+
+    nip: currentUser.nip,
+
+    nama: currentUser.nama,
+
+    jabatan: currentUser.jabatan,
+
+    unit_kerja: currentUser.unitKerja,
+
+    lokasi_penggunaan: form.lokasi,
+
+    tanggal_pinjam: form.tglPinjam,
+
+    tanggal_kembali: form.tglKembali,
+
+    keperluan: form.keperluan
+
+})
+
+      }
+    );
+
+    const result = await response.json();
+
+    if(result.success){
+
+        setShowPreview(false);
+
+        setSubmitted(true);
+
+    }else{
+
+        alert(result.message);
+
+    }
+
+  } catch (err) {
+
+    console.log(err);
+
+    alert("Gagal mengirim permohonan.");
+
+  }
+
+};
 
   if (submitted) {
     return (
@@ -356,6 +447,7 @@ useEffect(() => {
         <PreviewSurat
           form={form}
           barangDipilih={barangDipilih}
+          currentUser={currentUser}
           onClose={() => setShowPreview(false)}
           onSubmit={handleSubmit}
         />

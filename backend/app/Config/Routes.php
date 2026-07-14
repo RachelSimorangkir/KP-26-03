@@ -89,3 +89,51 @@ $routes->post(
     "api/ganti-password",
     "Auth::gantiPassword"
 );
+
+// ==========================
+// BMN - PEMINJAMAN BARANG
+// ==========================
+
+$routes->group('api', ['filter' => 'cors'], function ($routes) {
+
+    $routes->post(
+        'peminjaman',
+        'PeminjamanBarangController::create'
+    );
+
+    $routes->get(
+        'peminjaman',
+        'PeminjamanBarangController::index'
+    );
+
+    $routes->get(
+        'peminjaman/(:num)',
+        'PeminjamanBarangController::detail/$1'
+    );
+
+    $routes->put(
+        'peminjaman/(:num)',
+        'PeminjamanBarangController::updateStatus/$1'
+    );
+
+});
+
+$routes->get(
+    'api/permintaan',
+    'PermintaanBarangController::index'
+);
+
+$routes->post(
+    'api/permintaan',
+    'PermintaanBarangController::create'
+);
+
+$routes->put(
+    'api/permintaan/(:num)',
+    'PermintaanBarangController::update/$1'
+);
+
+$routes->get(
+    'api/permintaan/(:num)',
+    'PermintaanBarangController::show/$1'
+);
