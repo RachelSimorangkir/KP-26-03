@@ -37,23 +37,25 @@ class PermintaanBarangController extends ResourceController
 
         $this->model->insert([
 
-            "nip"          => $body["nip"] ?? "",
+    "request_id" => $body["request_id"],
 
-            "nama"         => $body["nama"] ?? "",
+    "nip" => $body["nip"],
 
-            "jabatan"      => $body["jabatan"] ?? "",
+    "nama" => $body["nama"],
 
-            "unit_kerja"   => $body["unit_kerja"] ?? "",
+    "jabatan" => $body["jabatan"],
 
-            "nama_barang"  => $body["nama_barang"] ?? "",
+    "unit_kerja" => $body["unit_kerja"],
 
-            "jumlah"       => $body["jumlah"] ?? 0,
+    "nama_barang" => $body["nama_barang"],
 
-            "alasan"       => $body["alasan"] ?? "",
+    "jumlah" => $body["jumlah"],
 
-            "status"       => "Pending"
+    "alasan" => $body["alasan"],
 
-        ]);
+    "status" => "Pending"
+
+]);
 
         return $this->respond([
 

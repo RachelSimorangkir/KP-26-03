@@ -138,7 +138,15 @@ const DetailModal = ({ item, onClose, onSetujui, onUpdate, onShowSurat }) => {
   const activeItems = editItems.length;
 
   return (
-    <Modal title={`Detail Permintaan — ${item.nomorSurat}`} onClose={onClose} wide>
+    <Modal
+    title={`Detail Permintaan ${
+        item.requestId
+            ? `— ${item.requestId.slice(0,8)}`
+            : ""
+    }`}
+    onClose={onClose}
+    wide
+>
       <div id={`permintaan-detail-print-${item.id}`}>
         {/* Info pemohon */}
         <div style={{ background: "#f8fafc", borderRadius: 8, padding: 14, marginBottom: 14, fontSize: 13 }}>
@@ -256,49 +264,49 @@ const PermintaanAdmin = () => {
 
             const grouped = {};
 
-            result.forEach(r => {
+result.forEach(r => {
 
-                if (!grouped[r.nomor_surat]) {
+    if (!grouped[r.request_id]) {
 
-                    grouped[r.nomor_surat] = {
+        grouped[r.request_id] = {
 
-                        id: r.id,
+            id: r.id,
 
-                        nomorSurat: r.nomor_surat,
+            requestId: r.request_id,
 
-                        tanggal: r.created_at.substring(0,10),
+            tanggal: r.created_at.substring(0,10),
 
-                        status: r.status,
+            status: r.status,
 
-                        pemohon: {
+            pemohon: {
 
-                            nama: r.nama,
+                nama: r.nama,
 
-                            nip: r.nip,
+                nip: r.nip,
 
-                            unitKerja: r.unit_kerja,
+                unitKerja: r.unit_kerja,
 
-                        },
+            },
 
-                        items: []
+            items: []
 
-                    };
+        };
 
-                }
+    }
 
-                grouped[r.nomor_surat].items.push({
+    grouped[r.request_id].items.push({
 
-                    nama: r.nama_barang,
+        nama: r.nama_barang,
 
-                    jumlahMinta: r.jumlah,
+        jumlahMinta: r.jumlah,
 
-                    jumlahAkhir: 0,
+        jumlahAkhir: 0,
 
-                    keterangan: r.alasan
+        keterangan: r.alasan
 
-                });
+    });
 
-            });
+});
 
             setData(Object.values(grouped));
 
@@ -318,9 +326,30 @@ const PermintaanAdmin = () => {
     setData(data.map(d => d.id === updated.id ? updated : d));
   };
 
-  const handleSetujuiDirect = (id) => {
-    setData(data.map(d => d.id === id ? { ...d, status: "Disetujui" } : d));
-  };
+  const handleSetujuiDirect = async (id) => {
+
+    await fetch(`http://localhost:8080/api/permintaan/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            status: "Disetujui"
+        })
+
+    });
+
+    setData(prev =>
+        prev.map(d =>
+            d.id === id
+                ? { ...d, status: "Disetujui" }
+                : d
+        )
+    );
+};
 
   const summary = {
     pending: data.filter(d => d.status === "Pending").length,

@@ -166,7 +166,11 @@ useEffect(() => {
 
   const canSubmit = items.some(i => i.nama && i.jumlahMinta);
 
+const requestId = crypto.randomUUID();
 const handleSubmit = async () => {
+
+  const requestId = crypto.randomUUID();
+
   try {
 
     for (const item of items) {
@@ -180,6 +184,8 @@ const handleSubmit = async () => {
         },
 
         body: JSON.stringify({
+
+          request_id: requestId,
 
           nip: currentUser.nip,
 
@@ -209,9 +215,10 @@ const handleSubmit = async () => {
 
     console.log(err);
 
-    alert("Gagal mengirim permintaan.");
+    alert("Gagal mengirim.");
 
   }
+
 };
 
 if (submitted) {

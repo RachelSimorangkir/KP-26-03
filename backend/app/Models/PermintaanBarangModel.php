@@ -14,27 +14,25 @@ class PermintaanBarangModel extends Model
 
     protected $allowedFields = [
 
-        "nip",
+    "request_id",
 
-        "nama",
+    "nip",
 
-        "jabatan",
+    "nama",
 
-        "unit_kerja",
+    "jabatan",
 
-        "nama_barang",
+    "unit_kerja",
 
-        "kategori",
+    "nama_barang",
 
-        "satuan",
+    "jumlah",
 
-        "jumlah",
+    "alasan",
 
-        "alasan",
+    "status"
 
-        "status"
-
-    ];
+];
 
     protected $useTimestamps = true;
 
