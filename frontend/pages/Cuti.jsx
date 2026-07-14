@@ -493,7 +493,7 @@ if (jenisCuti === "Cuti Tahunan") {
           <p>
 
             Pengajuan cuti pegawai secara elektronik
-            melalui Portal Layanan Internal BMBPSDM.
+            melalui Jendela Layanan Internal BMBPSDM.
 
           </p>
 

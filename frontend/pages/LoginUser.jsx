@@ -68,7 +68,7 @@ function LoginUser() {
           <h1>Login Pegawai</h1>
 
           <p>
-            Portal Layanan Internal
+            Jendela Layanan Internal
             <br />
             Direktorat Jenderal
             <br />

@@ -17,7 +17,7 @@ function DashboardKPG() {
         </h1>
 
         <p className="welcome-desc">
-          Portal ini digunakan untuk mendukung pengelolaan layanan
+          Jendela ini digunakan untuk mendukung pengelolaan layanan
           administrasi kepegawaian secara terintegrasi di lingkungan
           Balai Manajemen dan Pengembangan Sumber Daya Manusia
           Kementerian Agama Republik Indonesia.

@@ -18,7 +18,7 @@ function Login() {
     alt="logo"
 />
 
-          <h1>Portal Layanan Internal</h1>
+          <h1>Jendela Layanan Internal Bimas Kristen</h1>
 
           <p>
             Direktorat Jenderal

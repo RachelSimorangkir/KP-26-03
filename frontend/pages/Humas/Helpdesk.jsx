@@ -29,7 +29,7 @@ export default function Helpdesk() {
           <h1>Layanan Helpdesk</h1>
 
           <p>
-            Pilih jenis layanan helpdesk yang akan diajukan melalui Portal Layanan
+            Pilih jenis layanan helpdesk yang akan diajukan melalui Jendela Layanan
             Internal BMBPSDM.
           </p>
         </div>

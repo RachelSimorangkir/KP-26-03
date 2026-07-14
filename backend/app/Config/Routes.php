@@ -137,3 +137,8 @@ $routes->get(
     'api/permintaan/(:num)',
     'PermintaanBarangController::show/$1'
 );
+
+$routes->get(
+    'api/dbr/(:segment)',
+    'DbrController::show/$1'
+);

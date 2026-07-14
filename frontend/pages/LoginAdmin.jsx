@@ -105,7 +105,7 @@ const handleLogin = () => {
           <h1>Login Admin</h1>
 
           <p>
-            Portal Layanan Internal
+            Jendela Layanan Internal
             <br />
             Direktorat Jenderal
             <br />

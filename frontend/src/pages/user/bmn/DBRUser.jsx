@@ -8,12 +8,16 @@ const DBRUser = () => {
   const [myDBR, setMyDBR] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const nip = user?.nip;
 
   useEffect(() => {
     const fetchDBR = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:8080/api/pegawai/${nip}`)
+        const res = await fetch(
+    `http://localhost:8080/api/dbr/${nip}`
+);
         if (!res.ok) {
           if (res.status === 404) {
             setMyDBR(null);
@@ -23,17 +27,17 @@ const DBRUser = () => {
         }
         const data = await res.json();
         setMyDBR({
-          nama: data.nama,
-          nip: data.nip,
-          jabatan: data.jabatan,
-          ruangan: data.ruangan || "Belum ditentukan",
-          barang: (data.barang || []).map((b, i) => ({
-            no: i + 1,
-            nama: b.nama_barang,
-            nup: b.nup,
-            kondisi: b.kondisi,
-          })),
-        });
+    nama: data.nama,
+    nip: data.nip,
+    jabatan: data.jabatan,
+    ruangan: data.ruangan,
+    barang: data.barang.map((b, i) => ({
+        no: i + 1,
+        nama: b.nama_barang,
+        nup: b.nup,
+        kondisi: b.kondisi,
+    })),
+});
       } catch (err) {
         setError(err.message);
       } finally {

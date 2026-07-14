@@ -31,7 +31,7 @@ export default function FormHelpdesk() {
     "SIAK - Sistem Informasi Akademik",
     "SIMDA - Sistem Informasi Manajemen Data",
     "E-Office - Aplikasi Persuratan",
-    "Portal Internal Bimas Kristen",
+    "Jendela Internal Bimas Kristen",
     "Sistem Informasi BMN",
     "Aplikasi Lainnya",
   ];
