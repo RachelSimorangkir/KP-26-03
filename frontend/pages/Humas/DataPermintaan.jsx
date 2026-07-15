@@ -161,14 +161,11 @@ export default function DataPermintaan() {
     <div className="data-permintaan-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin-humas")}>
-          ← Kembali
-        </button>
-        <div className="header-text">
-          <h1>Permintaan Data</h1>
-          <p>Daftar permintaan data internal dari satuan kerja</p>
-        </div>
-      </div>
+  <div className="page-header-content">
+    <h1>Permintaan Data</h1>
+    <p>Daftar permintaan data internal dari satuan kerja</p>
+  </div>
+</div>
 
       {/* FILTER CARD - 4 KOLOM + SEARCH */}
       <div className="filter-card">

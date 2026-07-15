@@ -69,14 +69,11 @@ export default function BeritaMasuk() {
     <div className="berita-masuk-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin-humas")}>
-          ← Kembali
-        </button>
-        <div className="header-text">
-          <h1>Berita Masuk</h1>
-          <p>Daftar berita yang menunggu verifikasi dari satuan kerja</p>
-        </div>
-      </div>
+  <div className="page-header-content">
+    <h1>Berita Masuk</h1>
+    <p>Daftar berita yang menunggu verifikasi dari satuan kerja</p>
+  </div>
+</div>
 
       {/* FILTER */}
       <div className="filter-card">

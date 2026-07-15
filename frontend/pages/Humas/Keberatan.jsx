@@ -191,14 +191,11 @@ export default function Keberatan() {
     <div className="keberatan-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin-humas")}>
-          ← Kembali
-        </button>
-        <div className="header-text">
-          <h1>Keberatan Informasi</h1>
-          <p>Monitoring permohonan dan keberatan informasi antar-unit (PPID Internal)</p>
-        </div>
-      </div>
+  <div className="page-header-content">
+    <h1>Keberatan Informasi</h1>
+    <p>Monitoring permohonan dan keberatan informasi antar-unit (PPID Internal)</p>
+  </div>
+</div>
 
       {/* FILTER CARD - 4 KOLOM + SEARCH */}
       <div className="filter-card">

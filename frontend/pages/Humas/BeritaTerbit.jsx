@@ -88,14 +88,11 @@ export default function BeritaTerbit() {
     <div className="berita-terbit-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin-humas")}>
-          ← Kembali
-        </button>
-        <div className="header-text">
-          <h1>Berita Terbit</h1>
-          <p>Arsip berita yang telah dipublikasikan di berbagai kanal</p>
-        </div>
-      </div>
+  <div className="page-header-content">
+    <h1>Berita Terbit</h1>
+    <p>Arsip berita yang telah dipublikasikan di berbagai kanal</p>
+  </div>
+</div>
 
       {/* FILTER CARD - 4 KOLOM + SEARCH */}
       <div className="filter-card">
@@ -180,10 +177,18 @@ export default function BeritaTerbit() {
                   <td className="col-views">{item.jumlahDilihat.toLocaleString("id-ID")}</td>
                   <td>
                     <div className="action-buttons">
-                      <button className="btn btn-view" onClick={() => handleOpenModal(item, "view")} title="Lihat">👁️</button>
-                      <button className="btn btn-edit" onClick={() => handleOpenModal(item, "edit")} title="Edit">✏️</button>
-                      <button className="btn btn-tarik" onClick={() => handleOpenModal(item, "tarik")} title="Tarik">🗑️</button>
-                    </div>
+    <button className="btn-view">
+        Lihat
+    </button>
+
+    <button className="btn-edit">
+        Edit
+    </button>
+
+    <button className="btn-delete">
+        Hapus
+    </button>
+</div>
                   </td>
                 </tr>
               ))}

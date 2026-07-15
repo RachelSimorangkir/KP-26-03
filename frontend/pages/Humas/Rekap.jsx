@@ -113,13 +113,12 @@ export default function Rekap() {
     <div className="rekap-page">
       {/* BACK BUTTON */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/humasdata")}>
-          ← Kembali
-        </button>
-        <h1>Laporan & Rekap</h1>
-        <p>Ringkasan kinerja layanan Humas & Data per periode</p>
-      </div>
-
+  <div className="page-header-content">
+    <h1>Laporan dan Rekap</h1>
+    <p>Ringkasan kinerja layanan Humas & Data per periode</p>
+  </div>
+</div>
+//Ringkasan kinerja layanan Humas & Data per periode
       {/* FILTER SECTION */}
       <div className="filter-section">
         <div className="filter-row">
@@ -134,40 +133,41 @@ export default function Rekap() {
 
           <div className="filter-group filter-group-large">
             <label>Filter Layanan</label>
-            <div className="layanan-checkboxes">
-              <label className={`checkbox-item ${filterLayanan.includes("humas") ? "active" : ""}`}>
-                <input
-                  type="checkbox"
-                  checked={filterLayanan.includes("humas")}
-                  onChange={() => toggleLayanan("humas")}
-                />
-                <span> Humas</span>
-              </label>
-              <label className={`checkbox-item ${filterLayanan.includes("data") ? "active" : ""}`}>
-                <input
-                  type="checkbox"
-                  checked={filterLayanan.includes("data")}
-                  onChange={() => toggleLayanan("data")}
-                />
-                <span>📊 Data</span>
-              </label>
-              <label className={`checkbox-item ${filterLayanan.includes("si") ? "active" : ""}`}>
-                <input
-                  type="checkbox"
-                  checked={filterLayanan.includes("si")}
-                  onChange={() => toggleLayanan("si")}
-                />
-                <span>🛠️ Sistem Informasi</span>
-              </label>
-              <label className={`checkbox-item ${filterLayanan.includes("ppid") ? "active" : ""}`}>
-                <input
-                  type="checkbox"
-                  checked={filterLayanan.includes("ppid")}
-                  onChange={() => toggleLayanan("ppid")}
-                />
-                <span>⚖️ PPID</span>
-              </label>
-            </div>
+            <div className="layanan-filter">
+
+    <button
+        type="button"
+        className={`layanan-chip ${filterLayanan.includes("humas") ? "active" : ""}`}
+        onClick={() => toggleLayanan("humas")}
+    >
+        Humas
+    </button>
+
+    <button
+        type="button"
+        className={`layanan-chip ${filterLayanan.includes("data") ? "active" : ""}`}
+        onClick={() => toggleLayanan("data")}
+    >
+        Permintaan Data
+    </button>
+
+    <button
+        type="button"
+        className={`layanan-chip ${filterLayanan.includes("si") ? "active" : ""}`}
+        onClick={() => toggleLayanan("si")}
+    >
+        Sistem Informasi
+    </button>
+
+    <button
+        type="button"
+        className={`layanan-chip ${filterLayanan.includes("ppid") ? "active" : ""}`}
+        onClick={() => toggleLayanan("ppid")}
+    >
+        PPID
+    </button>
+
+</div>
           </div>
 
           <div className="filter-group export-group">
@@ -192,7 +192,7 @@ export default function Rekap() {
 
       <div className="metrics-grid">
         <div className="metric-card metric-total">
-          <div className="metric-icon">📋</div>
+          <div className="metric-icon"></div>
           <div className="metric-content">
             <span className="metric-label">Total Tiket</span>
             <span className="metric-value">{metrics.totalAll}</span>

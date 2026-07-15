@@ -1,0 +1,1432 @@
+/* =========================================================
+   UPLOAD DIP TAHUNAN
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.rekom-page{
+
+    width:100%;
+    max-width:1450px;
+
+    margin:0 auto;
+
+    padding:35px;
+
+    animation:fadePage .45s ease;
+
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-header{
+
+    display:flex;
+    align-items:center;
+    gap:24px;
+
+    background:linear-gradient(135deg,#163d86,#2563eb);
+
+    color:white;
+
+    padding:35px;
+
+    border-radius:24px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    margin-bottom:28px;
+
+    box-shadow:0 15px 35px rgba(37,99,235,.22);
+
+}
+
+.page-header::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:-70px;
+    top:-70px;
+
+    width:220px;
+    height:220px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.page-header h1{
+
+    font-size:44px;
+
+    font-weight:700;
+
+}
+
+.page-header p{
+
+    opacity:.9;
+
+    margin-top:6px;
+
+    font-size:15px;
+
+}
+
+.back-button{
+
+    width:68px;
+    height:68px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:white;
+
+    color:#163d86;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.back-button:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* =========================================================
+   PROGRESS CARD
+========================================================= */
+
+.progress-section{
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:26px;
+
+    margin-bottom:26px;
+
+    box-shadow:0 10px 28px rgba(15,23,42,.05);
+
+}
+
+.progress-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.progress-header h3{
+
+    color:#17345f;
+
+    font-size:22px;
+
+}
+
+.progress-text{
+
+    font-weight:600;
+
+    color:#2563eb;
+
+}
+
+.progress-bar-container{
+
+    width:100%;
+
+    height:12px;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    background:#edf2f7;
+
+}
+
+.progress-bar{
+
+    height:100%;
+
+    border-radius:20px;
+
+    background:linear-gradient(90deg,#22c55e,#34d399);
+
+    transition:.4s;
+
+}
+
+.progress-stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:18px;
+
+    margin-top:24px;
+
+}
+
+.stat-item{
+
+    background:#f8fafc;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.stat-icon{
+
+    font-size:24px;
+
+}
+
+.stat-label{
+
+    flex:1;
+
+    color:#64748b;
+
+}
+
+.stat-value{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#17345f;
+
+}
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.filter-section{
+
+    background:white;
+
+    padding:24px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:end;
+
+    margin-bottom:24px;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.05);
+
+}
+
+.filter-row{
+
+    display:flex;
+
+    gap:20px;
+
+}
+
+.filter-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.filter-group label{
+
+    margin-bottom:8px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    color:#64748b;
+
+}
+
+.filter-group select{
+
+    width:180px;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#f8fafc;
+
+    padding:0 16px;
+
+    box-shadow:
+    inset 0 0 0 1px #dbe4ef;
+
+}
+
+.filter-group select:focus{
+
+    outline:none;
+
+    background:white;
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+.btn-reminder{
+
+    height:46px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.btn-reminder:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-container{
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:18px;
+
+    overflow:auto;
+
+    box-shadow:0 10px 30px rgba(15,23,42,.05);
+
+}
+
+.dip-table{
+
+    width:100%;
+
+    min-width:1100px;
+
+    border-collapse:collapse;
+
+}
+
+.dip-table thead{
+
+    background:#f7f9fd;
+
+}
+
+.dip-table th{
+
+    padding:18px;
+
+    text-align:left;
+
+    color:#17345f;
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+.dip-table td{
+
+    padding:20px 18px;
+
+    border-top:1px solid #edf2f7;
+
+    color:#475569;
+
+}
+
+.dip-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.dip-table tbody tr:hover{
+
+    background:#f8fbff;
+
+}
+
+.bidang-name{
+
+    font-weight:700;
+
+    color:#17345f;
+
+}
+
+.file-link{
+
+    color:#2563eb;
+
+    font-weight:600;
+
+}
+
+.no-file{
+
+    color:#94a3b8;
+
+}
+
+.aksi-cell{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadePage{
+
+from{
+
+opacity:0;
+transform:translateY(15px);
+
+}
+
+to{
+
+opacity:1;
+transform:none;
+
+}
+
+}
+
+/* =========================================================
+   BADGE STATUS
+========================================================= */
+
+.badge{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:.2px;
+
+}
+
+/* SELESAI */
+
+.badge-selesai{
+
+    background:#ecfdf3;
+
+    color:#15803d;
+
+}
+
+/* MENUNGGU */
+
+.badge-menunggu{
+
+    background:#fff8e6;
+
+    color:#ca8a04;
+
+}
+
+/* REVISI */
+
+.badge-revisi{
+
+    background:#fff1f2;
+
+    color:#dc2626;
+
+}
+
+/* BELUM */
+
+.badge-belum{
+
+    background:#eef2f7;
+
+    color:#64748b;
+
+}
+
+/* =========================================================
+   BUTTON AKSI
+========================================================= */
+
+.btn-action{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:15px;
+
+}
+
+/* LIHAT */
+
+.btn-lihat{
+
+    background:#eef4ff;
+
+    color:#2563eb;
+
+}
+
+.btn-lihat:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+/* VALIDASI */
+
+.btn-validasi{
+
+    background:#eefcf5;
+
+    color:#16a34a;
+
+}
+
+.btn-validasi:hover{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+/* REMINDER */
+
+.btn-reminder-small{
+
+    background:#fff7e6;
+
+    color:#ca8a04;
+
+}
+
+.btn-reminder-small:hover{
+
+    background:#ca8a04;
+
+    color:white;
+
+}
+
+/* =========================================================
+   RIWAYAT REMINDER
+========================================================= */
+
+.riwayat-section{
+
+    margin-top:28px;
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:26px;
+
+    box-shadow:
+    0 10px 30px rgba(15,23,42,.05);
+
+}
+
+.riwayat-section h3{
+
+    color:#17345f;
+
+    margin-bottom:20px;
+
+    font-size:22px;
+
+}
+
+.riwayat-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.riwayat-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 20px;
+
+    border-radius:16px;
+
+    background:#f8fafc;
+
+    transition:.25s;
+
+}
+
+.riwayat-item:hover{
+
+    background:#eef4ff;
+
+}
+
+.riwayat-date{
+
+    width:170px;
+
+    font-weight:700;
+
+    color:#17345f;
+
+}
+
+.riwayat-bidang{
+
+    flex:1;
+
+    color:#475569;
+
+}
+
+.riwayat-jumlah{
+
+    font-weight:700;
+
+    color:#2563eb;
+
+}
+
+/* =========================================================
+   HOVER EFFECT
+========================================================= */
+
+.progress-section,
+.filter-section,
+.table-container,
+.riwayat-section{
+
+    transition:.3s;
+
+}
+
+.progress-section:hover,
+.filter-section:hover,
+.table-container:hover,
+.riwayat-section:hover{
+
+    box-shadow:
+    0 18px 40px rgba(15,23,42,.08);
+
+}
+
+/* =========================================================
+   FILE
+========================================================= */
+
+.file-link{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.file-link:hover{
+
+    color:#1d4ed8;
+
+    text-decoration:underline;
+
+}
+
+/* =========================================================
+   PROGRESS STAT
+========================================================= */
+
+.stat-item{
+
+    transition:.25s;
+
+}
+
+.stat-item:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 12px 25px rgba(37,99,235,.08);
+
+}
+
+.stat-value{
+
+    font-size:26px;
+
+}
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.filter-group select:hover{
+
+    background:white;
+
+    box-shadow:
+    inset 0 0 0 2px #2563eb;
+
+}
+
+.btn-reminder{
+
+    box-shadow:
+    0 8px 20px rgba(37,99,235,.20);
+
+}
+
+.btn-reminder:hover{
+
+    box-shadow:
+    0 12px 26px rgba(37,99,235,.28);
+
+    transform:translateY(-2px);
+
+}
+
+/* =========================================================
+   TABLE ROW
+========================================================= */
+
+.dip-table td{
+
+    vertical-align:middle;
+
+}
+
+.dip-table tbody tr:hover{
+
+    background:#f8fbff;
+
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.table-container::-webkit-scrollbar{
+
+    height:10px;
+
+}
+
+.table-container::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:20px;
+
+}
+
+.table-container::-webkit-scrollbar-thumb:hover{
+
+    background:#94a3b8;
+
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-overlay{
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(15,23,42,.45);
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:30px;
+
+    z-index:9999;
+
+    animation:fadeModal .25s ease;
+
+}
+
+.modal-content{
+
+    width:100%;
+    max-width:900px;
+
+    background:#fff;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.18);
+
+    animation:modalScale .25s ease;
+
+}
+
+.modal-large{
+
+    max-width:1100px;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:24px 28px;
+
+    border-bottom:1px solid #edf2f7;
+
+}
+
+.modal-header h2{
+
+    font-size:26px;
+
+    color:#17345f;
+
+    font-weight:700;
+
+}
+
+.modal-close{
+
+    width:42px;
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#f1f5f9;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.modal-close:hover{
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.modal-body{
+
+    padding:30px;
+
+}
+
+/* =========================================================
+   DOCUMENT INFO
+========================================================= */
+
+.document-info{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+
+    margin-bottom:30px;
+
+}
+
+.info-item{
+
+    background:#f8fafc;
+
+    border-radius:16px;
+
+    padding:18px;
+
+}
+
+.info-item label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#64748b;
+
+    text-transform:uppercase;
+
+}
+
+.info-item p{
+
+    color:#17345f;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.document-preview{
+
+    background:#f8fafc;
+
+    border:2px dashed #dbe4ef;
+
+    border-radius:20px;
+
+    padding:60px 20px;
+
+}
+
+.preview-placeholder{
+
+    text-align:center;
+
+}
+
+.preview-icon{
+
+    font-size:70px;
+
+    display:block;
+
+    margin-bottom:15px;
+
+}
+
+.preview-placeholder p{
+
+    color:#17345f;
+
+    font-size:16px;
+
+}
+
+.preview-note{
+
+    margin-top:10px;
+
+    color:#94a3b8 !important;
+
+    font-size:13px !important;
+
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-section{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.form-section h3{
+
+    color:#17345f;
+
+    font-size:22px;
+
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.form-group label{
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+    color:#475569;
+
+}
+
+.form-group select{
+
+    height:48px;
+
+    border:none;
+
+    background:#f8fafc;
+
+    border-radius:14px;
+
+    padding:0 16px;
+
+    box-shadow:
+    inset 0 0 0 1px #dbe4ef;
+
+}
+
+.form-group select:focus{
+
+    outline:none;
+
+    background:white;
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+.form-group textarea{
+
+    min-height:160px;
+
+    border:none;
+
+    background:#f8fafc;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    resize:vertical;
+
+    box-shadow:
+    inset 0 0 0 1px #dbe4ef;
+
+}
+
+.form-group textarea:focus{
+
+    outline:none;
+
+    background:white;
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.checkbox-header{
+
+    margin-bottom:15px;
+
+}
+
+.checkbox-list{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:14px;
+
+}
+
+.checkbox-label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:14px 16px;
+
+    background:#f8fafc;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.checkbox-label:hover{
+
+    background:#eef4ff;
+
+}
+
+.checkbox-label input{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+.warning-text{
+
+    margin-top:15px;
+
+    color:#dc2626;
+
+    font-weight:600;
+
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.modal-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    padding:24px 28px;
+
+    border-top:1px solid #edf2f7;
+
+}
+
+.btn-secondary{
+
+    height:42px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#eef2f7;
+
+    color:#475569;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+.btn-secondary:hover{
+
+    background:#dbe4ef;
+
+}
+
+.btn-primary{
+
+    height:42px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+.btn-primary:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:992px){
+
+.document-info{
+
+grid-template-columns:1fr;
+
+}
+
+.checkbox-list{
+
+grid-template-columns:1fr;
+
+}
+
+.modal-content{
+
+max-width:96%;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.upload-dip-page{
+
+padding:18px;
+
+}
+
+.progress-stats{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.filter-section{
+
+flex-direction:column;
+
+align-items:stretch;
+
+gap:20px;
+
+}
+
+.filter-row{
+
+width:100%;
+
+}
+
+.filter-group{
+
+width:100%;
+
+}
+
+.filter-group select{
+
+width:100%;
+
+}
+
+.btn-reminder{
+
+width:100%;
+
+}
+
+.page-header{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+padding:25px;
+
+}
+
+.page-header h1{
+
+font-size:34px;
+
+}
+
+.modal-body{
+
+padding:18px;
+
+}
+
+.modal-footer{
+
+flex-direction:column;
+
+}
+
+.modal-footer button{
+
+width:100%;
+
+}
+
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes modalScale{
+
+from{
+
+opacity:0;
+
+transform:scale(.95);
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+@keyframes fadeModal{
+
+from{
+
+opacity:0;
+
+}
+
+to{
+
+opacity:1;
+
+}
+
+}

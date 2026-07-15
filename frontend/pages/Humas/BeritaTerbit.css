@@ -1,0 +1,502 @@
+/* ==========================================
+   BERITA TERBIT
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.rekom-page{
+
+    width:100%;
+    max-width:1450px;
+
+    margin:0 auto;
+
+    padding:35px;
+
+    animation:fadePage .45s ease;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.page-header{
+    display:flex;
+    align-items:center;
+    gap:25px;
+
+    width:100%;
+
+    padding:35px;
+
+    border-radius:24px;
+
+    color:#fff;
+
+    background:linear-gradient(
+        135deg,
+        #143a7b,
+        #2563eb
+    );
+
+    position:relative;
+    overflow:hidden;
+
+    margin-bottom:30px;
+
+    box-shadow:
+        0 15px 35px rgba(37,99,235,.25);
+}
+
+.page-header::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60px;
+    right:-60px;
+
+    width:220px;
+    height:220px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.page-header h1{
+
+    margin:0;
+    font-size:48px;
+    font-weight:700;
+
+}
+
+.page-header p{
+
+    margin-top:8px;
+    opacity:.9;
+
+}
+
+.back-button{
+
+    width:64px;
+    height:64px;
+
+    border:none;
+    border-radius:18px;
+
+    background:#fff;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.back-button:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* ==========================================
+   FILTER
+========================================== */
+
+.filter-card{
+
+    background:#fff;
+
+    padding:24px;
+
+    border-radius:22px;
+
+    margin-bottom:24px;
+
+    box-shadow:
+        0 10px 30px rgba(15,23,42,.05);
+
+}
+
+.filter-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:18px;
+
+}
+
+.filter-item{
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+.filter-item label{
+
+    font-size:13px;
+
+    color:#64748b;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.filter-item select{
+
+    height:46px;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:0 15px;
+
+    background:#f5f7fb;
+
+    box-shadow:
+        inset 0 0 0 1px #dce3ef;
+
+    transition:.25s;
+
+}
+
+.filter-item select:hover{
+
+    background:white;
+
+    box-shadow:
+        inset 0 0 0 2px #2563eb;
+
+}
+
+.filter-item select:focus{
+
+    outline:none;
+
+    background:white;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+.search-row{
+
+    margin-top:20px;
+
+}
+
+.search-row input{
+
+    width:100%;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:0 18px;
+
+    background:#f5f7fb;
+
+    box-shadow:
+        inset 0 0 0 1px #dce3ef;
+
+}
+
+.search-row input:focus{
+
+    outline:none;
+
+    background:white;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.table-card{
+
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:18px;
+
+    box-shadow:
+        0 10px 35px rgba(15,23,42,.05);
+
+}
+
+.table-scroll{
+
+    overflow:auto;
+
+}
+
+.data-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.data-table thead{
+
+    background:#f6f8fd;
+
+}
+
+.data-table th{
+
+    padding:18px;
+
+    text-align:left;
+
+    color:#17345f;
+
+    font-weight:700;
+
+    font-size:14px;
+
+}
+
+.data-table td{
+
+    padding:22px 18px;
+
+    border-top:1px solid #edf2f7;
+
+    color:#475569;
+
+    font-size:14px;
+
+    vertical-align:middle;
+
+}
+
+.data-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.data-table tbody tr:hover{
+
+    background:#f8fbff;
+
+}
+
+.col-judul{
+
+    min-width:260px;
+
+    font-weight:600;
+
+    color:#243b5a;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   BADGE
+========================================== */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:7px 16px;
+
+    border-radius:40px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.badge-satker{
+
+    background:#eef4ff;
+
+    color:#2563eb;
+
+}
+
+/* ==========================================
+   CHANNEL BADGE
+========================================== */
+
+.badge-channel{
+
+    background:#eef6ff;
+
+    color:#2563eb;
+
+}
+
+/* ===============================
+   ACTION BUTTON
+=============================== */
+
+.action-buttons{
+
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    align-items:center;
+
+}
+
+/* Base */
+
+.action-buttons button{
+
+    min-width:95px;
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+/* LIHAT */
+
+.btn-view{
+
+    background:#2563eb;
+    color:white;
+
+    box-shadow:
+    0 6px 16px rgba(37,99,235,.25);
+
+}
+
+.btn-view:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+/* EDIT */
+
+.btn-edit{
+
+    background:#f59e0b;
+    color:white;
+
+    box-shadow:
+    0 6px 16px rgba(245,158,11,.25);
+
+}
+
+.btn-edit:hover{
+
+    background:#d97706;
+
+    transform:translateY(-2px);
+
+}
+
+/* HAPUS */
+
+.btn-delete{
+
+    background:#ef4444;
+    color:white;
+
+    box-shadow:
+    0 6px 16px rgba(239,68,68,.25);
+
+}
+
+.btn-delete:hover{
+
+    background:#dc2626;
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:1200px){
+
+.filter-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:768px){
+
+.page-header{
+
+    flex-direction:column;
+    align-items:flex-start;
+
+}
+
+.page-header h1{
+
+    font-size:36px;
+
+}
+
+.filter-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.action-buttons{
+
+    justify-content:center;
+
+}
+
+}

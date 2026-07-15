@@ -245,12 +245,11 @@ export default function UploadDip() {
     <div className="upload-dip-page">
       {/* BACK BUTTON */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/humasdata")}>
-          ← Kembali
-        </button>
-        <h1>Upload DIP Tahunan</h1>
-        <p>Monitoring upload Dokumen Informasi Publik (DIP) dari 9 bidang</p>
-      </div>
+  <div className="page-header-content">
+    <h1>Upload DIP Tahunan</h1>
+    <p>Monitoring upload Dokumen Informasi Publik (DIP) dari 9 bidang</p>
+  </div>
+</div>
 
       {/* PROGRESS BAR */}
       <div className="progress-section">

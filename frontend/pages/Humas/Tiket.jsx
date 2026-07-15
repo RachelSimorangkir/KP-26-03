@@ -159,14 +159,11 @@ export default function Tiket() {
     <div className="tiket-page">
       {/* HEADER */}
       <div className="page-header">
-        <button className="back-button" onClick={() => navigate("/admin-humas")}>
-          ← Kembali
-        </button>
-        <div className="header-text">
-          <h1>Tiket Helpdesk</h1>
-          <p>Daftar tiket bantuan teknis dari pengguna sistem</p>
-        </div>
-      </div>
+  <div className="page-header-content">
+    <h1>Tiket Helpdesk</h1>
+    <p>Daftar tiket bantuan teknis dari pengguna sistem</p>
+  </div>
+</div>
 
       {/* FILTER CARD - 4 KOLOM + SEARCH */}
       <div className="filter-card">
