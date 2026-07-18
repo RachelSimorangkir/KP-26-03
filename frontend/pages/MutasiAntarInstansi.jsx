@@ -129,25 +129,20 @@ setUnitKerja(data.unit_organisasi || "");
     <div className="mutasiinternal-page">
 
       <button
-        className="back-button"
-        onClick={() =>
-          navigate("/kepegawaian/rekomendasi/mutasi-promosi")
-        }
-      >
-        <img
-      src="/logo-back.png"
-      alt="Back"
-      className="back-icon"
-    />
-      </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
 
       {/* HEADER */}
 
       <div className="page-header">
-
-        <div className="header-icon">
-          🏢
-        </div>
 
         <div>
           <h1>Mutasi Antar Instansi</h1>

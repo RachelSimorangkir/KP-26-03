@@ -155,15 +155,16 @@ await Swal.fire({
     <div className="pengaktifan-page">
 
       <button
-        className="back-button"
-        onClick={() => navigate("/kepegawaian/rekomendasi")}
-      >
-        <img
-      src="/logo-back.png"
-      alt="Back"
-      className="back-icon"
-    />
-      </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
 
       {/* HEADER */}
 

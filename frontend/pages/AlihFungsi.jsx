@@ -152,13 +152,17 @@ const handleNipChange = async (e) => {
   return (
     <div className="alihfungsi-page">
 
-      {/* BACK BUTTON */}
       <button
-        className="back-button"
-        onClick={() => navigate("/kepegawaian/rekomendasi")}
-      >
-        ← Kembali
-      </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
 
       {/* HEADER */}
 <div className="page-header">

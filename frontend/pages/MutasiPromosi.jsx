@@ -8,24 +8,19 @@ function MutasiPromosi() {
     <div className="mutasi-page">
 
       <button
-        className="back-button"
-        onClick={() =>
-          navigate("/kepegawaian/rekomendasi")
-        }
-      >
-        <img
-      src="/logo-back.png"
-      alt="Back"
-      className="back-icon"
-    />
-      </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
 
       {/* HEADER */}
       <div className="mutasi-header">
-
-        <div className="mutasi-icon">
-          🚀
-        </div>
 
         <div>
           <h1>Mutasi & Promosi</h1>
