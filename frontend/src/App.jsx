@@ -28,6 +28,8 @@ import DBRUser from "./pages/user/bmn/DBRUser";
 import PemeliharaanUser from "./pages/user/bmn/PemeliharaanUser";
 import DashboardCuti from "./admin/DashboardCuti";
 import AdminDashboard from "./admin/AdminDashboard";
+import GantiPassword from "../pages/GantiPassword";
+
 
 /* ADMIN */
 import DetailPengajuan from "./admin/DetailPengajuan";
@@ -121,6 +123,8 @@ function App() {
 />
 
         {/* KEPEGAWAIAN */}
+        <Route path="/ganti-password" element={<GantiPassword />} />
+        
         <Route
           path="/kepegawaian"
           element={<Kepegawaian />}
