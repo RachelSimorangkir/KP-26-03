@@ -145,8 +145,8 @@ const handleNotificationClick = async (notif) => {
   setShowNotif(false);
 
   navigate("/kepegawaian/detail-pengajuan", {
-    state: pengajuan,
-  });
+  state: pengajuan,
+});
 };
 
 

@@ -29,6 +29,7 @@ import PemeliharaanUser from "./pages/user/bmn/PemeliharaanUser";
 import DashboardCuti from "./admin/DashboardCuti";
 import AdminDashboard from "./admin/AdminDashboard";
 import GantiPassword from "../pages/GantiPassword";
+import DetailPengajuanUser from "../pages/DetailPengajuanUser";
 
 
 /* ADMIN */
@@ -318,6 +319,11 @@ function App() {
 <Route
   path="/admin-kepegawaian/detail-pengajuan"
   element={<DetailPengajuan />}
+/>
+
+<Route
+  path="/kepegawaian/detail-pengajuan"
+  element={<DetailPengajuanUser />}
 />
 
 <Route

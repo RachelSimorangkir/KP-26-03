@@ -242,17 +242,15 @@ const handleApprove = async () => {
 
     console.log("TOMBOL SELESAI DIKLIK");
 
-    if (!suratRespon) {
-
-        Swal.fire({
-  icon: "warning",
-  title: "Surat Belum Diunggah",
-  text: "Silakan upload Surat Balasan Admin terlebih dahulu.",
-  confirmButtonColor: "#f59e0b",
-});
-        return;
-
-    }
+    if (!suratRespon && !data.file_respon) {
+    Swal.fire({
+        icon: "warning",
+        title: "Surat Belum Diunggah",
+        text: "Silakan upload Surat Balasan Admin terlebih dahulu.",
+        confirmButtonColor: "#f59e0b",
+    });
+    return;
+}
 
     await updateStatus(
         "Selesai",
@@ -357,7 +355,7 @@ const handleReject = async () => {
 {/* TIMELINE */}
 <div className="detail-section">
 
-  <h3>📌 Status Pengajuan</h3>
+  <h3>Status Pengajuan</h3>
 
   <div className="timeline">
 
@@ -423,7 +421,7 @@ const handleReject = async () => {
 
 <div className="detail-section">
 
-<h3>💬 Catatan Admin</h3>
+<h3>Catatan Admin</h3>
 
 <textarea
 rows="5"
@@ -439,7 +437,7 @@ placeholder="Tulis catatan..."
         {/* DATA PEGAWAI */}
         <div className="detail-section">
 
-          <h3>👤 Data Pegawai</h3>
+          <h3>Data Pegawai</h3>
 
           <div className="detail-grid">
 
@@ -476,7 +474,7 @@ placeholder="Tulis catatan..."
         {/* PENGAJUAN */}
         <div className="detail-section">
 
-          <h3>📋 Informasi Pengajuan</h3>
+          <h3>Informasi Pengajuan</h3>
 
           <div className="detail-grid">
 
@@ -510,7 +508,7 @@ placeholder="Tulis catatan..."
         {/* DOKUMEN */}
 <div className="detail-section">
 
-  <h3>📄 Surat Permohonan</h3>
+  <h3>Surat Permohonan</h3>
 
   {
     data.surat_permohonan ? (
@@ -518,10 +516,6 @@ placeholder="Tulis catatan..."
       <div className="document-card">
 
         <div className="document-info">
-
-          <div className="document-icon">
-            📄
-          </div>
 
           <div>
 
@@ -569,7 +563,7 @@ placeholder="Tulis catatan..."
 
 <div className="detail-section">
 
-  <h3>📂 Dokumen Pendukung</h3>
+  <h3>Dokumen Pendukung</h3>
 
   {
     data.link_drive? (
@@ -606,7 +600,7 @@ placeholder="Tulis catatan..."
         {catatanAdmin && (
           <div className="detail-section">
 
-            <h3>💬 Catatan Admin</h3>
+            <h3>Catatan Admin</h3>
 
             <div className="admin-note">
               {catatanAdmin}
@@ -615,40 +609,63 @@ placeholder="Tulis catatan..."
           </div>
         )}
 
-        <div className="response-upload">
+       <div className="response-upload">
 
-<h3>📄 Surat Balasan Admin</h3>
+  <h3>Surat Balasan Admin</h3>
 
-<label
-className="upload-response"
->
+  {data.file_respon ? (
 
-<input
-type="file"
-accept=".pdf"
-hidden
-onChange={(e)=>
-setSuratRespon(
-e.target.files[0]
-)
-}
-/>
+    <>
+      <p className="response-name">
+        ✅ {data.file_respon.split("/").pop()}
+      </p>
 
-📤 Upload Surat Balasan
+      <div className="document-actions">
 
-</label>
+        <a
+          href={`http://localhost:8080/${data.file_respon}`}
+          target="_blank"
+          rel="noreferrer"
+          className="view-doc-btn"
+        >
+          👁 Lihat
+        </a>
 
-{
-suratRespon && (
+        <a
+          href={`http://localhost:8080/${data.file_respon}`}
+          download
+          className="download-doc-btn"
+        >
+          ⬇ Download
+        </a>
 
-<p className="response-name">
+      </div>
+    </>
 
-✅ {suratRespon.name}
+  ) : (
 
-</p>
+    <>
+      <label className="upload-response">
 
-)
-}
+        <input
+          type="file"
+          accept=".pdf"
+          hidden
+          onChange={(e) => setSuratRespon(e.target.files[0])}
+        />
+
+        Upload Surat Balasan
+
+      </label>
+
+      {suratRespon && (
+        <p className="response-name">
+          ✅ {suratRespon.name}
+        </p>
+      )}
+    </>
+
+  )}
 
 </div>
 
