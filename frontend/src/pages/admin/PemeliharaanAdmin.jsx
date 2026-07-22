@@ -1,20 +1,60 @@
-import { useState } from "react";
-import { dummyPemeliharaan } from "../user/bmn/dummyData";
+import { useState, useEffect } from "react";
 import { Modal, StatusBadge, inputStyle, FormGroup, IconEye, BarcodeNIP, downloadAsPDF, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
 
 const PemeliharaanAdmin = () => {
-  const [data, setData] = useState(dummyPemeliharaan);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("Semua");
   const [detailItem, setDetailItem] = useState(null);
   const [showProsesModal, setShowProsesModal] = useState(null);
   const [catatan, setCatatan] = useState("");
 
+  // Normalisasi 1 baris data dari backend jadi bentuk yang dipakai Admin.
+  // Menerima baik bentuk yang sudah dibungkus (pemohon/barang) maupun bentuk
+  // mentah persis seperti yang dikirim PemeliharaanUser.jsx saat submit
+  // (nip, nama, jabatan, nomorSurat, items) — jadi tetap nyambung berapapun
+  // bentuk balikan backend-nya.
+  const normalisasiPemeliharaan = (d) => ({
+    id: d.id,
+    nomorSurat: d.nomorSurat || d.nomor_surat || "-",
+    tanggal: d.tanggal || (d.created_at ? d.created_at.substring(0, 10) : "-"),
+    status: d.status || "Diajukan",
+    catatanAdmin: d.catatanAdmin || d.catatan_admin || "",
+    pemohon: d.pemohon || {
+      nama: d.nama,
+      nip: d.nip,
+      jabatan: d.jabatan,
+    },
+    barang: (d.barang || d.items || []).map((b) => ({
+      nama: b.nama,
+      nup: b.nup,
+      keterangan: b.keterangan,
+    })),
+  });
+
+  const fetchData = () => {
+    setLoading(true);
+    fetch("http://localhost:8080/api/pemeliharaan")
+      .then((res) => res.json())
+      .then((json) => {
+        const arr = Array.isArray(json) ? json : [];
+        setData(arr.map(normalisasiPemeliharaan));
+      })
+      .catch((err) => console.error("Gagal ambil data pemeliharaan:", err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const filtered = data.filter(d => {
+    const q = search.toLowerCase();
     const matchSearch =
-      d.pemohon.nama.toLowerCase().includes(search.toLowerCase()) ||
-      d.pemohon.nip.includes(search) ||
-      d.barang.some(b => b.nama.toLowerCase().includes(search.toLowerCase()));
+      (d.pemohon.nama || "").toLowerCase().includes(q) ||
+      (d.pemohon.nip || "").includes(search) ||
+      d.barang.some(b => (b.nama || "").toLowerCase().includes(q));
     const matchFilter = filter === "Semua" || d.status === filter;
     return matchSearch && matchFilter;
   });
@@ -25,16 +65,34 @@ const PemeliharaanAdmin = () => {
     selesai:  data.filter(d => d.status === "Selesai").length,
   };
 
-  const handleMulaiProses = (id) => {
-    setData(data.map(d => d.id === id ? { ...d, status: "Diproses" } : d));
+  const handleMulaiProses = async (id) => {
+    try {
+      await fetch(`http://localhost:8080/api/pemeliharaan/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Diproses" }),
+      });
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal memperbarui status.");
+    }
   };
 
-  const handleSelesaikan = () => {
-    setData(data.map(d =>
-      d.id === showProsesModal.id ? { ...d, status: "Selesai", catatanAdmin: catatan } : d
-    ));
-    setShowProsesModal(null);
-    setCatatan("");
+  const handleSelesaikan = async () => {
+    try {
+      await fetch(`http://localhost:8080/api/pemeliharaan/${showProsesModal.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Selesai", catatanAdmin: catatan }),
+      });
+      setShowProsesModal(null);
+      setCatatan("");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyelesaikan pemeliharaan.");
+    }
   };
 
   // Badge warna sesuai status pemeliharaan
@@ -46,13 +104,21 @@ const PemeliharaanAdmin = () => {
     };
     const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
     return (
-      <span style={{ background: s.bg, color: s.color, padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+      <span style={{ background: s.bg, color: s.color, padding: "3px 10px", borderRadius: 20, fontSize: 14, fontWeight: 600, whiteSpace: "nowrap" }}>
         {status}
       </span>
     );
   };
 
   const tdBase = { padding: "12px 14px", textAlign: "left", borderBottom: "1px solid #f1f5f9", verticalAlign: "middle" };
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 320 }}>
+        <div style={{ fontSize: 12, color: "#64748b" }}>Memuat data pemeliharaan...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -76,7 +142,7 @@ const PemeliharaanAdmin = () => {
           {["Semua", "Diajukan", "Diproses", "Selesai"].map(f => (
             <button key={f} onClick={() => setFilter(f)}
               style={{
-                padding: "5px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: "pointer",
+                padding: "5px 14px", borderRadius: 20, fontSize: 16, fontWeight: 600, cursor: "pointer",
                 border: "none",
                 background: filter === f ? "#2563eb" : "#f1f5f9",
                 color:      filter === f ? "#fff"    : "#64748b",
@@ -87,56 +153,58 @@ const PemeliharaanAdmin = () => {
         </div>
 
         {/* Tabel — urutan: No. Surat, Tanggal, Pemohon, Barang, Status, Aksi */}
-        <AdminTable headers={["No. Surat", "Tanggal", "Pemohon", "Barang", "Status", "Aksi"]}>
-          {filtered.map(d => (
-            <tr key={d.id} style={{ borderBottom: "1px solid #f8fafc" }}>
-              {/* No. Surat */}
-              <td style={{ ...tdBase, fontFamily: "monospace", fontSize: 12, color: "#64748b" }}>
-                {d.nomorSurat}
-              </td>
-              {/* Tanggal */}
-              <td style={{ ...tdBase, color: "#64748b", whiteSpace: "nowrap" }}>
-                {d.tanggal}
-              </td>
-              {/* Pemohon */}
-              <td style={tdBase}>
-                <div style={{ fontWeight: 600, color: "#1e293b" }}>{d.pemohon.nama}</div>
-                <div style={{ fontSize: 11, color: "#94a3b8" }}>{d.pemohon.nip}</div>
-              </td>
-              {/* Barang */}
-              <td style={tdBase}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {d.barang.map((b, i) => (
-                    <span key={i} style={{ fontSize: 12, color: "#1e293b" }}>
-                      {b.nama}
-                      <span style={{ fontSize: 10, color: "#94a3b8", fontFamily: "monospace", marginLeft: 4 }}>
-                        {b.nup}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              </td>
-              {/* Status */}
-              <td style={tdBase}>
-                {statusBadge(d.status)}
-              </td>
-              {/* Aksi */}
-              <td style={tdBase}>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  <AdminButton variant="outline" onClick={() => setDetailItem(d)}>
-                    <IconEye /> Detail
-                  </AdminButton>
-                  {d.status === "Diajukan" && (
-                    <AdminButton onClick={() => handleMulaiProses(d.id)}>Mulai Proses</AdminButton>
-                  )}
-                  {d.status === "Diproses" && (
-                    <AdminButton variant="success" onClick={() => setShowProsesModal(d)}>Selesaikan</AdminButton>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </AdminTable>
+        <div style={{ overflowX: "auto" }}>
+          <AdminTable headers={["No. Surat", "Tanggal", "Pemohon", "Barang", "Status", "Aksi"]}>
+            {filtered.map(d => (
+              <tr key={d.id} style={{ borderBottom: "1px solid #f8fafc" }}>
+                {/* No. Surat */}
+                <td style={{ ...tdBase, fontFamily: "monospace", fontSize: 14, color: "#64748b", whiteSpace: "nowrap" }}>
+                  {d.nomorSurat}
+                </td>
+                {/* Tanggal */}
+                <td style={{ ...tdBase, color: "#64748b", whiteSpace: "nowrap" }}>
+                  {d.tanggal}
+                </td>
+                {/* Pemohon */}
+                <td style={{ ...tdBase, whiteSpace: "nowrap" }}>
+                  <div style={{ fontWeight: 600, color: "#1e293b" }}>{d.pemohon.nama}</div>
+                  <div style={{ fontSize: 14, color: "#94a3b8" }}>{d.pemohon.nip}</div>
+                </td>
+                {/* Barang */}
+                <td style={{ ...tdBase, whiteSpace: "nowrap" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    {d.barang.map((b, i) => (
+                      <div key={i} style={{ fontSize: 14, color: "#1e293b", whiteSpace: "nowrap" }}>
+                        {b.nama}
+                        <div style={{ fontSize: 12, color: "#94a3b8", fontFamily: "monospace", marginLeft: 4 }}>
+                          {b.nup}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </td>
+                {/* Status */}
+                <td style={{ ...tdBase, whiteSpace: "nowrap" }}>
+                  {statusBadge(d.status)}
+                </td>
+                {/* Aksi */}
+                <td style={{ ...tdBase, whiteSpace: "nowrap" }}>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
+                    <AdminButton variant="outline" onClick={() => setDetailItem(d)}>
+                      <IconEye /> Detail
+                    </AdminButton>
+                    {d.status === "Diajukan" && (
+                      <AdminButton onClick={() => handleMulaiProses(d.id)}>Mulai Proses</AdminButton>
+                    )}
+                    {d.status === "Diproses" && (
+                      <AdminButton variant="success" onClick={() => setShowProsesModal(d)}>Selesaikan</AdminButton>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail — tampilan Surat Pemeliharaan (sama seperti sisi user) ── */}
@@ -146,10 +214,21 @@ const PemeliharaanAdmin = () => {
             id="pemeliharaan-detail-print"
             style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 13, lineHeight: 1.7, color: "#1e293b" }}
           >
-            <div style={{ textAlign: "center", borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-              <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-              <div style={{ fontSize: 11 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-              <div style={{ fontSize: 11 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
+              <div style={{ flex: 1, textAlign: "center" }}>
+                <div style={{ fontWeight: 800, fontSize: 15 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+                <div style={{ fontWeight: 800, fontSize: 13 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+                <div style={{ fontSize: 10.5, color: "#374151" }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+                <div style={{ fontSize: 10.5, color: "#374151" }}>
+                  Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+                </div>
+                <div style={{ fontSize: 10.5, color: "#374151" }}>
+                  Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+                </div>
+                <div style={{ fontSize: 10.5, color: "#374151" }}>
+                  Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+                </div>
+              </div>
             </div>
 
             <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -160,22 +239,17 @@ const PemeliharaanAdmin = () => {
             <p style={{ textAlign: "justify", marginBottom: 4 }}>
               Permohonan pemeliharaan barang atas
             </p>
-            <table style={{ marginLeft: 16, marginBottom: 8, fontSize: 13, borderCollapse: "collapse" }}>
+            <table style={{ marginLeft: 16, marginBottom: 10, fontSize: 13, textAlign: "left", borderCollapse: "collapse" }}>
               <tbody>
                 <tr>
-                  <td style={{ paddingRight: 12, color: "#475569" }}>Nama</td>
-                  <td style={{ paddingRight: 8 }}>:</td>
-                  <td style={{ fontWeight: 700 }}>{detailItem.pemohon.nama}</td>
+                  <td style={{ padding: "2px 10px 2px 0", width: 110, textAlign: "left", verticalAlign: "top", color: "#475569" }}>Nama</td>
+                  <td style={{ padding: "2px 6px 2px 0", textAlign: "left", verticalAlign: "top" }}>:</td>
+                  <td style={{ padding: "2px 0", textAlign: "left" }}><strong>{detailItem.pemohon.nama}</strong></td>
                 </tr>
                 <tr>
-                  <td style={{ paddingRight: 12, color: "#475569" }}>NIP</td>
-                  <td style={{ paddingRight: 8 }}>:</td>
-                  <td style={{ fontWeight: 700 }}>{detailItem.pemohon.nip}</td>
-                </tr>
-                <tr>
-                  <td style={{ paddingRight: 12, color: "#475569" }}>Jabatan</td>
-                  <td style={{ paddingRight: 8 }}>:</td>
-                  <td style={{ fontWeight: 700 }}>{detailItem.pemohon.jabatan || "-"}</td>
+                  <td style={{ padding: "2px 10px 2px 0", width: 110, textAlign: "left", verticalAlign: "top", color: "#475569" }}>NIP</td>
+                  <td style={{ padding: "2px 6px 2px 0", textAlign: "left", verticalAlign: "top" }}>:</td>
+                  <td style={{ padding: "2px 0", textAlign: "left" }}><strong>{detailItem.pemohon.nip}</strong></td>
                 </tr>
               </tbody>
             </table>
@@ -198,7 +272,7 @@ const PemeliharaanAdmin = () => {
                     <td style={{ border: "1px solid #cbd5e1", padding: "6px 8px", textAlign: "left" }}>{i + 1}</td>
                     <td style={{ border: "1px solid #cbd5e1", padding: "6px 8px", textAlign: "left" }}>{b.nama}</td>
                     <td style={{ border: "1px solid #cbd5e1", padding: "6px 8px", textAlign: "left", fontFamily: "monospace" }}>{b.nup}</td>
-                    <td style={{ border: "1px solid #cbd5e1", padding: "6px 8px", textAlign: "left" }}>{detailItem.keterangan || "-"}</td>
+                    <td style={{ border: "1px solid #cbd5e1", padding: "6px 8px", textAlign: "left" }}>{b.keterangan || "-"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -218,15 +292,14 @@ const PemeliharaanAdmin = () => {
               Demikian permohonan ini saya buat dengan sebenar-benarnya untuk dapat diproses oleh Admin BMN.
             </p>
 
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24, alignItems: "flex-end" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
               <div style={{ textAlign: "center", width: 200 }}>
                 <div>Jakarta, {detailItem.tanggal}</div>
                 <div>Pemohon,</div>
-                <div style={{ marginTop: 12, display: "inline-block", overflow: "hidden", height: 80 }}>
+                <div style={{ marginTop: 12, marginLeft: 65, display: "inline-block", overflow: "hidden", height: 80 }}>
                   <BarcodeNIP value={detailItem.pemohon.nip} />
                 </div>
                 <div style={{ marginTop: 6, fontWeight: 700 }}>{detailItem.pemohon.nama}</div>
-                <div>NIP. {detailItem.pemohon.nip}</div>
               </div>
             </div>
           </div>

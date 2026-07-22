@@ -1,67 +1,73 @@
-import { useState } from "react";
-import { dummyBarangMasuk, currentUser } from "../user/bmn/dummyData";
+import { useState, useEffect } from "react";
 import { Modal, inputStyle, FormGroup, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
 import { IconPlus } from "../user/bmn/components";
 
-// ─── DAFTAR ADMIN BMN (dari data kepegawaian Bimas Kristen) ───────────────────
-// Jabatan: Pengelola Pengadaan Barang/Jasa Ahli Pertama &
-//          Penata Kelola Sistem dan Teknologi Informasi
-const adminBMN = [
-  { nama: "Olin Mawar Kristianty",  jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Tabita Marselia Silaen", jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martha Fransiska Manalu",jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Lidya Septaria Sinurat", jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Niar Ningsih Sabara",    jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martin Hasiholan Siagian", jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Roynardo",               jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-];
+const API_URL = "http://localhost:8080/api";
+
+// Daftar admin BMN sekarang diambil dari database (role = admin_bmn),
+// bukan hardcode lagi — lihat useEffect di bawah.
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const parseRupiah = (str) => {
   if (!str) return 0;
-  return parseInt(str.replace(/[^0-9]/g, "")) || 0;
+  return parseInt(String(str).replace(/[^0-9]/g, "")) || 0;
 };
 
 const formatRupiah = (num) =>
   "Rp " + Number(num).toLocaleString("id-ID");
 
-const emptyBarangItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
+const emptyBarangItem = { nama: "", kategori: "ATK", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
 
-// Konversi data lama (single-barang) → format baru (multi-barang per pengadaan)
-const normalizeData = (raw) =>
-  raw.map(d => ({
-    id: d.id,
-    noPengadaan: d.noPengadaan,
-    tanggal: d.tanggal,
-    pemeriksa: d.pj || "",
-    items: [{
-      nama: d.namaBarang,
-      kategori: d.kategori,
-      jumlah: d.jumlah,
-      kondisi: d.kondisi,
-      hargaUnit: d.nilaiUnit || "Rp 0",
-    }],
-  }));
-
-const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kategoriList = ["ATK", "Perangkat Lunak", "Lisensi Perangkat Lunak", "Peralatan Kantor"];
 
 const kategoriColor = {
-  "Peralatan IT": { bg: "#eff6ff", color: "#2563eb" },
-  "Perabot":      { bg: "#faf5ff", color: "#7c3aed" },
-  "Kendaraan":    { bg: "#fffbeb", color: "#d97706" },
-  "Lainnya":      { bg: "#f8fafc", color: "#475569" },
+  "ATK":                     { bg: "#eff6ff", color: "#2563eb" },
+  "Perangkat Lunak":         { bg: "#faf5ff", color: "#7c3aed" },
+  "Lisensi Perangkat Lunak": { bg: "#fdf2f8", color: "#db2777" },
+  "Peralatan Kantor":        { bg: "#fffbeb", color: "#d97706" },
 };
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const BarangMasukAdmin = () => {
-  const [data, setData] = useState(normalizeData(dummyBarangMasuk));
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [editId, setEditId] = useState(null);
 
-  // Cari nama admin yang login; kalau tidak ketemu gunakan admin pertama
+  const loadData = () => {
+    setLoading(true);
+    fetch(`${API_URL}/barang-masuk`)
+      .then(res => res.json())
+      .then(json => setData(Array.isArray(json) ? json : []))
+      .catch(err => console.error("Gagal ambil data barang masuk:", err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { loadData(); }, []);
+
+  const [adminBMN, setAdminBMN] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/admin-bmn`)
+      .then(res => res.json())
+      .then(data => setAdminBMN(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Gagal ambil daftar admin BMN:", err));
+  }, []);
+
+  // Pegawai yang login (dari hasil login sungguhan, bukan dummy)
+  const loginUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+  // Urutkan: admin yang lagi login ditaruh paling atas
+  const adminBMNSorted = [...adminBMN].sort((a, b) => {
+    if (a.nip === loginUser.nip) return -1;
+    if (b.nip === loginUser.nip) return 1;
+    return 0;
+  });
+
   const defaultPemeriksa =
-    adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
+    adminBMN.find(a => a.nip === loginUser.nip)?.nama || adminBMN[0]?.nama || "";
 
   const [form, setForm] = useState({
     noPengadaan: "",
@@ -69,6 +75,14 @@ const BarangMasukAdmin = () => {
     pemeriksa: defaultPemeriksa,
     items: [{ ...emptyBarangItem }],
   });
+
+  // adminBMN awalnya kosong (masih fetch), jadi update pemeriksa begitu datanya sudah ada
+  useEffect(() => {
+    if (defaultPemeriksa && !form.pemeriksa) {
+      setForm(prev => ({ ...prev, pemeriksa: defaultPemeriksa }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultPemeriksa]);
 
   const filtered = data.filter(d =>
     d.noPengadaan.toLowerCase().includes(search.toLowerCase()) ||
@@ -100,16 +114,72 @@ const BarangMasukAdmin = () => {
     });
   };
 
-  const handleSubmit = () => {
-    if (!form.noPengadaan || form.items.some(it => !it.nama)) return;
-    setData([...data, { ...form, id: data.length + 1 }]);
-    setShowModal(false);
+  const resetForm = () => {
     setForm({
       noPengadaan: "",
       tanggal: new Date().toISOString().slice(0, 10),
       pemeriksa: defaultPemeriksa,
       items: [{ ...emptyBarangItem }],
     });
+    setEditId(null);
+  };
+
+  const openAddModal = () => {
+    resetForm();
+    setShowModal(true);
+  };
+
+  const openEditModal = (d) => {
+    setForm({
+      noPengadaan: d.noPengadaan,
+      tanggal: d.tanggal,
+      pemeriksa: d.pemeriksa,
+      items: d.items.map(it => ({ ...it })),
+    });
+    setEditId(d.id);
+    setShowModal(true);
+  };
+
+  const handleDelete = async (d) => {
+    if (!window.confirm(`Hapus data pengadaan "${d.noPengadaan}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+    try {
+      const res = await fetch(`${API_URL}/barang-masuk/${d.id}`, { method: "DELETE" });
+      const result = await res.json();
+      if (!result.success) {
+        alert(result.error || "Gagal menghapus barang masuk.");
+        return;
+      }
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus barang masuk.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!form.noPengadaan || form.items.some(it => !it.nama)) return;
+
+    try {
+      const isEdit = Boolean(editId);
+      const res = await fetch(`${API_URL}/barang-masuk${isEdit ? `/${editId}` : ""}`, {
+        method: isEdit ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await res.json();
+
+      if (!result.success) {
+        alert(result.error || "Gagal menyimpan barang masuk.");
+        return;
+      }
+
+      setShowModal(false);
+      resetForm();
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan barang masuk.");
+    }
   };
 
   const summary = {
@@ -119,8 +189,16 @@ const BarangMasukAdmin = () => {
   };
 
   // Style sel tabel
-  const tdBase = { padding: "10px 14px", textAlign: "left", borderBottom: "1px solid #f1f5f9", verticalAlign: "middle" };
+  const tdBase = { padding: "10px 14px", textAlign: "left", borderBottom: "1px solid #f1f5f9", verticalAlign: "middle", whiteSpace: "nowrap" };
   const tdTop  = { ...tdBase, verticalAlign: "top" };
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
+        <div style={{ fontSize: 12, color: "#64748b" }}>Memuat data barang masuk...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -131,7 +209,7 @@ const BarangMasukAdmin = () => {
         onSearchChange={setSearch}
         searchPlaceholder="Cari no. pengadaan, barang, pemeriksa..."
         rightAction={
-          <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
+          <AdminButton onClick={openAddModal} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
             + Catat Barang Masuk
           </AdminButton>
         }
@@ -145,19 +223,20 @@ const BarangMasukAdmin = () => {
 
       {/* ── Tabel utama ── */}
       <AdminCard>
+        <div style={{ overflowX: "auto" }}>
         <AdminTable headers={[
           "No. Pengadaan", "Tanggal", "Nama Barang", "Kategori",
           "Jumlah Per Barang", "Kondisi", "Harga Total", "Pemeriksa Barang", "Aksi"
         ]}>
           {filtered.map(d =>
             d.items.map((it, idx) => {
-              const kc = kategoriColor[it.kategori] || kategoriColor["Lainnya"];
+              const kc = kategoriColor[it.kategori] || { bg: "#f8fafc", color: "#475569" };
               const hargaTotal = parseRupiah(it.hargaUnit) * Number(it.jumlah);
               return (
                 <tr key={`${d.id}-${idx}`} style={{ borderBottom: "1px solid #f8fafc" }}>
                   {/* No Pengadaan — rowspan, hanya di baris pertama */}
                   {idx === 0 && (
-                    <td style={{ ...tdTop, fontFamily: "monospace", fontSize: 12, color: "#64748b" }}
+                    <td style={{ ...tdTop, fontFamily: "monospace", fontSize: 16, color: "#64748b" }}
                         rowSpan={d.items.length}>
                       {d.noPengadaan}
                     </td>
@@ -175,7 +254,7 @@ const BarangMasukAdmin = () => {
                   </td>
                   {/* Kategori */}
                   <td style={tdBase}>
-                    <span style={{ background: kc.bg, color: kc.color, padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600 }}>
+                    <span style={{ background: kc.bg, color: kc.color, padding: "3px 10px", borderRadius: 20, fontSize: 14, fontWeight: 600 }}>
                       {it.kategori}
                     </span>
                   </td>
@@ -188,7 +267,7 @@ const BarangMasukAdmin = () => {
                     <span style={{
                       background: it.kondisi === "Baik" ? "#dcfce7" : it.kondisi === "Rusak Ringan" ? "#fef9c3" : "#fee2e2",
                       color:      it.kondisi === "Baik" ? "#16a34a" : it.kondisi === "Rusak Ringan" ? "#a16207" : "#dc2626",
-                      padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600,
+                      padding: "3px 10px", borderRadius: 20, fontSize: 14, fontWeight: 600,
                     }}>
                       {it.kondisi}
                     </span>
@@ -206,7 +285,11 @@ const BarangMasukAdmin = () => {
                   {/* Aksi — rowspan */}
                   {idx === 0 && (
                     <td style={tdTop} rowSpan={d.items.length}>
-                      <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                      <div style={{ display: "flex", gap: 6, whiteSpace: "nowrap" }}>
+                        <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                        <AdminButton variant="outline" onClick={() => openEditModal(d)}>Edit</AdminButton>
+                        <AdminButton variant="outline" onClick={() => handleDelete(d)} style={{ color: "#dc2626", borderColor: "#dc2626" }}>Hapus</AdminButton>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -214,6 +297,7 @@ const BarangMasukAdmin = () => {
             })
           )}
         </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail ── */}
@@ -263,7 +347,7 @@ const BarangMasukAdmin = () => {
                 })}
                 <tr style={{ background: "#f8fafc" }}>
                   <td colSpan={6} style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 700, textAlign: "right", color: "#1e293b" }}>Total Nilai Pengadaan</td>
-                  <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 800, color: "#2563eb", textAlign: "left" }}>{formatRupiah(hitungTotal(detailItem.items))}</td>
+                  <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 800, color: "#2563eb", textAlign: "left", whiteSpace: "nowrap" }}>{formatRupiah(hitungTotal(detailItem.items))}</td>
                 </tr>
               </tbody>
             </table>
@@ -277,7 +361,7 @@ const BarangMasukAdmin = () => {
 
       {/* ── Modal Catat Barang Masuk ── */}
       {showModal && (
-        <Modal title="Catat Barang Masuk" onClose={() => setShowModal(false)} wide>
+        <Modal title={editId ? "Edit Barang Masuk" : "Catat Barang Masuk"} onClose={() => { setShowModal(false); resetForm(); }} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="Nomor Pengadaan">
               <input
@@ -303,9 +387,9 @@ const BarangMasukAdmin = () => {
               value={form.pemeriksa}
               onChange={e => setForm({ ...form, pemeriksa: e.target.value })}
             >
-              {adminBMN.map(a => (
-                <option key={a.nama} value={a.nama}>
-                  {a.nama}{a.nama === defaultPemeriksa ? " (Saya)" : ""}
+              {adminBMNSorted.map(a => (
+                <option key={a.nip} value={a.nama}>
+                  {a.nama}{a.nip === loginUser.nip ? " (Saya)" : ""}
                 </option>
               ))}
             </select>
@@ -390,8 +474,8 @@ const BarangMasukAdmin = () => {
           </button>
 
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <AdminButton variant="outline" onClick={() => setShowModal(false)}>Batal</AdminButton>
-            <AdminButton variant="success" onClick={handleSubmit}>Simpan</AdminButton>
+            <AdminButton variant="outline" onClick={() => { setShowModal(false); resetForm(); }}>Batal</AdminButton>
+            <AdminButton variant="success" onClick={handleSubmit}>{editId ? "Simpan Perubahan" : "Simpan"}</AdminButton>
           </div>
         </Modal>
       )}

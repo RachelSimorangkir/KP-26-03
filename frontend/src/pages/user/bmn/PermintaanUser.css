@@ -268,9 +268,9 @@
 .rekom-card{
     background:#fff;
 
-    border-radius:24px;
+    border-radius:18px;
 
-    padding:32px;
+    padding:22px;
 
     box-shadow:0 10px 30px rgba(15,23,42,.06);
 
@@ -284,8 +284,8 @@
 }
 .rekom-card h3{
     color:#16324b;
-    font-size:30px;
-    margin-bottom:24px;
+    font-size:22px;
+    margin-bottom:16px;
 }
 
 @media(max-width:1100px){
@@ -305,14 +305,17 @@
 }
 
 /* Judul card */
+.rekom-card h2,
 .rekom-card h3{
-    font-size:32px;
+    font-size:22px;
     font-weight:700;
+    color:#16324b;
+    margin-bottom:14px;
 }
 
 /* Label form */
 .rekom-card label{
-    font-size:16px;
+    font-size:13px;
     font-weight:600;
     color:#16324b;
 }
@@ -321,14 +324,14 @@
 .rekom-card input,
 .rekom-card textarea,
 .rekom-card select{
-    font-size:16px !important;
-    padding:14px 16px !important;
+    font-size:13px !important;
+    padding:8px 10px !important;
 }
 
 /* Placeholder */
 .rekom-card input::placeholder,
 .rekom-card textarea::placeholder{
-    font-size:15px;
+    font-size:12px;
 }
 
 /* Judul "Data Pemohon" & "Detail Peminjaman" */
@@ -338,52 +341,52 @@
 
 .stok-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-    gap:20px;
-    margin-top:30px;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:12px;
+    margin-top:18px;
 }
 
 .stok-item{
     background:#f8fbff;
     border:1px solid #dbeafe;
-    border-radius:20px;
+    border-radius:14px;
 
-    padding:22px 18px;
+    padding:12px 10px;
 
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
 
-    min-height:145px;
+    min-height:95px;
 
     transition:.3s;
 }
 
 .stok-item:hover{
-    transform:translateY(-6px);
-    box-shadow:0 12px 28px rgba(37,99,235,.12);
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(37,99,235,.12);
 }
 
 .stok-item .stok-nama{
-    font-size:15px;
+    font-size:12px;
     font-weight:600;
     color:#16324b;
     text-align:center;
-    line-height:1.5;
-    margin-bottom:14px;
+    line-height:1.4;
+    margin-bottom:8px;
 }
 
 .stok-item .stok-angka{
-    font-size:34px;
+    font-size:22px;
     font-weight:800;
     color:#2563eb;
     line-height:1;
-    margin-bottom:10px;
+    margin-bottom:6px;
 }
 
 .stok-item .stok-satuan{
-    font-size:14px;
+    font-size:11px;
     color:#64748b;
 }
 
@@ -433,66 +436,78 @@
 
 .success-wrapper{
     width:100%;
-    min-height:80vh;
+    min-height:60vh;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
     padding:40px;
+
+    background:#eef4ff;
 }
 
 .success-card{
     width:100%;
-    max-width:560px;
+    max-width:420px;
 
-    background:#fff;
+    background:transparent;
 
-    border-radius:22px;
+    border-radius:0;
 
-    padding:55px 45px;
+    padding:20px;
 
     text-align:center;
 
-    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    box-shadow:none;
 }
 
 .success-icon{
-    font-size:68px;
-    margin-bottom:18px;
+    width:48px;
+    height:48px;
+
+    margin:0 auto 16px;
+
+    background:#22c55e;
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .success-title{
-    font-size:30px;
+    font-size:20px;
     font-weight:700;
     color:#1e293b;
-    margin-bottom:10px;
+    margin-bottom:8px;
 }
 
 .success-desc{
     color:#64748b;
-    line-height:1.8;
-    font-size:16px;
-    margin-bottom:35px;
+    line-height:1.6;
+    font-size:13px;
+    margin-bottom:20px;
 }
 
 .success-btn{
-    margin-top:30px;
+    margin-top:0;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
-    width:240px;
-    height:48px;
+    width:auto;
+    padding:0 20px;
+    height:40px;
 
-    font-size:15px;
+    font-size:13px;
     font-weight:600;
 
-    border-radius:12px;
+    border-radius:8px;
 }
 
 .success-card button{
-    margin:30px auto 0;
-    display:block;
+    margin:0 auto;
+    display:flex;
 }

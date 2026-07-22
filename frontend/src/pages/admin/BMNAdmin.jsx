@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AdminSidebarLayout, IconBox, IconClipboard, IconTruck, IconList, IconTool } from "../user/bmn/components";
 import PeminjamanAdmin from "./PeminjamanAdmin";
 import PermintaanAdmin from "./PermintaanAdmin";
@@ -38,6 +39,15 @@ const menuItems = [
 
 const BMNAdmin = ({ user, onBack, onLogout }) => {
   const [activePage, setActivePage] = useState("peminjaman");
+  const navigate = useNavigate();
+
+  // Kalau parent (route/App) belum ngasih onLogout, pakai logout bawaan ini
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    navigate("/login-admin");
+  };
 
   const renderPage = () => {
     switch (activePage) {
@@ -59,7 +69,7 @@ const BMNAdmin = ({ user, onBack, onLogout }) => {
       setActivePage={setActivePage}
       userName={user?.nama || "Admin BMN"}
       onBack={onBack}
-      onLogout={onLogout}
+      onLogout={onLogout || handleLogout}
     >
       {renderPage()}
     </AdminSidebarLayout>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { dummyPeminjaman, stokBarang } from "../user/bmn/dummyData";
 import { Modal, StatusBadge, inputStyle, FormGroup, IconEye, IconReturn, downloadAsPDF, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
 
 // ─── PREVIEW SURAT (Admin view) ───────────────────────────────────────────────
@@ -10,12 +9,23 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
 
   return (
     <Modal title="Preview Surat Peminjaman" onClose={onClose} wide>
-      <div id={`surat-admin-print-${item.id}`} style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 13, lineHeight: 1.7, color: "#1e293b" }}>
+      <div id={`surat-admin-print-${item.id}`} style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 14, lineHeight: 1.7, color: "#1e293b" }}>
         {/* Kop Surat */}
-        <div style={{ textAlign: "center", borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-          <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-          <div style={{ fontSize: 11 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-          <div style={{ fontSize: 11 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
+          <div style={{ flex: 1, textAlign: "center" }}>
+            <div style={{ fontWeight: 800, fontSize: 15 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+            <div style={{ fontWeight: 800, fontSize: 13 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>
+              Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+            </div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>
+              Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+            </div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>
+              Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+            </div>
+          </div>
         </div>
 
         {/* Judul */}
@@ -26,7 +36,7 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
 
         {/* Isi surat */}
         <p style={{ textAlign: "justify" }}>Yang bertanda tangan di bawah ini:</p>
-        <table style={{ marginLeft: 16, marginBottom: 10, fontSize: 13, textAlign: "left" }}>
+        <table style={{ marginLeft: 16, marginBottom: 10, fontSize: 14, textAlign: "left", borderCollapse: "collapse" }}>
           <tbody>
             {[
               ["Nama", item.peminjam.nama],
@@ -35,16 +45,16 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
               ["Unit Kerja", item.peminjam.unitKerja],
             ].map(([k, v]) => (
               <tr key={k}>
-                <td style={{ paddingRight: 10, width: 110, textAlign: "left", verticalAlign: "top" }}>{k}</td>
-                <td style={{ paddingRight: 6, textAlign: "left", verticalAlign: "top" }}>:</td>
-                <td style={{ textAlign: "left" }}><strong>{v}</strong></td>
+                <td style={{ padding: "2px 10px 2px 0", width: 110, textAlign: "left", verticalAlign: "top" }}>{k}</td>
+                <td style={{ padding: "2px 6px 2px 0", textAlign: "left", verticalAlign: "top" }}>:</td>
+                <td style={{ padding: "2px 0", textAlign: "left" }}><strong>{v}</strong></td>
               </tr>
             ))}
           </tbody>
         </table>
 
         <p style={{ textAlign: "justify" }}>Dengan ini mengajukan permohonan peminjaman barang milik negara sebagai berikut:</p>
-        <table style={{ marginLeft: 16, marginBottom: 10, fontSize: 13, textAlign: "left" }}>
+        <table style={{ marginLeft: 16, marginBottom: 10, fontSize: 13, textAlign: "left", borderCollapse: "collapse" }}>
           <tbody>
             {[
               ["Nama Barang", item.barang.nama],
@@ -55,9 +65,9 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
               ["Keperluan", item.keperluan],
             ].map(([k, v]) => (
               <tr key={k}>
-                <td style={{ paddingRight: 10, width: 140, textAlign: "left", verticalAlign: "top" }}>{k}</td>
-                <td style={{ paddingRight: 6, textAlign: "left", verticalAlign: "top" }}>:</td>
-                <td style={{ textAlign: "left" }}><strong>{v}</strong></td>
+                <td style={{ padding: "2px 10px 2px 0", width: 140, textAlign: "left", verticalAlign: "top" }}>{k}</td>
+                <td style={{ padding: "2px 6px 2px 0", textAlign: "left", verticalAlign: "top" }}>:</td>
+                <td style={{ padding: "2px 0", textAlign: "left" }}><strong>{v}</strong></td>
               </tr>
             ))}
           </tbody>
@@ -71,7 +81,7 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
 
         {/* TTD */}
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
-          <div style={{ textAlign: "center", width: 180 }}>
+          <div style={{ textAlign: "center", width: 180, whiteSpace: "nowrap" }}>
             <div>Mengetahui,</div>
             <div>Kasubbag Perlengkapan dan BMN</div>
             <div style={{ marginTop: 40, borderTop: "1px solid #000", paddingTop: 4 }}>
@@ -80,11 +90,11 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
             </div>
           </div>
           <div style={{ textAlign: "center", width: 180 }}>
-            <div>Jakarta, {today}</div>
-            <div>Yang Meminjam,</div>
+            <div style={{ whiteSpace: "nowrap" }}>Jakarta, {today}</div>
+            <div style={{ whiteSpace: "nowrap" }}>Yang Meminjam,</div>
             <div style={{ marginTop: 40, borderTop: "1px solid #000", paddingTop: 4 }}>
-              <div><strong>{item.peminjam.nama}</strong></div>
-              <div>NIP. {item.peminjam.nip}</div>
+              <div style={{ wordBreak: "break-word" }}><strong>{item.peminjam.nama}</strong></div>
+              <div style={{ whiteSpace: "nowrap" }}>NIP. {item.peminjam.nip}</div>
             </div>
           </div>
         </div>
@@ -103,66 +113,63 @@ const PreviewSuratAdmin = ({ item, onClose }) => {
 const PeminjamanAdmin = () => {
 
   const [data, setData] = useState([]);
+  const [stok, setStok] = useState([]);
 
   const loadData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/peminjaman");
+      const result = await response.json();
 
-      try{
+      const dataBaru = result.map(item => ({
+        id: item.id,
+        nomorSurat: `PMJ-${String(item.id).padStart(4, "0")}`,
+        peminjam: {
+          nama: item.nama,
+          nip: item.nip,
+          jabatan: item.jabatan,
+          unitKerja: item.unit_kerja
+        },
+        barang: {
+          id: item.barang_id,
+          nama: item.nama_barang,
+          kode: item.kode_barang
+        },
+        lokasi: item.lokasi_penggunaan,
+        tglPinjam: item.tanggal_pinjam,
+        tglKembali: item.tanggal_kembali,
+        keperluan: item.keperluan,
+        status: item.status === "Menunggu" ? "Diajukan" : item.status,
+        kondisiKembali: item.kondisi_kembali,
+      }));
 
-          const response = await fetch(
-              "http://localhost:8080/api/peminjaman"
-          );
-
-          const result = await response.json();
-
-          const dataBaru = result.map(item => ({
-
-              id:item.id,
-
-              nomorSurat:`PMJ-${String(item.id).padStart(4,"0")}`,
-
-              peminjam:{
-                  nama:item.nama,
-                  nip:item.nip,
-                  jabatan:item.jabatan,
-                  unitKerja:item.unit_kerja
-              },
-
-              barang:{
-                  id:item.barang_id,
-                  nama:item.nama_barang,
-                  kode:item.kode_barang
-              },
-
-              lokasi:item.lokasi_penggunaan,
-
-              tglPinjam:item.tanggal_pinjam,
-
-              tglKembali:item.tanggal_kembali,
-
-              keperluan:item.keperluan,
-
-              status:
-                  item.status === "Menunggu"
-                      ? "Diajukan"
-                      : item.status
-
-          }));
-
-          setData(dataBaru);
-
-      }catch(err){
-
-          console.log(err);
-
-      }
-
+      setData(dataBaru);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // Stok barang — fetch asli dari master-barang, bukan dummy lagi
+  const loadStok = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/master-barang");
+      const result = await response.json();
+
+      const stokBaru = result.map(item => ({
+        id: item.id,
+        nama: item.nama_barang,
+        stok: item.stok,
+      }));
+
+      setStok(stokBaru);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-
     loadData();
-
-}, []);
-
+    loadStok();
+  }, []);
 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("Semua");
@@ -171,7 +178,6 @@ const PeminjamanAdmin = () => {
   const [showKembali, setShowKembali] = useState(null);
   const [kondisi, setKondisi] = useState("Baik");
   const [catatan, setCatatan] = useState("");
-  const [stok, setStok] = useState(stokBarang);
 
   const filtered = data.filter(d => {
     const matchSearch =
@@ -187,86 +193,55 @@ const PeminjamanAdmin = () => {
     return s ? s.stok : 0;
   };
 
-  const handleSetujui = async(id)=>{
-
-    try{
-
-        await fetch(
-
-            `http://localhost:8080/api/peminjaman/${id}`,
-
-            {
-
-                method:"PUT",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-
-                    status:"Dipinjam"
-
-                })
-
-            }
-
-        );
-
-        loadData();
-
-    }catch(err){
-
-        console.log(err);
-
+  const handleSetujui = async (id) => {
+    try {
+      await fetch(`http://localhost:8080/api/peminjaman/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Dipinjam" }),
+      });
+      loadData();
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-};
-
-  const handleTolak = async(id)=>{
-
-    try{
-
-        await fetch(
-
-            `http://localhost:8080/api/peminjaman/${id}`,
-
-            {
-
-                method:"PUT",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-
-                    status:"Ditolak"
-
-                })
-
-            }
-
-        );
-
-        loadData();
-
-    }catch(err){
-
-        console.log(err);
-
+  const handleTolak = async (id) => {
+    try {
+      await fetch(`http://localhost:8080/api/peminjaman/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Ditolak" }),
+      });
+      loadData();
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-};
+  const handleKembali = async () => {
+    try {
+      await fetch(`http://localhost:8080/api/peminjaman/${showKembali.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "Dikembalikan",
+          kondisi_kembali: kondisi,
+          catatan_kembali: catatan,
+        }),
+      });
 
-  const handleKembali = () => {
-    setData(data.map(d => d.id === showKembali.id ? { ...d, status: "Dikembalikan", kondisiKembali: kondisi } : d));
-    if (kondisi !== "Rusak Berat") {
-      setStok(stok.map(s => s.id === showKembali.barang.id ? { ...s, stok: s.stok + 1 } : s));
+      setShowKembali(null);
+      setKondisi("Baik");
+      setCatatan("");
+
+      // Muat ulang data peminjaman & stok (stok otomatis nambah di backend kalau bukan Rusak Berat)
+      loadData();
+      loadStok();
+    } catch (err) {
+      console.log(err);
+      alert("Gagal memproses pengembalian.");
     }
-    setShowKembali(null);
-    setKondisi("Baik");
-    setCatatan("");
   };
 
   const summary = {
@@ -287,13 +262,13 @@ const PeminjamanAdmin = () => {
 
       {/* Stok Barang */}
       <AdminCard style={{ marginBottom: 14 }}>
-        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 12, marginBottom: 10 }}>Stok Barang Saat Ini</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 8 }}>
+        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 22, marginBottom: 12 }}>Stok Barang Saat Ini</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 10 }}>
           {stok.map((s, i) => (
-            <div key={i} style={{ background: s.stok === 0 ? "#fef2f2" : s.stok <= 2 ? "#fffbeb" : "#f8fafc", borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", marginBottom: 3, lineHeight: 1.25 }}>{s.nama}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: s.stok === 0 ? "#dc2626" : s.stok <= 2 ? "#d97706" : "#2563eb" }}>{s.stok}</div>
-              <div style={{ fontSize: 9, color: "#94a3b8" }}>Unit</div>
+            <div key={i} style={{ background: s.stok === 0 ? "#fef2f2" : s.stok <= 2 ? "#fffbeb" : "#f8fafc", borderRadius: 10, padding: "12px 14px", textAlign: "center" }}>
+              <div style={{ fontSize: 13, color: "#64748b", marginBottom: 5, lineHeight: 1.3 }}>{s.nama}</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: s.stok === 0 ? "#dc2626" : s.stok <= 2 ? "#d97706" : "#2563eb" }}>{s.stok}</div>
+              <div style={{ fontSize: 12, color: "#94a3b8" }}>Unit</div>
             </div>
           ))}
         </div>
@@ -312,7 +287,7 @@ const PeminjamanAdmin = () => {
           {["Semua", "Diajukan", "Dipinjam", "Dikembalikan", "Ditolak"].map(f => (
             <button key={f} onClick={() => setFilter(f)}
               style={{
-                padding: "7px 14px", border: "1.5px solid", borderRadius: 20, cursor: "pointer", fontSize: 12, fontWeight: 600,
+                padding: "7px 14px", border: "1.5px solid", borderRadius: 20, cursor: "pointer", fontSize: 16, fontWeight: 600,
                 borderColor: filter === f ? "#2563eb" : "#e2e8f0",
                 background: filter === f ? "#2563eb" : "#fff",
                 color: filter === f ? "#fff" : "#64748b",
@@ -325,18 +300,18 @@ const PeminjamanAdmin = () => {
         <AdminTable headers={["No. Surat", "Peminjam", "Barang", "Lokasi", "Tgl Pinjam", "Tgl Kembali", "Status", "Aksi"]}>
           {filtered.map(d => (
             <tr key={d.id} style={{ borderBottom: "1px solid #f8fafc" }}>
-              <td style={{ padding: "12px 16px", fontFamily: "monospace", fontSize: 12, color: "#64748b", textAlign: "left" }}>{d.nomorSurat}</td>
-              <td style={{ padding: "12px 16px", textAlign: "left" }}>
+              <td style={{ padding: "12px 16px", fontFamily: "monospace", fontSize: 16, color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.nomorSurat}</td>
+              <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>
                 <div style={{ fontWeight: 600, color: "#1e293b" }}>{d.peminjam.nama}</div>
-                <div style={{ fontSize: 11, color: "#94a3b8" }}>{d.peminjam.nip}</div>
+                <div style={{ fontSize: 14, color: "#94a3b8" }}>{d.peminjam.nip}</div>
               </td>
-              <td style={{ padding: "12px 16px", color: "#1e293b", textAlign: "left" }}>{d.barang.nama}</td>
-              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left" }}>{d.lokasi}</td>
-              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left" }}>{d.tglPinjam}</td>
-              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left" }}>{d.tglKembali}</td>
-              <td style={{ padding: "12px 16px", textAlign: "left" }}><StatusBadge status={d.status} /></td>
-              <td style={{ padding: "12px 16px", textAlign: "left" }}>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              <td style={{ padding: "12px 16px", color: "#1e293b", textAlign: "left", whiteSpace: "nowrap" }}>{d.barang.nama}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.lokasi}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.tglPinjam}</td>
+              <td style={{ padding: "12px 16px", color: "#64748b", textAlign: "left", whiteSpace: "nowrap" }}>{d.tglKembali}</td>
+              <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}><StatusBadge status={d.status} /></td>
+              <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
                   <AdminButton variant="outline" onClick={() => setDetailItem(d)}><IconEye /> Detail</AdminButton>
                   {d.status === "Diajukan" && (
                     <>

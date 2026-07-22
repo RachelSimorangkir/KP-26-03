@@ -35,9 +35,9 @@ function BMNUser() {
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         <div className="sidebar-header">
           {!collapsed && (
-            <Link to="/" className="portal-link">
+            <Link to="/" className="jendela-link">
   <div className="logo-text">
-    <h2>Portal</h2>
+    <h2>Jendela</h2>
     <span>Layanan Internal</span>
   </div>
 </Link>
@@ -89,7 +89,7 @@ function BMNUser() {
       <div className="welcome-container">
 
         <div className="welcome-badge">
-          Portal Internal BMBPSDM
+          Jendela Internal BMN
         </div>
 
         <h1 className="welcome-title">
@@ -99,7 +99,7 @@ function BMNUser() {
         </h1>
 
         <p className="welcome-desc">
-          Portal ini digunakan untuk mendukung pengelolaan Barang Milik Negara
+          Layanan ini digunakan untuk mendukung pengelolaan Barang Milik Negara
           secara terintegrasi di lingkungan Balai Manajemen dan Pengembangan
           Sumber Daya Manusia Kementerian Agama Republik Indonesia.
         </p>
