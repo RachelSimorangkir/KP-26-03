@@ -115,7 +115,54 @@ $routes->group('api', ['filter' => 'cors'], function ($routes) {
         'peminjaman/(:num)',
         'PeminjamanBarangController::updateStatus/$1'
     );
+    $routes->get(
+        'master-barang',
+        'MasterBarangController::index'
+    );
+    $routes->get(
+    'persediaan',
+    'PersediaanController::index'
+    );
+    $routes->get('pemeliharaan', 'PemeliharaanController::index');
+    $routes->post('pemeliharaan', 'PemeliharaanController::create');
+    $routes->put('pemeliharaan/(:segment)', 'PemeliharaanController::updateStatus/$1');
 
+    $routes->get('dbr-struktur', 'DbrStrukturController::index');
+$routes->get('dbr-struktur/cari-pegawai', 'DbrStrukturController::searchPegawai');
+
+$routes->post('dbr-struktur/eselon', 'DbrStrukturController::storeEselon');
+$routes->put('dbr-struktur/eselon/(:num)', 'DbrStrukturController::updateEselon/$1');
+$routes->delete('dbr-struktur/eselon/(:num)', 'DbrStrukturController::deleteEselon/$1');
+
+$routes->post('dbr-struktur/bagian', 'DbrStrukturController::storeBagian');
+$routes->put('dbr-struktur/bagian/(:num)', 'DbrStrukturController::updateBagian/$1');
+$routes->delete('dbr-struktur/bagian/(:num)', 'DbrStrukturController::deleteBagian/$1');
+
+$routes->post('dbr-struktur/bagian/(:num)/pegawai', 'DbrStrukturController::addPegawai/$1');
+$routes->delete('dbr-struktur/bagian/(:num)/pegawai/(:segment)', 'DbrStrukturController::removePegawai/$1/$2');
+
+$routes->post('dbr-struktur/bagian/(:num)/barang', 'DbrStrukturController::storeBarang/$1');
+$routes->delete('dbr-struktur/barang/(:num)', 'DbrStrukturController::deleteBarang/$1');
+
+// Barang Masuk — tambahin PUT & DELETE 
+$routes->get('barang-masuk', 'BarangMasukController::index');
+$routes->post('barang-masuk', 'BarangMasukController::create');
+$routes->put('barang-masuk/(:num)', 'BarangMasukController::update/$1');
+$routes->delete('barang-masuk/(:num)', 'BarangMasukController::delete/$1');
+
+// Hibah Masuk 
+$routes->get('hibah-masuk', 'HibahMasukController::index');
+$routes->post('hibah-masuk', 'HibahMasukController::create');
+$routes->put('hibah-masuk/(:num)', 'HibahMasukController::update/$1');
+$routes->delete('hibah-masuk/(:num)', 'HibahMasukController::delete/$1');
+
+// Hibah Keluar 
+$routes->get('hibah-keluar', 'HibahKeluarController::index');
+$routes->post('hibah-keluar', 'HibahKeluarController::create');
+$routes->put('hibah-keluar/(:num)', 'HibahKeluarController::update/$1');
+$routes->delete('hibah-keluar/(:num)', 'HibahKeluarController::delete/$1');
+
+$routes->get('admin-bmn', 'AdminUserController::listAdminBmn');
 });
 
 $routes->get(

@@ -706,7 +706,7 @@ $pdf->Cell(
 // I. DATA PEGAWAI
 //=========================================
 
-$pdf->SetFont("Arial","",10);
+$pdf->SetFont("Arial","",9);
 
 // Nama
 $pdf->SetXY(48.5,105.5);
@@ -844,7 +844,7 @@ $pdf->Cell(
 // TANDA TANGAN
 //=========================================
 
-$pdf->SetXY(128.5,219);
+$pdf->SetXY(127,219);
 
 $pdf->Cell(
     55,

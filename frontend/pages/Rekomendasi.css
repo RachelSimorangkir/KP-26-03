@@ -90,101 +90,82 @@
   transform:translateY(-3px);
 }
 
-/* =====================================
-   BANNER
-===================================== */
-
 .service-banner{
-  width:100%;
+    width:100% !important;
 
-  background:
-    linear-gradient(
-      135deg,
-      #16324b,
-      #2563eb
-    );
+    background:linear-gradient(
+        135deg,
+        #16324b,
+        #2563eb
+    ) !important;
 
-  border-radius:30px;
+    border-radius:30px !important;
 
-  padding:45px;
+    padding:45px !important;
 
-  color:white;
+    color:#fff !important;
 
-  display:flex;
-  align-items:center;
-  gap:30px;
+    display:flex !important;
+    align-items:center !important;
+    gap:30px !important;
 
-  position:relative;
+    position:relative !important;
 
-  overflow:hidden;
+    overflow:hidden !important;
 
-  margin-bottom:30px;
+    margin-bottom:30px !important;
 
-  box-shadow:
-    0 20px 45px rgba(37,99,235,.25);
-
-  animation:bannerFade .8s ease;
+    box-shadow:0 20px 45px rgba(37,99,235,.25) !important;
 }
 
 .service-banner::before{
-  content:"";
+    content:"";
 
-  position:absolute;
+    position:absolute;
 
-  top:-80px;
-  right:-80px;
+    top:-80px;
+    right:-80px;
 
-  width:220px;
-  height:220px;
+    width:220px;
+    height:220px;
 
-  border-radius:50%;
+    border-radius:50%;
 
-  background:
-    rgba(255,255,255,.08);
+    background:rgba(255,255,255,.08);
 }
 
 .service-banner::after{
-  content:"";
+    content:"";
 
-  position:absolute;
+    position:absolute;
 
-  bottom:-100px;
-  left:-50px;
+    bottom:-100px;
+    left:-50px;
 
-  width:250px;
-  height:250px;
+    width:250px;
+    height:250px;
 
-  border-radius:50%;
+    border-radius:50%;
 
-  background:
-    rgba(255,255,255,.05);
-}
-
-.icon{
-    display:none;
-}
-
-
-.service-banner-content{
-  flex:1;
+    background:rgba(255,255,255,.05);
 }
 
 .service-banner h1{
-  margin:0;
-
-  font-size:52px;
-  font-weight:800;
-
-  line-height:1.1;
+    margin:0 !important;
+    font-size:52px !important;
+    font-weight:800 !important;
+    line-height:1.1 !important;
+    color:#fff !important;
 }
 
 .service-banner p{
-  margin-top:12px;
+    margin-top:12px !important;
+    font-size:18px !important;
+    color:rgba(255,255,255,.95) !important;
+}
 
-  font-size:18px;
-
-  color:
-    rgba(255,255,255,.95);
+.icon{
+    display:none !important;
 }
 
 /* =====================================
@@ -589,4 +570,92 @@
     }
 
 }
+}
+
+/* ==================================
+   HEADER (PAKSA SAMA REKOMENDASI)
+================================== */
+
+.page-header{
+    width:100% !important;
+
+    background:linear-gradient(
+        135deg,
+        #16324b,
+        #2563eb
+    ) !important;
+
+    border-radius:30px !important;
+
+    padding:45px !important;
+
+    color:white !important;
+
+    display:flex !important;
+    align-items:center !important;
+    gap:30px !important;
+
+    position:relative !important;
+
+    overflow:hidden !important;
+
+    margin-bottom:30px !important;
+
+    box-shadow:0 20px 45px rgba(37,99,235,.25) !important;
+}
+
+.page-header::before{
+    content:"";
+
+    position:absolute;
+
+    top:-80px;
+    right:-80px;
+
+    width:220px;
+    height:220px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+}
+
+.page-header::after{
+    content:"";
+
+    position:absolute;
+
+    bottom:-100px;
+    left:-50px;
+
+    width:250px;
+    height:250px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.05);
+}
+
+.page-header h1{
+    margin:0 !important;
+
+    font-size:52px !important;
+    font-weight:800 !important;
+
+    line-height:1.1 !important;
+
+    color:#fff !important;
+}
+
+.page-header p{
+    margin-top:12px !important;
+
+    font-size:18px !important;
+
+    color:rgba(255,255,255,.95) !important;
+}
+
+/* Hilangkan icon supaya sama seperti Rekomendasi */
+.header-icon{
+    display:none !important;
 }

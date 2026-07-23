@@ -211,12 +211,9 @@ const getCountdown = (mulai, selesai) => {
             <button
               className="detail-btn"
               onClick={() =>
-                navigate(
-                  "/admin-kepegawaian/detail-pengajuan",
-                  {
-                    state: item,
-                  }
-                )
+                navigate("/admin-kepegawaian/detail-pengajuan", {
+    state: item
+})
               }
             >
               Detail

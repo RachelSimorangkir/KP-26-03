@@ -18,26 +18,30 @@
 ========================= */
 
 .back-button{
-  background:#ffffff;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
 
-  color:#16324b;
+    flex-direction:row !important;
 
-  border:none;
+    gap:10px !important;
 
-  padding:12px 22px;
+    width:auto !important;
+    height:auto !important;
 
-  border-radius:12px;
+    padding:12px 24px !important;
 
-  font-weight:600;
+    white-space:nowrap !important;
 
-  cursor:pointer;
+    background:#fff !important;
 
-  margin-bottom:25px;
+    color:#16324b !important;
 
-  box-shadow:
-    0 4px 12px rgba(15,23,42,.08);
+    border:none !important;
 
-  transition:.25s;
+    border-radius:14px !important;
+
+    font-weight:600 !important;
 }
 
 .back-button:hover{

@@ -3,20 +3,23 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
-use Config\Database;
+use App\Models\DbrModel;
 
 class DbrController extends ResourceController
 {
     protected $format = "json";
+    protected $model;
+
+    public function __construct()
+    {
+        $this->model = new DbrModel();
+    }
 
     public function show($nip = null)
     {
-        $db = Database::connect();
-
-        $rows = $db->table("dbr_data_lt10")
-                   ->where("nip", $nip)
-                   ->get()
-                   ->getResultArray();
+        $rows = $this->model
+            ->where("nip", $nip)
+            ->findAll();
 
         if (empty($rows)) {
             return $this->failNotFound("DBR tidak ditemukan");
@@ -27,13 +30,11 @@ class DbrController extends ResourceController
         $barang = [];
 
         foreach ($rows as $row) {
-
             $barang[] = [
                 "nama_barang" => $row["bmn"],
                 "nup"         => $row["nup"],
                 "kondisi"     => $row["kondisi"]
             ];
-
         }
 
         return $this->respond([

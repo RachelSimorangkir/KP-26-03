@@ -144,17 +144,16 @@ const handleNipChange = async (e) => {
     <div className="mutasiinternal-page">
 
       <button
-        className="back-button"
-        onClick={() =>
-          navigate("/kepegawaian/rekomendasi/mutasi-promosi")
-        }
-      >
-        <img
-      src="/logo-back.png"
-      alt="Back"
-      className="back-icon"
-    />
-      </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
 
       {/* HEADER */}
 

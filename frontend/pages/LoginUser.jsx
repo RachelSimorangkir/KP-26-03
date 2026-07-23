@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginUser.css";
 import logo from "../src/assets/logo-kemenag.png";
+import Swal from "sweetalert2";
 
 
 function LoginUser() {
@@ -27,7 +28,7 @@ function LoginUser() {
 
     const data = await response.json();
 
-    if (data.status) {
+if (data.status) {
 
   localStorage.setItem("isLoggedIn", "true");
 
@@ -40,10 +41,41 @@ function LoginUser() {
   localStorage.setItem("userNIP", data.user.nip);
   localStorage.setItem("userRole", data.user.role);
 
-  navigate("/");
+  Swal.fire({
+    icon: "success",
+    title: "Login Berhasil",
+    text: `Selamat datang, ${data.user.nama}`,
+    confirmButtonColor: "#2563eb",
+    confirmButtonText: "Masuk",
+    timer: 1800,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  }).then(() => {
+    navigate("/");
+  });
+
 } else {
-      alert(data.message);
-    }
+
+  Swal.fire({
+    icon: "error",
+    title: "Login Gagal",
+    html: `
+      <div style="font-size:15px">
+        ${data.message}
+      </div>
+    `,
+    confirmButtonText: "Coba Lagi",
+    confirmButtonColor: "#2563eb",
+    background: "#ffffff",
+    color: "#16324b",
+    backdrop: "rgba(22,50,75,.55)",
+    customClass: {
+      popup: "rounded-popup",
+      confirmButton: "rounded-btn",
+    },
+  });
+
+}
 
   } catch (error) {
     console.error(error);

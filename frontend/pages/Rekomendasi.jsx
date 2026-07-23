@@ -32,15 +32,16 @@ export default function Rekomendasi() {
       {/* HEADER */}
       <div className="rekom-header">
         <button
-          className="back-button"
-          onClick={() => navigate("/kepegawaian")}
-        >
-          <img
-      src="/logo-back.png"
-      alt="Back"
-      className="back-icon"
-    />
-        </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
       </div>
 
       {/* BANNER */}

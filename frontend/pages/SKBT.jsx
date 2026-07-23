@@ -13,15 +13,16 @@ function SKBT() {
 
       {/* BACK */}
       <button
-        className="back-button"
-        onClick={() => navigate("/kepegawaian")}
-      >
-        <img
-      src="/logo-back.png"
-      alt="Back"
-      className="back-icon"
-    />
-      </button>
+  className="back-button"
+  onClick={() => navigate("/kepegawaian/rekomendasi")}
+>
+  <img
+    src="/logo-back.png"
+    alt="Back"
+    className="back-icon"
+  />
+  <span>Kembali</span>
+</button>
 
       {/* HEADER */}
       <div className="page-header">

@@ -1,79 +1,85 @@
-import { useState } from "react";
-import { currentUser } from "../user/bmn/dummyData";
+import { useState, useEffect } from "react";
 import {
   Modal, inputStyle, FormGroup,
   AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton,
   IconPlus,
 } from "../user/bmn/components";
 
-// ─── DAFTAR ADMIN BMN ─────────────────────────────────────────────────────────
-const adminBMN = [
-  { nama: "Olin Mawar Kristianty",    jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Tabita Marselia Silaen",   jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martha Fransiska Manalu",  jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Lidya Septaria Sinurat",   jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Niar Ningsih Sabara",      jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martin Hasiholan Siagian", jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Roynardo",                 jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-];
+const API_URL = "http://localhost:8080/api";
+
+// Daftar admin BMN sekarang diambil dari database (role = admin_bmn),
+// bukan hardcode lagi — lihat useEffect di dalam komponen.
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
-const parseRupiah = (str) => parseInt((str || "").replace(/[^0-9]/g, "")) || 0;
+const parseRupiah = (str) => parseInt(String(str || "").replace(/[^0-9]/g, "")) || 0;
 const formatRupiah = (num) => "Rp " + Number(num).toLocaleString("id-ID");
 
-const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kategoriList = [
+  "Perlengkapan Kantor", "Meubelier", "Lemari Besi/Kayu",
+  "Kendaraan Roda Dua", "Kendaraan Roda Empat", "Tanah", "Gedung",
+];
 const kondisiList  = ["Baik", "Rusak Ringan", "Rusak Berat"];
 
 const kategoriColor = {
-  "Peralatan IT": { bg: "#eff6ff", color: "#2563eb" },
-  "Perabot":      { bg: "#faf5ff", color: "#7c3aed" },
-  "Kendaraan":    { bg: "#fffbeb", color: "#d97706" },
-  "Lainnya":      { bg: "#f8fafc", color: "#475569" },
+  "Perlengkapan Kantor":  { bg: "#eff6ff", color: "#2563eb" },
+  "Meubelier":            { bg: "#faf5ff", color: "#7c3aed" },
+  "Lemari Besi/Kayu":     { bg: "#fef3c7", color: "#a16207" },
+  "Kendaraan Roda Dua":   { bg: "#fffbeb", color: "#d97706" },
+  "Kendaraan Roda Empat": { bg: "#fff7ed", color: "#c2410c" },
+  "Tanah":                { bg: "#f0fdf4", color: "#16a34a" },
+  "Gedung":               { bg: "#f0f9ff", color: "#0284c7" },
 };
 
 const tdBase = {
   padding: "10px 14px", textAlign: "left",
   borderBottom: "1px solid #f1f5f9", verticalAlign: "middle",
+  whiteSpace: "nowrap",
 };
 const tdTop = { ...tdBase, verticalAlign: "top" };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HIBAH MASUK
 // ─────────────────────────────────────────────────────────────────────────────
-const emptyMasukItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
-
-const dummyHibahMasuk = [
-  {
-    id: 1,
-    noPengadaan: "HBM-2026-001",
-    tanggal: "2026-05-10",
-    pemeriksa: "Olin Mawar Kristianty",
-    asalHibah: "Kementerian Keuangan RI",
-    items: [
-      { nama: "Laptop Lenovo ThinkPad", kategori: "Peralatan IT", jumlah: 3, kondisi: "Baik", hargaUnit: "Rp 12.000.000" },
-      { nama: "Printer Canon G3010",    kategori: "Peralatan IT", jumlah: 2, kondisi: "Baik", hargaUnit: "Rp 2.500.000" },
-    ],
-  },
-  {
-    id: 2,
-    noPengadaan: "HBM-2026-002",
-    tanggal: "2026-06-01",
-    pemeriksa: "Tabita Marselia Silaen",
-    asalHibah: "USAID Indonesia",
-    items: [
-      { nama: "Kursi Ergonomis", kategori: "Perabot", jumlah: 10, kondisi: "Baik", hargaUnit: "Rp 1.800.000" },
-    ],
-  },
-];
+const emptyMasukItem = { nama: "", kategori: "Perlengkapan Kantor", jumlah: 1, kondisi: "Baik", hargaUnit: "" };
 
 const HibahMasukAdmin = () => {
-  const [data, setData]             = useState(dummyHibahMasuk);
+  const [data, setData]             = useState([]);
+  const [loading, setLoading]       = useState(true);
   const [search, setSearch]         = useState("");
   const [showModal, setShowModal]   = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [editId, setEditId]         = useState(null);
+
+  const loadData = () => {
+    setLoading(true);
+    fetch(`${API_URL}/hibah-masuk`)
+      .then(res => res.json())
+      .then(json => setData(Array.isArray(json) ? json : []))
+      .catch(err => console.error("Gagal ambil data hibah masuk:", err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { loadData(); }, []);
+
+  const [adminBMN, setAdminBMN] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/admin-bmn`)
+      .then(res => res.json())
+      .then(data => setAdminBMN(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Gagal ambil daftar admin BMN:", err));
+  }, []);
+
+  const loginUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+  const adminBMNSorted = [...adminBMN].sort((a, b) => {
+    if (a.nip === loginUser.nip) return -1;
+    if (b.nip === loginUser.nip) return 1;
+    return 0;
+  });
 
   const defaultPemeriksa =
-    adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
+    adminBMN.find(a => a.nip === loginUser.nip)?.nama || adminBMN[0]?.nama || "";
 
   const emptyForm = () => ({
     noPengadaan: "",
@@ -84,6 +90,15 @@ const HibahMasukAdmin = () => {
   });
 
   const [form, setForm] = useState(emptyForm());
+
+  // adminBMN awalnya kosong (masih fetch), update pemeriksa begitu datanya sudah ada
+  useEffect(() => {
+    if (defaultPemeriksa && !form.pemeriksa) {
+      setForm(prev => ({ ...prev, pemeriksa: defaultPemeriksa }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultPemeriksa]);
+
 
   const filtered = data.filter(d =>
     d.noPengadaan.toLowerCase().includes(search.toLowerCase()) ||
@@ -112,11 +127,68 @@ const HibahMasukAdmin = () => {
       items: prev.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
     }));
 
-  const handleSubmit = () => {
-    if (!form.noPengadaan || !form.asalHibah || form.items.some(it => !it.nama)) return;
-    setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
-    setShowModal(false);
+  const resetForm = () => {
     setForm(emptyForm());
+    setEditId(null);
+  };
+
+  const openAddModal = () => {
+    resetForm();
+    setShowModal(true);
+  };
+
+  const openEditModal = (d) => {
+    setForm({
+      noPengadaan: d.noPengadaan,
+      tanggal:     d.tanggal,
+      pemeriksa:   d.pemeriksa,
+      asalHibah:   d.asalHibah,
+      items:       d.items.map(it => ({ ...it })),
+    });
+    setEditId(d.id);
+    setShowModal(true);
+  };
+
+  const handleDelete = async (d) => {
+    if (!window.confirm(`Hapus data hibah masuk "${d.noPengadaan}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+    try {
+      const res = await fetch(`${API_URL}/hibah-masuk/${d.id}`, { method: "DELETE" });
+      const result = await res.json();
+      if (!result.success) {
+        alert(result.error || "Gagal menghapus hibah masuk.");
+        return;
+      }
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus hibah masuk.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!form.noPengadaan || !form.asalHibah || form.items.some(it => !it.nama)) return;
+
+    try {
+      const isEdit = Boolean(editId);
+      const res = await fetch(`${API_URL}/hibah-masuk${isEdit ? `/${editId}` : ""}`, {
+        method: isEdit ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await res.json();
+
+      if (!result.success) {
+        alert(result.error || "Gagal menyimpan hibah masuk.");
+        return;
+      }
+
+      setShowModal(false);
+      resetForm();
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan hibah masuk.");
+    }
   };
 
   const summary = {
@@ -124,6 +196,14 @@ const HibahMasukAdmin = () => {
     totalUnit:  data.reduce((acc, d) => acc + hitungUnit(d.items), 0),
     totalNilai: data.reduce((acc, d) => acc + hitungTotal(d.items), 0),
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
+        <div style={{ fontSize: 12, color: "#64748b" }}>Memuat data hibah masuk...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -134,7 +214,7 @@ const HibahMasukAdmin = () => {
         onSearchChange={setSearch}
         searchPlaceholder="Cari no. pengadaan, asal hibah, barang..."
         rightAction={
-          <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
+          <AdminButton onClick={openAddModal} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
             + Catat Hibah Masuk
           </AdminButton>
         }
@@ -148,34 +228,35 @@ const HibahMasukAdmin = () => {
 
       {/* ── Tabel utama ── */}
       <AdminCard>
+        <div style={{ overflowX: "auto" }}>
         <AdminTable headers={[
           "No. Pengadaan", "Tanggal", "Asal Hibah", "Nama Barang",
           "Kategori", "Jumlah", "Kondisi", "Harga Total", "Pemeriksa Hibah", "Aksi",
         ]}>
           {filtered.map(d =>
             d.items.map((it, idx) => {
-              const kc = kategoriColor[it.kategori] || kategoriColor["Lainnya"];
+              const kc = kategoriColor[it.kategori] || { bg: "#f8fafc", color: "#475569" };
               const hargaTotal = parseRupiah(it.hargaUnit) * Number(it.jumlah);
               return (
                 <tr key={`${d.id}-${idx}`} style={{ borderBottom: "1px solid #f8fafc" }}>
                   {idx === 0 && (
-                    <td style={{ ...tdTop, fontFamily: "monospace", fontSize: 12, color: "#64748b" }} rowSpan={d.items.length}>
+                    <td style={{ ...tdTop, fontFamily: "monospace", fontSize: 14, color: "#64748b" }} rowSpan={d.items.length}>
                       {d.noPengadaan}
                     </td>
                   )}
                   {idx === 0 && (
-                    <td style={{ ...tdTop, color: "#64748b", whiteSpace: "nowrap" }} rowSpan={d.items.length}>
+                    <td style={{ ...tdTop, color: "#64748b", whiteSpace: "nowrap", fontSize: 14, }} rowSpan={d.items.length}>
                       {d.tanggal}
                     </td>
                   )}
                   {idx === 0 && (
-                    <td style={{ ...tdTop, color: "#374151", fontWeight: 600 }} rowSpan={d.items.length}>
+                    <td style={{ ...tdTop, color: "#374151", fontWeight: 600, fontSize: 14, }} rowSpan={d.items.length}>
                       {d.asalHibah}
                     </td>
                   )}
                   <td style={{ ...tdBase, fontWeight: 600, color: "#1e293b" }}>{it.nama}</td>
                   <td style={tdBase}>
-                    <span style={{ background: kc.bg, color: kc.color, padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600 }}>
+                    <span style={{ background: kc.bg, color: kc.color, padding: "3px 10px", borderRadius: 20, fontSize: 14, fontWeight: 600 }}>
                       {it.kategori}
                     </span>
                   </td>
@@ -184,7 +265,7 @@ const HibahMasukAdmin = () => {
                     <span style={{
                       background: it.kondisi === "Baik" ? "#dcfce7" : it.kondisi === "Rusak Ringan" ? "#fef9c3" : "#fee2e2",
                       color:      it.kondisi === "Baik" ? "#16a34a" : it.kondisi === "Rusak Ringan" ? "#a16207" : "#dc2626",
-                      padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600,
+                      padding: "3px 10px", borderRadius: 20, fontSize: 16, fontWeight: 600,
                     }}>{it.kondisi}</span>
                   </td>
                   <td style={{ ...tdBase, fontWeight: 700, color: "#1e293b" }}>{formatRupiah(hargaTotal)}</td>
@@ -193,7 +274,11 @@ const HibahMasukAdmin = () => {
                   )}
                   {idx === 0 && (
                     <td style={{ ...tdTop }} rowSpan={d.items.length}>
-                      <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                      <div style={{ display: "flex", gap: 6, whiteSpace: "nowrap" }}>
+                        <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                        <AdminButton variant="outline" onClick={() => openEditModal(d)}>Edit</AdminButton>
+                        <AdminButton variant="outline" onClick={() => handleDelete(d)} style={{ color: "#dc2626", borderColor: "#dc2626" }}>Hapus</AdminButton>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -201,6 +286,7 @@ const HibahMasukAdmin = () => {
             })
           )}
         </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail ── */}
@@ -280,7 +366,7 @@ const HibahMasukAdmin = () => {
 
       {/* ── Modal Catat Hibah Masuk ── */}
       {showModal && (
-        <Modal title="Catat Hibah Masuk" onClose={() => setShowModal(false)} wide>
+        <Modal title={editId ? "Edit Hibah Masuk" : "Catat Hibah Masuk"} onClose={() => { setShowModal(false); resetForm(); }} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="Nomor Pengadaan">
               <input
@@ -315,9 +401,9 @@ const HibahMasukAdmin = () => {
               value={form.pemeriksa}
               onChange={e => setForm(prev => ({ ...prev, pemeriksa: e.target.value }))}
             >
-              {adminBMN.map(a => (
-                <option key={a.nama} value={a.nama}>
-                  {a.nama}{a.nama === defaultPemeriksa ? " (Saya)" : ""}
+              {adminBMNSorted.map(a => (
+                <option key={a.nip} value={a.nama}>
+                  {a.nama}{a.nip === loginUser.nip ? " (Saya)" : ""}
                 </option>
               ))}
             </select>
@@ -400,8 +486,8 @@ const HibahMasukAdmin = () => {
           </button>
 
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <AdminButton variant="outline" onClick={() => setShowModal(false)}>Batal</AdminButton>
-            <AdminButton variant="success" onClick={handleSubmit}>Simpan</AdminButton>
+            <AdminButton variant="outline" onClick={() => { setShowModal(false); resetForm(); }}>Batal</AdminButton>
+            <AdminButton variant="success" onClick={handleSubmit}>{editId ? "Simpan Perubahan" : "Simpan"}</AdminButton>
           </div>
         </Modal>
       )}

@@ -250,7 +250,7 @@ data.status==="Selesai"
 {
 data.status==="Menunggu"
 ?
-"⏳ Menunggu verifikasi admin"
+"Menunggu verifikasi admin"
 :
 "Sedang diproses admin"
 }
@@ -296,7 +296,7 @@ data.status==="Selesai"
         <div className="detail-section">
 
           <h3>
-            📄 Surat Permohonan
+            Surat Permohonan
           </h3>
 
           <a
@@ -318,7 +318,7 @@ data.status==="Selesai"
         <div className="detail-section">
 
           <h3>
-            📂 Dokumen Pendukung
+            Dokumen Pendukung
           </h3>
 
           <a
@@ -327,7 +327,7 @@ data.status==="Selesai"
             rel="noopener noreferrer"
             className="download-btn"
           >
-            🔗 Buka Folder Google Drive
+            Buka Folder Google Drive
           </a>
 
         </div>
@@ -340,7 +340,7 @@ data.status==="Selesai"
 <div className="detail-section">
 
 <h3>
-💬 Catatan Admin
+Catatan Admin
 </h3>
 
 <p>
@@ -358,7 +358,7 @@ data.file_respon && (
         <div className="detail-section">
 
           <h3>
-            📄 Surat Balasan
+            Surat Balasan
           </h3>
 
           <a
