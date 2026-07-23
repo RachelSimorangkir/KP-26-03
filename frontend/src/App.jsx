@@ -54,12 +54,12 @@ import PPID from "../pages/Humas/PPID";
 import Permohonan from "../pages/Humas/Permohonan";
 import StatusPermohonan from "../pages/Humas/StatusPermohonan";
 import BeritaMasuk from "../pages/Humas/BeritaMasuk";
-import BeritaTerbit from "../pages/Humas/BeritaTerbit";
 import DataPermintaan from "../pages/Humas/DataPermintaan";
 import UploadDip from "../pages/Humas/UploadDip";
 import Tiket from "../pages/Humas/Tiket";
 import Keberatan from "../pages/Humas/Keberatan";
 import Rekap from "../pages/Humas/Rekap";
+import Dip from "../pages/Humas/Dip";
 
 const currentUser = JSON.parse(
   localStorage.getItem("currentUser") || "null"
@@ -298,6 +298,9 @@ function App() {
           <Route path="PPID" element={<PPID />} />
           <Route path="PPID/Permohonan" element={<Permohonan />} />
           <Route path="PPID/StatusPermohonan" element={<StatusPermohonan />} />
+          
+
+          <Route path="/humasdata/dip" element={<Dip />} />
         </Route>
 
 
@@ -324,7 +327,6 @@ function App() {
 <Route path="/admin-humas" element={<HumasLayout />}>
   <Route index element={<HumasAdmin />} />
   <Route path="berita-masuk" element={<BeritaMasuk />} />
-  <Route path="berita-terbit" element={<BeritaTerbit />} />
   <Route path="permintaan-data" element={<DataPermintaan />} />
   <Route path="upload-dip" element={<UploadDip />} />
   <Route path="tiket-helpdesk" element={<Tiket />} />

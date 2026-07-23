@@ -6,13 +6,11 @@ export default function Helpdesk() {
 
   const layanan = [
     {
-      icon: "🎫",
       title: "Form Pengajuan Helpdesk",
       desc: "Ajukan permintaan bantuan atau keluhan.",
       path: "/humasdata/helpdesk/FormHelpdesk",
     },
     {
-      icon: "📑",
       title: "Daftar & Status Pengajuan",
       desc: "Lihat status pengajuan helpdesk Anda.",
       path: "/humasdata/helpdesk/StatusHelpdesk",
@@ -23,7 +21,6 @@ export default function Helpdesk() {
     <div className="rekom-page">
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">🛠️</div>
 
         <div className="service-banner-content">
           <h1>Layanan Helpdesk</h1>

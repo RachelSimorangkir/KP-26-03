@@ -1,628 +1,115 @@
-/* ==========================================
-   BERITA MASUK
-========================================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-.rekom-page{
-
-    width:100%;
-    max-width:1450px;
-
-    margin:0 auto;
-
-    padding:35px;
-
-    animation:fadePage .45s ease;
-
-}
-
-/* ==========================================
-   HEADER
-========================================== */
-
-.page-header{
-
-    display:flex;
-    align-items:center;
-    gap:25px;
-
-    padding:35px;
-
-    border-radius:24px;
-
-    color:white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #143a7b,
-        #2563eb
-    );
-
-    position:relative;
-
-    overflow:hidden;
-
-    margin-bottom:30px;
-
-    box-shadow:
-    0 15px 35px rgba(37,99,235,.25);
-
-    width:100%;
-    box-sizing:border-box;
-
-}
-
-.page-header::before{
-
-content:"";
-
-position:absolute;
-
-right:-60px;
-top:-60px;
-
-width:220px;
-height:220px;
-
-border-radius:50%;
-
-background:
-rgba(255,255,255,.08);
-
-}
-
-.page-header h1{
-
-margin:0;
-
-font-size:46px;
-
-font-weight:700;
-
-}
-
-.page-header p{
-
-margin-top:8px;
-
-opacity:.9;
-
-font-size:16px;
-
-}
-
-.back-button{
-
-width:70px;
-height:70px;
-
-border:none;
-
-border-radius:18px;
-
-background:white;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.back-button:hover{
-
-transform:translateY(-3px);
-
-}
-
-/* ==========================================
-   FILTER CARD
-========================================== */
-
-.filter-card{
-
-background:white;
-
-padding:25px;
-
-border-radius:22px;
-
-margin-bottom:25px;
-
-box-shadow:
-0 10px 30px rgba(15,23,42,.05);
-
-width:100%;
-box-sizing:border-box;
-
-}
-
-.filter-grid{
-
-display:grid;
-
-grid-template-columns:
-repeat(4,1fr);
-
-gap:18px;
-
-}
-
-.filter-item{
-
-display:flex;
-
-flex-direction:column;
-
-}
-
-.filter-item label{
-
-font-size:13px;
-
-font-weight:600;
-
-margin-bottom:8px;
-
-color:#64748b;
-
-}
-
-.filter-item select{
-
-height:46px;
-
-padding:0 15px;
-
-border:none;
-
-background:#f5f7fb;
-
-border-radius:14px;
-
-box-shadow:
-0 0 0 1px #dbe3ef inset;
-
-transition:.25s;
-
-}
-
-.filter-item select:hover{
-
-background:white;
-
-box-shadow:
-0 0 0 2px #2563eb inset;
-
-}
-
-.filter-item select:focus{
-
-outline:none;
-
-background:white;
-
-box-shadow:
-0 0 0 3px rgba(37,99,235,.15);
-
-}
-
-.search-row{
-
-margin-top:20px;
-
-}
-
-.search-row input{
-
-width:100%;
-
-height:50px;
-
-border:none;
-
-border-radius:14px;
-
-padding:0 18px;
-
-background:#f5f7fb;
-
-box-shadow:
-0 0 0 1px #dbe3ef inset;
-
-font-size:14px;
-
-transition:.25s;
-
-}
-
-.search-row input:focus{
-
-outline:none;
-
-background:white;
-
-box-shadow:
-0 0 0 3px rgba(37,99,235,.15);
-
-}
-
-/* ==========================================
-   TABLE CARD
-========================================== */
-
-.table-card{
-
-background:white;
-
-padding:18px;
-
-border-radius:24px;
-
-box-shadow:
-0 12px 35px rgba(15,23,42,.06);
-
-}
-
-.table-scroll{
-
-overflow:auto;
-
-}
-
-/* ==========================================
-   TABLE
-========================================== */
-
-.data-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-.data-table thead{
-
-background:#f5f8ff;
-
-}
-
-.data-table th{
-
-padding:18px;
-
-text-align:left;
-
-font-size:14px;
-
-font-weight:700;
-
-color:#17345f;
-
-}
-
-.data-table td{
-
-padding:22px 18px;
-
-border-top:1px solid #edf2f7;
-
-font-size:14px;
-
-color:#475569;
-
-vertical-align:middle;
-
-}
-
-.data-table tbody tr{
-
-transition:.25s;
-
-}
-
-.data-table tbody tr:hover{
-
-background:#f8fbff;
-
-}
-
-.col-judul{
-
-font-weight:600;
-
-color:#243b5a;
-
-line-height:1.6;
-
-min-width:250px;
-
-}
-
-/* ==========================================
-   BADGE
-========================================== */
-
-.badge{
-
-display:inline-flex;
-
-align-items:center;
-
-justify-content:center;
-
-padding:7px 15px;
-
-border-radius:40px;
-
-font-size:12px;
-
-font-weight:700;
-
-}
-
-.badge-satker{
-
-background:#eef4ff;
-
-color:#2563eb;
-
-}
-
-.badge-menunggu{
-
-background:#fff7e6;
-
-color:#d48806;
-
-}
-
-.badge-disetujui{
-
-background:#eafaf1;
-
-color:#16934d;
-
-}
-
-.badge-revisi{
-
-background:#fff1f0;
-
-color:#cf1322;
-
-}
-
-.badge-ditolak{
-
-background:#fdeaea;
-
-color:#dc2626;
-
-}
-
-/* ==========================================
-   BUTTON
-========================================== */
-
-.action-buttons{
-
-display:flex;
-
-gap:10px;
-
-}
-
-.btn{
-
-padding:10px 22px;
-
-border:none;
-
-border-radius:12px;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.btn-detail{
-
-background:#edf4ff;
-
-color:#2563eb;
-
-}
-
-.btn-detail:hover{
-
-background:#2563eb;
-
-color:white;
-
-transform:translateY(-2px);
-
-box-shadow:
-0 10px 20px rgba(37,99,235,.25);
-
-}
-
-.btn-verify{
-
-background:
-linear-gradient(
-135deg,
-#16a34a,
-#22c55e);
-
-color:white;
-
-}
-
-.btn-verify:hover{
-
-transform:translateY(-2px);
-
-box-shadow:
-0 10px 20px rgba(34,197,94,.35);
-
-}
-
-.btn:disabled{
-
-background:#e5e7eb !important;
-
-color:#9ca3af !important;
-
-cursor:not-allowed;
-
-box-shadow:none;
-
-transform:none;
-
-}
-
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media(max-width:1200px){
-
-.filter-grid{
-
-grid-template-columns:
-repeat(2,1fr);
-
-}
-
-}
-
-@media(max-width:768px){
-
-.page-header{
-
-flex-direction:column;
-
-align-items:flex-start;
-
-}
-
-.page-header h1{
-
-font-size:34px;
-
-}
-
-.filter-grid{
-
-grid-template-columns:1fr;
-
-}
-
-.action-buttons{
-
-flex-direction:column;
-
-}
-
-.btn{
-
-width:100%;
-
-}
-
-}
-
-/* ==========================================
-   ANIMATION
-========================================== */
-
-@keyframes fade{
-
-from{
-
-opacity:0;
-transform:translateY(20px);
-
-}
-
-to{
-
-opacity:1;
-transform:none;
-
-}
-
-}
-
 /* ===============================
-   ACTION BUTTONS
+   FILTER SECTION - PERBAIKAN TOTAL
 ================================ */
 
-.action-buttons{
-    display:flex;
-    gap:12px;
-    align-items:center;
+.filter-section {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  width: 100%;
 }
 
-/* Base Button */
-
-.btn{
-    min-width:130px;
-    height:44px;
-    border:none !important;
-    border-radius:12px !important;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-    transition:all .3s ease;
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
 }
 
-/* DETAIL */
-
-.btn-detail{
-    background:#3b82f6 !important;
-    color:#fff !important;
-    box-shadow:0 8px 18px rgba(59,130,246,.25);
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
-.btn-detail:hover{
-    background:#2563eb !important;
-    transform:translateY(-2px);
+.filter-item label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
 }
 
-/* VERIFIKASI */
-
-.btn-verify{
-    background:#22c55e !important;
-    color:#fff !important;
-    box-shadow:0 8px 18px rgba(34,197,94,.25);
+.filter-item select {
+  width: 100%;
+  height: 48px;
+  padding: 0 40px 0 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #334155;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
 }
 
-.btn-verify:hover:not(:disabled){
-    background:#16a34a !important;
-    transform:translateY(-2px);
+/* Search Row - PASTI DI BAWAH & FULL WIDTH */
+.search-row {
+  width: 100%;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f1f5f9;
+  display: block;
+  clear: both;
 }
 
-/* DISABLED */
+.search-row input {
+  width: 100% !important;
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #334155;
+  display: block;
+}
 
-.btn:disabled,
-.btn-verify:disabled{
-    background:#d1d5db !important;
-    color:#9ca3af !important;
-    box-shadow:none !important;
-    cursor:not-allowed;
-    transform:none;
-    opacity:1;
+.search-row input::placeholder {
+  color: #94a3b8;
+}
+
+.search-row input:focus {
+  outline: none;
+  background: white;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-row {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+}
+
+/* PAKSA SEARCH ROW DI BAWAH */
+.search-row {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  margin-top: 20px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid #f1f5f9 !important;
+  display: block !important;
+}
+
+.search-row input {
+  width: 100% !important;
+  display: block !important;
 }

@@ -1,0 +1,173 @@
+/* ===== DIP PAGE LAYOUT - UPDATED ===== */
+.dip-page {
+  max-width: 1400px; /* Dari 1000px jadi 1400px */
+  margin: 0 auto;
+  padding: 0 40px; /* Tambah padding sisi */
+  width: 100%;
+}
+
+/* ===== PERBESAR TAB NAVIGATION ===== */
+.dip-tabs {
+  display: flex;
+  gap: 15px; /* Dari 10px jadi 15px */
+  margin: 40px 0 30px 0; /* Lebih besar */
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.tab-btn {
+  padding: 15px 30px; /* Dari 12px 24px jadi lebih besar */
+  border: none;
+  background: transparent;
+  font-size: 1.05rem; /* Dari 0.95rem jadi lebih besar */
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-btn:hover {
+  color: #2563eb;
+  background: #f1f5f9;
+}
+
+.tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 600;
+  background: white;
+}
+
+/* ===== PERBESAR INFO CARDS ===== */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Dari 300px jadi 400px */
+  gap: 30px; /* Dari 20px jadi 30px */
+  margin-bottom: 40px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 16px;
+  padding: 35px; /* Dari 25px jadi 35px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Shadow lebih kuat */
+  min-height: 250px; /* Tinggi minimum lebih besar */
+}
+
+.info-card h4 {
+  margin: 0 0 20px 0; /* Dari 15px jadi 20px */
+  color: #64748b;
+  font-size: 0.95rem; /* Sedikit lebih besar */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.status-display {
+  margin-bottom: 20px;
+}
+
+/* PERBESAR DEADLINE DISPLAY */
+.deadline-display {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.big-number {
+  font-size: 4rem; /* Dari 2.5rem jadi 4rem - JAUH LEBIH BESAR! */
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1;
+}
+
+.day-text {
+  font-size: 1.2rem; /* Dari 1rem jadi lebih besar */
+  color: #64748b;
+  font-weight: 600;
+}
+
+.info-detail {
+  margin: 8px 0; /* Dari 5px jadi 8px */
+  color: #0f2c4c;
+  font-size: 1rem; /* Dari 0.95rem jadi lebih besar */
+  line-height: 1.6;
+}
+
+/* ===== PERBESAR UPLOAD SECTION ===== */
+.upload-section {
+  background: white;
+  padding: 40px; /* Dari 30px jadi 40px */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.upload-section h3 {
+  margin: 0 0 30px 0; /* Dari 20px jadi 30px */
+  color: #0f2c4c;
+  font-size: 1.5rem; /* Lebih besar */
+}
+
+.upload-form {
+  gap: 30px; /* Dari 20px jadi 30px */
+}
+
+.file-drop-zone {
+  min-height: 200px; /* Tinggi minimum lebih besar */
+}
+
+.upload-label {
+  padding: 50px 30px; /* Dari 40px 20px jadi lebih besar */
+}
+
+.upload-placeholder .upload-icon {
+  font-size: 4rem; /* Dari 3rem jadi lebih besar */
+  margin-bottom: 15px;
+}
+
+.upload-placeholder p {
+  font-size: 1.1rem; /* Lebih besar */
+}
+
+/* ===== PERBESAR TIMELINE RIWAYAT ===== */
+.timeline {
+  padding-left: 40px; /* Dari 30px jadi lebih besar */
+  margin-top: 30px;
+}
+
+.timeline-item {
+  padding-bottom: 40px; /* Dari 30px jadi lebih besar */
+}
+
+.timeline-content {
+  padding: 30px; /* Dari 20px jadi 30px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.timeline-header h4 {
+  font-size: 1.1rem; /* Lebih besar */
+}
+
+/* ===== RESPONSIVE TETAP BAGUS ===== */
+@media (max-width: 768px) {
+  .dip-page {
+    padding: 0 20px;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .big-number {
+    font-size: 3rem; /* Tetap besar di mobile */
+  }
+  
+  .tab-btn {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+}

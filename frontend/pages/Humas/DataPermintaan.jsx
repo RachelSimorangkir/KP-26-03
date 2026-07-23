@@ -230,7 +230,6 @@ export default function DataPermintaan() {
                 <th>Cakupan Wilayah</th>
                 <th>Periode Data</th>
                 <th>Urgensi</th>
-                <th>Status Atasan</th>
                 <th>Status Permintaan</th>
                 <th>Petugas</th>
                 <th>Tanggal Pengajuan</th>

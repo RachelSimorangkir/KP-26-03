@@ -116,7 +116,6 @@ export default function FormHelpdesk() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">🎫</div>
         <div className="service-banner-content">
           <h1>Form Pengajuan Tiket Bantuan</h1>
           <p>

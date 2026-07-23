@@ -5,8 +5,8 @@ import "./StatusHelpdesk.css";
 export default function StatusHelpdesk() {
   const navigate = useNavigate();
 
-  // Mock data - nanti diganti dengan data dari API
-  const [tiketList, setTiketList] = useState([
+  // Mock data
+  const [tiketList] = useState([
     {
       id: "TKT-2024-001",
       namaAplikasi: "SIMPEG - Sistem Informasi Kepegawaian",
@@ -64,19 +64,18 @@ export default function StatusHelpdesk() {
     },
   ]);
 
-  // Fungsi untuk menentukan class badge status
   const getStatusClass = (status) => {
+    // Memetakan status ke class badge yang konsisten dengan halaman lain
     const statusMap = {
-      "Baru": "badge-baru",
+      "Baru": "badge-menunggu",
+      "Menunggu Respon": "badge-menunggu",
       "Diproses": "badge-diproses",
-      "Menunggu Respon": "badge-menunggu-respon",
       "Selesai": "badge-selesai",
-      "Ditutup": "badge-ditutup",
+      "Ditutup": "badge-ditolak",
     };
-    return statusMap[status] || "badge-baru";
+    return statusMap[status] || "badge-menunggu";
   };
 
-  // Fungsi untuk format tanggal
   const formatTanggal = (dateStr) => {
     return new Date(dateStr).toLocaleDateString("id-ID", {
       day: "numeric",
@@ -86,107 +85,90 @@ export default function StatusHelpdesk() {
   };
 
   return (
-    <div className="rekom-page">
+    <div className="rekom-page status-helpdesk-page">
       {/* BACK BUTTON */}
-      <div className="rekom-header">
-        <button
-          className="back-button"
-          onClick={() => navigate("/humasdata/helpdesk")}
-        >
-          ← Kembali
-        </button>
-      </div>
+      <button className="btn-back" onClick={() => navigate("/humasdata/helpdesk")}>
+        ← Kembali ke Layanan Helpdesk
+      </button>
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📑</div>
         <div className="service-banner-content">
           <h1>Daftar & Detail Tiket Saya</h1>
-          <p>
-            Pantau status tiket bantuan teknis yang pernah Anda ajukan.
-          </p>
+          <p>Pantau status dan tanggapan untuk setiap tiket bantuan teknis yang pernah Anda ajukan.</p>
         </div>
       </section>
 
-      {/* ACTION BUTTON */}
+      {/* ACTION HEADER */}
       <div className="action-header">
-        <button
-          className="btn-primary"
-          onClick={() => navigate("/humasdata/helpdesk/FormHelpdesk")}
-        >
+        <h2>Riwayat Tiket Bantuan</h2>
+        <button className="btn-primary" onClick={() => navigate("/humasdata/helpdesk/FormHelpdesk")}>
           + Buat Tiket Baru
         </button>
       </div>
 
       {/* DAFTAR TIKET */}
       {tiketList.length === 0 ? (
-        <section className="description-card empty-state">
-          <h2>Belum Ada Tiket</h2>
+        <section className="empty-state-card">
+          <div className="empty-icon">📭</div>
+          <h3>Belum Ada Tiket</h3>
           <p>Anda belum pernah mengajukan tiket bantuan. Klik tombol di atas untuk membuat tiket baru.</p>
         </section>
       ) : (
         <div className="tiket-list">
           {tiketList.map((tiket) => (
             <div key={tiket.id} className="tiket-card">
-              {/* Header Card */}
-              <div className="tiket-header">
-                <div className="tiket-title-section">
-                  <div className="tiket-id-row">
-                    <span className="tiket-id">{tiket.id}</span>
+              
+              {/* 1. Card Header: ID, Judul & Meta */}
+              <div className="card-header">
+                <div className="header-left">
+                  <span className="tiket-id">{tiket.id}</span>
+                  <h3 className="card-title">{tiket.judulMasalah}</h3>
+                </div>
+                <div className="card-meta">
+                  <span className="meta-item">
+                    <span className="meta-label">Aplikasi:</span> {tiket.namaAplikasi}
+                  </span>
+                  <span className="meta-item">
+                    <span className="meta-label">Kategori:</span> {tiket.kategori}
+                  </span>
+                </div>
+              </div>
+
+              {/* 2. Card Body: Status, Petugas & Timeline */}
+              <div className="card-body">
+                <div className="status-grid">
+                  <div className="status-box">
+                    <span className="status-label">Status Tiket</span>
                     <span className={`badge ${getStatusClass(tiket.statusTiket)}`}>
                       {tiket.statusTiket}
                     </span>
                   </div>
-                  <h3>{tiket.judulMasalah}</h3>
-                  <div className="tiket-meta">
-                    <span className="meta-item">
-                      <span className="meta-label">Aplikasi:</span>
-                      <span>{tiket.namaAplikasi}</span>
-                    </span>
-                    <span className="meta-item">
-                      <span className="meta-label">Kategori:</span>
-                      <span>{tiket.kategori}</span>
-                    </span>
-                  </div>
+                  {tiket.petugasPJ !== "-" && (
+                    <div className="status-box">
+                      <span className="status-label">Petugas Penanggung Jawab</span>
+                      <span className="info-value">👤 {tiket.petugasPJ}</span>
+                    </div>
+                  )}
                 </div>
+
+                <div className="timeline-compact">
+                  <span>📅 Lapor: {formatTanggal(tiket.tanggalLapor)}</span>
+                  <span>🔄 Update Terakhir: {formatTanggal(tiket.tanggalUpdate)}</span>
+                </div>
+
+                {/* 3. Tanggapan/Solusi (Muncul jika ada) */}
+                {tiket.tanggapanSolusi && (
+                  <div className={`catatan-box ${tiket.statusTiket === "Selesai" ? "catatan-success" : "catatan-info"}`}>
+                    <div className="catatan-header">
+                      <span className="catatan-icon">💬</span>
+                      <strong>Tanggapan / Solusi dari Petugas</strong>
+                    </div>
+                    <p>{tiket.tanggapanSolusi}</p>
+                  </div>
+                )}
               </div>
 
-              {/* Info Timeline */}
-              <div className="timeline-section">
-                <div className="timeline-item">
-                  <span className="timeline-icon">📅</span>
-                  <div className="timeline-content">
-                    <span className="timeline-label">Tanggal Lapor:</span>
-                    <span className="timeline-value">{formatTanggal(tiket.tanggalLapor)}</span>
-                  </div>
-                </div>
-                <div className="timeline-item">
-                  <span className="timeline-icon">🔄</span>
-                  <div className="timeline-content">
-                    <span className="timeline-label">Update Terakhir:</span>
-                    <span className="timeline-value">{formatTanggal(tiket.tanggalUpdate)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Petugas Penanggung Jawab */}
-              {tiket.petugasPJ !== "-" && (
-                <div className="info-row">
-                  <span className="info-label">👤 Petugas Penanggung Jawab:</span>
-                  <span className="info-value">{tiket.petugasPJ}</span>
-                </div>
-              )}
-
-              {/* Tanggapan/Solusi dari Petugas */}
-              {tiket.tanggapanSolusi && (
-                <div className="tanggapan-section">
-                  <div className="tanggapan-header">
-                    <span className="tanggapan-icon">💬</span>
-                    <span className="tanggapan-title">Tanggapan/Solusi dari Petugas:</span>
-                  </div>
-                  <p className="tanggapan-content">{tiket.tanggapanSolusi}</p>
-                </div>
-              )}
             </div>
           ))}
         </div>

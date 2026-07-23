@@ -260,7 +260,6 @@ export default function Keberatan() {
                 <th>Jenis</th>
                 <th>Unit Tujuan</th>
                 <th>Urgensi</th>
-                <th>Status Atasan</th>
                 <th>Status Permohonan</th>
                 <th>Petugas PPID</th>
                 <th>Tgl Pengajuan</th>

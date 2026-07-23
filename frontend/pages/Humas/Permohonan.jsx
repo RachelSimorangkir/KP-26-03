@@ -133,7 +133,6 @@ export default function Permohonan() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📮</div>
         <div className="service-banner-content">
           <h1>Permohonan / Keberatan Informasi</h1>
           <p>
@@ -351,35 +350,6 @@ export default function Permohonan() {
                 ))}
               </div>
             )}
-          </div>
-        </section>
-
-        {/* Persetujuan Atasan */}
-        <section className="description-card">
-          <h2>Persetujuan Atasan</h2>
-          <div className="form-group full-width">
-            <label>
-              Atasan Pengaju Penyetuju <span className="required">*</span>
-            </label>
-            <select
-              name="atasanPengaju"
-              value={form.atasanPengaju}
-              onChange={handleChange}
-              className={errors.atasanPengaju ? "input-error" : ""}
-            >
-              <option value="">-- Pilih Atasan --</option>
-              {atasanOptions.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-            {errors.atasanPengaju && (
-              <span className="error-text">{errors.atasanPengaju}</span>
-            )}
-            <small>
-              Permohonan akan diteruskan ke atasan untuk persetujuan sebelum diproses.
-            </small>
           </div>
         </section>
 

@@ -128,7 +128,6 @@ export default function DataInternal() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📊</div>
         <div className="service-banner-content">
           <h1>Permintaan Data Internal</h1>
           <p>

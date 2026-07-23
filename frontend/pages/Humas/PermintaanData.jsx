@@ -6,13 +6,11 @@ export default function PermintaanData() {
 
   const layanan = [
     {
-      icon: "💾",
       title: "Permintaan Data Internal",
       desc: "Ajukan permintaan data yang diperlukan.",
       path: "/humasdata/PermintaanData/DataInternal",
     },
     {
-      icon: "🕐",
       title: "Status Permintaan Data Internal",
       desc: "Lihat status pengajuan permintaan data Anda.",
       path: "/humasdata/PermintaanData/StatusData",
@@ -23,7 +21,6 @@ export default function PermintaanData() {
     <div className="rekom-page">
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📊</div>
 
         <div className="service-banner-content">
           <h1>Layanan Permintaan Data</h1>

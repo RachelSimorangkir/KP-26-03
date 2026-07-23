@@ -7,25 +7,25 @@ function HumasData() {
 
   const menus = [
     {
-      icon: "📰",
       title: " Publikasi Berita Kegiatan",
       path: "/humasdata/publikasi",
     },
     {
-      icon: "📊",
       title: "Permintaan Data Internal",
       path: "/humasdata/PermintaanData",
     },
     {
-      icon: "🛠️",
       title: "Helpdesk",
       path: "/humasdata/helpdesk",
     },
     {
-      icon: "📨",
       title: "PPID Internal",
       path: "/humasdata/PPID",
     },
+    {
+      title: "Upload DIP",
+      path: "/humasdata/Dip",
+    }
   ];
 
   return (

@@ -70,7 +70,6 @@ export default function FormPengajuan() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📰</div>
         <div className="service-banner-content">
           <h1>Form Pengajuan Publikasi</h1>
           <p>
@@ -258,29 +257,6 @@ export default function FormPengajuan() {
           </div>
         </section>
 
-        {/* Penanggung Jawab */}
-        <section className="description-card">
-          <h2>Penanggung Jawab</h2>
-          <div className="form-group full-width">
-            <label>
-              Atasan Langsung Penyetuju <span className="required">*</span>
-            </label>
-            <select
-              name="atasan"
-              value={form.atasan}
-              onChange={handleChange}
-              className={errors.atasan ? "input-error" : ""}
-            >
-              <option value="">-- Pilih Atasan --</option>
-              <option value="Dr. Budi">Dr. Budi</option>
-              <option value="Ibu Sari">Ibu Sari</option>
-              <option value="Kepala Satker">Kepala Satker</option>
-            </select>
-            {errors.atasan && (
-              <span className="error-text">{errors.atasan}</span>
-            )}
-          </div>
-        </section>
 
         {/* Submit Buttons */}
         <div className="form-actions">

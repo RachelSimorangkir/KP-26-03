@@ -6,13 +6,11 @@ export default function Publikasi() {
 
   const layanan = [
     {
-      icon: "📝",
       title: "Form Pengajuan Publikasi",
       desc: "Ajukan publikasi berita kegiatan baru.",
       path: "/humasdata/publikasi/form-pengajuan",
     },
     {
-      icon: "📋",
       title: "Daftar & Status Pengajuan",
       desc: "Lihat status pengajuan publikasi Anda.",
       path: "/humasdata/publikasi/daftar-pengajuan",
@@ -23,7 +21,6 @@ export default function Publikasi() {
     <div className="rekom-page">
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📰</div>
 
         <div className="service-banner-content">
           <h1>Layanan Publikasi</h1>
