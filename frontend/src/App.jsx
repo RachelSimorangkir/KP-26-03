@@ -47,6 +47,7 @@ import DashboardHumas from "../pages/Humas/DashboardHumas";
 import Publikasi from "../pages/Humas/Publikasi";
 import DaftarPengajuan from "../pages/Humas/DaftarPengajuan";
 import FormPengajuan from "../pages/Humas/FormPengajuan";
+import DetailBerita from "../pages/Humas/DetailBerita";
 import PermintaanData from "../pages/Humas/PermintaanData";
 import DataInternal from "../pages/Humas/DataInternal";
 import StatusData from "../pages/Humas/StatusData";
@@ -288,6 +289,7 @@ function App() {
           <Route path="publikasi" element={<Publikasi />} />
           <Route path="publikasi/form-pengajuan" element={<FormPengajuan />} />
           <Route path="publikasi/daftar-pengajuan" element={<DaftarPengajuan />} />
+          <Route path="/humasdata/publikasi/detail-berita/:id" element={<DetailBerita />}/>
   
           {/* Permintaan Data Internal */}
           <Route path="PermintaanData" element={<PermintaanData/>} />

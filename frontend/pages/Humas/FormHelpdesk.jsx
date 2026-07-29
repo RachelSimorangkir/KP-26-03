@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FormHelpdesk.css";
 
 export default function FormHelpdesk() {
   const navigate = useNavigate();
 
+
   const [form, setForm] = useState({
     // Data auto-fill (read-only)
-    nip: "197001011990031001",
-    namaPelapor: "Nama Pelapor",
-    unitKerja: "Kanwil",
-    
+    nip: "",
+    namaPelapor: "",
+    unitKerja: "",
+
     // Field form
     emailUsername: "",
     nomorTelepon: "",
@@ -20,7 +21,21 @@ export default function FormHelpdesk() {
     judulMasalah: "",
     deskripsiMasalah: "",
     lampiran: [],
-  });
+});
+
+useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
+
+    setForm(prev => ({
+        ...prev,
+        nip: user.nip || "",
+        namaPelapor: user.nama || "",
+        unitKerja: user.unit_organisasi || ""
+    }));
+}, []);
+  
+  
+
 
   const [errors, setErrors] = useState({});
 

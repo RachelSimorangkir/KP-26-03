@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import "./HumasLayout.css";
 
@@ -6,6 +7,23 @@ export default function HumasLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [jumlahBerita, setJumlahBerita] = useState(0);
+
+  const loadJumlahBerita = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/berita/count/menunggu"
+    );
+
+    setJumlahBerita(res.data.jumlah);
+  } catch (err) {
+    console.error("Gagal mengambil jumlah berita:", err);
+  }
+};
+
+useEffect(() => {
+  loadJumlahBerita();
+}, []);
 
   const menuItems = [
     {
@@ -17,7 +35,7 @@ export default function HumasLayout() {
     {
       group: "HUMAS",
       items: [
-        { label: "Berita masuk", path: "/admin-humas/berita-masuk", badge: 5, },
+        { label: "Berita masuk", path: "/admin-humas/berita-masuk", badge: jumlahBerita,},
       ],
     },
     {

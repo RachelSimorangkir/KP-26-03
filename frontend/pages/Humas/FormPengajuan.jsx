@@ -1,25 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./FormPengajuan.css";
 
 export default function FormPengajuan() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    nip: "197001011990031001",
-    namaPengusul: "Nama Pengusul",
-    satuanKerja: "Kanwil",
+    nip: "",
+    namaPengusul: "",
+    satuanKerja: "",
     judul: "",
-    kategori: "",
+    kategori_id: "",
     tanggalKegiatan: "",
     waktuKegiatan: "",
     lokasiKegiatan: "",
     isiBerita: "",
     foto: [],
-    atasan: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [kategoriList, setKategoriList] = useState([]);
+  const [loadingKategori, setLoadingKategori] = useState(true); // Tambah state loading
+
+  // Ambil data user dan kategori
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    setForm(prev => ({
+    ...prev,
+    nip: user.nip || "",
+    namaPengusul: user.nama || "",
+    satuanKerja: user.unit_organisasi || ""
+}));
+
+    // Ambil daftar kategori dari API
+    axios.get('/api/kategori')
+      .then(res => {
+        console.log('Response kategori:', res.data); // Debug log
+        // Coba berbagai kemungkinan struktur response
+        const data = res.data.data || res.data || [];
+        setKategoriList(Array.isArray(data) ? data : []);
+        setLoadingKategori(false);
+      })
+      .catch(err => {
+        console.error('Gagal ambil kategori:', err);
+        // Fallback data jika API gagal
+        setKategoriList([
+          { id: 1, nama_kategori: 'Keagamaan' },
+          { id: 2, nama_kategori: 'Pendidikan' },
+          { id: 3, nama_kategori: 'Sosial' },
+          { id: 4, nama_kategori: 'Kelembagaan' },
+        ]);
+        setLoadingKategori(false);
+      });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,23 +69,58 @@ export default function FormPengajuan() {
   const validate = () => {
     const err = {};
     if (!form.judul) err.judul = "Judul berita wajib diisi";
-    if (!form.kategori) err.kategori = "Kategori wajib dipilih";
+    if (!form.kategori_id) err.kategori_id = "Kategori wajib dipilih";
     if (!form.tanggalKegiatan) err.tanggalKegiatan = "Tanggal kegiatan wajib";
     if (!form.lokasiKegiatan) err.lokasiKegiatan = "Lokasi kegiatan wajib";
     if (!form.isiBerita) err.isiBerita = "Isi berita wajib diisi";
     if (form.foto.length === 0) err.foto = "Minimal 1 file dokumentasi";
-    if (!form.atasan) err.atasan = "Atasan penyetuju wajib dipilih";
     return err;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const err = validate();
     setErrors(err);
     
     if (Object.keys(err).length === 0) {
-      alert("Pengajuan berhasil dikirim!");
-      navigate("/humas/daftar-pengajuan");
+      setLoading(true);
+      
+      try {
+        const formData = new FormData();
+        formData.append('judul', form.judul);
+        formData.append('kategori_id', form.kategori_id);
+        formData.append('tanggal_kegiatan', form.tanggalKegiatan);
+        formData.append('lokasi_kegiatan', form.lokasiKegiatan);
+        formData.append('isi_berita', form.isiBerita);
+        
+        form.foto.forEach((file, index) => {
+          formData.append(`foto[${index}]`, file);
+        });
+
+        const response = await axios.post('/api/berita', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-User-Id': '1',
+            'X-User-Nip': form.nip,
+            'X-User-Name': form.namaPengusul,
+            'X-User-SatuanKerja': form.satuanKerja
+          }
+        });
+
+        if (response.data.status) {
+          alert(response.data.message);
+          navigate("/humas/daftar-pengajuan");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.data) {
+          alert('Error: ' + JSON.stringify(error.response.data.message));
+        } else {
+          alert('Gagal mengirim pengajuan. Pastikan server CodeIgniter berjalan.');
+        }
+      } finally {
+        setLoading(false);
+      }
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -150,20 +220,29 @@ export default function FormPengajuan() {
                 Kategori Kegiatan <span className="required">*</span>
               </label>
               <select
-                name="kategori"
-                value={form.kategori}
+                name="kategori_id"
+                value={form.kategori_id}
                 onChange={handleChange}
-                className={errors.kategori ? "input-error" : ""}
+                className={errors.kategori_id ? "input-error" : ""}
               >
                 <option value="">-- Pilih Kategori --</option>
-                <option value="Keagamaan">Keagamaan</option>
-                <option value="Pendidikan">Pendidikan</option>
-                <option value="Sosial">Sosial</option>
-                <option value="Kelembagaan">Kelembagaan</option>
-                <option value="Lainnya">Lainnya</option>
+                {loadingKategori ? (
+                  <option disabled>Memuat kategori...</option>
+                ) : kategoriList.length === 0 ? (
+                  <option disabled>Tidak ada kategori tersedia</option>
+                ) : (
+                  kategoriList.map((kat) => (
+                    <option key={kat.id} value={kat.id}>
+                      {kat.nama_kategori || kat.nama || kat.kategori}
+                    </option>
+                  ))
+                )}
               </select>
-              {errors.kategori && (
-                <span className="error-text">{errors.kategori}</span>
+              {errors.kategori_id && (
+                <span className="error-text">{errors.kategori_id}</span>
+              )}
+              {kategoriList.length === 0 && !loadingKategori && (
+                <span className="error-text">⚠️ Kategori tidak tersedia. Menggunakan data fallback.</span>
               )}
             </div>
 
@@ -257,14 +336,22 @@ export default function FormPengajuan() {
           </div>
         </section>
 
-
         {/* Submit Buttons */}
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate("/humas")}>
+          <button 
+            type="button" 
+            className="btn-secondary" 
+            onClick={() => navigate("/humas")}
+            disabled={loading}
+          >
             Batal
           </button>
-          <button type="submit" className="btn-primary">
-            Ajukan Publikasi
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={loading || loadingKategori}
+          >
+            {loading ? 'Mengirim...' : 'Ajukan Publikasi'}
           </button>
         </div>
       </form>

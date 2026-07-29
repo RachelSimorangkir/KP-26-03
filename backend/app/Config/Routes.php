@@ -189,3 +189,89 @@ $routes->get(
     'api/dbr/(:segment)',
     'DbrController::show/$1'
 );
+
+// Routes untuk Fitur Berita
+$routes->get('berita', 'BeritaController::index');
+$routes->get('berita/tambah', 'BeritaController::create');
+$routes->post('berita/simpan', 'BeritaController::store');
+$routes->get('login', 'Auth::index');
+$routes->get('login', 'LoginController::index');
+
+// ========================================
+// API ROUTES UNTUK BERITA
+// ========================================
+$routes->group('api', ['filter' => 'cors'], function($routes) {
+    $routes->get('berita', 'BeritaController::index');
+    $routes->get('berita/(:num)', 'BeritaController::show/$1');
+    $routes->post('berita', 'BeritaController::create');
+    $routes->put('berita/(:num)', 'BeritaController::update/$1');
+    $routes->delete('berita/(:num)', 'BeritaController::delete/$1');
+});
+
+// Route untuk mengambil kategori (untuk dropdown form)
+$routes->get('api/kategori', function() {
+    $db = \Config\Database::connect();
+    $kategori = $db->table('kategori_berita')->get()->getResult();
+    
+    return service('response')
+        ->setStatusCode(200)
+        ->setJSON([
+            'status' => true,
+            'message' => 'Kategori berhasil diambil',
+            'data' => $kategori
+        ]);
+});
+
+$routes->get('reset_password', 'AuthController::resetPassword');
+$routes->post('reset_password', 'AuthController::processResetPassword');
+
+// ========================================
+// ROUTE LOGIN & AUTH (Diperbaiki untuk CORS & React)
+// ========================================
+$routes->options('api/login', static function () {
+    return service('response')
+        ->setStatusCode(200)
+        ->setHeader('Access-Control-Allow-Origin', '*')
+        ->setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        ->setHeader('Access-Control-Allow-Headers', 'Content-Type');
+});
+
+$routes->post('api/login', 'Auth::login');
+$routes->post('api/register', 'Auth::registerZN');
+$routes->post('api/ganti-password', 'Auth::gantiPassword');
+
+// ========================================
+// API ROUTES UNTUK BERITA & LAINNYA
+// ========================================
+$routes->group('api', ['filter' => 'cors'], function($routes) {
+    // ... route berita, peminjaman, dll tetap di sini ...
+    $routes->get('berita', 'BeritaController::index');
+    $routes->post('berita', 'BeritaController::create');
+    
+    $routes->get('kategori', function() {
+        $db = \Config\Database::connect();
+        $kategori = $db->table('kategori_berita')->get()->getResult();
+        return service('response')->setJSON(['status' => true, 'data' => $kategori]);
+    });
+});
+
+$routes->post('login-admin', 'Auth::loginAdmin');
+
+$routes->options('login-admin', static function () {
+    return service('response')
+        ->setStatusCode(200)
+        ->setHeader('Access-Control-Allow-Origin', '*')
+        ->setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        ->setHeader('Access-Control-Allow-Headers', 'Content-Type');
+});
+
+$routes->post('login-admin', 'Auth::loginAdmin');
+
+$routes->get('init-password-pegawai', 'Auth::initPasswordPegawai');
+
+// Humas
+$routes->get(
+    'api/berita/user/(:any)',
+    'BeritaController::getByUser/$1'
+);
+$routes->get('api/berita/count/menunggu', 'BeritaController::countMenunggu');//untuk menghitung jumlah berita dengan status menunggu

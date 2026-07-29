@@ -30,16 +30,21 @@ function LoginUser() {
 
 if (data.status) {
 
-  localStorage.setItem("isLoggedIn", "true");
+localStorage.setItem("isLoggedIn", "true");
 
-  localStorage.setItem(
-    "currentUser",
-    JSON.stringify(data.user)
-  );
+localStorage.setItem(
+  "user",
+  JSON.stringify(data.user)
+);
 
-  localStorage.setItem("userName", data.user.nama);
-  localStorage.setItem("userNIP", data.user.nip);
-  localStorage.setItem("userRole", data.user.role);
+localStorage.setItem(
+  "currentUser",
+  JSON.stringify(data.user)
+);
+
+localStorage.setItem("userName", data.user.nama);
+localStorage.setItem("userNIP", data.user.nip);
+localStorage.setItem("userRole", data.user.role);
 
   Swal.fire({
     icon: "success",

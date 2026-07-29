@@ -22,7 +22,7 @@ function LoginAdmin() {
   const navigate = useNavigate();
 
   const [selectedRole, setSelectedRole] = useState("");
-  const [nip, setNip] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -32,11 +32,16 @@ function LoginAdmin() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nip, password }),
-      });
+      const res = await fetch(`${API_URL}/login-admin`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    username,
+    password,
+  }),
+});
       const result = await res.json();
 
       if (!result.status) {
@@ -125,13 +130,14 @@ function LoginAdmin() {
               <h2>{getRoleTitle()}</h2>
 
               <div className="form-group">
-                <label>NIP</label>
-                <input
-                  type="text"
-                  placeholder="Masukkan NIP"
-                  value={nip}
-                  onChange={(e) => setNip(e.target.value)}
-                />
+                <label>Username</label>
+
+<input
+  type="text"
+  placeholder="Masukkan Username"
+  value={username}
+  onChange={(e) => setUsername(e.target.value)}
+/>
               </div>
 
               <div className="form-group">
@@ -159,7 +165,7 @@ function LoginAdmin() {
                 className="back-btn"
                 onClick={() => {
                   setSelectedRole("");
-                  setNip("");
+                  setUsername("");
                   setPassword("");
                   setErrorMsg("");
                 }}

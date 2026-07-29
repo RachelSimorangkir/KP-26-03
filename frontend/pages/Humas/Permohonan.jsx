@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Permohonan.css";
 
@@ -7,9 +7,9 @@ export default function Permohonan() {
 
   const [form, setForm] = useState({
     // Data auto-fill (read-only)
-    nip: "197001011990031001",
-    namaPengaju: "Nama Pengaju",
-    unitKerja: "Kanwil",
+    nip: "",
+    namaPengaju: "",
+    unitKerja: "",
     
     // Field form
     jenisPermohonan: "",
@@ -20,6 +20,17 @@ export default function Permohonan() {
     dokumen: [],
     atasanPengaju: "",
   });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
+
+    setForm(prev => ({
+        ...prev,
+        nip: user.nip || "",
+        namaPengaju: user.nama || "",
+        unitKerja: user.unit_organisasi || ""
+    }));
+}, []);
 
   const [errors, setErrors] = useState({});
 

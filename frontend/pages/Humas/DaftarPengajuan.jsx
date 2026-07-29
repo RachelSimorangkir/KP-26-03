@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./DaftarPengajuan.css";
 
@@ -6,56 +7,43 @@ export default function DaftarPengajuan() {
   const navigate = useNavigate();
 
   // Mock data
-  const [pengajuanList] = useState([
-    {
-      id: 1,
-      judul: "Pelatihan Guru Kristen 2024",
-      tanggalPengajuan: "2024-06-20",
-      tanggalTerbit: "2024-06-25",
-      statusAtasan: "Disetujui",
-      statusHumas: "Terbit",
-      catatanRevisi: "",
-    },
-    {
-      id: 2,
-      judul: "Kegiatan Sosial Bakti Sosial",
-      tanggalPengajuan: "2024-06-18",
-      tanggalTerbit: null,
-      statusAtasan: "Disetujui",
-      statusHumas: "Diterima",
-      catatanRevisi: "",
-    },
-    {
-      id: 3,
-      judul: "Rapat Koordinasi Keagamaan",
-      tanggalPengajuan: "2024-06-15",
-      tanggalTerbit: null,
-      statusAtasan: "Menunggu",
-      statusHumas: "Menunggu",
-      catatanRevisi: "",
-    },
-    {
-      id: 4,
-      judul: "Workshop Pendidikan Kristen",
-      tanggalPengajuan: "2024-06-10",
-      tanggalTerbit: null,
-      statusAtasan: "Revisi",
-      statusHumas: "Revisi",
-      catatanRevisi: "Judul terlalu panjang, mohon dipersingkat. Tambahkan foto kegiatan lebih banyak.",
-    },
-  ]);
+   const [pengajuanList, setPengajuanList] = useState([]);
+   const [loading, setLoading] = useState(true);
 
-  const getStatusBadgeClass = (status) => {
-    const statusMap = {
-      Menunggu: "badge-menunggu",
-      Disetujui: "badge-disetujui",
-      Diterima: "badge-diterima",
-      Ditolak: "badge-ditolak",
-      Revisi: "badge-revisi",
-      Terbit: "badge-terbit",
-    };
-    return statusMap[status] || "badge-menunggu";
+   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
+  
+   const loadPengajuan = async () => {
+  try {
+    if (!currentUser?.nip) return;
+
+    const res = await axios.get(
+      `http://localhost:8080/api/berita/user/${currentUser.nip}`
+    );
+
+    setPengajuanList(res.data.data || []);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  loadPengajuan();
+}, []);
+
+const getStatusBadgeClass = (status) => {
+  const statusMap = {
+    menunggu: "badge-menunggu",
+    disetujui: "badge-disetujui",
+    revisi: "badge-revisi",
+    ditolak: "badge-ditolak",
+    terbit: "badge-terbit",
   };
+
+  return statusMap[status?.toLowerCase()] || "badge-menunggu";
+};
 
   const formatDate = (dateString) => {
     if (!dateString) return "-";
@@ -108,56 +96,60 @@ export default function DaftarPengajuan() {
                 <h3 className="card-title">{item.judul}</h3>
                 <div className="card-meta">
                   <span className="meta-item">
-                    <span className="meta-label">Diajukan:</span> {formatDate(item.tanggalPengajuan)}
+                    <span className="meta-label">Diajukan:</span> {formatDate(item.submitted_at)}
                   </span>
-                  {item.tanggalTerbit && (
-                    <span className="meta-item highlight">
-                      <span className="meta-label">Terbit:</span> {formatDate(item.tanggalTerbit)}
-                    </span>
-                  )}
+{item.tanggal_terbit && (
+  <span className="meta-item highlight">
+    <span className="meta-label">Terbit:</span>
+    {formatDate(item.tanggal_terbit)}
+  </span>
+)}
                 </div>
               </div>
 
               {/* Card Body: Status */}
               <div className="card-body">
                 <div className="status-grid">
-                  <div className="status-box">
-                    <span className="status-label">Status Atasan</span>
-                    <span className={`badge ${getStatusBadgeClass(item.statusAtasan)}`}>
-                      {item.statusAtasan}
-                    </span>
-                  </div>
-                  <div className="status-box">
-                    <span className="status-label">Status Humas</span>
-                    <span className={`badge ${getStatusBadgeClass(item.statusHumas)}`}>
-                      {item.statusHumas}
-                    </span>
-                  </div>
+                 <div className="status-box">
+                  <span className="status-label">Status Pengajuan</span>
+                  <span className={`badge ${getStatusBadgeClass(item.status)}`}>
+                   {item.status
+                    ? item.status.charAt(0).toUpperCase() + item.status.slice(1)
+                    : "-"}
+                  </span>
                 </div>
+              </div>
 
                 {/* Catatan Revisi (Muncul hanya jika ada) */}
-                {item.catatanRevisi && (
+                {item.catatan_admin && (
                   <div className="catatan-revisi-box">
                     <div className="revisi-header">
                       <span className="revisi-icon">📝</span>
                       <strong>Catatan Revisi dari Admin</strong>
                     </div>
-                    <p>{item.catatanRevisi}</p>
+                    <p>{item.catatan_admin}</p>
                   </div>
                 )}
               </div>
 
               {/* Card Footer: Actions */}
               <div className="card-footer">
-                {(item.statusAtasan === "Revisi" || item.statusHumas === "Revisi") && (
-                  <button
-                    className="btn-edit"
-                    onClick={() => navigate(`/humasdata/publikasi/form-pengajuan/${item.id}`)}
-                  >
-                    ✏️ Edit & Ajukan Ulang
-                  </button>
-                )}
-                <button className="btn-detail">Lihat Detail Lengkap →</button>
+{item.status === "revisi" && (
+    <button
+        className="btn-edit"
+        onClick={() =>
+            navigate(`/humasdata/publikasi/form-pengajuan/${item.id}`)
+        }
+    >
+        ✏️ Edit & Ajukan Ulang
+    </button>
+)}
+<button
+    className="btn-detail"
+    onClick={() => navigate(`/humasdata/publikasi/detail-berita/${item.id}`)}
+>
+    Lihat Detail Lengkap →
+</button>
               </div>
             </div>
           ))}

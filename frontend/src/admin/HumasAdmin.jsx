@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { FaChartBar } from 'react-icons/fa'
 import "./HumasAdmin.css"; 
 
 export default function AdminHumas() {
+
+  const [jumlahBerita, setJumlahBerita] = useState(0);
+
   const metrics = {
-    beritaMenunggu: 5,
-    permintaanData: 3,
-    tiketKritis: 3,
-    keberatanPPID: 2,
-  };
+  beritaMenunggu: jumlahBerita,
+  permintaanData: 3,
+  tiketKritis: 3,
+  keberatanPPID: 2,
+};
+
+  const loadJumlahBerita = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/berita/count/menunggu"
+    );
+
+    setJumlahBerita(res.data.jumlah);
+  } catch (err) {
+    console.error("Gagal mengambil jumlah berita:", err);
+  }
+};
+
+useEffect(() => {
+  loadJumlahBerita();
+}, []);
+
 
   const tiketPerStatus = [
     { status: "Baru", jumlah: 4, color: "baru" },
