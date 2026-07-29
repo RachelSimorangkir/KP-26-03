@@ -15,23 +15,10 @@ export default function AdminDashboard() {
   console.log("URL:", window.location.pathname);
   console.log("Division:", localStorage.getItem("adminDivision"));
 
-  const isLoggedIn =
-    localStorage.getItem("isLoggedIn") === "true";
+ const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+const role = localStorage.getItem("userRole");
 
-  const role =
-    localStorage.getItem("userRole");
-
-  if (!isLoggedIn || role !== "admin") {
-    return <Navigate to="/login-admin" />;
-  }
-
-  const division = localStorage.getItem("adminDivision");
-
-if (
-  !isLoggedIn ||
-  role !== "admin" ||
-  division !== "kepegawaian"
-) {
+if (!isLoggedIn || role !== "admin_kepegawaian") {
   return <Navigate to="/login-admin" />;
 }
 

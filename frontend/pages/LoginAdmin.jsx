@@ -61,9 +61,13 @@ function LoginAdmin() {
       }
 
       // Simpan sebagai currentUser — dipakai konsisten di semua halaman admin BMN dkk.
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userRole", user.role);
+      localStorage.clear();
+
+localStorage.setItem("currentUser", JSON.stringify(user));
+localStorage.setItem("isLoggedIn", "true");
+localStorage.setItem("userRole", user.role);
+localStorage.setItem("adminDivision", selectedRole);
+
 
       const tujuan = ROLE_REDIRECT[user.role] || "/";
       navigate(tujuan);

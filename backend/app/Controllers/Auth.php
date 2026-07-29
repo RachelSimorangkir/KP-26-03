@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PegawaiModel;
 use App\Models\UserModel;
+use App\Models\AdminModel;
 
 class Auth extends BaseController
 {
@@ -86,7 +87,7 @@ if (!password_verify($data['password'], $user['password'])) {
         ]);
 
     }
-    public function loginAdmin()
+public function loginAdmin()
 {
     $this->response->setHeader('Access-Control-Allow-Origin', '*');
     $this->response->setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -96,28 +97,22 @@ if (!password_verify($data['password'], $user['password'])) {
         return $this->response->setStatusCode(200);
     }
 
-    $model = new UserModel();
     $data = $this->request->getJSON(true);
 
-    if (empty($data['username']) || empty($data['password'])) {
-        return $this->response->setStatusCode(400)->setJSON([
-            "status" => false,
-            "message" => "Username dan Password wajib diisi"
-        ]);
-    }
+    $model = new AdminModel();
 
-    $user = $model
-        ->where("username", $data["username"])
+    $admin = $model
+        ->where('username', $data['username'])
         ->first();
 
-    if (!$user) {
+    if (!$admin) {
         return $this->response->setStatusCode(401)->setJSON([
             "status" => false,
             "message" => "Username tidak ditemukan"
         ]);
     }
 
-    if (!password_verify($data["password"], $user["password"])) {
+    if ($admin['password'] != $data['password']) {
         return $this->response->setStatusCode(401)->setJSON([
             "status" => false,
             "message" => "Password salah"
@@ -125,20 +120,17 @@ if (!password_verify($data['password'], $user['password'])) {
     }
 
     session()->set([
-        "user_id" => $user["id"],
-        "username" => $user["username"],
-        "nama_lengkap" => $user["nama_lengkap"],
-        "email" => $user["email"],
-        "role" => $user["role"],
+        "username" => $admin["username"],
+        "role" => $admin["role"],
         "isLoggedIn" => true
     ]);
 
-    unset($user["password"]);
+    unset($admin["password"]);
 
     return $this->response->setJSON([
         "status" => true,
-        "message" => "Login admin berhasil",
-        "user" => $user
+        "message" => "Login berhasil",
+        "user" => $admin
     ]);
 }
 
