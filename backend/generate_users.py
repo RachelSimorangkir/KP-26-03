@@ -2,10 +2,12 @@ import psycopg2
 import subprocess
 
 conn = psycopg2.connect(
-    host="localhost",
-    database="KP-26-103-A",
-    user="postgres",
-    password="rachell2005"
+    host="ep-aged-bird-azhokr22.c-3.ap-southeast-1.aws.neon.tech",
+    database="neondb",
+    user="neondb_owner",
+    password="PASSWORD_NEON",
+    port=5432,
+    sslmode="require"
 )
 
 cur = conn.cursor()
@@ -34,7 +36,7 @@ for nip, nama in pegawai:
     cur.execute("""
         INSERT INTO users
         (
-            nama,
+            nama_lengkap,
             email,
             password,
             role,

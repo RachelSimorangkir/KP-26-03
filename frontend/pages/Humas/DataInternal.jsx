@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DataInternal.css";
 
@@ -6,14 +6,13 @@ export default function DataInternal() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    // Data auto-fill (read-only)
-    nip: "197001011990031001",
-    namaPemohon: "Nama Pemohon",
-    jabatan: "Kepala Sub Bagian",
-    unitKerja: "Kanwil",
-    
+    nip: "",
+    namaPemohon: "",
+    jabatan: "",
+    unitKerja: "",
+
     // Field form
-    jenisData: [], // Multi-select (array)
+    jenisData: [],
     cakupanWilayah: "",
     periodeDari: "",
     periodeSampai: "",
@@ -25,6 +24,18 @@ export default function DataInternal() {
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
+
+    setForm((prev) => ({
+      ...prev,
+      nip: user.nip || "",
+      namaPemohon: user.nama || "",
+      jabatan: user.jabatan || "",
+      unitKerja: user.unit_organisasi || "",
+    }));
+  }, []);
 
   // Opsi untuk dropdown
   const jenisDataOptions = [
@@ -87,17 +98,37 @@ export default function DataInternal() {
 
   const validate = () => {
     const err = {};
-    if (form.jenisData.length === 0) err.jenisData = "Jenis data wajib dipilih";
-    if (!form.cakupanWilayah) err.cakupanWilayah = "Cakupan wilayah wajib dipilih";
-    if (!form.periodeDari) err.periodeDari = "Tanggal awal periode wajib";
-    if (!form.periodeSampai) err.periodeSampai = "Tanggal akhir periode wajib";
-    if (form.periodeDari && form.periodeSampai && form.periodeDari > form.periodeSampai) {
+    if (form.jenisData.length === 0) {
+      err.jenisData = "Jenis data wajib dipilih";
+    }
+    if (!form.cakupanWilayah) {
+      err.cakupanWilayah = "Cakupan wilayah wajib dipilih";
+    }
+    if (!form.periodeDari) {
+      err.periodeDari = "Tanggal awal periode wajib";
+    }
+    if (!form.periodeSampai) {
+      err.periodeSampai = "Tanggal akhir periode wajib";
+    }
+    if (
+      form.periodeDari &&
+      form.periodeSampai &&
+      form.periodeDari > form.periodeSampai
+    ) {
       err.periodeSampai = "Tanggal akhir harus setelah tanggal awal";
     }
-    if (!form.tujuanPenggunaanKategori) err.tujuanPenggunaanKategori = "Kategori tujuan wajib dipilih";
-    if (!form.tujuanPenggunaanDetail) err.tujuanPenggunaanDetail = "Detail tujuan wajib diisi";
-    if (!form.tingkatUrgensi) err.tingkatUrgensi = "Tingkat urgensi wajib dipilih";
-    if (!form.atasanPemohon) err.atasanPemohon = "Atasan penyetuju wajib dipilih";
+    if (!form.tujuanPenggunaanKategori) {
+      err.tujuanPenggunaanKategori = "Kategori tujuan wajib dipilih";
+    }
+    if (!form.tujuanPenggunaanDetail) {
+      err.tujuanPenggunaanDetail = "Detail tujuan wajib diisi";
+    }
+    if (!form.tingkatUrgensi) {
+      err.tingkatUrgensi = "Tingkat urgensi wajib dipilih";
+    }
+    if (!form.atasanPemohon) {
+      err.atasanPemohon = "Atasan penyetuju wajib dipilih";
+    }
     return err;
   };
 
@@ -128,11 +159,11 @@ export default function DataInternal() {
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">📊</div>
         <div className="service-banner-content">
           <h1>Permintaan Data Internal</h1>
           <p>
-            Lengkapi formulir di bawah ini untuk mengajukan permintaan data internal.
+            Lengkapi formulir di bawah ini untuk mengajukan permintaan data
+            internal.
           </p>
         </div>
       </section>
@@ -142,7 +173,9 @@ export default function DataInternal() {
         {/* Error Summary */}
         {Object.keys(errors).length > 0 && (
           <div className="error-summary">
-            <strong>⚠️ Terdapat {Object.keys(errors).length} kesalahan:</strong>
+            <strong>
+              ⚠️ Terdapat {Object.keys(errors).length} kesalahan:
+            </strong>
             <ul>
               {Object.values(errors).map((err, idx) => (
                 <li key={idx}>{err}</li>
@@ -208,7 +241,9 @@ export default function DataInternal() {
                 multiple
                 value={form.jenisData}
                 onChange={handleMultiSelect}
-                className={`multi-select ${errors.jenisData ? "input-error" : ""}`}
+                className={`multi-select ${
+                  errors.jenisData ? "input-error" : ""
+                }`}
                 size={5}
               >
                 {jenisDataOptions.map((opt) => (
@@ -218,7 +253,9 @@ export default function DataInternal() {
                 ))}
               </select>
               <small>Tekan Ctrl/Cmd + klik untuk memilih lebih dari satu</small>
-              {errors.jenisData && <span className="error-text">{errors.jenisData}</span>}
+              {errors.jenisData && (
+                <span className="error-text">{errors.jenisData}</span>
+              )}
             </div>
 
             {/* Cakupan Wilayah */}
@@ -294,7 +331,9 @@ export default function DataInternal() {
                 name="tujuanPenggunaanKategori"
                 value={form.tujuanPenggunaanKategori}
                 onChange={handleChange}
-                className={errors.tujuanPenggunaanKategori ? "input-error" : ""}
+                className={
+                  errors.tujuanPenggunaanKategori ? "input-error" : ""
+                }
               >
                 <option value="">-- Pilih Kategori Tujuan --</option>
                 {tujuanOptions.map((opt) => (
@@ -304,7 +343,9 @@ export default function DataInternal() {
                 ))}
               </select>
               {errors.tujuanPenggunaanKategori && (
-                <span className="error-text">{errors.tujuanPenggunaanKategori}</span>
+                <span className="error-text">
+                  {errors.tujuanPenggunaanKategori}
+                </span>
               )}
 
               <textarea
@@ -313,10 +354,14 @@ export default function DataInternal() {
                 onChange={handleChange}
                 rows={4}
                 placeholder="Jelaskan secara detail tujuan penggunaan data..."
-                className={`mt-10 ${errors.tujuanPenggunaanDetail ? "input-error" : ""}`}
+                className={`mt-10 ${
+                  errors.tujuanPenggunaanDetail ? "input-error" : ""
+                }`}
               />
               {errors.tujuanPenggunaanDetail && (
-                <span className="error-text">{errors.tujuanPenggunaanDetail}</span>
+                <span className="error-text">
+                  {errors.tujuanPenggunaanDetail}
+                </span>
               )}
             </div>
 
@@ -342,29 +387,6 @@ export default function DataInternal() {
                 <span className="error-text">{errors.tingkatUrgensi}</span>
               )}
             </div>
-
-            {/* Atasan Pemohon */}
-            <div className="form-group">
-              <label>
-                Persetujuan Atasan Pemohon <span className="required">*</span>
-              </label>
-              <select
-                name="atasanPemohon"
-                value={form.atasanPemohon}
-                onChange={handleChange}
-                className={errors.atasanPemohon ? "input-error" : ""}
-              >
-                <option value="">-- Pilih Atasan --</option>
-                {atasanOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              {errors.atasanPemohon && (
-                <span className="error-text">{errors.atasanPemohon}</span>
-              )}
-            </div>
           </div>
         </section>
 
@@ -380,11 +402,14 @@ export default function DataInternal() {
               className={errors.memoFile ? "input-error" : ""}
             />
             <small>Opsional. Format: PDF. Maksimal 5MB.</small>
-            {errors.memoFile && <span className="error-text">{errors.memoFile}</span>}
+            {errors.memoFile && (
+              <span className="error-text">{errors.memoFile}</span>
+            )}
             {form.memoFile && (
               <div className="file-list">
                 <div className="file-item">
-                  📎 {form.memoFile.name} ({Math.round(form.memoFile.size / 1024)} KB)
+                  📎 {form.memoFile.name} (
+                  {Math.round(form.memoFile.size / 1024)} KB)
                 </div>
               </div>
             )}

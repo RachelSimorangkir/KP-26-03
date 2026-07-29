@@ -137,9 +137,8 @@ export default function UploadDip() {
 
   // Handle buka modal reminder
   const handleOpenReminder = () => {
-    const belumUpload = dipData.filter((d) => d.status === "Belum Upload");
     setReminderForm({
-      bidangTerpilih: belumUpload.map((d) => d.bidang),
+      bidangTerpilih: [],
       pesan: "Dengan hormat,\n\nKami mengingatkan bahwa batas waktu upload DIP Tahunan 2024 adalah 30 Juni 2024. Mohon segera mengunggah dokumen DIP bidang Anda.\n\nTerima kasih.",
     });
     setModalType("reminder");
@@ -168,7 +167,6 @@ export default function UploadDip() {
     }
 
     if (window.confirm("Simpan hasil validasi?")) {
-      // Update data
       const updatedData = dipData.map((d) =>
         d.id === selectedBidang.id
           ? { ...d, status: validasiForm.hasilValidasi, catatan: validasiForm.catatan }
@@ -190,7 +188,6 @@ export default function UploadDip() {
     }
 
     if (window.confirm(`Kirim reminder ke ${reminderForm.bidangTerpilih.length} bidang?`)) {
-      // Tambah ke riwayat
       const newRiwayat = {
         tanggal: new Date().toISOString().split("T")[0],
         bidang: reminderForm.bidangTerpilih,
@@ -212,11 +209,10 @@ export default function UploadDip() {
 
   // Handle select all
   const handleSelectAll = () => {
-    const belumUpload = dipData.filter((d) => d.status === "Belum Upload");
-    if (reminderForm.bidangTerpilih.length === belumUpload.length) {
+    if (reminderForm.bidangTerpilih.length === dipData.length) {
       setReminderForm({ ...reminderForm, bidangTerpilih: [] });
     } else {
-      setReminderForm({ ...reminderForm, bidangTerpilih: belumUpload.map((d) => d.bidang) });
+      setReminderForm({ ...reminderForm, bidangTerpilih: dipData.map((d) => d.bidang) });
     }
   };
 
@@ -243,13 +239,13 @@ export default function UploadDip() {
 
   return (
     <div className="upload-dip-page">
-      {/* BACK BUTTON */}
+      {/* HEADER */}
       <div className="page-header">
-  <div className="page-header-content">
-    <h1>Upload DIP Tahunan</h1>
-    <p>Monitoring upload Dokumen Informasi Publik (DIP) dari 9 bidang</p>
-  </div>
-</div>
+        <div className="page-header-content">
+          <h1>Upload DIP Tahunan</h1>
+          <p>Monitoring upload Dokumen Informasi Publik (DIP) dari 9 bidang</p>
+        </div>
+      </div>
 
       {/* PROGRESS BAR */}
       <div className="progress-section">
@@ -272,7 +268,7 @@ export default function UploadDip() {
             <span className="stat-value">{selesaiCount}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-icon">⏳</span>
+            <span className="stat-icon"></span>
             <span className="stat-label">Menunggu Validasi</span>
             <span className="stat-value">{dipData.filter((d) => d.status === "Menunggu Validasi").length}</span>
           </div>
@@ -302,7 +298,7 @@ export default function UploadDip() {
           </div>
         </div>
         <button className="btn-reminder" onClick={handleOpenReminder}>
-           Kirim Reminder
+          📧 Kirim Reminder
         </button>
       </div>
 
@@ -325,7 +321,7 @@ export default function UploadDip() {
                 <td>
                   <span className={`badge ${getStatusBadgeClass(item.status)}`}>
                     {item.status === "Selesai" && "✅ "}
-                    {item.status === "Menunggu Validasi" && " "}
+                    {item.status === "Menunggu Validasi" && "⏳ "}
                     {item.status === "Revisi" && "🟡 "}
                     {item.status === "Belum Upload" && "🔴 "}
                     {item.status}
@@ -397,7 +393,7 @@ export default function UploadDip() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>📄 Dokumen DIP - {selectedBidang.bidang}</h2>
+              <h2> Dokumen DIP - {selectedBidang.bidang}</h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>
                 ✕
               </button>
@@ -511,12 +507,12 @@ export default function UploadDip() {
         </div>
       )}
 
-      {/* MODAL REMINDER */}
+      {/* MODAL REMINDER - UPDATED DENGAN GRID 2 KOLOM */}
       {showModal && modalType === "reminder" && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>📧 Kirim Reminder Upload DIP</h2>
+              <h2> Kirim Reminder Upload DIP</h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>
                 ✕
               </button>
@@ -525,30 +521,36 @@ export default function UploadDip() {
               <div className="modal-body">
                 <div className="form-section">
                   <h3>Pilih Bidang</h3>
+                  
+                  {/* Checkbox Header - Select All */}
                   <div className="checkbox-header">
                     <label className="checkbox-label">
                       <input
                         type="checkbox"
-                        checked={reminderForm.bidangTerpilih.length === dipData.filter((d) => d.status === "Belum Upload").length}
+                        checked={reminderForm.bidangTerpilih.length === dipData.length}
                         onChange={handleSelectAll}
                       />
-                      <strong>Pilih Semua yang Belum Upload</strong>
+                      <strong>Pilih Semua Bidang</strong>
                     </label>
                   </div>
+
+                  {/* Checkbox List - Grid 2 Kolom untuk SEMUA Bidang */}
                   <div className="checkbox-list">
-                    {dipData
-                      .filter((d) => d.status === "Belum Upload")
-                      .map((item) => (
-                        <label key={item.id} className="checkbox-label">
-                          <input
-                            type="checkbox"
-                            checked={reminderForm.bidangTerpilih.includes(item.bidang)}
-                            onChange={() => handleBidangChange(item.bidang)}
-                          />
-                          {item.bidang}
-                        </label>
-                      ))}
+                    {dipData.map((item) => (
+                      <label key={item.id} className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={reminderForm.bidangTerpilih.includes(item.bidang)}
+                          onChange={() => handleBidangChange(item.bidang)}
+                        />
+                        {item.bidang}
+                        {item.status === "Selesai" && (
+                          <span className="status-badge-small">✅ Selesai</span>
+                        )}
+                      </label>
+                    ))}
                   </div>
+
                   {reminderForm.bidangTerpilih.length === 0 && (
                     <p className="warning-text">⚠️ Tidak ada bidang yang dipilih</p>
                   )}

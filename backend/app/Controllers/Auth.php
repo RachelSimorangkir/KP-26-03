@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\PegawaiModel;
 use App\Models\UserModel;
 
 class Auth extends BaseController
@@ -9,56 +10,72 @@ class Auth extends BaseController
     public function register()
     {
         $model = new UserModel();
-
         $data = $this->request->getJSON(true);
 
         $user = [
-    'nama'     => $data['nama'],
-    'nip'      => $data['nip'],
-    'email'    => $data['email'],
-    'password' => password_hash(
-        $data['password'],
-        PASSWORD_DEFAULT
-    ),
-    'role'     => $data['role']
-];
+            'nama'     => $data['nama'],
+            'nip'      => $data['nip'],
+            'email'    => $data['email'],
+            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+            'role'     => $data['role'] ?? 'pegawai'
+        ];
 
         $model->insert($user);
 
         return $this->response->setJSON([
             'status' => true,
             'message' => 'User berhasil dibuat'
-        ]);
+]);
     }
 
     public function login()
     {
-        $model = new UserModel();
+        // Izinkan CORS untuk request dari React
+        $this->response->setHeader('Access-Control-Allow-Origin', '*');
+        $this->response->setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+        // Handle preflight OPTIONS request
+        if ($this->request->getMethod() === 'options') {
+            return $this->response->setStatusCode(200);
+        }
 
         $data = $this->request->getJSON(true);
 
-        $user = $model
-            ->where('nip', $data['nip'])
-            ->first();
-
-        if (!$user) {
-            return $this->response->setStatusCode(401)
-                ->setJSON([
-                    'status' => false,
-                    'message' => 'NIP tidak ditemukan'
-                ]);
+        // Validasi input
+        if (empty($data['nip']) || empty($data['password'])) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status' => false,
+                'message' => 'NIP dan Password wajib diisi'
+            ]);
         }
 
-        if (!password_verify(
-            $data['password'],
-            $user['password']
-        )) {
-            return $this->response->setStatusCode(401)
-                ->setJSON([
-                    'status' => false,
-                    'message' => 'Password salah'
-                ]);
-        }
+        $model = new PegawaiModel();
+
+$user = $model->where('nip', $data['nip'])->first();
+
+if (!$user) {
+    return $this->response->setStatusCode(401)->setJSON([
+        'status' => false,
+        'message' => 'NIP tidak ditemukan'
+    ]);
+}
+
+if (!password_verify($data['password'], $user['password'])) {
+    return $this->response->setStatusCode(401)->setJSON([
+        'status' => false,
+        'message' => 'Password salah'
+    ]);
+}
+
+        // === PERBAIKAN DI SINI: 'nama' bukan 'nama_lengkap' ===
+        $sessionData = [
+    'nip'        => $user['nip'],
+    'nama'       => $user['nama'],
+    'role'       => 'pegawai',
+    'isLoggedIn' => true
+];
+        session()->set($sessionData);
 
         unset($user['password']);
 
@@ -67,57 +84,106 @@ class Auth extends BaseController
             'message' => 'Login berhasil',
             'user' => $user
         ]);
-    }
-    public function gantiPassword()
-{
-    $model = new UserModel();
 
+    }
+    public function loginAdmin()
+{
+    $this->response->setHeader('Access-Control-Allow-Origin', '*');
+    $this->response->setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if ($this->request->getMethod() === 'options') {
+        return $this->response->setStatusCode(200);
+    }
+
+    $model = new UserModel();
     $data = $this->request->getJSON(true);
 
-    $nip = $data["nip"];
-    $passwordLama = $data["passwordLama"];
-    $passwordBaru = $data["passwordBaru"];
+    if (empty($data['username']) || empty($data['password'])) {
+        return $this->response->setStatusCode(400)->setJSON([
+            "status" => false,
+            "message" => "Username dan Password wajib diisi"
+        ]);
+    }
 
     $user = $model
-        ->where("nip", $nip)
+        ->where("username", $data["username"])
         ->first();
 
     if (!$user) {
-
-        return $this->response->setJSON([
+        return $this->response->setStatusCode(401)->setJSON([
             "status" => false,
-            "message" => "User tidak ditemukan."
+            "message" => "Username tidak ditemukan"
         ]);
-
     }
 
-    if (
-        !password_verify(
-            $passwordLama,
-            $user["password"]
-        )
-    ) {
-
-        return $this->response->setJSON([
+    if (!password_verify($data["password"], $user["password"])) {
+        return $this->response->setStatusCode(401)->setJSON([
             "status" => false,
-            "message" => "Password lama salah."
+            "message" => "Password salah"
         ]);
-
     }
 
-    $model->update(
-        $user["id"],
-        [
-            "password" => password_hash(
-                $passwordBaru,
-                PASSWORD_DEFAULT
-            )
-        ]
-    );
+    session()->set([
+        "user_id" => $user["id"],
+        "username" => $user["username"],
+        "nama_lengkap" => $user["nama_lengkap"],
+        "email" => $user["email"],
+        "role" => $user["role"],
+        "isLoggedIn" => true
+    ]);
+
+    unset($user["password"]);
 
     return $this->response->setJSON([
         "status" => true,
-        "message" => "Password berhasil diganti."
+        "message" => "Login admin berhasil",
+        "user" => $user
+    ]);
+}
+
+    public function gantiPassword()
+    {
+        $this->response->setHeader('Access-Control-Allow-Origin', '*');
+        
+        $model = new PegawaiModel();
+        $data = $this->request->getJSON(true);
+
+        $nip = $data["nip"] ?? '';
+        $passwordLama = $data["passwordLama"] ?? '';
+        $passwordBaru = $data["passwordBaru"] ?? '';
+
+        $user = $model->where("nip", $nip)->first();
+
+        if (!$user) {
+            return $this->response->setJSON(["status" => false, "message" => "User tidak ditemukan."]);
+        }
+
+        if (!password_verify($passwordLama, $user["password"])) {
+            return $this->response->setJSON(["status" => false, "message" => "Password lama salah."]);
+        }
+
+        $model->update($user["id"], [
+            "password" => password_hash($passwordBaru, PASSWORD_DEFAULT)
+        ]);
+
+        return $this->response->setJSON(["status" => true, "message" => "Password berhasil diganti."]);
+    }
+    public function initPasswordPegawai()
+{
+    $pegawaiModel = new \App\Models\PegawaiModel();
+
+    $pegawai = $pegawaiModel->findAll();
+
+    foreach ($pegawai as $p) {
+        $pegawaiModel->update($p['nip'], [
+            'password' => password_hash($p['nip'], PASSWORD_DEFAULT)
+        ]);
+    }
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Password seluruh pegawai berhasil diinisialisasi.'
     ]);
 }
 }

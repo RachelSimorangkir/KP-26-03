@@ -1,14 +1,56 @@
 import { useState, useEffect } from "react";
-import { currentUser } from "./dummyData";
+import { useNavigate } from "react-router-dom";
 import { StatusBadge, IconDoc, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
+import "./DBRUser.css";
 
 const API_URL = "http://localhost:8080/api";
 
+// Jabatan yang usia pensiunnya 60 tahun (pimpinan Eselon I & II).
+// Sisanya (pegawai lain) pensiun di usia 58 tahun.
+const JABATAN_PENSIUN_60 = [
+  "direktur jenderal",
+  "direktur pendidikan",
+  "direktur urusan agama",
+  "sekretaris ditjen",
+  "sekretaris direktorat jenderal",
+];
+
+// Hitung tanggal pensiun dari NIP (8 digit pertama = tanggal lahir YYYYMMDD)
+// dan jabatan (menentukan usia pensiun 58 atau 60 tahun).
+// Aturan: pensiun efektif tanggal 1 pada bulan SETELAH bulan tercapainya usia pensiun.
+const hitungPensiun = (nip, jabatan) => {
+  if (!nip || nip.length < 6) return null;
+
+  const tahunLahir = parseInt(nip.substring(0, 4), 10);
+  const bulanLahir = parseInt(nip.substring(4, 6), 10);
+
+  if (isNaN(tahunLahir) || isNaN(bulanLahir) || bulanLahir < 1 || bulanLahir > 12) {
+    return null;
+  }
+
+  const isPimpinan = JABATAN_PENSIUN_60.some(kw =>
+    (jabatan || "").toLowerCase().includes(kw)
+  );
+  const usiaPensiun = isPimpinan ? 60 : 58;
+
+  let tahunPensiun = tahunLahir + usiaPensiun;
+  let bulanPensiun = bulanLahir + 1;
+
+  if (bulanPensiun > 12) {
+    bulanPensiun = 1;
+    tahunPensiun += 1;
+  }
+
+  const tgl = new Date(tahunPensiun, bulanPensiun - 1, 1);
+  return tgl.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
+};
+
 const DBRUser = () => {
+  const navigate = useNavigate();
   const [myDBR, setMyDBR] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("currentUser"));
   const nip = user?.nip;
 
   useEffect(() => {
@@ -81,21 +123,38 @@ const DBRUser = () => {
     );
   }
 
+  const tanggalPensiun = hitungPensiun(myDBR.nip, myDBR.jabatan);
+
   return (
     <div>
-      <AdminHeaderCard title="DBR Saya" subtitle="Daftar Barang Ruang yang menjadi tanggung jawab Anda" />
+      <button
+        className="back-button"
+        onClick={() => navigate("/bmn")}
+      >
+        <img
+          src="/logo-back.png"
+          alt="Back"
+          className="back-icon"
+        />
+      </button>
 
-      {/* Info Card */}
-      <div style={{ background: "linear-gradient(135deg, #1e293b, #2563eb)", borderRadius: 10, padding: "14px 18px", color: "#fff", marginBottom: 14, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 700 }}>{myDBR.nama}</div>
-          <div style={{ fontSize: 11, opacity: 0.85 }}>{myDBR.jabatan}</div>
-          <div style={{ fontSize: 11, opacity: 0.85 }}>NIP. {myDBR.nip}</div>
+      <div className="service-banner">
+        <div className="service-banner-content">
+          <h1>DBR Saya</h1>
+          <p>
+            Lihat Daftar Barang Ruang (DBR) yang menjadi
+            tanggung jawab Anda secara online melalui Portal Internal BMBPSDM.
+          </p>
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontWeight: 600 }}>{myDBR.ruangan}</div>
-          <div style={{ fontSize: 10, opacity: 0.7, marginTop: 4 }}>{myDBR.barang.length} barang terdaftar</div>
-        </div>
+      </div>
+
+      <div className="description-card">
+        <h2>Tentang Layanan</h2>
+        <p>
+          Halaman ini menampilkan seluruh Barang Milik Negara
+          yang tercatat pada Daftar Barang Ruangan (DBR) atas
+          nama Anda, lengkap dengan kondisi barang dan informasi pensiun.
+        </p>
       </div>
 
       {/* Tabel DBR */}
@@ -107,12 +166,13 @@ const DBRUser = () => {
             <div style={{ fontWeight: 700, fontSize: 13, marginTop: 6, letterSpacing: 0.5 }}>DAFTAR BARANG RUANGAN (DBR)</div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 16, fontSize: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 16, fontSize: 14 }}>
             {[
               ["Nama", myDBR.nama],
               ["NIP", myDBR.nip],
               ["Jabatan", myDBR.jabatan],
               ["Ruangan", myDBR.ruangan],
+              ["Pensiun", tanggalPensiun || "-"],
             ].map(([k, v]) => (
               <div key={k} style={{ display: "flex", gap: 8 }}>
                 <span style={{ fontWeight: 600, width: 70, flexShrink: 0 }}>{k}</span>
@@ -126,11 +186,11 @@ const DBRUser = () => {
               Belum ada barang yang terdaftar untuk pegawai ini.
             </div>
           ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, marginBottom: 16 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, marginBottom: 16 }}>
               <thead>
                 <tr style={{ background: "#f8fafc" }}>
                   {["No.", "Nama Barang", "NUP", "Kondisi"].map(h => (
-                    <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontWeight: 700, color: "#374151", border: "1px solid #cbd5e1" }}>{h}</th>
+                    <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontWeight: 700, color: "#374151", border: "1px solid #cbd5e1", width: h === "No." ? 50 : "auto", whiteSpace: h === "No." ? "nowrap" : "normal" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -139,7 +199,7 @@ const DBRUser = () => {
                   <tr key={i} style={{ borderBottom: "1px solid #f1f5f9", textAlign: "left" }}>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", textAlign: "left", color: "#64748b" }}>{b.no}</td>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: "#1e293b" }}>{b.nama}</td>
-                    <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontFamily: "monospace", fontSize: 11, color: "#64748b" }}>{b.nup}</td>
+                    <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontFamily: "monospace", fontSize: 13, color: "#64748b" }}>{b.nup}</td>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}><StatusBadge status={b.kondisi} /></td>
                   </tr>
                 ))}
@@ -147,10 +207,10 @@ const DBRUser = () => {
             </table>
           )}
 
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginTop: 14 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginTop: 14 }}>
             <div style={{ textAlign: "center", width: 180 }}>
               <div style={{ fontWeight: 600 }}>Mengetahui,</div>
-              <div style={{ fontSize: 11, color: "#64748b" }}>Kasubbag Perlengkapan dan BMN</div>
+              <div style={{ fontSize: 12, color: "#64748b" }}>Kasubbag Perlengkapan dan BMN</div>
               <div style={{ height: 40 }} />
               <div style={{ borderTop: "1.5px solid #1e293b", paddingTop: 6 }}>
                 <div style={{ color: "#94a3b8" }}>(________________________)</div>

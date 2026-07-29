@@ -1,25 +1,34 @@
 import { useState, useEffect } from "react";
-import { currentUser } from "./dummyData";
+import { useNavigate } from "react-router-dom";
 import { Modal, inputStyle, FormGroup, BarcodeNIP, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
-
-const API_URL = "http://localhost:8080/api";
+import "./PemeliharaanUser.css";
 
 const generateNomor = () => {
   const now = new Date();
   return `PML-${now.getFullYear()}-${String(Math.floor(Math.random() * 900) + 100)}`;
 };
 
-const FormPemeliharaan = ({ barangTerpilih, keteranganMap, nip, onClose, onSubmit }) => {
-  const nomorSurat = generateNomor();
+const FormPemeliharaan = ({ barangTerpilih, keteranganMap, currentUser, nip, nomorSurat, onClose, onSubmit }) => {
   const today = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 
   return (
     <Modal title="Form Pemeliharaan Barang" onClose={onClose} wide>
       <div id="surat-pemeliharaan-print" style={{ border: "1.5px solid #e2e8f0", borderRadius: 8, padding: 24, background: "#fff", fontFamily: "serif", fontSize: 13, lineHeight: 1.7, color: "#1e293b" }}>
-        <div style={{ textAlign: "center", borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
-          <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-          <div style={{ fontSize: 11 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
-          <div style={{ fontSize: 11 }}>Jalan M.H. Thamrin Nomor 6 Jakarta 10340</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, borderBottom: "3px double #1e293b", paddingBottom: 10, marginBottom: 16 }}>
+          <div style={{ flex: 1, textAlign: "center" }}>
+            <div style={{ fontWeight: 800, fontSize: 15 }}>KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+            <div style={{ fontWeight: 800, fontSize: 13 }}>DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT KRISTEN</div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>Jalan M.H Thamrin Nomor 6 Jakarta 10340</div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>
+              Telepon (021) 31924509, 31930565, 3920774, 3920739, 3920791, Pest 465, 496,234, 487
+            </div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>
+              Telepon Langsung/Fax. : (021) 3812583, 3846832, 3920626, 3920628 Tromol Pos 3690
+            </div>
+            <div style={{ fontSize: 10.5, color: "#374151" }}>
+              Website : https://www.bimaskristen.kemenag.go.id, Email : bimaskristen@kemenag.go.id
+            </div>
+          </div>
         </div>
 
         <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -30,17 +39,17 @@ const FormPemeliharaan = ({ barangTerpilih, keteranganMap, nip, onClose, onSubmi
         <p style={{ textAlign: "justify", marginBottom: 4 }}>
           Permohonan pemeliharaan barang atas
         </p>
-        <table style={{ marginLeft: 16, marginBottom: 8, fontSize: 13, borderCollapse: "collapse" }}>
+        <table style={{ marginLeft: 16, marginBottom: 10, fontSize: 13, textAlign: "left", borderCollapse: "collapse" }}>
           <tbody>
             <tr>
-              <td style={{ paddingRight: 12, color: "#475569" }}>Nama</td>
-              <td style={{ paddingRight: 8 }}>:</td>
-              <td style={{ fontWeight: 700 }}>{currentUser.nama}</td>
+              <td style={{ padding: "2px 10px 2px 0", width: 110, textAlign: "left", verticalAlign: "top", color: "#475569" }}>Nama</td>
+              <td style={{ padding: "2px 6px 2px 0", textAlign: "left", verticalAlign: "top" }}>:</td>
+              <td style={{ padding: "2px 0", textAlign: "left" }}><strong>{currentUser.nama}</strong></td>
             </tr>
             <tr>
-              <td style={{ paddingRight: 12, color: "#475569" }}>NIP</td>
-              <td style={{ paddingRight: 8 }}>:</td>
-              <td style={{ fontWeight: 700 }}>{nip}</td>
+              <td style={{ padding: "2px 10px 2px 0", width: 110, textAlign: "left", verticalAlign: "top", color: "#475569" }}>NIP</td>
+              <td style={{ padding: "2px 6px 2px 0", textAlign: "left", verticalAlign: "top" }}>:</td>
+              <td style={{ padding: "2px 0", textAlign: "left" }}><strong>{nip}</strong></td>
             </tr>
           </tbody>
         </table>
@@ -73,15 +82,14 @@ const FormPemeliharaan = ({ barangTerpilih, keteranganMap, nip, onClose, onSubmi
           Demikian permohonan ini saya buat dengan sebenar-benarnya untuk dapat diproses oleh Admin BMN.
         </p>
 
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24, alignItems: "flex-end" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
           <div style={{ textAlign: "center", width: 200 }}>
             <div>Jakarta, {today}</div>
             <div>Pemohon,</div>
-            <div style={{ marginTop: 12, display: "inline-block", overflow: "hidden", height: 80 }}>
+            <div style={{ marginTop: 12, marginLeft: 65, display: "inline-block", overflow: "hidden", height: 80 }}>
               <BarcodeNIP value={nip} />
             </div>
             <div style={{ marginTop: 6, fontWeight: 700 }}>{currentUser.nama}</div>
-            <div>NIP. {nip}</div>
           </div>
         </div>
       </div>
@@ -102,7 +110,6 @@ const FormPemeliharaan = ({ barangTerpilih, keteranganMap, nip, onClose, onSubmi
 const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranganChange }) => {
   return (
     <div>
-      {/* Baris barang */}
       <div style={{
         display: "flex",
         alignItems: "center",
@@ -114,7 +121,6 @@ const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranga
         userSelect: "none",
         textAlign: "left",
       }}>
-        {/* Nomor bulat */}
         <div style={{
           width: 22, height: 22, borderRadius: "50%",
           background: isChecked ? "#2563eb" : "#e2e8f0",
@@ -125,23 +131,21 @@ const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranga
           {index + 1}
         </div>
 
-        {/* Nama + NUP — lebar tetap agar selalu sejajar */}
         <div style={{ flex: 1, minWidth: 0, marginLeft: 10 }}>
           <div style={{
-            fontSize: 12, fontWeight: 600, color: "#1e293b",
+            fontSize: 14, fontWeight: 600, color: "#1e293b",
             lineHeight: 1.4,
           }}>
             {barang.nama}
           </div>
           <div style={{
-            fontSize: 10, color: "#94a3b8",
+            fontSize: 13, color: "#94a3b8",
             fontFamily: "monospace", marginTop: 2,
           }}>
             {barang.nup}
           </div>
         </div>
 
-        {/* Checkbox di kanan — satu-satunya trigger toggle */}
         <input
           type="checkbox"
           checked={isChecked}
@@ -155,7 +159,6 @@ const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranga
         />
       </div>
 
-      {/* Box keterangan — muncul hanya jika barang ini dicentang */}
       {isChecked && (
         <div style={{
           border: "1.5px solid #2563eb",
@@ -164,7 +167,7 @@ const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranga
           background: "#f0f6ff",
           padding: "10px 14px",
         }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#2563eb", marginBottom: 5 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: "#2563eb", marginBottom: 5 }}>
             Keterangan Permasalahan — {barang.nama}
           </div>
           <textarea
@@ -173,7 +176,7 @@ const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranga
               minHeight: 60,
               resize: "vertical",
               background: "#fff",
-              fontSize: 12,
+              fontSize: 14,
               border: "1px solid #bfdbfe",
               width: "100%",
               boxSizing: "border-box",
@@ -192,6 +195,12 @@ const BarangRow = ({ barang, index, isChecked, keterangan, onToggle, onKeteranga
 /* Komponen utama                                                       */
 /* ------------------------------------------------------------------ */
 const PemeliharaanUser = () => {
+  const navigate = useNavigate();
+
+  // Data pegawai yang login (bukan dummy lagi)
+  const loginUser = JSON.parse(localStorage.getItem("currentUser"));
+  const nip = loginUser?.nip;
+
   const [myDBR, setMyDBR] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -202,12 +211,20 @@ const PemeliharaanUser = () => {
   const [setuju, setSetuju] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [nomorSurat, setNomorSurat] = useState("");
 
+  // Ambil DBR (daftar barang) milik pegawai yang login — dari endpoint DBR, bukan endpoint pegawai
   useEffect(() => {
+    if (!nip) {
+      setError("NIP tidak ditemukan, silakan login ulang.");
+      setLoading(false);
+      return;
+    }
+
     const fetchDBR = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:8080/api/pegawai/${nip}`)
+        const res = await fetch(`http://localhost:8080/api/dbr/${nip}`);
         if (!res.ok) {
           if (res.status === 404) { setMyDBR(null); return; }
           throw new Error("Gagal mengambil data DBR");
@@ -218,8 +235,8 @@ const PemeliharaanUser = () => {
           nip: data.nip,
           jabatan: data.jabatan,
           ruangan: data.ruangan || "Belum ditentukan",
-          barang: (data.barang || []).map((b,i) => ({
-            id:i,
+          barang: (data.barang || []).map((b, i) => ({
+            id: i,
             nama: b.nama_barang,
             nup: b.nup,
             kondisi: b.kondisi,
@@ -232,7 +249,7 @@ const PemeliharaanUser = () => {
       }
     };
     fetchDBR();
-  }, []);
+  }, [nip]);
 
   if (loading) {
     return (
@@ -283,7 +300,41 @@ const PemeliharaanUser = () => {
   };
 
   const allKeteranganFilled = selected.length > 0 && selected.every(b => (keteranganMap[b.nup] || "").trim());
-  const isValid = allKeteranganFilled && setuju && nipConfirm === currentUser.nip;
+  const isValid = allKeteranganFilled && setuju && nipConfirm === myDBR.nip;
+
+  const handleSubmit = async () => {
+    try {
+      const items = selected.map(b => ({
+        nama: b.nama,
+        nup: b.nup,
+        keterangan: keteranganMap[b.nup] || "",
+      }));
+
+      const response = await fetch("http://localhost:8080/api/pemeliharaan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nip: myDBR.nip,
+          nama: myDBR.nama,
+          jabatan: myDBR.jabatan,
+          nomorSurat,
+          items,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setShowForm(false);
+        setSubmitted(true);
+      } else {
+        alert(result.message || "Gagal mengirim permohonan.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengirim permohonan.");
+    }
+  };
 
   if (submitted) {
     return (
@@ -303,18 +354,46 @@ const PemeliharaanUser = () => {
 
   return (
     <div>
-      <AdminHeaderCard title="Pemeliharaan Barang" subtitle="Ajukan pemeliharaan untuk barang yang terdaftar di DBR Anda" />
+      <button
+        className="back-button"
+        onClick={() => navigate("/bmn")}
+      >
+        <img
+          src="/logo-back.png"
+          alt="Back"
+          className="back-icon"
+        />
+      </button>
+
+      <div className="service-banner">
+        <div className="service-banner-content">
+          <h1>Pemeliharaan Barang</h1>
+          <p>
+            Ajukan permohonan pemeliharaan Barang Milik Negara
+            yang terdaftar di DBR Anda secara online melalui Portal Internal BMBPSDM.
+          </p>
+        </div>
+      </div>
+
+      <div className="description-card">
+        <h2>Tentang Layanan</h2>
+        <p>
+          Layanan ini digunakan oleh pegawai untuk mengajukan
+          pemeliharaan Barang Milik Negara yang terdaftar pada
+          Daftar Barang Ruangan (DBR) miliknya.
+          Seluruh permohonan akan diverifikasi oleh Admin BMN
+          sebelum diproses lebih lanjut.
+        </p>
+      </div>
 
       <AdminCard>
-        {/* Judul & subtitle justify */}
-        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 13, marginBottom: 4, textAlign: "justify" }}>
+        <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 20, marginBottom: 4, textAlign: "justify" }}>
           Pilih Barang yang Bermasalah
         </div>
-        <div style={{ fontSize: 11, color: "#64748b", marginBottom: 12, textAlign: "justify" }}>
-          Ruangan: {myDBR.ruangan} — centang satu atau lebih barang
+        <div style={{ fontSize: 14, color: "#64748b", marginBottom: 12, textAlign: "justify" }}>
+          Ruangan: {myDBR.ruangan} — Centang satu atau lebih barang
         </div>
 
-        {/* Daftar barang */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
           {myDBR.barang.map((b, i) => (
             <BarangRow
@@ -329,10 +408,9 @@ const PemeliharaanUser = () => {
           ))}
         </div>
 
-        {/* Persetujuan */}
         <div style={{ background: "#f8fafc", borderRadius: 8, padding: 12, marginTop: 4 }}>
-          <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 12, marginBottom: 8 }}>Persetujuan Pemohon</div>
-          <label style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10, fontSize: 12, cursor: "pointer" }}>
+          <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 16, marginBottom: 8 }}>Persetujuan Pemohon</div>
+          <label style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10, fontSize: 14, cursor: "pointer" }}>
             <input
               type="checkbox"
               checked={setuju}
@@ -340,7 +418,7 @@ const PemeliharaanUser = () => {
               style={{ width: 14, height: 14, marginTop: 2, accentColor: "#2563eb" }}
             />
             <span>
-              Saya, <strong>{currentUser.nama}</strong>, menyatakan setuju untuk mengajukan permohonan
+              Saya, <strong>{myDBR.nama}</strong>, menyatakan setuju untuk mengajukan permohonan
               pemeliharaan terhadap barang yang dipilih di atas.
             </span>
           </label>
@@ -352,7 +430,7 @@ const PemeliharaanUser = () => {
               placeholder="Masukkan NIP untuk konfirmasi"
             />
           </FormGroup>
-          {nipConfirm && nipConfirm !== currentUser.nip && (
+          {nipConfirm && nipConfirm !== myDBR.nip && (
             <div style={{ fontSize: 11, color: "#dc2626", marginTop: -6 }}>
               NIP tidak sesuai dengan akun Anda.
             </div>
@@ -360,7 +438,7 @@ const PemeliharaanUser = () => {
         </div>
 
         <button
-          onClick={() => isValid && setShowForm(true)}
+          onClick={() => { if (isValid) { setNomorSurat(generateNomor()); setShowForm(true); } }}
           disabled={!isValid}
           style={{
             width: "100%", marginTop: 16, padding: "9px 0",
@@ -377,9 +455,11 @@ const PemeliharaanUser = () => {
         <FormPemeliharaan
           barangTerpilih={selected}
           keteranganMap={keteranganMap}
+          currentUser={myDBR}
           nip={nipConfirm}
+          nomorSurat={nomorSurat}
           onClose={() => setShowForm(false)}
-          onSubmit={() => { setShowForm(false); setSubmitted(true); }}
+          onSubmit={handleSubmit}
         />
       )}
     </div>

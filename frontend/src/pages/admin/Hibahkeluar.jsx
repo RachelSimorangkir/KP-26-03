@@ -1,63 +1,42 @@
-import { useState } from "react";
-import { currentUser } from "../user/bmn/dummyData";
+import { useState, useEffect } from "react";
 import {
   Modal, inputStyle, FormGroup,
   AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton,
   IconPlus,
 } from "../user/bmn/components";
 
-// ─── DAFTAR ADMIN BMN ─────────────────────────────────────────────────────────
-const adminBMN = [
-  { nama: "Olin Mawar Kristianty",    jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Tabita Marselia Silaen",   jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martha Fransiska Manalu",  jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Lidya Septaria Sinurat",   jabatan: "Penata Kelola Sistem dan Teknologi Informasi" },
-  { nama: "Niar Ningsih Sabara",      jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Martin Hasiholan Siagian", jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-  { nama: "Roynardo",                 jabatan: "Pengelola Pengadaan Barang/Jasa Ahli Pertama" },
-];
+const API_URL = "http://localhost:8080/api";
+
+// Daftar admin BMN sekarang diambil dari database (role = admin_bmn),
+// bukan hardcode lagi — lihat useEffect di dalam komponen.
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
-const kategoriList = ["Peralatan IT", "Perabot", "Kendaraan", "Lainnya"];
+const kategoriList = [
+  "Perlengkapan Kantor", "Meubelier", "Lemari Besi/Kayu",
+  "Kendaraan Roda Dua", "Kendaraan Roda Empat", "Tanah", "Gedung",
+];
 const kondisiList  = ["Baik", "Rusak Ringan", "Rusak Berat"];
+
+const kategoriColor = {
+  "Perlengkapan Kantor":  { bg: "#eff6ff", color: "#2563eb" },
+  "Meubelier":            { bg: "#faf5ff", color: "#7c3aed" },
+  "Lemari Besi/Kayu":     { bg: "#fef3c7", color: "#a16207" },
+  "Kendaraan Roda Dua":   { bg: "#fffbeb", color: "#d97706" },
+  "Kendaraan Roda Empat": { bg: "#fff7ed", color: "#c2410c" },
+  "Tanah":                { bg: "#f0fdf4", color: "#16a34a" },
+  "Gedung":               { bg: "#f0f9ff", color: "#0284c7" },
+};
 
 const tdBase = {
   padding: "10px 14px", textAlign: "left",
   borderBottom: "1px solid #f1f5f9", verticalAlign: "middle",
+  whiteSpace: "nowrap",
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HIBAH KELUAR
 // ─────────────────────────────────────────────────────────────────────────────
-const emptyKeluarItem = { nama: "", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", keterangan: "" };
-
-const dummyHibahKeluar = [
-  {
-    id: 1,
-    noSurat: "HBK-2026-001",
-    tanggal: "2026-05-20",
-    pemeriksa: "Roynardo",
-    penerima: { nama: "Dinas Pendidikan Kota Bogor", nip: "", unitKerja: "Bidang Pendidikan Agama" },
-    tujuan: "Hibah barang inventaris tidak terpakai",
-    status: "Selesai",
-    items: [
-      { nama: "Monitor LG 19 inch", kategori: "Peralatan IT", jumlah: 2, kondisi: "Baik", keterangan: "Diganti monitor baru" },
-      { nama: "Kursi Plastik Lama",  kategori: "Perabot",      jumlah: 5, kondisi: "Rusak Ringan", keterangan: "" },
-    ],
-  },
-  {
-    id: 2,
-    noSurat: "HBK-2026-002",
-    tanggal: "2026-06-15",
-    pemeriksa: "Martin Hasiholan Siagian",
-    penerima: { nama: "Yayasan Pendidikan Kristen Nusantara", nip: "", unitKerja: "Lembaga Sosial" },
-    tujuan: "Hibah sarana pendidikan",
-    status: "Proses",
-    items: [
-      { nama: "Proyektor Epson Lama", kategori: "Peralatan IT", jumlah: 1, kondisi: "Baik", keterangan: "Masih berfungsi baik" },
-    ],
-  },
-];
+const emptyKeluarItem = { nama: "", kategori: "Perlengkapan Kantor", jumlah: 1, kondisi: "Baik", keterangan: "" };
 
 const generateNoSurat = () => {
   const now = new Date();
@@ -71,14 +50,44 @@ const statusColor = {
 };
 
 const HibahKeluarAdmin = () => {
-  const [data, setData]             = useState(dummyHibahKeluar);
+  const [data, setData]             = useState([]);
+  const [loading, setLoading]       = useState(true);
   const [search, setSearch]         = useState("");
   const [filter, setFilter]         = useState("Semua");
   const [showModal, setShowModal]   = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+  const [editId, setEditId]         = useState(null);
+
+  const loadData = () => {
+    setLoading(true);
+    fetch(`${API_URL}/hibah-keluar`)
+      .then(res => res.json())
+      .then(json => setData(Array.isArray(json) ? json : []))
+      .catch(err => console.error("Gagal ambil data hibah keluar:", err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { loadData(); }, []);
+
+  const [adminBMN, setAdminBMN] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/admin-bmn`)
+      .then(res => res.json())
+      .then(data => setAdminBMN(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Gagal ambil daftar admin BMN:", err));
+  }, []);
+
+  const loginUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+  const adminBMNSorted = [...adminBMN].sort((a, b) => {
+    if (a.nip === loginUser.nip) return -1;
+    if (b.nip === loginUser.nip) return 1;
+    return 0;
+  });
 
   const defaultPemeriksa =
-    adminBMN.find(a => a.nama === currentUser.nama)?.nama || adminBMN[0].nama;
+    adminBMN.find(a => a.nip === loginUser.nip)?.nama || adminBMN[0]?.nama || "";
 
   const emptyForm = () => ({
     noSurat:   generateNoSurat(),
@@ -91,6 +100,15 @@ const HibahKeluarAdmin = () => {
   });
 
   const [form, setForm] = useState(emptyForm());
+
+  // adminBMN awalnya kosong (masih fetch), update pemeriksa begitu datanya sudah ada
+  useEffect(() => {
+    if (defaultPemeriksa && !form.pemeriksa) {
+      setForm(prev => ({ ...prev, pemeriksa: defaultPemeriksa }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultPemeriksa]);
+
 
   const filtered = data.filter(d => {
     const matchSearch =
@@ -116,11 +134,70 @@ const HibahKeluarAdmin = () => {
       items: prev.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
     }));
 
-  const handleSubmit = () => {
-    if (!form.penerima.nama || form.items.some(it => !it.nama)) return;
-    setData(prev => [...prev, { ...form, id: prev.length + 1 }]);
-    setShowModal(false);
+  const resetForm = () => {
     setForm(emptyForm());
+    setEditId(null);
+  };
+
+  const openAddModal = () => {
+    resetForm();
+    setShowModal(true);
+  };
+
+  const openEditModal = (d) => {
+    setForm({
+      noSurat:   d.noSurat,
+      tanggal:   d.tanggal,
+      pemeriksa: d.pemeriksa,
+      penerima:  { ...d.penerima },
+      tujuan:    d.tujuan,
+      status:    d.status,
+      items:     d.items.map(it => ({ ...it })),
+    });
+    setEditId(d.id);
+    setShowModal(true);
+  };
+
+  const handleDelete = async (d) => {
+    if (!window.confirm(`Hapus data hibah keluar "${d.noSurat}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+    try {
+      const res = await fetch(`${API_URL}/hibah-keluar/${d.id}`, { method: "DELETE" });
+      const result = await res.json();
+      if (!result.success) {
+        alert(result.error || "Gagal menghapus hibah keluar.");
+        return;
+      }
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus hibah keluar.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!form.penerima.nama || form.items.some(it => !it.nama)) return;
+
+    try {
+      const isEdit = Boolean(editId);
+      const res = await fetch(`${API_URL}/hibah-keluar${isEdit ? `/${editId}` : ""}`, {
+        method: isEdit ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await res.json();
+
+      if (!result.success) {
+        alert(result.error || "Gagal menyimpan hibah keluar.");
+        return;
+      }
+
+      setShowModal(false);
+      resetForm();
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan hibah keluar.");
+    }
   };
 
   const summary = {
@@ -128,6 +205,14 @@ const HibahKeluarAdmin = () => {
     totalItem: data.reduce((acc, d) => acc + d.items.reduce((a, it) => a + Number(it.jumlah), 0), 0),
     bulanIni:  data.filter(d => d.tanggal.startsWith(new Date().toISOString().slice(0, 7))).length,
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
+        <div style={{ fontSize: 12, color: "#64748b" }}>Memuat data hibah keluar...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -138,7 +223,7 @@ const HibahKeluarAdmin = () => {
         onSearchChange={setSearch}
         searchPlaceholder="Cari no. surat, penerima, atau barang..."
         rightAction={
-          <AdminButton onClick={() => setShowModal(true)} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
+          <AdminButton onClick={openAddModal} style={{ background: "#fff", color: "#2563eb", whiteSpace: "nowrap" }}>
             + Catat Hibah Keluar
           </AdminButton>
         }
@@ -157,7 +242,7 @@ const HibahKeluarAdmin = () => {
             key={s}
             onClick={() => setFilter(s)}
             style={{
-              padding: "5px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none",
+              padding: "5px 14px", borderRadius: 20, fontSize: 16, fontWeight: 600, cursor: "pointer", border: "none",
               background: filter === s ? "#2563eb" : "#f1f5f9",
               color:      filter === s ? "#fff"    : "#64748b",
             }}
@@ -167,6 +252,7 @@ const HibahKeluarAdmin = () => {
 
       {/* ── Tabel utama ── */}
       <AdminCard>
+        <div style={{ overflowX: "auto" }}>
         <AdminTable headers={[
           "No. Surat", "Tanggal", "Penerima Hibah", "Unit / Instansi",
           "Barang", "Pemeriksa Hibah", "Status", "Aksi",
@@ -175,14 +261,14 @@ const HibahKeluarAdmin = () => {
             const sc = statusColor[d.status] || { bg: "#f1f5f9", color: "#475569" };
             return (
               <tr key={d.id} style={{ borderBottom: "1px solid #f8fafc" }}>
-                <td style={{ ...tdBase, fontFamily: "monospace", fontSize: 12, color: "#64748b" }}>{d.noSurat}</td>
-                <td style={{ ...tdBase, color: "#64748b", whiteSpace: "nowrap" }}>{d.tanggal}</td>
+                <td style={{ ...tdBase, fontFamily: "monospace", fontSize: 14, color: "#64748b" }}>{d.noSurat}</td>
+                <td style={{ ...tdBase, color: "#64748b" }}>{d.tanggal}</td>
                 <td style={{ ...tdBase, fontWeight: 600, color: "#1e293b" }}>{d.penerima.nama}</td>
                 <td style={{ ...tdBase, color: "#64748b" }}>{d.penerima.unitKerja}</td>
                 <td style={tdBase}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     {d.items.map((it, i) => (
-                      <span key={i} style={{ fontSize: 11, color: "#374151" }}>
+                      <span key={i} style={{ fontSize: 14, color: "#374151", whiteSpace: "nowrap" }}>
                         {it.nama} <span style={{ color: "#94a3b8" }}>({it.jumlah} unit)</span>
                       </span>
                     ))}
@@ -190,17 +276,22 @@ const HibahKeluarAdmin = () => {
                 </td>
                 <td style={{ ...tdBase, color: "#374151" }}>{d.pemeriksa}</td>
                 <td style={tdBase}>
-                  <span style={{ background: sc.bg, color: sc.color, padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600 }}>
+                  <span style={{ background: sc.bg, color: sc.color, padding: "3px 10px", borderRadius: 20, fontSize: 14, fontWeight: 600 }}>
                     {d.status}
                   </span>
                 </td>
                 <td style={tdBase}>
-                  <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                  <div style={{ display: "flex", gap: 6, whiteSpace: "nowrap" }}>
+                    <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                    <AdminButton variant="outline" onClick={() => openEditModal(d)}>Edit</AdminButton>
+                    <AdminButton variant="outline" onClick={() => handleDelete(d)} style={{ color: "#dc2626", borderColor: "#dc2626" }}>Hapus</AdminButton>
+                  </div>
                 </td>
               </tr>
             );
           })}
         </AdminTable>
+        </div>
       </AdminCard>
 
       {/* ── Modal Detail ── */}
@@ -221,7 +312,7 @@ const HibahKeluarAdmin = () => {
                   <span style={{ flexShrink: 0 }}>:</span>
                   <span>
                     {k === "Status"
-                      ? <span style={{ background: (statusColor[v] || {}).bg, color: (statusColor[v] || {}).color, padding: "2px 8px", borderRadius: 12, fontSize: 11, fontWeight: 600 }}>{v}</span>
+                      ? <span style={{ background: (statusColor[v] || {}).bg, color: (statusColor[v] || {}).color, padding: "2px 8px", borderRadius: 12, fontSize: 14, fontWeight: 600 }}>{v}</span>
                       : v}
                   </span>
                 </div>
@@ -257,7 +348,16 @@ const HibahKeluarAdmin = () => {
                   <tr key={i}>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", color: "#64748b" }}>{i + 1}</td>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: "#1e293b" }}>{it.nama}</td>
-                    <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}>{it.kategori}</td>
+                    <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}>
+                      {(() => {
+                        const kc = kategoriColor[it.kategori] || { bg: "#f8fafc", color: "#475569" };
+                        return (
+                          <span style={{ background: kc.bg, color: kc.color, padding: "3px 10px", borderRadius: 20, fontSize: 14, fontWeight: 600 }}>
+                            {it.kategori}
+                          </span>
+                        );
+                      })()}
+                    </td>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0" }}>{it.jumlah} unit</td>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", fontWeight: 600, color: it.kondisi === "Baik" ? "#16a34a" : "#a16207" }}>{it.kondisi}</td>
                     <td style={{ padding: "8px 12px", border: "1px solid #e2e8f0", color: "#64748b" }}>{it.keterangan || "-"}</td>
@@ -275,7 +375,7 @@ const HibahKeluarAdmin = () => {
 
       {/* ── Modal Catat Hibah Keluar ── */}
       {showModal && (
-        <Modal title="Catat Hibah Keluar" onClose={() => setShowModal(false)} wide>
+        <Modal title={editId ? "Edit Hibah Keluar" : "Catat Hibah Keluar"} onClose={() => { setShowModal(false); resetForm(); }} wide>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <FormGroup label="No. Surat">
               <input style={{ ...inputStyle, background: "#f8fafc", color: "#94a3b8" }} value={form.noSurat} readOnly />
@@ -321,9 +421,9 @@ const HibahKeluarAdmin = () => {
                 value={form.pemeriksa}
                 onChange={e => setForm(prev => ({ ...prev, pemeriksa: e.target.value }))}
               >
-                {adminBMN.map(a => (
-                  <option key={a.nama} value={a.nama}>
-                    {a.nama}{a.nama === defaultPemeriksa ? " (Saya)" : ""}
+                {adminBMNSorted.map(a => (
+                  <option key={a.nip} value={a.nama}>
+                    {a.nama}{a.nip === loginUser.nip ? " (Saya)" : ""}
                   </option>
                 ))}
               </select>
@@ -418,8 +518,8 @@ const HibahKeluarAdmin = () => {
           </button>
 
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <AdminButton variant="outline" onClick={() => setShowModal(false)}>Batal</AdminButton>
-            <AdminButton variant="success" onClick={handleSubmit}>Simpan</AdminButton>
+            <AdminButton variant="outline" onClick={() => { setShowModal(false); resetForm(); }}>Batal</AdminButton>
+            <AdminButton variant="success" onClick={handleSubmit}>{editId ? "Simpan Perubahan" : "Simpan"}</AdminButton>
           </div>
         </Modal>
       )}

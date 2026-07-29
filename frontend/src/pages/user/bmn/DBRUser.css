@@ -1,0 +1,179 @@
+/* =====================================
+   PAGE
+===================================== */
+
+.dashboard-user{
+    width:100%;
+    max-width:1450px;
+    margin:0 auto;
+    padding:35px;
+    position:relative;
+    animation:pageFade .8s ease;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+@keyframes pageFade{
+    from{ opacity:0; }
+    to{ opacity:1; }
+}
+
+/* =====================================
+   BACK BUTTON
+===================================== */
+
+.back-button{
+    width:52px;
+    height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#fff;
+    border:none;
+    border-radius:16px;
+
+    cursor:pointer;
+
+    margin-top:0;
+    margin-bottom:18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+}
+
+.back-button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
+}
+
+.back-icon{
+    width:26px;
+    height:26px;
+    object-fit:contain;
+}
+
+/* =====================================
+   SERVICE BANNER
+===================================== */
+
+.service-banner{
+    width:100%;
+
+    display:block;
+
+    align-items:center;
+
+    padding:42px;
+
+    border-radius:30px;
+
+    background:linear-gradient(
+        135deg,
+        #16324b,
+        #2563eb
+    );
+
+    box-shadow:0 18px 40px rgba(37,99,235,.20);
+
+    margin-bottom:30px;
+    margin-top:0;
+
+    position:relative;
+    overflow:hidden;
+}
+
+.service-banner::before{
+    content:"";
+    position:absolute;
+    top:-90px;
+    right:-70px;
+
+    width:220px;
+    height:220px;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+}
+
+.service-banner::after{
+    content:"";
+    position:absolute;
+    left:-70px;
+    bottom:-90px;
+
+    width:220px;
+    height:220px;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.05);
+}
+
+.service-banner-content h1{
+    color:#fff;
+    font-size:64px;
+    font-weight:800;
+    line-height:1.05;
+    margin-bottom:20px;
+}
+
+.service-banner-content p{
+    color:rgba(255,255,255,.95);
+    line-height:1.8;
+    font-size:18px;
+}
+
+/* =====================================
+   DESCRIPTION CARD
+===================================== */
+
+.description-card{
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:36px 40px;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+
+    margin-bottom:30px;
+}
+
+.description-card h2{
+    color:#16324b;
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.description-card p{
+    color:#64748b;
+    font-size:18px;
+    line-height:2;
+}
+
+@media(max-width:1100px){
+    .service-banner-content h1{
+        font-size:48px;
+    }
+}
+
+/* =====================================
+   ADMIN CARD
+===================================== */
+
+.admin-card{
+    background:#fff;
+    border-radius:24px !important;
+    border:none !important;
+    box-shadow:0 12px 30px rgba(15,23,42,.06) !important;
+    transition:.3s;
+}
+
+.admin-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 45px rgba(15,23,42,.10) !important;
+}

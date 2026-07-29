@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import "./HumasLayout.css";
 
@@ -6,44 +7,60 @@ export default function HumasLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [jumlahBerita, setJumlahBerita] = useState(0);
+
+  const loadJumlahBerita = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/berita/count/menunggu"
+    );
+
+    setJumlahBerita(res.data.jumlah);
+  } catch (err) {
+    console.error("Gagal mengambil jumlah berita:", err);
+  }
+};
+
+useEffect(() => {
+  loadJumlahBerita();
+}, []);
 
   const menuItems = [
     {
       group: "RINGKASAN",
       items: [
-        { label: "Ringkasan", path: "/admin-humas", icon: "📝" },
+        { label: "Ringkasan", path: "/admin-humas", },
       ],
     },
     {
       group: "HUMAS",
       items: [
-        { label: "Berita masuk", path: "/admin-humas/berita-masuk", badge: 5, icon: "📥" },
-        { label: "Berita terbit", path: "/admin-humas/berita-terbit", icon: "📤" },
+        { label: "Berita masuk", path: "/admin-humas/berita-masuk", badge: jumlahBerita,},
       ],
     },
     {
       group: "DATA",
       items: [
-        { label: "Permintaan data", path: "/admin-humas/permintaan-data", badge: 3, icon: "📋" },
-        { label: "Upload DIP tahunan", path: "/admin-humas/upload-dip", icon: "📁" },
+        { label: "Permintaan data", path: "/admin-humas/permintaan-data", badge: 3,},
+        { label: "Upload DIP tahunan", path: "/admin-humas/upload-dip", },
       ],
     },
     {
       group: "SISTEM INFORMASI",
       items: [
-        { label: "Tiket helpdesk", path: "/admin-humas/tiket-helpdesk", badge: 8, icon: "🛠️" },
+        { label: "Tiket helpdesk", path: "/admin-humas/tiket-helpdesk", badge: 8,},
       ],
     },
     {
       group: "PPID",
       items: [
-        { label: "Keberatan informasi", path: "/admin-humas/keberatan-ppid", badge: 2, icon: "⚖️" },
+        { label: "Keberatan informasi", path: "/admin-humas/keberatan-ppid", badge: 2, },
       ],
     },
     {
       group: "LAINNYA",
       items: [
-        { label: "Laporan & rekap", path: "/admin-humas/laporan", icon: "📈" },
+        { label: "Laporan & rekap", path: "/admin-humas/laporan", },
       ],
     },
   ];
@@ -85,9 +102,6 @@ export default function HumasLayout() {
                     onClick={() => navigate(item.path)}
                     title={collapsed ? item.label : ""}
                   >
-                    <div className="menu-icon-box">
-                      <span className="menu-icon">{item.icon}</span>
-                    </div>
                     {!collapsed && <span className="menu-label">{item.label}</span>}
                     {!collapsed && item.badge && (
                       <span className="menu-badge">{item.badge}</span>

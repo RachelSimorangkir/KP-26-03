@@ -5,8 +5,8 @@ import "./StatusPermohonan.css";
 export default function StatusPermohonan() {
   const navigate = useNavigate();
 
-  // Mock data - nanti diganti dengan data dari API
-  const [permohonanList, setPermohonanList] = useState([
+  // Mock data
+  const [permohonanList] = useState([
     {
       id: "REG-2024-001",
       jenisPermohonan: "Permintaan Dokumen",
@@ -17,11 +17,7 @@ export default function StatusPermohonan() {
       statusPPID: "Selesai",
       petugasPPID: "Hendra Wijaya, S.H",
       tanggapan: "Permohonan dikabulkan. Dokumen telah dikirim melalui email resmi pemohon pada tanggal 25 Juni 2024.",
-      fileSurat: {
-        nama: "Surat_Tanggapan_REG-2024-001.pdf",
-        url: "#",
-        ukuran: "450 KB",
-      },
+      fileSurat: { nama: "Surat_Tanggapan_REG-2024-001.pdf", url: "#", ukuran: "450 KB" },
     },
     {
       id: "REG-2024-002",
@@ -57,11 +53,7 @@ export default function StatusPermohonan() {
       statusPPID: "Ditolak",
       petugasPPID: "-",
       tanggapan: "Permohonan ditolak karena dokumen bersifat rahasia dan memerlukan izin khusus dari pimpinan.",
-      fileSurat: {
-        nama: "Surat_Penolakan_REG-2024-004.pdf",
-        url: "#",
-        ukuran: "320 KB",
-      },
+      fileSurat: { nama: "Surat_Penolakan_REG-2024-004.pdf", url: "#", ukuran: "320 KB" },
     },
     {
       id: "REG-2024-005",
@@ -75,198 +67,140 @@ export default function StatusPermohonan() {
       tanggapan: "",
       fileSurat: null,
     },
-    {
-      id: "REG-2024-006",
-      jenisPermohonan: "Permintaan Dokumen",
-      uraian: "Permintaan salinan peraturan internal tahun 2024",
-      tanggalPengajuan: "2024-06-05",
-      tanggalPutusan: "2024-06-08",
-      statusAtasan: "Disetujui",
-      statusPPID: "Selesai",
-      petugasPPID: "Budi Santoso, S.Kom",
-      tanggapan: "Dokumen peraturan internal telah dikirim melalui email resmi. Silakan cek inbox Anda.",
-      fileSurat: {
-        nama: "Surat_Tanggapan_REG-2024-006.pdf",
-        url: "#",
-        ukuran: "580 KB",
-      },
-    },
   ]);
 
-  // Fungsi untuk menentukan class badge status atasan
   const getStatusAtasanClass = (status) => {
-    const statusMap = {
-      "Menunggu": "badge-menunggu",
-      "Disetujui": "badge-disetujui",
-      "Ditolak": "badge-ditolak",
-    };
-    return statusMap[status] || "badge-menunggu";
+    const map = { Menunggu: "badge-menunggu", Disetujui: "badge-disetujui", Ditolak: "badge-ditolak" };
+    return map[status] || "badge-menunggu";
   };
 
-  // Fungsi untuk menentukan class badge status PPID
   const getStatusPPIDClass = (status) => {
-    const statusMap = {
-      "Diajukan": "badge-diajukan",
-      "Diproses": "badge-diproses",
-      "Mediasi": "badge-mediasi",
-      "Selesai": "badge-selesai",
-      "Ditolak": "badge-ditolak",
-    };
-    return statusMap[status] || "badge-diajukan";
+    const map = { Diajukan: "badge-diajukan", Diproses: "badge-diproses", Mediasi: "badge-mediasi", Selesai: "badge-selesai", Ditolak: "badge-ditolak" };
+    return map[status] || "badge-diajukan";
   };
 
-  // Fungsi untuk handle download file
+  const getCatatanBoxClass = (status) => {
+    if (status === "Selesai") return "catatan-success";
+    if (status === "Ditolak") return "catatan-danger";
+    return "catatan-info";
+  };
+
   const handleDownload = (file) => {
     alert(`Mengunduh file: ${file.nama}\n\n(Untuk demo, link belum aktif)`);
-    // window.open(file.url, '_blank');
   };
 
-  // Fungsi untuk format tanggal
   const formatTanggal = (dateStr) => {
     if (!dateStr) return "-";
-    return new Date(dateStr).toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
+    return new Date(dateStr).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
   };
 
   return (
-    <div className="rekom-page">
+    <div className="rekom-page status-permohonan-page">
       {/* BACK BUTTON */}
-      <div className="rekom-header">
-        <button
-          className="back-button"
-          onClick={() => navigate("/humasdata/PPID")}
-        >
-          ← Kembali
-        </button>
-      </div>
+      <button className="btn-back" onClick={() => navigate("/humasdata/PPID")}>
+        ← Kembali ke Layanan PPID
+      </button>
 
       {/* BANNER */}
       <section className="service-banner">
-        <div className="banner-icon">🔍</div>
         <div className="service-banner-content">
           <h1>Status Permohonan Saya</h1>
-          <p>
-            Pantau status permohonan/keberatan informasi yang pernah Anda ajukan.
-          </p>
+          <p>Pantau status permohonan atau keberatan informasi publik yang pernah Anda ajukan.</p>
         </div>
       </section>
 
-      {/* ACTION BUTTON */}
+      {/* ACTION HEADER */}
       <div className="action-header">
-        <button
-          className="btn-primary"
-          onClick={() => navigate("/humasdata/PPID/Permohonan")}
-        >
+        <h2>Riwayat Permohonan</h2>
+        <button className="btn-primary" onClick={() => navigate("/humasdata/PPID/Permohonan")}>
           + Ajukan Permohonan Baru
         </button>
       </div>
 
       {/* DAFTAR PERMOHONAN */}
       {permohonanList.length === 0 ? (
-        <section className="description-card empty-state">
-          <h2>Belum Ada Permohonan</h2>
+        <section className="empty-state-card">
+          <div className="empty-icon">📭</div>
+          <h3>Belum Ada Permohonan</h3>
           <p>Anda belum pernah mengajukan permohonan/keberatan. Klik tombol di atas untuk memulai.</p>
         </section>
       ) : (
         <div className="permohonan-list">
           {permohonanList.map((item) => (
             <div key={item.id} className="permohonan-card">
-              {/* Header Card */}
-              <div className="permohonan-header">
-                <div className="permohonan-title-section">
-                  <div className="permohonan-id-row">
-                    <span className="permohonan-id">{item.id}</span>
+              
+              {/* 1. Card Header: ID, Uraian & Meta */}
+              <div className="card-header">
+                <div className="header-left">
+                  <span className="permohonan-id">{item.id}</span>
+                  <h3 className="card-title">{item.uraian}</h3>
+                </div>
+                <div className="card-meta">
+                  <span className="meta-item">
+                    <span className="meta-label">Jenis:</span> {item.jenisPermohonan}
+                  </span>
+                </div>
+              </div>
+
+              {/* 2. Card Body: Status & Timeline */}
+              <div className="card-body">
+                <div className="status-grid">
+                  <div className="status-box">
+                    <span className="status-label">Persetujuan Atasan</span>
+                    <span className={`badge ${getStatusAtasanClass(item.statusAtasan)}`}>
+                      {item.statusAtasan}
+                    </span>
+                  </div>
+                  <div className="status-box">
+                    <span className="status-label">Status Permohonan PPID</span>
                     <span className={`badge ${getStatusPPIDClass(item.statusPPID)}`}>
                       {item.statusPPID}
                     </span>
                   </div>
-                  <h3>{item.uraian}</h3>
-                  <div className="permohonan-meta">
-                    <span className="meta-item">
-                      <span className="meta-label">Jenis:</span>
-                      <span>{item.jenisPermohonan}</span>
-                    </span>
-                  </div>
                 </div>
-              </div>
 
-              {/* Timeline Section */}
-              <div className="timeline-section">
-                <div className="timeline-item">
-                  <span className="timeline-icon">📅</span>
-                  <div className="timeline-content">
-                    <span className="timeline-label">Tanggal Pengajuan:</span>
-                    <span className="timeline-value">{formatTanggal(item.tanggalPengajuan)}</span>
-                  </div>
+                <div className="timeline-compact">
+                  <span>📅 Diajukan: {formatTanggal(item.tanggalPengajuan)}</span>
+                  <span>⚖️ Putusan: {formatTanggal(item.tanggalPutusan)}</span>
                 </div>
-                <div className="timeline-item">
-                  <span className="timeline-icon"></span>
-                  <div className="timeline-content">
-                    <span className="timeline-label">Tanggal Putusan:</span>
-                    <span className="timeline-value">{formatTanggal(item.tanggalPutusan)}</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Status Section */}
-              <div className="status-section">
-                <div className="status-item">
-                  <span className="status-label">Status Persetujuan Atasan:</span>
-                  <span className={`badge ${getStatusAtasanClass(item.statusAtasan)}`}>
-                    {item.statusAtasan}
-                  </span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Status Permohonan PPID:</span>
-                  <span className={`badge ${getStatusPPIDClass(item.statusPPID)}`}>
-                    {item.statusPPID}
-                  </span>
-                </div>
-              </div>
-
-              {/* Petugas PPID */}
-              {item.petugasPPID !== "-" && (
-                <div className="info-row">
-                  <span className="info-label">👤 Petugas PPID:</span>
-                  <span className="info-value">{item.petugasPPID}</span>
-                </div>
-              )}
-
-              {/* Tanggapan/Putusan */}
-              {item.tanggapan && (
-                <div className="tanggapan-section">
-                  <div className="tanggapan-header">
-                    <span className="tanggapan-icon">💬</span>
-                    <span className="tanggapan-title">Tanggapan/Putusan:</span>
-                  </div>
-                  <p className="tanggapan-content">{item.tanggapan}</p>
-                </div>
-              )}
-
-              {/* File Surat Tanggapan - Hanya muncul saat status Selesai atau Ditolak */}
-              {(item.statusPPID === "Selesai" || item.statusPPID === "Ditolak") && item.fileSurat && (
-                <div className="file-result-section">
-                  <div className="file-result-header">
-                    <span className="file-result-icon"></span>
-                    <span className="file-result-title">File Surat Tanggapan</span>
-                  </div>
-                  <div className="file-result-content">
-                    <div className="file-info">
-                      <span className="file-name">{item.fileSurat.nama}</span>
-                      <span className="file-size">({item.fileSurat.ukuran})</span>
+                {/* Petugas PPID */}
+                {item.petugasPPID !== "-" && (
+                  <div className="info-row">
+                    <span className="info-icon">👤</span>
+                    <div>
+                      <span className="info-label">Petugas PPID:</span>
+                      <span className="info-value">{item.petugasPPID}</span>
                     </div>
-                    <button
-                      className="btn-download"
-                      onClick={() => handleDownload(item.fileSurat)}
-                    >
-                      ️ Unduh Surat
+                  </div>
+                )}
+
+                {/* 3. Tanggapan/Putusan (Dinamis berdasarkan status) */}
+                {item.tanggapan && (
+                  <div className={`catatan-box ${getCatatanBoxClass(item.statusPPID)}`}>
+                    <div className="catatan-header">
+                      <span className="catatan-icon">💬</span>
+                      <strong>Tanggapan / Putusan PPID</strong>
+                    </div>
+                    <p>{item.tanggapan}</p>
+                  </div>
+                )}
+
+                {/* 4. File Surat Tanggapan (Hanya jika Selesai/Ditolak & ada file) */}
+                {(item.statusPPID === "Selesai" || item.statusPPID === "Ditolak") && item.fileSurat && (
+                  <div className="file-result-box">
+                    <div className="file-icon-large">📄</div>
+                    <div className="file-details">
+                      <span className="file-name">{item.fileSurat.nama}</span>
+                      <span className="file-size">{item.fileSurat.ukuran}</span>
+                    </div>
+                    <button className="btn-download" onClick={() => handleDownload(item.fileSurat)}>
+                      ⬇️ Unduh Surat
                     </button>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
             </div>
           ))}
         </div>
