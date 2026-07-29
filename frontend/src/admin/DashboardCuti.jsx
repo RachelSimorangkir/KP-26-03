@@ -14,14 +14,14 @@ export default function DashboardCuti() {
   const navigate = useNavigate();
 
   const isLoggedIn =
-    localStorage.getItem("isLoggedIn") === "true";
+  localStorage.getItem("isLoggedIn") === "true";
 
-  const role =
-    localStorage.getItem("userRole");
+const role =
+  localStorage.getItem("userRole");
 
-  if (!isLoggedIn || role !== "admin") {
-    return <Navigate to="/login-admin" />;
-  }
+if (!isLoggedIn || role !== "admin_kepegawaian") {
+  return <Navigate to="/login-admin" replace />;
+}
 
   const handleLogout = () => {
     localStorage.clear();

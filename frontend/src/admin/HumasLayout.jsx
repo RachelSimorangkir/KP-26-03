@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import "./HumasLayout.css";
 
+
 export default function HumasLayout() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,6 +67,12 @@ useEffect(() => {
   ];
 
   const isActive = (path) => location.pathname === path;
+  const handleLogout = () => {
+  localStorage.clear();
+  sessionStorage.clear();
+
+  navigate("/login-admin");
+};
 
   return (
     <div className="admin-layout">
@@ -112,6 +119,15 @@ useEffect(() => {
             </div>
           ))}
         </nav>
+        <div className="sidebar-footer">
+  <button
+    className="menu-item logout-item"
+    onClick={handleLogout}
+    title={collapsed ? "Logout" : ""}
+  >
+    {!collapsed && <span className="menu-label">Logout</span>}
+  </button>
+</div>
       </aside>
 
       <main className={`main-content ${collapsed ? "expanded" : ""}`}>

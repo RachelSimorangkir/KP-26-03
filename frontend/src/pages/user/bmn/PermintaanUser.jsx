@@ -294,7 +294,7 @@ if (submitted) {
 
         <p>
             Ajukan permintaan barang habis pakai secara online
-            melalui Portal Internal BMBPSDM.
+            melalui Jendela Layanan Internal Ditjen Bimas Kristen
         </p>
 
     </div>

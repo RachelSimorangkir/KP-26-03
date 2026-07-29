@@ -370,7 +370,7 @@ const PemeliharaanUser = () => {
           <h1>Pemeliharaan Barang</h1>
           <p>
             Ajukan permohonan pemeliharaan Barang Milik Negara
-            yang terdaftar di DBR Anda secara online melalui Portal Internal BMBPSDM.
+            yang terdaftar di DBR Anda secara online melalui jendela layanan ditjen bimas kristen
           </p>
         </div>
       </div>

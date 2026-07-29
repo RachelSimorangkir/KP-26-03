@@ -195,7 +195,7 @@ export default function Tiket() {
               <option value="">Semua</option>
               <option value="SIMPEG">SIMPEG</option>
               <option value="SIKA">SIKA</option>
-              <option value="Portal Internal">Portal Internal</option>
+              <option value="Portal Internal">Jendela Layanan Internal</option>
               <option value="E-Office">E-Office</option>
               <option value="Sistem BMN">Sistem BMN</option>
             </select>

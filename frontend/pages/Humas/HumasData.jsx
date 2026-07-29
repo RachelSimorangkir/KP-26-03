@@ -35,7 +35,7 @@ function HumasData() {
           {!collapsed && (
             <Link to="/" className="portal-link">
               <div className="logo-text">
-                <h2>Portal</h2>
+                <h2>Jendela</h2>
                 <span>Layanan Internal</span>
               </div>
             </Link>

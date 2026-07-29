@@ -26,7 +26,7 @@ export default function Publikasi() {
           <h1>Layanan Publikasi</h1>
 
           <p>
-            Pilih jenis layanan publikasi yang akan diajukan melalui Portal Layanan
+            Pilih jenis layanan publikasi yang akan diajukan melalui Jendela Layanan
             Internal BMBPSDM.
           </p>
         </div>

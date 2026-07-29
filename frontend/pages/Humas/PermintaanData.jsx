@@ -26,7 +26,7 @@ export default function PermintaanData() {
           <h1>Layanan Permintaan Data</h1>
 
           <p>
-            Pilih jenis layanan permintaan data yang akan diajukan melalui Portal Layanan
+            Pilih jenis layanan permintaan data yang akan diajukan melalui Jendela Layanan
             Internal BMBPSDM.
           </p>
         </div>

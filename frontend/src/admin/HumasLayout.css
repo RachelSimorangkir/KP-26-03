@@ -219,3 +219,28 @@
     padding: 16px;
   }
 }
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-nav {
+  flex: 1;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.logout-item {
+  width: 100%;
+  color: #ffb4b4;
+}
+
+.logout-item:hover {
+  background: rgba(220, 38, 38, 0.15);
+  color: #ff6b6b;
+}

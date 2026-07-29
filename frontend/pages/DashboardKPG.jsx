@@ -7,7 +7,7 @@ function DashboardKPG() {
       <div className="welcome-container">
 
         <div className="welcome-badge">
-          Portal Internal BMBPSDM
+          Jendela Layanan Internal Ditjen Bimas Kristen
         </div>
 
         <h1 className="welcome-title">

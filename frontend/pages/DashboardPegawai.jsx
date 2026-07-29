@@ -38,7 +38,7 @@ if (!pegawai) {
           <h1>Selamat Datang 👋</h1>
 
           <p>
-            Portal Layanan Internal BMBPSDM
+            Jendela Layanan Internal Ditjen Bimas Kristen
           </p>
         </div>
 

@@ -26,7 +26,7 @@ export default function Permohonan() {
           <h1>Layanan PPID Internal</h1>
 
           <p>
-            Pilih jenis layanan PPID Internal yang akan diajukan melalui Portal Layanan
+            Pilih jenis layanan PPID Internal yang akan diajukan melalui Jendela Layanan
             Internal BMBPSDM.
           </p>
         </div>

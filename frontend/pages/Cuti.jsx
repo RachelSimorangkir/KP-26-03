@@ -68,6 +68,41 @@ function Cuti() {
   const [linkDrive, setLinkDrive] =
     useState("");
 
+ const [step, setStep] = useState(1);
+
+  const handleNext = () => {
+  if (!nip) {
+    Swal.fire("Peringatan", "Masukkan NIP terlebih dahulu.", "warning");
+    return;
+  }
+
+  if (!statusKepegawaian) {
+    Swal.fire("Peringatan", "Pilih Status Kepegawaian.", "warning");
+    return;
+  }
+
+  if (!jenisCuti) {
+    Swal.fire("Peringatan", "Pilih Jenis Cuti.", "warning");
+    return;
+  }
+
+  if (!alasanCuti) {
+    Swal.fire("Peringatan", "Isi Alasan Cuti.", "warning");
+    return;
+  }
+
+  if (!tanggalMulai || !tanggalSelesai) {
+    Swal.fire("Peringatan", "Pilih tanggal cuti.", "warning");
+    return;
+  }
+
+  setStep(2);
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
       //==========================
   // JENIS CUTI
   //==========================
@@ -1039,20 +1074,13 @@ if (jenisCuti === "Cuti Tahunan") {
       {/* ================= BUTTON ================= */}
 
       <div className="cuti-actions">
-
-        <button
-
-          className="submit-btn"
-
-          onClick={handleSubmit}
-
-        >
-
-          Ajukan Permohonan
-
-        </button>
-
-      </div>
+  <button
+    className="submit-btn"
+    onClick={handleNext}
+  >
+    Selanjutnya
+  </button>
+</div>
 
       </>
       ) : (

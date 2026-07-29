@@ -56,7 +56,7 @@ const Login = ({ onLoginSuccess }) => {
           }}>
             🏛️
           </div>
-          <div style={{ fontWeight: 800, fontSize: 18, color: "#1e3a5f" }}>Portal Layanan Internal</div>
+          <div style={{ fontWeight: 800, fontSize: 18, color: "#1e3a5f" }}>Jendela Laynana Internal</div>
           <div style={{ fontSize: 13, color: "#64748b", marginTop: 2 }}>Bimas Kristen — Kementerian Agama RI</div>
         </div>
 
