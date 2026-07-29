@@ -17,6 +17,8 @@ function Cuti() {
 
   const [status, setStatus] = useState("Menunggu");
 
+  const [sisaCuti, setSisaCuti] = useState(null);
+
   //==========================
   // DATA PEGAWAI
   //==========================
@@ -212,6 +214,14 @@ setDurasi(totalHari);
         setUnitKerja(
           data.unit_organisasi || ""
         );
+
+        const responseSisa = await fetch(
+    `http://localhost:8080/api/cuti/sisa/${value}`
+);
+
+const dataSisa = await responseSisa.json();
+
+setSisaCuti(dataSisa);
 
       }
 
@@ -538,6 +548,8 @@ if (jenisCuti === "Cuti Tahunan") {
 
       {/* ================= DATA PEGAWAI ================= */}
 
+      
+
       <div className="form-card">
 
         <h2>Data Pegawai</h2>
@@ -654,6 +666,23 @@ if (jenisCuti === "Cuti Tahunan") {
 
       </div>
             {/* ================= DETAIL CUTI ================= */}
+      {sisaCuti && (
+    <div className="sisa-cuti-card">
+
+        <h3>Sisa Cuti Tahunan</h3>
+
+        <div className="sisa-number">
+            {sisaCuti.sisa} Hari
+        </div>
+
+        <div className="sisa-detail">
+            Hak Cuti : {sisaCuti.hak} Hari
+            <br />
+            Sudah Digunakan : {sisaCuti.terpakai} Hari
+        </div>
+
+    </div>
+)}
 
       <div className="form-card">
 

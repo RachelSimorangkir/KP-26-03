@@ -350,6 +350,35 @@ log_message(
     }
     
 }
+
+public function getSisaCuti($nip)
+{
+    $tahun = date("Y");
+
+    $awal = "$tahun-01-01";
+    $akhir = "$tahun-12-31";
+
+    $hasil = $this->pengajuanModel
+        ->selectSum("durasi")
+        ->where("nip", $nip)
+        ->where("jenis_cuti", "Cuti Tahunan")
+        ->whereIn("status", [
+            "Disetujui",
+            "Selesai"
+        ])
+        ->where("tanggal_mulai >=", $awal)
+        ->where("tanggal_mulai <=", $akhir)
+        ->first();
+
+    $terpakai = (int)($hasil["durasi"] ?? 0);
+
+    return $this->response->setJSON([
+        "hak" => 12,
+        "terpakai" => $terpakai,
+        "sisa" => max(0, 12 - $terpakai)
+    ]);
+}
+
 private function hitungHariKerja($mulai, $selesai)
 {
     $start = new \DateTime($mulai);

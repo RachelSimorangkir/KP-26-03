@@ -60,7 +60,7 @@ function MutasiPromosi() {
           </p>
 
           <span>
-            Ajukan Permohonan →
+            Ajukan Permohonan
           </span>
 
         </div>
@@ -88,7 +88,7 @@ function MutasiPromosi() {
           </p>
 
           <span>
-            Ajukan Permohonan →
+            Ajukan Permohonan
           </span>
 
         </div>

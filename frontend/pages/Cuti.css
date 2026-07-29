@@ -862,3 +862,37 @@
 .download-btn:active{
     transform:scale(.98);
 }
+
+/* Hilangkan background kuning pada status Selesai */
+.timeline-item.pending,
+.timeline-item.completed,
+.timeline-item.current {
+    background: #fff !important;
+    border-radius: 16px;
+}
+
+/* Jika hanya item terakhir (Selesai) yang kuning */
+.timeline-item:last-child {
+    background: #fff !important;
+}
+
+.sisa-cuti-card{
+    background:#f0fdf4;
+    border:1px solid #bbf7d0;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:24px;
+    text-align:center;
+}
+
+.sisa-number{
+    font-size:42px;
+    font-weight:700;
+    color:#16a34a;
+    margin:12px 0;
+}
+
+.sisa-detail{
+    color:#475569;
+    line-height:1.8;
+}

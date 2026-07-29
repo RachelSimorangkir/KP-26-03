@@ -98,7 +98,7 @@ export default function Helpdesk() {
                   marginTop: "4px",
                 }}
               >
-                Ajukan Permohonan →
+                Ajukan Permohonan
               </span>
             </div>
           </div>

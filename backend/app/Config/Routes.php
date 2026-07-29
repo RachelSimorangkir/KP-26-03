@@ -142,3 +142,5 @@ $routes->get(
     'api/dbr/(:segment)',
     'DbrController::show/$1'
 );
+
+$routes->get('api/cuti/sisa/(:segment)', 'PengajuanController::getSisaCuti/$1');

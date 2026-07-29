@@ -354,10 +354,6 @@ const handleNotificationClick = async (notif) => {
             Bimas Kristen Kementerian Agama Republik Indonesia
           </p>
 
-          <span>
-            Pilih bidang layanan yang ingin diakses
-          </span>
-
         </div>
 
       </section>
