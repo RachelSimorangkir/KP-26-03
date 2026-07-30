@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./FormPengajuan.css";
+import Swal from "sweetalert2";
 
 export default function FormPengajuan() {
   const navigate = useNavigate();
@@ -108,15 +109,39 @@ export default function FormPengajuan() {
         });
 
         if (response.data.status) {
-          alert(response.data.message);
-          navigate("/humas/daftar-pengajuan");
-        }
+  await Swal.fire({
+    icon: "success",
+    title: "Pengajuan Berhasil",
+    html: `
+      <div style="line-height:1.8;font-size:15px">
+        ${response.data.message}
+      </div>
+    `,
+    confirmButtonText: "Lihat Status",
+    confirmButtonColor: "#2563eb",
+    width: "430px",
+    padding: "2rem",
+    backdrop: "rgba(22,50,75,.45)"
+  });
+
+  navigate("/humasdata/publikasi/daftar-pengajuan");
+}
       } catch (error) {
         console.error('Error:', error);
         if (error.response && error.response.data) {
-          alert('Error: ' + JSON.stringify(error.response.data.message));
+          Swal.fire({
+  icon: "error",
+  title: "Pengajuan Gagal",
+  text: error.response.data.message,
+  confirmButtonColor: "#dc2626",
+});
         } else {
-          alert('Gagal mengirim pengajuan. Pastikan server CodeIgniter berjalan.');
+          Swal.fire({
+  icon: "error",
+  title: "Server Tidak Merespons",
+  text: "Gagal mengirim pengajuan. Pastikan server CodeIgniter berjalan.",
+  confirmButtonColor: "#dc2626",
+});
         }
       } finally {
         setLoading(false);

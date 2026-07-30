@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FormHelpdesk.css";
+import Swal from "sweetalert2";
 
 export default function FormHelpdesk() {
   const navigate = useNavigate();
@@ -104,18 +105,50 @@ useEffect(() => {
     return err;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const err = validate();
-    setErrors(err);
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (Object.keys(err).length === 0) {
-      alert("Tiket bantuan berhasil dikirim!");
-      navigate("/humasdata/helpdesk");
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+  const err = validate();
+  setErrors(err);
+
+  if (Object.keys(err).length === 0) {
+
+    await Swal.fire({
+      icon: "success",
+      title: "Tiket Berhasil Dikirim",
+      html: `
+        <div style="font-size:15px; line-height:1.8">
+          Tiket bantuan berhasil dibuat.<br>
+          <strong>Tim Helpdesk akan segera memproses laporan Anda.</strong>
+        </div>
+      `,
+      confirmButtonText: "Lihat Status",
+      confirmButtonColor: "#2563eb",
+      width: "430px",
+      padding: "2rem",
+      timer: 3000,
+      timerProgressBar: true,
+    });
+
+    navigate("/humasdata/helpdesk/StatusHelpdesk");
+
+  } else {
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+    Swal.fire({
+      icon: "warning",
+      title: "Form Belum Lengkap",
+      text: "Masih ada data yang harus dilengkapi sebelum tiket dikirim.",
+      confirmButtonColor: "#f59e0b",
+      confirmButtonText: "Periksa Kembali",
+    });
+
+  }
+};
 
   return (
     <div className="rekom-page">

@@ -276,3 +276,8 @@ $routes->get(
     'BeritaController::getByUser/$1'
 );
 $routes->get('api/berita/count/menunggu', 'BeritaController::countMenunggu');//untuk menghitung jumlah berita dengan status menunggu
+
+$routes->post(
+    'pdf/cuti/preview',
+    'PdfController::preview'
+);

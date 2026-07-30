@@ -2,7 +2,7 @@
 .dip-page {
   max-width: 1400px; /* Dari 1000px jadi 1400px */
   margin: 0 auto;
-  padding: 0 40px; /* Tambah padding sisi */
+  padding:35px 35px 50px; /* Tambah padding sisi */
   width: 100%;
 }
 

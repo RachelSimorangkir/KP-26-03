@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DataInternal.css";
+import Swal from "sweetalert2";
 
 export default function DataInternal() {
   const navigate = useNavigate();
@@ -126,24 +127,52 @@ export default function DataInternal() {
     if (!form.tingkatUrgensi) {
       err.tingkatUrgensi = "Tingkat urgensi wajib dipilih";
     }
-    if (!form.atasanPemohon) {
-      err.atasanPemohon = "Atasan penyetuju wajib dipilih";
-    }
     return err;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const err = validate();
-    setErrors(err);
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (Object.keys(err).length === 0) {
-      alert("Permintaan data berhasil dikirim!");
-      navigate("/humasdata/PermintaanData/daftar-pengajuan");
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+  const err = validate();
+  setErrors(err);
+
+  if (Object.keys(err).length === 0) {
+
+    await Swal.fire({
+      icon: "success",
+      title: "Permintaan Berhasil Dikirim",
+      html: `
+        <div style="font-size:15px; line-height:1.8">
+          Permintaan data internal berhasil diajukan.<br>
+          <strong>Pengajuan Anda sedang menunggu proses verifikasi.</strong>
+        </div>
+      `,
+      confirmButtonText: "Lihat Status",
+      confirmButtonColor: "#2563eb",
+      width: "430px",
+      padding: "2rem",
+      timer: 3000,
+      timerProgressBar: true,
+    });
+
+    navigate("/humasdata/PermintaanData/StatusData");
+  } else {
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+    Swal.fire({
+      icon: "warning",
+      title: "Form Belum Lengkap",
+      text: "Masih ada data yang harus dilengkapi sebelum dikirim.",
+      confirmButtonColor: "#f59e0b",
+      confirmButtonText: "Periksa Kembali",
+    });
+
+  }
+};
 
   return (
     <div className="rekom-page">

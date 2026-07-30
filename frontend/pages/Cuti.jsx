@@ -3,21 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
+
 function Cuti() {
 
   const navigate = useNavigate();
+  const [step, setStep] = useState(1);
 
   // ===========================
   // STATE
   // ===========================
 
   const [submitted, setSubmitted] = useState(false);
+const [sisaCuti, setSisaCuti] = useState("");
 
   const [pengajuanId, setPengajuanId] = useState(null);
 
   const [status, setStatus] = useState("Menunggu");
-
-  const [sisaCuti, setSisaCuti] = useState(null);
 
   //==========================
   // DATA PEGAWAI
@@ -68,41 +69,6 @@ function Cuti() {
   const [linkDrive, setLinkDrive] =
     useState("");
 
- const [step, setStep] = useState(1);
-
-  const handleNext = () => {
-  if (!nip) {
-    Swal.fire("Peringatan", "Masukkan NIP terlebih dahulu.", "warning");
-    return;
-  }
-
-  if (!statusKepegawaian) {
-    Swal.fire("Peringatan", "Pilih Status Kepegawaian.", "warning");
-    return;
-  }
-
-  if (!jenisCuti) {
-    Swal.fire("Peringatan", "Pilih Jenis Cuti.", "warning");
-    return;
-  }
-
-  if (!alasanCuti) {
-    Swal.fire("Peringatan", "Isi Alasan Cuti.", "warning");
-    return;
-  }
-
-  if (!tanggalMulai || !tanggalSelesai) {
-    Swal.fire("Peringatan", "Pilih tanggal cuti.", "warning");
-    return;
-  }
-
-  setStep(2);
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
-
       //==========================
   // JENIS CUTI
   //==========================
@@ -143,12 +109,13 @@ function Cuti() {
 
   useEffect(() => {
 
-    if (!tanggalMulai || !tanggalSelesai) {
-        setDurasi("");
-        setLamaCuti("");
-        setSatuanCuti("");
-        return;
-    }
+    if (!tanggalMulai || !tanggalSelesai || !jenisCuti) {
+    setDurasi("");
+    setLamaCuti("");
+    setSatuanCuti("");
+    setSisaCuti("");
+    return;
+}
 
     const mulai = new Date(tanggalMulai);
     const selesai = new Date(tanggalSelesai);
@@ -177,6 +144,11 @@ while (current <= selesai) {
 }
 
 setDurasi(totalHari);
+if (jenisCuti === "Cuti Tahunan") {
+    setSisaCuti(Math.max(0, 12 - totalHari));
+} else {
+    setSisaCuti("-");
+}
 
     // Hitung tahun, bulan, hari
     let tahun = selesai.getFullYear() - mulai.getFullYear();
@@ -211,11 +183,74 @@ setDurasi(totalHari);
 
     }
 
-}, [tanggalMulai, tanggalSelesai]);
+}, [tanggalMulai, tanggalSelesai, jenisCuti]);
 
     //========================================
   // AMBIL DATA PEGAWAI BERDASARKAN NIP
   //========================================
+
+  const handleDownloadSurat = async () => {
+
+  const formData = new FormData();
+
+  formData.append("nip", nip);
+  formData.append("nama", nama);
+  formData.append("jabatan", jabatan);
+  formData.append("unit_kerja", unitKerja);
+
+  formData.append(
+    "status_kepegawaian",
+    statusKepegawaian
+  );
+
+  formData.append(
+    "jenis_cuti",
+    jenisCuti
+  );
+
+  formData.append(
+    "alasan_cuti",
+    alasanCuti
+  );
+
+  formData.append(
+    "tanggal_mulai",
+    tanggalMulai
+  );
+
+  formData.append(
+    "tanggal_selesai",
+    tanggalSelesai
+  );
+
+  formData.append("durasi", durasi);
+  formData.append("lama_cuti", lamaCuti);
+  formData.append("satuan_cuti", satuanCuti);
+
+  formData.append(
+    "alamat_cuti",
+    alamatCuti
+  );
+
+  formData.append(
+    "no_hp",
+    noHp
+  );
+
+  const response = await fetch(
+    "http://localhost:8080/pdf/cuti/preview",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  const blob = await response.blob();
+
+  const url = URL.createObjectURL(blob);
+
+  window.open(url);
+};
 
   const handleNipChange = async (e) => {
 
@@ -249,14 +284,6 @@ setDurasi(totalHari);
         setUnitKerja(
           data.unit_organisasi || ""
         );
-
-        const responseSisa = await fetch(
-    `http://localhost:8080/api/cuti/sisa/${value}`
-);
-
-const dataSisa = await responseSisa.json();
-
-setSisaCuti(dataSisa);
 
       }
 
@@ -331,18 +358,6 @@ setSisaCuti(dataSisa);
       Swal.fire(
         "Peringatan",
         "Pilih tanggal cuti.",
-        "warning"
-      );
-
-      return;
-
-    }
-
-    if (!suratPermohonan) {
-
-      Swal.fire(
-        "Peringatan",
-        "Upload Surat Permohonan.",
         "warning"
       );
 
@@ -547,11 +562,100 @@ if (jenisCuti === "Cuti Tahunan") {
 
       </div>
 
-      {!submitted ? (
+      {submitted ? (
+        <div className="tracking-card">
 
-        step === 1 ? (
+  <h2>Status Pengajuan Cuti</h2>
 
-            <>
+  <div className="timeline">
+
+    <div className="timeline-item completed">
+
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+
+        <h4>Pengajuan Dikirim</h4>
+
+        <span>
+          {new Date().toLocaleString("id-ID")}
+        </span>
+
+        <p>
+          {
+            status === "Menunggu"
+              ? "Menunggu verifikasi admin"
+              : status === "Diproses"
+              ? "Sedang diverifikasi"
+              : "Verifikasi selesai"
+          }
+        </p>
+
+      </div>
+
+    </div>
+
+    <div
+      className={`timeline-item ${
+        status === "Menunggu"
+          ? "current"
+          : status === "Diproses" || status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+
+        <h4>Sedang Diproses</h4>
+
+        <span>
+          {
+            status === "Menunggu"
+              ? "Menunggu verifikasi admin"
+              : "Sedang diproses admin"
+          }
+        </span>
+
+      </div>
+
+    </div>
+
+    <div
+      className={`timeline-item ${
+        status === "Selesai"
+          ? "completed"
+          : "pending"
+      }`}
+    >
+
+      <div className="timeline-dot"></div>
+
+      <div className="timeline-content">
+
+        <h4>Selesai</h4>
+
+        <span>
+          {
+            status === "Selesai"
+              ? "Permohonan telah selesai"
+              : "Menunggu penyelesaian"
+          }
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+) : step === 1 ? (
+
+      <>
 
       {/* ================= PANDUAN ================= */}
 
@@ -584,8 +688,6 @@ if (jenisCuti === "Cuti Tahunan") {
       </div>
 
       {/* ================= DATA PEGAWAI ================= */}
-
-      
 
       <div className="form-card">
 
@@ -703,23 +805,6 @@ if (jenisCuti === "Cuti Tahunan") {
 
       </div>
             {/* ================= DETAIL CUTI ================= */}
-      {sisaCuti && (
-    <div className="sisa-cuti-card">
-
-        <h3>Sisa Cuti Tahunan</h3>
-
-        <div className="sisa-number">
-            {sisaCuti.sisa} Hari
-        </div>
-
-        <div className="sisa-detail">
-            Hak Cuti : {sisaCuti.hak} Hari
-            <br />
-            Sudah Digunakan : {sisaCuti.terpakai} Hari
-        </div>
-
-    </div>
-)}
 
       <div className="form-card">
 
@@ -877,6 +962,18 @@ if (jenisCuti === "Cuti Tahunan") {
 
 </div>
 
+<div className="form-group">
+
+    <label>Sisa Cuti Tahunan</label>
+
+    <input
+        type="text"
+        value={sisaCuti}
+        readOnly
+    />
+
+</div>
+
 
           {/* Alamat */}
 
@@ -932,67 +1029,6 @@ if (jenisCuti === "Cuti Tahunan") {
         </div>
 
       </div>
-
-      <div className="cuti-actions">
-    <button
-        className="submit-btn"
-        onClick={handleNext}
-    >
-        Selanjutnya
-    </button>
-</div>
-
-</>
-
-        ) : (
-
-            <>
-
-{/* ================= REVIEW ================= */}
-
-<div className="form-card">
-
-    <h2>Review Pengajuan</h2>
-
-    <div className="review-grid">
-
-        <div>
-            <strong>Nama</strong>
-            <p>{nama}</p>
-        </div>
-
-        <div>
-            <strong>NIP</strong>
-            <p>{nip}</p>
-        </div>
-
-        <div>
-            <strong>Jabatan</strong>
-            <p>{jabatan}</p>
-        </div>
-
-        <div>
-            <strong>Jenis Cuti</strong>
-            <p>{jenisCuti}</p>
-        </div>
-
-        <div>
-            <strong>Tanggal</strong>
-            <p>
-                {tanggalMulai} s/d {tanggalSelesai}
-            </p>
-        </div>
-
-        <div>
-            <strong>Durasi</strong>
-            <p>{durasi} Hari</p>
-        </div>
-
-    </div>
-
-</div>
-
-
 
       {/* ================= DOKUMEN PENDUKUNG ================= */}
 
@@ -1079,175 +1115,67 @@ if (jenisCuti === "Cuti Tahunan") {
 
       <div className="cuti-actions">
 
-    <button
-        className="back-btn"
-        onClick={() => setStep(1)}
-    >
-        ← Kembali
-    </button>
+        <button
+    className="submit-btn"
+    onClick={() => setStep(2)}
+>
+    Selanjutnya
+</button>
 
-    <button
-        className="submit-btn"
-        onClick={handleSubmit}
-    >
-        Ajukan Permohonan
-    </button>
+      </div>
+
+      </>
+      ) : (
+
+<div className="form-card">
+
+<h2>Konfirmasi Pengajuan</h2>
+
+<p>
+Silakan download surat, tanda tangani, upload kembali, lalu klik Ajukan Permohonan.
+</p>
+
+<button
+    className="download-btn"
+    onClick={handleDownloadSurat}
+>
+    Download Surat
+</button>
+
+<br /><br />
+
+<div className="upload-area">
+
+<input
+    id="uploadSurat"
+    type="file"
+    accept=".pdf"
+    style={{ display: "none" }}
+    onChange={(e) => setSuratPermohonan(e.target.files[0])}
+/>
+
+<label htmlFor="uploadSurat" className="upload-btn">
+    Upload Surat Permohonan
+</label>
+
+{suratPermohonan && (
+    <p style={{ marginTop: "10px" }}>
+        📄 {suratPermohonan.name}
+    </p>
+)}
 
 </div>
 
-      </>
-        )
-      ) : (
-
-      <div className="tracking-card">
-
-        <h2>Status Pengajuan Cuti</h2>
-
-        {/* ================= DOWNLOAD PDF ================= */}
-
-        <div className="download-box">
-
-          <button
-
-            className="download-btn"
-
-            onClick={() =>
-
-              window.open(
-
-                `http://localhost:8080/pdf/cuti/${pengajuanId}`,
-
-                "_blank"
-
-              )
-
-            }
-
-          >
-
-            📄 Download Formulir Cuti
-
-          </button>
-
-        </div>
-
-        {/* ================= TIMELINE ================= */}
-
-        <div className="timeline">
-
-          {/* STEP 1 */}
-
-          <div className="timeline-item completed">
-
-            <div className="timeline-dot"></div>
-
-            <div className="timeline-content">
-
-              <h4>Pengajuan Dikirim</h4>
-
-              <span>
-
-                {new Date().toLocaleString("id-ID")}
-
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* STEP 2 */}
-
-          <div
-
-            className={`timeline-item ${
-
-              status === "Menunggu"
-
-                ? "current"
-
-                : status === "Diproses" ||
-
-                  status === "Selesai"
-
-                ? "completed"
-
-                : "pending"
-
-            }`}
-
-          >
-
-            <div className="timeline-dot"></div>
-
-            <div className="timeline-content">
-
-              <h4>Sedang Diproses</h4>
-
-              <span>
-
-                {
-
-                  status === "Menunggu"
-
-                    ? "Menunggu verifikasi admin"
-
-                    : status === "Diproses"
-
-                    ? "Sedang diverifikasi"
-
-                    : "Verifikasi selesai"
-
-                }
-
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* STEP 3 */}
-
-          <div
-
-            className={`timeline-item ${
-
-              status === "Selesai"
-
-                ? "completed"
-
-                : "pending"
-
-            }`}
-
-          >
-
-            <div className="timeline-dot"></div>
-
-            <div className="timeline-content">
-
-              <h4>Selesai</h4>
-
-              <span>
-
-                {
-
-                  status === "Selesai"
-
-                    ? "Pengajuan cuti telah selesai"
-
-                    : "Menunggu penyelesaian"
-
-                }
-
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
+<br />
+
+<button
+    className="submit-btn"
+    onClick={handleSubmit}
+>
+    Ajukan Permohonan
+</button>
+
+</div>
 
       )}
 

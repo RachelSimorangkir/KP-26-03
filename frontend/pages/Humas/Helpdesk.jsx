@@ -44,63 +44,27 @@ export default function Helpdesk() {
       </section>
 
       {/* DAFTAR LAYANAN */}
-      <section className="layanan-grid">
-        {layanan.map((item) => (
-          <div
-            key={item.path}
-            className="layanan-card"
-            onClick={() => navigate(item.path)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-              padding: "25px 30px",
-              cursor: "pointer",
-            }}
-          >
-            <div
-              className="layanan-icon"
-              style={{
-                width: "60px",
-                height: "60px",
-                minWidth: "60px",
-                marginBottom: "0",
-              }}
-            >
-              {item.icon}
-            </div>
+<section className="publikasi-grid">
+  {layanan.map((item) => (
+    <div
+      key={item.path}
+      className="publikasi-card"
+      onClick={() => navigate(item.path)}
+    >
+      <div className="publikasi-icon">
 
-            <div
-              className="layanan-content"
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 600 }}>
-                {item.title}
-              </h3>
+      </div>
 
-              <p style={{ margin: 0, fontSize: "0.9rem", color: "#64748b" }}>
-                {item.desc}
-              </p>
+      <div className="publikasi-content">
+        <h3>{item.title}</h3>
 
-              <span
-                style={{
-                  fontSize: "0.9rem",
-                  color: "#2563eb",
-                  fontWeight: 500,
-                  marginTop: "4px",
-                }}
-              >
-                Ajukan Permohonan
-              </span>
-            </div>
-          </div>
-        ))}
-      </section>
+        <p>{item.desc}</p>
+
+        <span>Ajukan Permohonan</span>
+      </div>
+    </div>
+  ))}
+</section>
     </div>
   );
 }

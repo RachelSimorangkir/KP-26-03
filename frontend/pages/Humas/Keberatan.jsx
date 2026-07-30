@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Keberatan.css";
+import Swal from "sweetalert2";
 
 export default function Keberatan() {
   const navigate = useNavigate();
@@ -166,6 +167,27 @@ export default function Keberatan() {
     setModalType("proses");
     setShowModal(true);
   };
+  const handleSimpan = async () => {
+
+  await Swal.fire({
+    icon: "success",
+    title: "Perubahan Berhasil Disimpan",
+    html: `
+      <div style="font-size:15px;line-height:1.8">
+        Status permohonan berhasil diperbarui.<br>
+        <strong>Perubahan telah tersimpan pada sistem.</strong>
+      </div>
+    `,
+    confirmButtonText: "Selesai",
+    confirmButtonColor: "#2563eb",
+    width: "430px",
+    padding: "2rem",
+    timer: 2500,
+    timerProgressBar: true,
+  });
+
+  setShowModal(false);
+};
 
   const getStatusBadge = (status, type) => {
     const map = {
@@ -400,7 +422,14 @@ export default function Keberatan() {
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Tutup</button>
-              {modalType === "proses" && <button className="btn btn-primary">Simpan</button>}
+             {modalType === "proses" && (
+    <button
+        className="btn btn-primary"
+        onClick={handleSimpan}
+    >
+        Simpan
+    </button>
+)}
             </div>
           </div>
         </div>

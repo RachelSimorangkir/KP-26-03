@@ -44,7 +44,7 @@ class PdfController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function cutiPNS($id)
+    public function cutiPNS($id = null, $previewData = null)
     {
         //==============================
         // MODEL
@@ -57,11 +57,19 @@ class PdfController extends Controller
         // AMBIL DATA PENGAJUAN
         //==============================
 
-        $pengajuan = $pengajuanModel->find($id);
+        if ($previewData !== null) {
 
-        if (!$pengajuan) {
-            return "Data pengajuan tidak ditemukan.";
-        }
+    $pengajuan = $previewData;
+
+} else {
+
+    $pengajuan = $pengajuanModel->find($id);
+
+    if (!$pengajuan) {
+        return "Data pengajuan tidak ditemukan.";
+    }
+
+}
 
         //==============================
         // AMBIL DATA PEGAWAI
@@ -270,21 +278,17 @@ $bulan = [
     "Desember"
 ];
 
-$tanggalSurat = date(
-    "j",
-    strtotime($pengajuan["tanggal_pengajuan"])
-);
+$tanggal = $pengajuan["tanggal_pengajuan"] ?? date("Y-m-d");
+
+$tanggalSurat = date("j", strtotime($tanggal));
 
 $bulanSurat = $bulan[
-    date(
-        "n",
-        strtotime($pengajuan["tanggal_pengajuan"])
-    )
+    date("n", strtotime($tanggal))
 ];
 
 $tahunSurat = date(
     "Y",
-    strtotime($pengajuan["tanggal_pengajuan"])
+    strtotime($tanggal)
 );
 
 $pdf->SetFont("Arial","",15);
@@ -509,8 +513,9 @@ $pdf->Cell(15,5,$sisaN);
 
     }
 
-    public function cutiPPPK($id)
-{
+    public function cutiPPPK($id = null, $previewData = null)
+    {
+        return $this->cutiPPPK(null, $data);
     //==============================
     // MODEL
     //==============================
@@ -867,5 +872,24 @@ $pdf->Cell(
 return $this->response
     ->setHeader("Content-Type","application/pdf")
     ->setBody($pdf->Output("S"));
+}
+public function preview()
+{
+    $data = $this->request->getPost();
+
+    if ($data["status_kepegawaian"] == "PNS") {
+        return $this->previewPNS($data);
+    }
+
+    return $this->previewPPPK($data);
+}
+public function previewPNS($data)
+{
+    return $this->cutiPNS(null, $data);
+}
+
+public function previewPPPK($data)
+{
+    return $this->cutiPPPK(null, $data);
 }
 }
