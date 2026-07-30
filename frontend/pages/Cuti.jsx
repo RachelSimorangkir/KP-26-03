@@ -549,7 +549,9 @@ if (jenisCuti === "Cuti Tahunan") {
 
       {!submitted ? (
 
-      <>
+        step === 1 ? (
+
+            <>
 
       {/* ================= PANDUAN ================= */}
 
@@ -930,63 +932,65 @@ if (jenisCuti === "Cuti Tahunan") {
         </div>
 
       </div>
-            {/* ================= SURAT PERMOHONAN ================= */}
 
-      <div className="form-card">
+      <div className="cuti-actions">
+    <button
+        className="submit-btn"
+        onClick={handleNext}
+    >
+        Selanjutnya
+    </button>
+</div>
 
-        <h2>Surat Permohonan</h2>
+</>
 
-        <div className="upload-area">
+        ) : (
 
-          <label htmlFor="surat">
+            <>
 
-            Upload Surat Permohonan
+{/* ================= REVIEW ================= */}
 
-          </label>
+<div className="form-card">
 
-          <input
+    <h2>Review Pengajuan</h2>
 
-            id="surat"
+    <div className="review-grid">
 
-            type="file"
-
-            accept=".pdf"
-
-            onChange={(e)=>
-
-              setSuratPermohonan(
-
-                e.target.files[0]
-
-              )
-
-            }
-
-          />
-
-          {
-
-            suratPermohonan && (
-
-              <div className="uploaded-file">
-
-                ✅ {suratPermohonan.name}
-
-              </div>
-
-            )
-
-          }
-
-          <span>
-
-            Format PDF (maksimal 10 MB)
-
-          </span>
-
+        <div>
+            <strong>Nama</strong>
+            <p>{nama}</p>
         </div>
 
-      </div>
+        <div>
+            <strong>NIP</strong>
+            <p>{nip}</p>
+        </div>
+
+        <div>
+            <strong>Jabatan</strong>
+            <p>{jabatan}</p>
+        </div>
+
+        <div>
+            <strong>Jenis Cuti</strong>
+            <p>{jenisCuti}</p>
+        </div>
+
+        <div>
+            <strong>Tanggal</strong>
+            <p>
+                {tanggalMulai} s/d {tanggalSelesai}
+            </p>
+        </div>
+
+        <div>
+            <strong>Durasi</strong>
+            <p>{durasi} Hari</p>
+        </div>
+
+    </div>
+
+</div>
 
 
 
@@ -1074,15 +1078,25 @@ if (jenisCuti === "Cuti Tahunan") {
       {/* ================= BUTTON ================= */}
 
       <div className="cuti-actions">
-  <button
-    className="submit-btn"
-    onClick={handleNext}
-  >
-    Selanjutnya
-  </button>
+
+    <button
+        className="back-btn"
+        onClick={() => setStep(1)}
+    >
+        ← Kembali
+    </button>
+
+    <button
+        className="submit-btn"
+        onClick={handleSubmit}
+    >
+        Ajukan Permohonan
+    </button>
+
 </div>
 
       </>
+        )
       ) : (
 
       <div className="tracking-card">
