@@ -1,61 +1,171 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaChartBar } from 'react-icons/fa'
+import { FaChartBar } from 'react-icons/fa';
 import "./HumasAdmin.css"; 
 
 export default function AdminHumas() {
 
+  // =========================================================
+  // 1. STATE (Semua useState harus di bagian paling atas)
+  // =========================================================
   const [jumlahBerita, setJumlahBerita] = useState(0);
+  const [jumlahPermintaan, setJumlahPermintaan] = useState(0);
+  const [jumlahKeberatan, setJumlahKeberatan] = useState(0);
+  
+  const [dashboard, setDashboard] = useState({
+    baru: 0,
+    diproses: 0,
+    terlambat: 0,
+    selesai_hari_ini: 0
+  });
 
-  const metrics = {
-  beritaMenunggu: jumlahBerita,
-  permintaanData: 3,
-  tiketKritis: 3,
-  keberatanPPID: 2,
-};
+  const [uploadDIP, setUploadDIP] = useState({
+    tahun: new Date().getFullYear(),
+    total_bidang: 0,
+    sudah_upload: 0,
+    belum_upload: [],
+  });
 
-  const loadJumlahBerita = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:8080/api/berita/count/menunggu"
-    );
+  const [aktivitasTerbaru, setAktivitasTerbaru] = useState([]);
 
-    setJumlahBerita(res.data.jumlah);
-  } catch (err) {
-    console.error("Gagal mengambil jumlah berita:", err);
-  }
-};
-
-useEffect(() => {
-  loadJumlahBerita();
-}, []);
-
-
-  const tiketPerStatus = [
-    { status: "Baru", jumlah: 4, color: "baru" },
-    { status: "Diproses", jumlah: 6, color: "diproses" },
-    { status: "Selesai (7 hari)", jumlah: 21, color: "selesai" },
-  ];
-
-  const uploadDIP = {
-    total: 9,
-    sudahUpload: 6,
-    belumUpload: ["Data", "Ortala Kepegawaian", "BMN"],
+  // =========================================================
+  // 2. FUNGSI LOAD DATA
+  // =========================================================
+  const loadDashboardDIP = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/dip/dashboard");
+      setUploadDIP(res.data.data);
+    } catch (err) {
+      console.error("Dashboard DIP gagal:", err);
+    }
   };
 
-  const aktivitasTerbaru = [
-    { id: 1, tipe: "berita", icon: "📰", judul: 'Berita "Pembinaan Rohaniwan Kab. Sleman" menunggu verifikasi', waktu: "10 menit lalu" },
-    { id: 2, tipe: "tiket", icon: "️", judul: "Tiket #SI-2026-0042 (Kritis) belum ditugaskan", waktu: "25 menit lalu" },
-    { id: 3, tipe: "ppid", icon: "⚖️", judul: "Keberatan PPID #PPID-2026-0009 mendekati batas waktu 30 hari", waktu: "1 jam lalu" },
-    { id: 4, tipe: "data", icon: "📊", judul: "Permintaan data dari Bidang Pendidikan menunggu diproses", waktu: "2 jam lalu" },
-    { id: 5, tipe: "berita", icon: "📰", judul: 'Berita "Rapat Koordinasi" telah diterbitkan', waktu: "3 jam lalu" },
+  const loadJumlahBerita = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/berita/count/menunggu");
+      setJumlahBerita(res.data.jumlah);
+    } catch (err) {
+      console.error("Gagal mengambil jumlah berita:", err);
+    }
+  };
+
+  const loadJumlahPermintaan = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/data-internal/count/menunggu");
+      setJumlahPermintaan(res.data.jumlah);
+    } catch (err) {
+      console.error("Gagal mengambil jumlah permintaan:", err);
+    }
+  };
+
+  const loadJumlahKeberatan = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/ppid/count/baru");
+      console.log("Jumlah Keberatan:", res.data);
+      setJumlahKeberatan(res.data.jumlah);
+    } catch (err) {
+      console.error("Gagal mengambil jumlah keberatan:", err);
+    }
+  };
+
+  const loadDashboard = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/helpdesk/dashboard");
+      setDashboard(res.data.data);
+    } catch (err) {
+      console.error("Gagal mengambil dashboard helpdesk:", err);
+    }
+  };
+
+  const loadAktivitasTerbaru = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/dashboard/aktivitas");
+      console.log("DATA AKTIVITAS:", res.data);
+      setAktivitasTerbaru(res.data.data);
+    } catch (err) {
+      console.error("Gagal mengambil aktivitas terbaru:", err);
+    }
+  };
+
+  // =========================================================
+  // 3. USEEFFECT
+  // =========================================================
+  useEffect(() => {
+    loadJumlahBerita();
+    loadJumlahPermintaan();
+    loadDashboardDIP();
+    loadJumlahKeberatan();
+    loadDashboard();
+    loadAktivitasTerbaru();
+  }, []);
+
+  useEffect(() => {
+    console.log("aktivitasTerbaru =", aktivitasTerbaru);
+  }, [aktivitasTerbaru]);
+
+  // =========================================================
+  // 4. VARIABEL TURUNAN (Derived State)
+  // =========================================================
+  const metrics = {
+    beritaMenunggu: jumlahBerita,
+    permintaanData: jumlahPermintaan,
+    keberatanPPID: jumlahKeberatan,
+  };
+
+  const tiketPerStatus = [
+    {
+      status: "Baru",
+      jumlah: dashboard.baru,
+      color: "baru",
+    },
+    {
+      status: "Diproses",
+      jumlah: dashboard.diproses,
+      color: "diproses",
+    },
+    {
+      status: "Selesai Hari Ini",
+      jumlah: dashboard.selesai_hari_ini,
+      color: "selesai",
+    },
   ];
 
+  // ✅ REV 1: Hitung total tiket secara dinamis untuk progress bar
+  const totalTiket = (dashboard.baru || 0) + (dashboard.diproses || 0) + (dashboard.selesai_hari_ini || 0);
+
+  const persenUpload = uploadDIP.total_bidang > 0 
+    ? (uploadDIP.sudah_upload / uploadDIP.total_bidang) * 100 
+    : 0;
+
+  // =========================================================
+  // 5. FUNGSI HELPER
+  // =========================================================
   const formatDate = () => {
     const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
     return new Date().toLocaleDateString("id-ID", options);
   };
 
+  // ✅ REV 2: Tambahkan pengecekan null dan invalid date
+  const formatRelativeTime = (dateString) => {
+    if (!dateString) return "-";
+
+    const now = new Date();
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) return "-";
+
+    const diff = Math.floor((now - date) / 1000);
+
+    if (diff < 60) return `${diff} detik lalu`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
+    
+    return `${Math.floor(diff / 86400)} hari lalu`;
+  };
+
+  // =========================================================
+  // 6. RETURN (UI - Tidak ada perubahan desain)
+  // =========================================================
   return (
     <>
       <header className="content-header">
@@ -82,8 +192,8 @@ useEffect(() => {
         </div>
         <div className="metric-card metric-critical">
           <div className="metric-content">
-            <span className="metric-label">Tiket kritis</span>
-            <span className="metric-value">{metrics.tiketKritis}</span>
+            <span className="metric-label">SLA Terlambat</span>
+            <span className="metric-value">{dashboard.terlambat}</span>
           </div>
         </div>
         <div className="metric-card">
@@ -106,7 +216,11 @@ useEffect(() => {
                   <span className="status-count">{item.jumlah}</span>
                 </div>
                 <div className="status-bar-container">
-                  <div className={`status-bar ${item.color}`} style={{ width: `${(item.jumlah / 31) * 100}%` }}></div>
+                  {/* ✅ REV 1: Gunakan totalTiket dinamis, fallback ke 0% jika total 0 */}
+                  <div 
+                    className={`status-bar ${item.color}`} 
+                    style={{ width: `${totalTiket > 0 ? (item.jumlah / totalTiket) * 100 : 0}%` }}
+                  ></div>
                 </div>
               </div>
             ))}
@@ -114,19 +228,19 @@ useEffect(() => {
         </div>
 
         <div className="panel">
-          <h3 className="panel-title">Upload DIP tahunan 2026</h3>
+          <h3 className="panel-title">Upload DIP tahunan {uploadDIP.tahun}</h3>
           <div className="dip-progress">
             <div className="progress-bar-container">
-              <div className="progress-bar" style={{ width: `${(uploadDIP.sudahUpload / uploadDIP.total) * 100}%` }}></div>
+              <div className="progress-bar" style={{ width: `${persenUpload}%` }}></div>
             </div>
             <div className="progress-info">
-              <span className="progress-text">{uploadDIP.sudahUpload}/{uploadDIP.total} bidang</span>
+              <span className="progress-text">{uploadDIP.sudah_upload}/{uploadDIP.total_bidang} bidang</span>
             </div>
-            {uploadDIP.belumUpload.length > 0 && (
+            {uploadDIP.belum_upload.length > 0 && (
               <div className="belum-upload-list">
                 <div className="warning-icon">⚠️</div>
                 <div className="belum-upload-text">
-                  {uploadDIP.belumUpload.join(", ")}
+                  {uploadDIP.belum_upload.join(", ")}
                   <span className="belum-upload-label"> belum upload</span>
                 </div>
               </div>
@@ -145,7 +259,7 @@ useEffect(() => {
               <div className="aktivitas-content">
                 <p className="aktivitas-text">{aktivitas.judul}</p>
               </div>
-              <span className="aktivitas-waktu">{aktivitas.waktu}</span>
+              <span className="aktivitas-waktu">{formatRelativeTime(aktivitas.waktu)}</span>
             </div>
           ))}
         </div>

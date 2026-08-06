@@ -1,133 +1,68 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./DataPermintaan.css";
 
 export default function DataPermintaan() {
   const navigate = useNavigate();
+  const API_URL = "http://localhost:8080/api/data-internal";
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
-  const [permintaanList] = useState([
-    {
-      id: 1,
-      nip: "198701012010011001",
-      namaPemohon: "John Doe",
-      jabatan: "Kepala Sub Bagian",
-      unitKerja: "Kanwil",
-      jenisData: ["Data Kepegawaian", "Data Statistik"],
-      cakupanWilayah: "Nasional",
-      periodeDari: "2024-01-01",
-      periodeSampai: "2024-06-30",
-      tujuanPenggunaan: "Penyusunan laporan tahunan",
-      tingkatUrgensi: "Segera",
-      statusAtasan: "Disetujui",
-      statusPermintaan: "Diproses",
-      petugasPengolah: "Budi Santoso, S.Kom",
-      tanggalPengajuan: "2024-06-20",
-      memoFile: "memo_001.pdf",
-      fileHasil: null,
-      catatanPemohon: "",
-      tanggalSelesai: null,
-      riwayatPersetujuan: [
-        { tanggal: "2024-06-20", status: "Diajukan", keterangan: "Permintaan diajukan" },
-        { tanggal: "2024-06-21", status: "Disetujui Atasan", keterangan: "Disetujui oleh Dr. Budi" },
-        { tanggal: "2024-06-22", status: "Diproses", keterangan: "Ditugaskan ke Budi Santoso" },
-      ],
-    },
-    {
-      id: 2,
-      nip: "198702022011011002",
-      namaPemohon: "Jane Smith",
-      jabatan: "Staf",
-      unitKerja: "Kab-Kota",
-      jenisData: ["Data Pendidikan"],
-      cakupanWilayah: "Provinsi",
-      periodeDari: "2024-01-01",
-      periodeSampai: "2024-12-31",
-      tujuanPenggunaan: "Analisis kebijakan pendidikan",
-      tingkatUrgensi: "Normal",
-      statusAtasan: "Disetujui",
-      statusPermintaan: "Selesai",
-      petugasPengolah: "Siti Aminah, M.Pd",
-      tanggalPengajuan: "2024-06-15",
-      memoFile: "memo_002.pdf",
-      fileHasil: "data_pendidikan_2024.xlsx",
-      catatanPemohon: "Data telah dikirim via email",
-      tanggalSelesai: "2024-06-18",
-      riwayatPersetujuan: [
-        { tanggal: "2024-06-15", status: "Diajukan", keterangan: "Permintaan diajukan" },
-        { tanggal: "2024-06-16", status: "Disetujui Atasan", keterangan: "Disetujui oleh Ibu Sari" },
-        { tanggal: "2024-06-17", status: "Diproses", keterangan: "Diproses oleh Siti Aminah" },
-        { tanggal: "2024-06-18", status: "Selesai", keterangan: "Data telah dikirim" },
-      ],
-    },
-    {
-      id: 3,
-      nip: "198703032012011003",
-      namaPemohon: "Bob Anderson",
-      jabatan: "Kepala Bidang",
-      unitKerja: "Kanwil",
-      jenisData: ["Data Keuangan", "Data Aset"],
-      cakupanWilayah: "Kab-Kota",
-      periodeDari: "2023-01-01",
-      periodeSampai: "2023-12-31",
-      tujuanPenggunaan: "Audit internal",
-      tingkatUrgensi: "Sangat Segera",
-      statusAtasan: "Menunggu",
-      statusPermintaan: "Diajukan",
-      petugasPengolah: "-",
-      tanggalPengajuan: "2024-06-22",
-      memoFile: null,
-      fileHasil: null,
-      catatanPemohon: "",
-      tanggalSelesai: null,
-      riwayatPersetujuan: [
-        { tanggal: "2024-06-22", status: "Diajukan", keterangan: "Menunggu persetujuan atasan" },
-      ],
-    },
-    {
-      id: 4,
-      nip: "198704042013011004",
-      namaPemohon: "Siti Rahayu",
-      jabatan: "Analis Data",
-      unitKerja: "PTK",
-      jenisData: ["Data Pelatihan"],
-      cakupanWilayah: "Nasional",
-      periodeDari: "2024-01-01",
-      periodeSampai: "2024-06-30",
-      tujuanPenggunaan: "Evaluasi program pelatihan",
-      tingkatUrgensi: "Normal",
-      statusAtasan: "Ditolak",
-      statusPermintaan: "Ditolak",
-      petugasPengolah: "-",
-      tanggalPengajuan: "2024-06-10",
-      memoFile: "memo_004.pdf",
-      fileHasil: null,
-      catatanPemohon: "Permintaan ditolak karena data bersifat rahasia",
-      tanggalSelesai: "2024-06-12",
-      riwayatPersetujuan: [
-        { tanggal: "2024-06-10", status: "Diajukan", keterangan: "Permintaan diajukan" },
-        { tanggal: "2024-06-11", status: "Ditolak Atasan", keterangan: "Ditolak karena data rahasia" },
-        { tanggal: "2024-06-12", status: "Ditolak", keterangan: "Permintaan ditutup" },
-      ],
-    },
-  ]);
+  const [permintaanList, setPermintaanList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterTahun, setFilterTahun] = useState("2024");
+  const [filterTahun, setFilterTahun] = useState("");
   const [filterJenisData, setFilterJenisData] = useState("");
   const [filterUrgensi, setFilterUrgensi] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+  
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [selectedPermintaan, setSelectedPermintaan] = useState(null);
 
+  // ✅ LANGKAH 5: State processed_by dihapus karena tidak diperlukan lagi
+  const [formProses, setFormProses] = useState({
+    status: "",
+    response_note: "",
+    response_file: null,
+  });
+
+  // ✅ LANGKAH 1: fetchData() dibersihkan dari infinite recursion
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(API_URL);
+
+      if (response.data.status) {
+        setPermintaanList(response.data.data);
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredData = permintaanList.filter((item) => {
     const matchSearch =
-      item.namaPemohon.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.unitKerja.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchTahun = new Date(item.tanggalPengajuan).getFullYear().toString() === filterTahun;
-    const matchJenisData = filterJenisData ? item.jenisData.includes(filterJenisData) : true;
-    const matchUrgensi = filterUrgensi ? item.tingkatUrgensi === filterUrgensi : true;
-    const matchStatus = filterStatus ? item.statusPermintaan === filterStatus : true;
+      (item.nama_pemohon || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.unit_kerja || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchTahun =
+      filterTahun === "" ? true : new Date(item.submitted_at || item.created_at).getFullYear().toString() === filterTahun;
+
+    const matchJenisData =
+      filterJenisData === "" ? true : (item.jenis_data || "").toLowerCase().includes(filterJenisData.toLowerCase());
+
+    const matchUrgensi =
+      filterUrgensi === "" ? true : (item.tingkat_urgensi || "").toLowerCase() === filterUrgensi.toLowerCase();
+
+    const matchStatus =
+      filterStatus === "" ? true : (item.status || "").toLowerCase() === filterStatus.toLowerCase();
+
     return matchSearch && matchTahun && matchJenisData && matchUrgensi && matchStatus;
   });
 
@@ -137,19 +72,78 @@ export default function DataPermintaan() {
     setShowModal(true);
   };
 
+  // ✅ LANGKAH 2 & 5: handleOpenProses diperbaiki (koma sudah aman, processed_by dihapus dari state)
   const handleOpenProses = (permintaan) => {
     setSelectedPermintaan(permintaan);
+    setFormProses({
+      status: permintaan.status || "",
+      response_note: permintaan.response_note || permintaan.catatan_admin || "",
+      response_file: null,
+    });
     setModalType("proses");
     setShowModal(true);
   };
 
+  // ✅ LANGKAH 3 & 4: handleSaveProses dibersihkan (hanya 1 request POST, lalu refresh data)
+  const handleSaveProses = async () => {
+    try {
+      const formData = new FormData();
+
+      formData.append("_method", "PUT");
+      formData.append("status", formProses.status);
+      formData.append("processed_by", currentUser.id);
+      formData.append("catatan_admin", formProses.response_note);
+
+      if (formProses.response_file) {
+        formData.append("response_file", formProses.response_file);
+      }
+
+      const response = await axios.post(
+        `${API_URL}/${selectedPermintaan.id}`,
+        formData
+      );
+
+      if (response.data.status) {
+        await fetchData();
+        setShowModal(false);
+        alert("Data berhasil diperbarui.");
+      } else {
+        alert(response.data.message || "Gagal memperbarui data.");
+      }
+
+    } catch (err) {
+      console.error("ERROR:", err);
+
+      if (err.response) {
+        console.log("STATUS:", err.response.status);
+        console.log("DATA:", err.response.data);
+
+        alert(
+          err.response.data.message ||
+          JSON.stringify(err.response.data)
+        );
+      } else {
+        alert(err.message);
+      }
+    }
+  }; // <-- INI ADALAH KURUNG KURAWAL YANG HILANG SEBELUMNYA
+
   const getStatusBadge = (status, type) => {
     const map = {
-      urgensi: { Normal: "badge-normal", Segera: "badge-segera", "Sangat Segera": "badge-sangat-segera" },
-      atasan: { Menunggu: "badge-menunggu", Disetujui: "badge-disetujui", Ditolak: "badge-ditolak" },
-      permintaan: { Diajukan: "badge-diajukan", Diproses: "badge-diproses", Selesai: "badge-selesai", Ditolak: "badge-ditolak" },
+      urgensi: {
+        normal: "badge-normal",
+        segera: "badge-segera",
+        "sangat-segera": "badge-sangat-segera",
+      },
+      permintaan: {
+        menunggu: "badge-menunggu",
+        diproses: "badge-diproses",
+        selesai: "badge-selesai",
+        ditolak: "badge-ditolak",
+      },
     };
-    return map[type]?.[status] || "badge-menunggu";
+    const normalizedStatus = status ? status.toLowerCase() : "menunggu";
+    return map[type]?.[normalizedStatus] || "badge-menunggu";
   };
 
   const formatTanggal = (dateStr) => {
@@ -157,15 +151,35 @@ export default function DataPermintaan() {
     return new Date(dateStr).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="data-permintaan-page">
+        <h3>Memuat data...</h3>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="data-permintaan-page">
+        <h3>{error}</h3>
+      </div>
+    );
+  }
+
   return (
     <div className="data-permintaan-page">
       {/* HEADER */}
       <div className="page-header">
-  <div className="page-header-content">
-    <h1>Permintaan Data</h1>
-    <p>Daftar permintaan data internal dari satuan kerja</p>
-  </div>
-</div>
+        <div className="page-header-content">
+          <h1>Permintaan Data</h1>
+          <p>Daftar permintaan data internal dari satuan kerja</p>
+        </div>
+      </div>
 
       {/* FILTER CARD - 4 KOLOM + SEARCH */}
       <div className="filter-card">
@@ -193,19 +207,19 @@ export default function DataPermintaan() {
             <label>Tingkat Urgensi</label>
             <select value={filterUrgensi} onChange={(e) => setFilterUrgensi(e.target.value)}>
               <option value="">Semua</option>
-              <option value="Normal">Normal</option>
-              <option value="Segera">Segera</option>
-              <option value="Sangat Segera">Sangat Segera</option>
+              <option value="normal">Normal</option>
+              <option value="segera">Segera</option>
+              <option value="sangat-segera">Sangat Segera</option>
             </select>
           </div>
           <div className="filter-item">
             <label>Status</label>
             <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
               <option value="">Semua</option>
-              <option value="Diajukan">Diajukan</option>
-              <option value="Diproses">Diproses</option>
-              <option value="Selesai">Selesai</option>
-              <option value="Ditolak">Ditolak</option>
+              <option value="menunggu">Menunggu</option>
+              <option value="diproses">Diproses</option>
+              <option value="selesai">Selesai</option>
+              <option value="ditolak">Ditolak</option>
             </select>
           </div>
         </div>
@@ -230,8 +244,8 @@ export default function DataPermintaan() {
                 <th>Cakupan Wilayah</th>
                 <th>Periode Data</th>
                 <th>Urgensi</th>
-                <th>Status Permintaan</th>
-                <th>Petugas</th>
+                <th>Status</th>
+                <th>Diproses Oleh</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Aksi</th>
               </tr>
@@ -241,39 +255,47 @@ export default function DataPermintaan() {
                 <tr key={item.id}>
                   <td>
                     <div className="pemohon-info">
-                      <div className="pemohon-name">{item.namaPemohon}</div>
-                      <div className="pemohon-unit">{item.unitKerja}</div>
+                      <div className="pemohon-name">{item.nama_pemohon || "-"}</div>
+                      <div className="pemohon-unit">{item.unit_kerja || "-"}</div>
                     </div>
                   </td>
                   <td>
                     <div className="jenis-data-tags">
-                      {item.jenisData.map((data, idx) => (
-                        <span key={idx} className="badge badge-jenis-data">{data}</span>
-                      ))}
+                      {(item.jenis_data || "")
+                        .split(",")
+                        .map((data, idx) => (
+                          <span key={idx} className="badge badge-jenis-data">
+                            {data.trim()}
+                          </span>
+                        ))}
                     </div>
                   </td>
-                  <td>{item.cakupanWilayah}</td>
+                  <td>{item.cakupan_wilayah || "-"}</td>
                   <td className="col-periode">
-                    {formatTanggal(item.periodeDari)} - {formatTanggal(item.periodeSampai)}
+                    {formatTanggal(item.periode_dari)} - {formatTanggal(item.periode_sampai)}
                   </td>
-                  <td><span className={`badge ${getStatusBadge(item.tingkatUrgensi, "urgensi")}`}>{item.tingkatUrgensi}</span></td>
-                  <td><span className={`badge ${getStatusBadge(item.statusAtasan, "atasan")}`}>{item.statusAtasan}</span></td>
-                  <td><span className={`badge ${getStatusBadge(item.statusPermintaan, "permintaan")}`}>{item.statusPermintaan}</span></td>
                   <td>
-                    {item.petugasPengolah !== "-" ? (
-                      <div className="petugas-info">
-                        <span className="petugas-avatar">👤</span>
-                        <span>{item.petugasPengolah}</span>
-                      </div>
-                    ) : (
-                      <span className="belum-diassign">-</span>
-                    )}
+                    <span className={`badge ${getStatusBadge(item.tingkat_urgensi, "urgensi")}`}>
+                      {item.tingkat_urgensi ? item.tingkat_urgensi.charAt(0).toUpperCase() + item.tingkat_urgensi.slice(1) : "-"}
+                    </span>
                   </td>
-                  <td>{formatTanggal(item.tanggalPengajuan)}</td>
+                  <td>
+                    <span className={`badge ${getStatusBadge(item.status, "permintaan")}`}>
+                      {item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Menunggu"}
+                    </span>
+                  </td>
+                  <td>{item.processed_by ? item.processed_by : "-"}</td>
+                  <td>{formatTanggal(item.submitted_at || item.created_at)}</td>
                   <td>
                     <div className="action-buttons">
                       <button className="btn btn-detail" onClick={() => handleOpenDetail(item)}>Detail</button>
-                      <button className="btn btn-proses" onClick={() => handleOpenProses(item)} disabled={item.statusPermintaan === "Selesai" || item.statusPermintaan === "Ditolak"}>Proses</button>
+                      <button 
+                        className="btn btn-proses" 
+                        onClick={() => handleOpenProses(item)} 
+                        disabled={(item.status || "").toLowerCase() === "selesai" || (item.status || "").toLowerCase() === "ditolak"}
+                      >
+                        Proses
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -297,64 +319,103 @@ export default function DataPermintaan() {
                   <div className="detail-section">
                     <h3>Data Pemohon</h3>
                     <div className="detail-grid">
-                      <div className="detail-item"><label>NIP</label><p>{selectedPermintaan.nip}</p></div>
-                      <div className="detail-item"><label>Nama</label><p>{selectedPermintaan.namaPemohon}</p></div>
-                      <div className="detail-item"><label>Jabatan</label><p>{selectedPermintaan.jabatan}</p></div>
-                      <div className="detail-item"><label>Unit Kerja</label><p>{selectedPermintaan.unitKerja}</p></div>
+                      <div className="detail-item"><label>NIP</label><p>{selectedPermintaan.nip_pemohon || "-"}</p></div>
+                      <div className="detail-item"><label>Nama</label><p>{selectedPermintaan.nama_pemohon || "-"}</p></div>
+                      <div className="detail-item"><label>Jabatan</label><p>{selectedPermintaan.jabatan || "-"}</p></div>
+                      <div className="detail-item"><label>Unit Kerja</label><p>{selectedPermintaan.unit_kerja || "-"}</p></div>
                     </div>
                   </div>
                   <div className="detail-section">
                     <h3>Detail Permintaan</h3>
                     <div className="detail-grid">
-                      <div className="detail-item full-width"><label>Jenis Data</label><div className="jenis-data-tags">{selectedPermintaan.jenisData.map((d, i) => (<span key={i} className="badge badge-jenis-data">{d}</span>))}</div></div>
-                      <div className="detail-item"><label>Cakupan</label><p>{selectedPermintaan.cakupanWilayah}</p></div>
-                      <div className="detail-item"><label>Periode</label><p>{formatTanggal(selectedPermintaan.periodeDari)} - {formatTanggal(selectedPermintaan.periodeSampai)}</p></div>
-                      <div className="detail-item full-width"><label>Tujuan</label><p className="tujuan-text">{selectedPermintaan.tujuanPenggunaan}</p></div>
+                      <div className="detail-item full-width">
+                        <label>Jenis Data</label>
+                        <div className="jenis-data-tags">
+                          {(selectedPermintaan.jenis_data || "")
+                            .split(",")
+                            .map((d, i) => (
+                              <span key={i} className="badge badge-jenis-data">
+                                {d.trim()}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                      <div className="detail-item"><label>Cakupan</label><p>{selectedPermintaan.cakupan_wilayah || "-"}</p></div>
+                      <div className="detail-item">
+                        <label>Periode</label>
+                        <p>{formatTanggal(selectedPermintaan.periode_dari)} - {formatTanggal(selectedPermintaan.periode_sampai)}</p>
+                      </div>
+                      <div className="detail-item full-width">
+                        <label>Tujuan</label>
+                        <p className="tujuan-text">
+                          <strong>{selectedPermintaan.tujuan_kategori || "-"}</strong><br/>
+                          {selectedPermintaan.tujuan_detail || "-"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="detail-section">
                     <h3>Riwayat Persetujuan</h3>
                     <div className="timeline">
-                      {selectedPermintaan.riwayatPersetujuan.map((r, idx) => (
-                        <div key={idx} className="timeline-item">
-                          <div className="timeline-date">{formatTanggal(r.tanggal)}</div>
-                          <div className="timeline-status">{r.status}</div>
-                          <div className="timeline-keterangan">{r.keterangan}</div>
+                      <p style={{ color: "#6b7280", fontStyle: "italic", padding: "0.5rem 0" }}>
+                        Riwayat persetujuan detail belum tersedia.
+                      </p>
+                      {selectedPermintaan.catatan_admin && (
+                        <div className="timeline-item" style={{ marginTop: "1rem", borderLeft: "3px solid #f59e0b", paddingLeft: "1rem" }}>
+                          <div className="timeline-date">{formatTanggal(selectedPermintaan.processed_at)}</div>
+                          <div className="timeline-status">Catatan Admin</div>
+                          <div className="timeline-keterangan">{selectedPermintaan.catatan_admin}</div>
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>
               )}
+              
+              {/* Form Proses yang terikat ke state formProses */}
               {modalType === "proses" && (
                 <div className="form-section">
                   <div className="form-group">
                     <label>Petugas Pengolah *</label>
-                    <select>
-                      <option value="">-- Pilih Petugas --</option>
-                      <option value="Budi Santoso, S.Kom">Budi Santoso, S.Kom</option>
-                      <option value="Siti Aminah, M.Pd">Siti Aminah, M.Pd</option>
-                    </select>
                   </div>
                   <div className="form-group">
                     <label>Status Permintaan *</label>
-                    <select>
+                    <select
+                      value={formProses.status}
+                      onChange={(e) => setFormProses({ ...formProses, status: e.target.value })}
+                    >
                       <option value="">-- Pilih Status --</option>
-                      <option value="Diproses">Diproses</option>
-                      <option value="Selesai">Selesai</option>
-                      <option value="Ditolak">Ditolak</option>
+                      <option value="diproses">Diproses</option>
+                      <option value="selesai">Selesai</option>
+                      <option value="ditolak">Ditolak</option>
                     </select>
                   </div>
                   <div className="form-group">
                     <label>Catatan untuk Pemohon</label>
-                    <textarea rows="4" placeholder="Tambahkan catatan..."></textarea>
+                    <textarea
+                      rows="4"
+                      value={formProses.response_note}
+                      onChange={(e) => setFormProses({ ...formProses, response_note: e.target.value })}
+                      placeholder="Tambahkan catatan..."
+                    ></textarea>
+                  </div>
+                  <div className="form-group">
+                    <label>Upload File Balasan</label>
+                    <input
+                      type="file"
+                      onChange={(e) => setFormProses({ ...formProses, response_file: e.target.files[0] })}
+                    />
                   </div>
                 </div>
               )}
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Tutup</button>
-              {modalType === "proses" && <button className="btn btn-primary">Simpan</button>}
+              {modalType === "proses" && (
+                <button className="btn btn-primary" onClick={handleSaveProses}>
+                  Simpan
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -94,9 +94,7 @@ export default function FormPengajuan() {
         formData.append('lokasi_kegiatan', form.lokasiKegiatan);
         formData.append('isi_berita', form.isiBerita);
         
-        form.foto.forEach((file, index) => {
-          formData.append(`foto[${index}]`, file);
-        });
+        form.foto.forEach(file => {formData.append("foto", file);});
 
         const response = await axios.post('/api/berita', formData, {
           headers: {

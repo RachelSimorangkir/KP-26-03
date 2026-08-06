@@ -9,8 +9,10 @@ export default function HumasLayout() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [jumlahBerita, setJumlahBerita] = useState(0);
+  const [jumlahHelpdesk, setJumlahHelpdesk] = useState(0);
+  const [jumlahPermintaan, setJumlahPermintaan] = useState(0);
 
-  const loadJumlahBerita = async () => {
+const loadJumlahBerita = async () => {
   try {
     const res = await axios.get(
       "http://localhost:8080/api/berita/count/menunggu"
@@ -22,8 +24,52 @@ export default function HumasLayout() {
   }
 };
 
+const loadJumlahPermintaan = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/data-internal/count/menunggu"
+    );
+
+    setJumlahPermintaan(res.data.jumlah);
+  } catch (err) {
+    console.error("Gagal mengambil jumlah permintaan:", err);
+  }
+};
+
+const loadJumlahHelpdesk = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/helpdesk/count/baru"
+    );
+
+    setJumlahHelpdesk(res.data.jumlah);
+
+  } catch (err) {
+    console.error("Gagal mengambil jumlah tiket helpdesk:", err);
+  }
+};
+
+const [jumlahKeberatan, setJumlahKeberatan] = useState(0);
+
+const loadJumlahKeberatan = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/ppid/count/baru"
+    );
+
+    setJumlahKeberatan(res.data.jumlah);
+  } catch (err) {
+    console.error("Gagal mengambil jumlah keberatan:", err);
+  }
+};
+
+
+
 useEffect(() => {
   loadJumlahBerita();
+  loadJumlahPermintaan();
+  loadJumlahHelpdesk();
+  loadJumlahKeberatan();
 }, []);
 
   const menuItems = [
@@ -42,28 +88,23 @@ useEffect(() => {
     {
       group: "DATA",
       items: [
-        { label: "Permintaan data", path: "/admin-humas/permintaan-data", badge: 3,},
+        { label: "Permintaan data", path: "/admin-humas/permintaan-data", badge: jumlahPermintaan,},
         { label: "Upload DIP tahunan", path: "/admin-humas/upload-dip", },
       ],
     },
     {
       group: "SISTEM INFORMASI",
       items: [
-        { label: "Tiket helpdesk", path: "/admin-humas/tiket-helpdesk", badge: 8,},
+        { label: "Tiket helpdesk", path: "/admin-humas/tiket-helpdesk", badge: jumlahHelpdesk,},
       ],
     },
     {
       group: "PPID",
       items: [
-        { label: "Keberatan informasi", path: "/admin-humas/keberatan-ppid", badge: 2, },
+        { label: "Keberatan informasi", path: "/admin-humas/keberatan-ppid", badge: jumlahKeberatan, },
       ],
     },
-    {
-      group: "LAINNYA",
-      items: [
-        { label: "Laporan & rekap", path: "/admin-humas/laporan", },
-      ],
-    },
+    
   ];
 
   const isActive = (path) => location.pathname === path;

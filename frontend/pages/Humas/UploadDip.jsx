@@ -1,233 +1,180 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./UploadDip.css";
 
 export default function UploadDip() {
   const navigate = useNavigate();
 
-  // Mock data DIP 9 bidang
-  const [dipData, setDipData] = useState([
-    {
-      id: 1,
-      bidang: "Keuangan",
-      status: "Selesai",
-      namaFile: "DIP_Keuangan_2024.pdf",
-      tanggalUpload: "2024-06-15",
-      fileSize: "2.5 MB",
-      catatan: "",
-    },
-    {
-      id: 2,
-      bidang: "Perencanaan",
-      status: "Selesai",
-      namaFile: "DIP_Perencanaan_2024.pdf",
-      tanggalUpload: "2024-06-18",
-      fileSize: "1.8 MB",
-      catatan: "",
-    },
-    {
-      id: 3,
-      bidang: "Humas",
-      status: "Selesai",
-      namaFile: "DIP_Humas_2024.pdf",
-      tanggalUpload: "2024-06-20",
-      fileSize: "3.2 MB",
-      catatan: "",
-    },
-    {
-      id: 4,
-      bidang: "Data",
-      status: "Menunggu Validasi",
-      namaFile: "DIP_Data_2024.pdf",
-      tanggalUpload: "2024-06-22",
-      fileSize: "4.1 MB",
-      catatan: "",
-    },
-    {
-      id: 5,
-      bidang: "Evaluasi",
-      status: "Revisi",
-      namaFile: "DIP_Evaluasi_2024.pdf",
-      tanggalUpload: "2024-06-19",
-      fileSize: "2.9 MB",
-      catatan: "Data evaluasi belum lengkap, mohon dilengkapi",
-    },
-    {
-      id: 6,
-      bidang: "Sistem Informasi",
-      status: "Selesai",
-      namaFile: "DIP_SI_2024.pdf",
-      tanggalUpload: "2024-06-17",
-      fileSize: "1.5 MB",
-      catatan: "",
-    },
-    {
-      id: 7,
-      bidang: "Ortala Kepegawaian",
-      status: "Belum Upload",
-      namaFile: null,
-      tanggalUpload: null,
-      fileSize: null,
-      catatan: "",
-    },
-    {
-      id: 8,
-      bidang: "Umum",
-      status: "Selesai",
-      namaFile: "DIP_Umum_2024.pdf",
-      tanggalUpload: "2024-06-16",
-      fileSize: "2.1 MB",
-      catatan: "",
-    },
-    {
-      id: 9,
-      bidang: "BMN",
-      status: "Belum Upload",
-      namaFile: null,
-      tanggalUpload: null,
-      fileSize: null,
-      catatan: "",
-    },
-  ]);
+  const [uploadList, setUploadList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false); // ✅ REV 5: State terpisah untuk proses simpan
 
-  // State untuk filter tahun
-  const [filterTahun, setFilterTahun] = useState("2024");
+  // ✅ REV 1: Filter tahun dinamis (default tahun sekarang)
+  const currentYear = String(new Date().getFullYear());
+  const [filterTahun, setFilterTahun] = useState(currentYear);
+  const [filterStatus, setFilterStatus] = useState("Semua");
+  const [keyword, setKeyword] = useState("");
 
-  // State untuk modal
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(""); // 'validasi', 'reminder', 'lihat'
-  const [selectedBidang, setSelectedBidang] = useState(null);
+  const [modalType, setModalType] = useState(""); 
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  // State untuk form validasi
   const [validasiForm, setValidasiForm] = useState({
-    hasilValidasi: "",
-    catatan: "",
+    status: "",
+    catatan_admin: "",
   });
 
-  // State untuk form reminder
   const [reminderForm, setReminderForm] = useState({
     bidangTerpilih: [],
-    pesan: "Dengan hormat,\n\nKami mengingatkan bahwa batas waktu upload DIP Tahunan 2024 adalah 30 Juni 2024. Mohon segera mengunggah dokumen DIP bidang Anda.\n\nTerima kasih.",
+    pesan: "Dengan hormat,\n\nKami mengingatkan bahwa batas waktu upload DIP Tahunan ini segera berakhir. Mohon segera mengunggah dokumen DIP unit Anda.\n\nTerima kasih.",
   });
 
-  // State untuk riwayat reminder
-  const [riwayatReminder, setRiwayatReminder] = useState([
-    { tanggal: "2024-06-20", bidang: ["Ortala Kepegawaian", "BMN"], jumlah: 2 },
-    { tanggal: "2024-06-15", bidang: ["Evaluasi"], jumlah: 1 },
-  ]);
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("http://localhost:8080/api/dip");
+      setUploadList(res.data.data || []);
+    } catch (err) {
+      console.error("Gagal memuat data DIP:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Hitung progress
-  const totalBidang = dipData.length;
-  const selesaiCount = dipData.filter((d) => d.status === "Selesai").length;
-  const progressPersentase = (selesaiCount / totalBidang) * 100;
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  // Filter data berdasarkan tahun
-  const filteredData = dipData; // Untuk demo, tidak ada filter tahun yang berbeda
+  // ✅ REV 1: Buat daftar tahun dinamis dari data yang ada
+  const tahunList = [...new Set(uploadList.map((i) => i.tahun).filter(Boolean))];
 
-  // Handle buka modal validasi
-  const handleOpenValidasi = (bidang) => {
-    setSelectedBidang(bidang);
+  // ✅ REV 2: Progress berdasarkan target total unit kerja (misal: 20), bukan panjang array uploadList
+  const TOTAL_TARGET_UNITS = 20; 
+  const selesaiCount = uploadList.filter((d) => d.status === "Selesai").length;
+  const progressPersentase = (selesaiCount / TOTAL_TARGET_UNITS) * 100;
+
+  const filteredData = uploadList.filter((item) => {
+    const cocokTahun = filterTahun === "" || String(item.tahun) === filterTahun;
+    const cocokStatus = filterStatus === "Semua" || item.status === filterStatus;
+    const cocokKeyword =
+      (item.nomor_upload || "").toLowerCase().includes(keyword.toLowerCase()) ||
+      (item.nama_pengaju || "").toLowerCase().includes(keyword.toLowerCase());
+
+    return cocokTahun && cocokStatus && cocokKeyword;
+  });
+
+  const handleOpenLihat = (item) => {
+    setSelectedItem(item);
+    setModalType("lihat");
+    setShowModal(true);
+  };
+
+  const handleOpenValidasi = (item) => {
+    setSelectedItem(item);
     setValidasiForm({
-      hasilValidasi: "",
-      catatan: "",
+      status: "",
+      catatan_admin: "",
     });
     setModalType("validasi");
     setShowModal(true);
   };
 
-  // Handle buka modal reminder
   const handleOpenReminder = () => {
+    const unitBelumSelesai = [...new Set(
+      uploadList
+        .filter((d) => d.status !== "Selesai")
+        .map((d) => d.unit_pengaju)
+    )];
+    
     setReminderForm({
-      bidangTerpilih: [],
-      pesan: "Dengan hormat,\n\nKami mengingatkan bahwa batas waktu upload DIP Tahunan 2024 adalah 30 Juni 2024. Mohon segera mengunggah dokumen DIP bidang Anda.\n\nTerima kasih.",
+      bidangTerpilih: unitBelumSelesai,
+      pesan: reminderForm.pesan,
     });
     setModalType("reminder");
     setShowModal(true);
   };
 
-  // Handle buka modal lihat
-  const handleOpenLihat = (bidang) => {
-    setSelectedBidang(bidang);
-    setModalType("lihat");
-    setShowModal(true);
-  };
-
-  // Handle submit validasi
-  const handleSubmitValidasi = (e) => {
+  const handleSubmitValidasi = async (e) => {
     e.preventDefault();
 
-    if (!validasiForm.hasilValidasi) {
+    if (!validasiForm.status) {
       alert("Hasil validasi wajib dipilih!");
       return;
     }
 
-    if ((validasiForm.hasilValidasi === "Revisi" || validasiForm.hasilValidasi === "Ditolak") && !validasiForm.catatan) {
-      alert("Catatan validasi wajib diisi jika status Revisi atau Ditolak!");
+    // ✅ REV 3: Hanya cek "Revisi" karena "Ditolak" sudah dihapus
+    if (validasiForm.status === "Revisi" && !validasiForm.catatan_admin) {
+      alert("Catatan validasi wajib diisi jika status Revisi!");
       return;
     }
 
-    if (window.confirm("Simpan hasil validasi?")) {
-      const updatedData = dipData.map((d) =>
-        d.id === selectedBidang.id
-          ? { ...d, status: validasiForm.hasilValidasi, catatan: validasiForm.catatan }
-          : d
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+    const validatedBy = currentUser.nama || "Admin PPID";
+
+    try {
+      setSaving(true); // ✅ REV 5: Aktifkan state saving
+      const response = await axios.put(
+        `http://localhost:8080/api/dip/${selectedItem.id}`,
+        {
+          status: validasiForm.status,
+          catatan_admin: validasiForm.catatan_admin,
+          validated_by: validatedBy,
+        }
       );
-      setDipData(updatedData);
-      alert("Validasi berhasil disimpan!");
-      setShowModal(false);
+
+      if (response.data.status) {
+        alert("Validasi berhasil disimpan!");
+        setShowModal(false);
+        await loadData(); // Refresh otomatis
+      } else {
+        alert(response.data.message || "Gagal menyimpan validasi.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan jaringan saat menyimpan validasi.");
+    } finally {
+      setSaving(false); // ✅ REV 5: Matikan state saving
     }
   };
 
-  // Handle submit reminder
   const handleSubmitReminder = (e) => {
     e.preventDefault();
-
     if (reminderForm.bidangTerpilih.length === 0) {
-      alert("Minimal pilih 1 bidang untuk dikirim reminder!");
+      alert("Minimal pilih 1 unit untuk dikirim reminder!");
       return;
     }
-
-    if (window.confirm(`Kirim reminder ke ${reminderForm.bidangTerpilih.length} bidang?`)) {
-      const newRiwayat = {
-        tanggal: new Date().toISOString().split("T")[0],
-        bidang: reminderForm.bidangTerpilih,
-        jumlah: reminderForm.bidangTerpilih.length,
-      };
-      setRiwayatReminder([newRiwayat, ...riwayatReminder]);
-      alert("Reminder berhasil dikirim!");
-      setShowModal(false);
-    }
+    alert(`Reminder berhasil dikirim ke ${reminderForm.bidangTerpilih.length} unit! (Simulasi)`);
+    setShowModal(false);
   };
 
-  // Handle checkbox bidang
-  const handleBidangChange = (bidang) => {
-    const newBidang = reminderForm.bidangTerpilih.includes(bidang)
-      ? reminderForm.bidangTerpilih.filter((b) => b !== bidang)
-      : [...reminderForm.bidangTerpilih, bidang];
+  const handleBidangChange = (unit) => {
+    const newBidang = reminderForm.bidangTerpilih.includes(unit)
+      ? reminderForm.bidangTerpilih.filter((b) => b !== unit)
+      : [...reminderForm.bidangTerpilih, unit];
     setReminderForm({ ...reminderForm, bidangTerpilih: newBidang });
   };
 
-  // Handle select all
   const handleSelectAll = () => {
-    if (reminderForm.bidangTerpilih.length === dipData.length) {
+    const uniqueUnits = [...new Set(uploadList.map((d) => d.unit_pengaju))];
+    if (reminderForm.bidangTerpilih.length === uniqueUnits.length) {
       setReminderForm({ ...reminderForm, bidangTerpilih: [] });
     } else {
-      setReminderForm({ ...reminderForm, bidangTerpilih: dipData.map((d) => d.bidang) });
+      setReminderForm({ ...reminderForm, bidangTerpilih: uniqueUnits });
     }
   };
 
-  // Badge status helper
+  // ✅ REV 6: Fallback badge menggunakan nullish coalescing (??)
   const getStatusBadgeClass = (status) => {
     const statusMap = {
-      Selesai: "badge-selesai",
+      "Selesai": "badge-selesai",
       "Menunggu Validasi": "badge-menunggu",
-      Revisi: "badge-revisi",
+      "Revisi": "badge-revisi",
       "Belum Upload": "badge-belum",
     };
-    return statusMap[status] || "badge-menunggu";
+    return statusMap[status] ?? "badge-menunggu";
   };
 
-  // Format tanggal
   const formatTanggal = (dateStr) => {
     if (!dateStr) return "-";
     return new Date(dateStr).toLocaleDateString("id-ID", {
@@ -237,28 +184,45 @@ export default function UploadDip() {
     });
   };
 
+  if (loading && uploadList.length === 0) {
+    return (
+      <div className="upload-dip-page">
+        <div className="page-header">
+          <div className="page-header-content">
+            <h1>Upload DIP Tahunan</h1>
+            <p>Monitoring upload Dokumen Informasi Publik (DIP)</p>
+          </div>
+        </div>
+        <div className="table-container" style={{ textAlign: "center", padding: "3rem" }}>
+          <h3>Memuat data...</h3>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="upload-dip-page">
       {/* HEADER */}
       <div className="page-header">
         <div className="page-header-content">
           <h1>Upload DIP Tahunan</h1>
-          <p>Monitoring upload Dokumen Informasi Publik (DIP) dari 9 bidang</p>
+          <p>Monitoring upload Dokumen Informasi Publik (DIP) dari seluruh unit kerja</p>
         </div>
       </div>
 
       {/* PROGRESS BAR */}
       <div className="progress-section">
         <div className="progress-header">
-          <h3>Progress Upload DIP {filterTahun}</h3>
+          <h3>Progress Upload DIP {currentYear}</h3>
+          {/* ✅ REV 2: Menggunakan TOTAL_TARGET_UNITS */}
           <span className="progress-text">
-            {selesaiCount} dari {totalBidang} bidang ({Math.round(progressPersentase)}%)
+            {selesaiCount} dari {TOTAL_TARGET_UNITS} unit kerja ({Math.min(100, Math.round(progressPersentase))}%)
           </span>
         </div>
         <div className="progress-bar-container">
           <div
             className="progress-bar"
-            style={{ width: `${progressPersentase}%` }}
+            style={{ width: `${Math.min(100, progressPersentase)}%` }}
           ></div>
         </div>
         <div className="progress-stats">
@@ -268,33 +232,51 @@ export default function UploadDip() {
             <span className="stat-value">{selesaiCount}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-icon"></span>
+            <span className="stat-icon">⏳</span>
             <span className="stat-label">Menunggu Validasi</span>
-            <span className="stat-value">{dipData.filter((d) => d.status === "Menunggu Validasi").length}</span>
+            <span className="stat-value">{uploadList.filter((d) => d.status === "Menunggu Validasi").length}</span>
           </div>
           <div className="stat-item">
             <span className="stat-icon">🟡</span>
             <span className="stat-label">Revisi</span>
-            <span className="stat-value">{dipData.filter((d) => d.status === "Revisi").length}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-icon">🔴</span>
-            <span className="stat-label">Belum Upload</span>
-            <span className="stat-value">{dipData.filter((d) => d.status === "Belum Upload").length}</span>
+            <span className="stat-value">{uploadList.filter((d) => d.status === "Revisi").length}</span>
           </div>
         </div>
       </div>
 
       {/* FILTER & ACTION */}
       <div className="filter-section">
-        <div className="filter-row">
+        <div className="filter-row" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
           <div className="filter-group">
             <label>Tahun</label>
+            {/* ✅ REV 1: Dropdown tahun dinamis */}
             <select value={filterTahun} onChange={(e) => setFilterTahun(e.target.value)}>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
+              <option value="">Semua</option>
+              {tahunList.map((tahun) => (
+                <option key={tahun} value={tahun}>
+                  {tahun}
+                </option>
+              ))}
             </select>
+          </div>
+          <div className="filter-group">
+            <label>Status</label>
+            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+              <option value="Semua">Semua</option>
+              <option value="Menunggu Validasi">Menunggu Validasi</option>
+              <option value="Revisi">Revisi</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+          </div>
+          <div className="filter-group" style={{ flex: 1, minWidth: "250px" }}>
+            <label>Pencarian</label>
+            <input 
+              type="text" 
+              placeholder="Cari nomor upload atau nama..." 
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              style={{ width: "100%", padding: "8px 12px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+            />
           </div>
         </div>
         <button className="btn-reminder" onClick={handleOpenReminder}>
@@ -302,98 +284,78 @@ export default function UploadDip() {
         </button>
       </div>
 
-      {/* MATRIKS STATUS */}
+      {/* MATRIKS STATUS / TABEL */}
       <div className="table-container">
         <table className="dip-table">
           <thead>
             <tr>
-              <th>Nama Bidang</th>
-              <th>Status Upload</th>
-              <th>Nama File</th>
-              <th>Tanggal Upload</th>
+              <th>No</th>
+              <th>Nomor Upload</th>
+              <th>Nama Pengaju</th>
+              <th>Unit Kerja</th>
+              <th>Tahun</th>
+              <th>Status</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td className="bidang-name">{item.bidang}</td>
-                <td>
-                  <span className={`badge ${getStatusBadgeClass(item.status)}`}>
-                    {item.status === "Selesai" && "✅ "}
-                    {item.status === "Menunggu Validasi" && "⏳ "}
-                    {item.status === "Revisi" && "🟡 "}
-                    {item.status === "Belum Upload" && "🔴 "}
-                    {item.status}
-                  </span>
-                </td>
-                <td>
-                  {item.namaFile ? (
-                    <span className="file-link">{item.namaFile}</span>
-                  ) : (
-                    <span className="no-file">-</span>
-                  )}
-                </td>
-                <td>{formatTanggal(item.tanggalUpload)}</td>
-                <td className="aksi-cell">
-                  {item.namaFile && (
-                    <button
-                      className="btn-action btn-lihat"
-                      onClick={() => handleOpenLihat(item)}
-                      title="Lihat Dokumen"
-                    >
-                      👁️
-                    </button>
-                  )}
-                  {item.status === "Menunggu Validasi" && (
-                    <button
-                      className="btn-action btn-validasi"
-                      onClick={() => handleOpenValidasi(item)}
-                      title="Validasi"
-                    >
-                      ✓
-                    </button>
-                  )}
-                  {item.status === "Belum Upload" && (
-                    <button
-                      className="btn-action btn-reminder-small"
-                      onClick={handleOpenReminder}
-                      title="Kirim Reminder"
-                    >
-                      📧
-                    </button>
-                  )}
+            {filteredData.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center", padding: "2rem", color: "#64748b" }}>
+                  Tidak ada data yang ditemukan.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredData.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td className="bidang-name" style={{ fontWeight: "600", color: "#2563eb" }}>
+                    {item.nomor_upload || `DIP-${item.id}`}
+                  </td>
+                  <td>{item.nama_pengaju}</td>
+                  <td>{item.unit_pengaju}</td>
+                  <td>{item.tahun}</td>
+                  <td>
+                    <span className={`badge ${getStatusBadgeClass(item.status)}`}>
+                      {item.status === "Selesai" && "✅ "}
+                      {item.status === "Menunggu Validasi" && "⏳ "}
+                      {item.status === "Revisi" && "🟡 "}
+                      {item.status}
+                    </span>
+                  </td>
+                  <td className="aksi-cell">
+                    {item.file_path && (
+                      <button
+                        className="btn-action btn-lihat"
+                        onClick={() => handleOpenLihat(item)}
+                        title="Lihat Dokumen"
+                      >
+                        👁️
+                      </button>
+                    )}
+                    {(item.status === "Menunggu Validasi" || item.status === "Revisi") && (
+                      <button
+                        className="btn-action btn-validasi"
+                        onClick={() => handleOpenValidasi(item)}
+                        title="Validasi"
+                      >
+                        ✓
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
-      {/* RIWAYAT REMINDER */}
-      {riwayatReminder.length > 0 && (
-        <div className="riwayat-section">
-          <h3>Riwayat Reminder Terkirim</h3>
-          <div className="riwayat-list">
-            {riwayatReminder.map((item, idx) => (
-              <div key={idx} className="riwayat-item">
-                <div className="riwayat-date">{formatTanggal(item.tanggal)}</div>
-                <div className="riwayat-bidang">
-                  {item.bidang.join(", ")}
-                </div>
-                <div className="riwayat-jumlah">{item.jumlah} bidang</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* MODAL LIHAT DOKUMEN */}
-      {showModal && modalType === "lihat" && selectedBidang && (
+      {showModal && modalType === "lihat" && selectedItem && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2> Dokumen DIP - {selectedBidang.bidang}</h2>
+              <h2>📄 Dokumen DIP - {selectedItem.unit_pengaju}</h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>
                 ✕
               </button>
@@ -401,67 +363,74 @@ export default function UploadDip() {
             <div className="modal-body">
               <div className="document-info">
                 <div className="info-item">
-                  <label>Nama File</label>
-                  <p>{selectedBidang.namaFile}</p>
+                  <label>Nomor Upload</label>
+                  <p>{selectedItem.nomor_upload || "-"}</p>
                 </div>
                 <div className="info-item">
-                  <label>Ukuran File</label>
-                  <p>{selectedBidang.fileSize}</p>
+                  <label>Nama Pengaju</label>
+                  <p>{selectedItem.nama_pengaju}</p>
                 </div>
                 <div className="info-item">
-                  <label>Tanggal Upload</label>
-                  <p>{formatTanggal(selectedBidang.tanggalUpload)}</p>
+                  <label>Unit Kerja</label>
+                  <p>{selectedItem.unit_pengaju}</p>
                 </div>
                 <div className="info-item">
-                  <label>Status</label>
-                  <span className={`badge ${getStatusBadgeClass(selectedBidang.status)}`}>
-                    {selectedBidang.status}
-                  </span>
+                  <label>Tahun</label>
+                  <p>{selectedItem.tahun}</p>
+                </div>
+                <div className="info-item" style={{ gridColumn: "1 / -1" }}>
+                  <label>Catatan Pengirim</label>
+                  <p>{selectedItem.catatan_pengirim || "-"}</p>
                 </div>
               </div>
 
-              <div className="document-preview">
-                <div className="preview-placeholder">
-                  <span className="preview-icon">📄</span>
-                  <p>Preview dokumen PDF</p>
-                  <p className="preview-note">
-                    (Untuk demo, preview tidak tersedia. Silakan download file untuk melihat isi dokumen.)
-                  </p>
-                </div>
+              <div className="document-preview" style={{ marginTop: "20px", textAlign: "center", padding: "20px", background: "#f8fafc", borderRadius: "8px" }}>
+                <span className="preview-icon" style={{ fontSize: "48px" }}>📄</span>
+                <p style={{ fontWeight: "600", marginTop: "10px" }}>{selectedItem.nama_file}</p>
+                <p style={{ color: "#64748b", fontSize: "14px" }}>
+                  Diunggah pada: {formatTanggal(selectedItem.created_at)}
+                </p>
               </div>
             </div>
             <div className="modal-footer">
               <button className="btn-secondary" onClick={() => setShowModal(false)}>
                 Tutup
               </button>
-              <button className="btn-primary">
-                ️ Download Dokumen
-              </button>
+              {/* ✅ REV 4: replace(/^\/+/, '') untuk mencegah double slash pada URL */}
+              <a 
+                href={`http://localhost:8080/${selectedItem.file_path?.replace(/^\/+/, '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary"
+                style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+              >
+                ⬇️ Download Dokumen
+              </a>
             </div>
           </div>
         </div>
       )}
 
       {/* MODAL VALIDASI */}
-      {showModal && modalType === "validasi" && selectedBidang && (
+      {showModal && modalType === "validasi" && selectedItem && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>✓ Validasi Dokumen DIP - {selectedBidang.bidang}</h2>
+              <h2>✓ Validasi Dokumen DIP</h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>
                 ✕
               </button>
             </div>
             <form onSubmit={handleSubmitValidasi}>
               <div className="modal-body">
-                <div className="document-info">
+                <div className="document-info" style={{ marginBottom: "20px", paddingBottom: "15px", borderBottom: "1px solid #e2e8f0" }}>
                   <div className="info-item">
-                    <label>Nama File</label>
-                    <p>{selectedBidang.namaFile}</p>
+                    <label>Nomor Upload</label>
+                    <p>{selectedItem.nomor_upload || "-"}</p>
                   </div>
                   <div className="info-item">
-                    <label>Tanggal Upload</label>
-                    <p>{formatTanggal(selectedBidang.tanggalUpload)}</p>
+                    <label>Nama File</label>
+                    <p>{selectedItem.nama_file}</p>
                   </div>
                 </div>
 
@@ -469,25 +438,26 @@ export default function UploadDip() {
                   <div className="form-group">
                     <label>Hasil Validasi *</label>
                     <select
-                      value={validasiForm.hasilValidasi}
-                      onChange={(e) => setValidasiForm({ ...validasiForm, hasilValidasi: e.target.value })}
+                      value={validasiForm.status}
+                      onChange={(e) => setValidasiForm({ ...validasiForm, status: e.target.value })}
                       required
                     >
                       <option value="">-- Pilih Hasil Validasi --</option>
+                      <option value="Menunggu Validasi">⏳ Menunggu Validasi</option>
+                      <option value="Revisi">🟡 Revisi</option>
                       <option value="Selesai">✅ Selesai</option>
-                      <option value="Revisi"> Revisi</option>
-                      <option value="Ditolak">❌ Ditolak</option>
+                      {/* ✅ REV 3: Opsi "Ditolak" dihapus agar sesuai backend */}
                     </select>
                   </div>
 
-                  {(validasiForm.hasilValidasi === "Revisi" || validasiForm.hasilValidasi === "Ditolak") && (
+                  {validasiForm.status === "Revisi" && (
                     <div className="form-group">
                       <label>Catatan Validasi *</label>
                       <textarea
-                        value={validasiForm.catatan}
-                        onChange={(e) => setValidasiForm({ ...validasiForm, catatan: e.target.value })}
+                        value={validasiForm.catatan_admin}
+                        onChange={(e) => setValidasiForm({ ...validasiForm, catatan_admin: e.target.value })}
                         rows="4"
-                        placeholder="Jelaskan alasan revisi/penolakan..."
+                        placeholder="Jelaskan alasan revisi..."
                         required
                       />
                     </div>
@@ -498,8 +468,9 @@ export default function UploadDip() {
                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
                   Batal
                 </button>
-                <button type="submit" className="btn-primary">
-                  Simpan Validasi
+                {/* ✅ REV 5: Menggunakan state saving, bukan loading */}
+                <button type="submit" className="btn-primary" disabled={saving}>
+                  {saving ? "Menyimpan..." : "Simpan Validasi"}
                 </button>
               </div>
             </form>
@@ -507,12 +478,12 @@ export default function UploadDip() {
         </div>
       )}
 
-      {/* MODAL REMINDER - UPDATED DENGAN GRID 2 KOLOM */}
+      {/* MODAL REMINDER */}
       {showModal && modalType === "reminder" && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2> Kirim Reminder Upload DIP</h2>
+              <h2>📧 Kirim Reminder Upload DIP</h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>
                 ✕
               </button>
@@ -520,39 +491,34 @@ export default function UploadDip() {
             <form onSubmit={handleSubmitReminder}>
               <div className="modal-body">
                 <div className="form-section">
-                  <h3>Pilih Bidang</h3>
+                  <h3>Pilih Unit Kerja</h3>
                   
-                  {/* Checkbox Header - Select All */}
                   <div className="checkbox-header">
                     <label className="checkbox-label">
                       <input
                         type="checkbox"
-                        checked={reminderForm.bidangTerpilih.length === dipData.length}
+                        checked={reminderForm.bidangTerpilih.length > 0 && reminderForm.bidangTerpilih.length === [...new Set(uploadList.map((d) => d.unit_pengaju))].length}
                         onChange={handleSelectAll}
                       />
-                      <strong>Pilih Semua Bidang</strong>
+                      <strong>Pilih Semua Unit</strong>
                     </label>
                   </div>
 
-                  {/* Checkbox List - Grid 2 Kolom untuk SEMUA Bidang */}
-                  <div className="checkbox-list">
-                    {dipData.map((item) => (
-                      <label key={item.id} className="checkbox-label">
+                  <div className="checkbox-list" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "10px" }}>
+                    {[...new Set(uploadList.map((d) => d.unit_pengaju))].map((unit, idx) => (
+                      <label key={idx} className="checkbox-label" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <input
                           type="checkbox"
-                          checked={reminderForm.bidangTerpilih.includes(item.bidang)}
-                          onChange={() => handleBidangChange(item.bidang)}
+                          checked={reminderForm.bidangTerpilih.includes(unit)}
+                          onChange={() => handleBidangChange(unit)}
                         />
-                        {item.bidang}
-                        {item.status === "Selesai" && (
-                          <span className="status-badge-small">✅ Selesai</span>
-                        )}
+                        {unit}
                       </label>
                     ))}
                   </div>
 
                   {reminderForm.bidangTerpilih.length === 0 && (
-                    <p className="warning-text">⚠️ Tidak ada bidang yang dipilih</p>
+                    <p className="warning-text" style={{ color: "#dc2626", marginTop: "10px" }}>⚠️ Tidak ada unit yang dipilih</p>
                   )}
                 </div>
 
@@ -565,6 +531,7 @@ export default function UploadDip() {
                       rows="6"
                       placeholder="Tulis pesan reminder..."
                       required
+                      style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
                     />
                   </div>
                 </div>

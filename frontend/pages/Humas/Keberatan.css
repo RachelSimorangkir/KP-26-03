@@ -1,0 +1,75 @@
+.lampiran-card{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:18px;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:12px;
+
+    background:#f8fafc;
+
+}
+
+.lampiran-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.lampiran-icon{
+
+    font-size:34px;
+
+}
+
+.lampiran-info strong{
+
+    display:block;
+
+    color:#1e293b;
+
+}
+
+.lampiran-info p{
+
+    margin-top:4px;
+
+    color:#64748b;
+
+    font-size:14px;
+
+}
+
+.lampiran-actions{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.lampiran-empty{
+
+    padding:20px;
+
+    border:1px dashed #cbd5e1;
+
+    border-radius:10px;
+
+    color:#64748b;
+
+    background:#f8fafc;
+
+}

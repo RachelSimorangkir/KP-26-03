@@ -74,9 +74,11 @@ class BeritaController extends ResourceController
      */
     public function create()
     {
+        
         try {
             // ✅ PERBAIKAN 1: Gunakan getPost() karena frontend mengirim FormData
             $input = $this->request->getPost();
+
             
             // ✅ PERBAIKAN 2: Validasi TANPA field 'status' (karena status otomatis 'menunggu')
             $validation = Services::validation();
@@ -101,38 +103,53 @@ class BeritaController extends ResourceController
             // Handle upload file
             $fotoUtama = null;
             $lampiranData = [];
-            
-            if ($this->request->getFile('foto')) {
-                $files = $this->request->getFileMultiple('foto') ?? [$this->request->getFile('foto')];
-                
-                foreach ($files as $index => $file) {
-                    if ($file && $file->isValid() && !$file->hasMoved()) {
-                        if ($file->getSize() > 8 * 1024 * 1024) {
-                            return $this->failValidationErrors(['foto' => 'Ukuran file maksimal 8MB']);
-                        }
-                        
-                        $newName = $file->getRandomName();
-                        $file->move(WRITEPATH . 'uploads/berita', $newName);
-                        
-                        $filePath = 'uploads/berita/' . $newName;
-                        
-                        if ($index === 0) {
-                            $fotoUtama = $filePath;
-                        }
-                        
-                        $lampiranData[] = [
-                            'file_path' => $filePath,
-                            'file_name' => $file->getClientName(),
-                            'file_size' => $file->getSize(),
-                            'file_type' => $file->getClientMimeType(),
-                            'jenis'     => strpos($file->getClientMimeType(), 'video') !== false ? 'video' : 'foto',
-                            'urutan'    => $index
-                        ];
-                    }
-                }
-            }
+
+
+            $file = $this->request->getFile('foto');
+
+if ($file && $file->isValid() && !$file->hasMoved()) {
+
+    if ($file->getSize() > 8 * 1024 * 1024) {
+
+        return $this->failValidationErrors([
+            'foto' => 'Ukuran file maksimal 8MB'
+        ]);
+
+    }
+
+    $newName = $file->getRandomName();
+
+    $folder = FCPATH . 'uploads/berita';
+
+if (!is_dir($folder)) {
+    mkdir($folder, 0777, true);
+}
+
+if (!$file->move($folder, $newName)) {
+
+    return $this->respond([
+        "status" => false,
+        "error" => $file->getErrorString(),
+        "code" => $file->getError()
+    ],500);
+}
+
+$fotoUtama = 'uploads/berita/' . $newName;
+
+    $lampiranData[] = [
+
+        'file_path' => $fotoUtama,
+        'file_name' => $file->getClientName(),
+        'file_size' => $file->getSize(),
+        'file_type' => $file->getClientMimeType(),
+        'jenis'     => 'foto',
+        'urutan'    => 0
+
+    ];
+}
 
             // Simpan data berita (Status dipaksa 'menunggu')
+     
             $beritaId = $this->beritaModel->insert([
                 'user_id'           => $userId,
                 'nip_pengusul'      => $userNip,

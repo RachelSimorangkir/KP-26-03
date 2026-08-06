@@ -1,88 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./StatusHelpdesk.css";
 
 export default function StatusHelpdesk() {
   const navigate = useNavigate();
 
-  // Mock data
-  const [tiketList] = useState([
-    {
-      id: "TKT-2024-001",
-      namaAplikasi: "SIMPEG - Sistem Informasi Kepegawaian",
-      kategori: "Error Sistem",
-      judulMasalah: "Tidak bisa login ke SIMPEG",
-      tanggalLapor: "2024-06-20",
-      tanggalUpdate: "2024-06-21",
-      statusTiket: "Selesai",
-      petugasPJ: "Budi Santoso, S.Kom",
-      tanggapanSolusi: "Masalah telah diperbaiki. Silakan clear cache browser dan coba login kembali. Jika masih bermasalah, hubungi kami kembali.",
-    },
-    {
-      id: "TKT-2024-002",
-      namaAplikasi: "SIKA - Sistem Informasi Keuangan",
-      kategori: "Reset Password",
-      judulMasalah: "Lupa password SIKA",
-      tanggalLapor: "2024-06-18",
-      tanggalUpdate: "2024-06-19",
-      statusTiket: "Diproses",
-      petugasPJ: "Siti Aminah, M.Pd",
-      tanggapanSolusi: "Password reset sedang dalam proses. Kami akan mengirimkan link reset ke email Anda dalam 1x24 jam.",
-    },
-    {
-      id: "TKT-2024-003",
-      namaAplikasi: "Portal Internal Bimas Kristen",
-      kategori: "Permintaan Akses",
-      judulMasalah: "Meminta akses modul laporan",
-      tanggalLapor: "2024-06-15",
-      tanggalUpdate: "2024-06-16",
-      statusTiket: "Menunggu Respon",
-      petugasPJ: "Ahmad Fauzi, S.Pd",
-      tanggapanSolusi: "Mohon konfirmasi apakah Anda sudah memiliki izin dari atasan untuk akses modul ini?",
-    },
-    {
-      id: "TKT-2024-004",
-      namaAplikasi: "E-Office - Aplikasi Persuratan",
-      kategori: "Bug",
-      judulMasalah: "File PDF tidak bisa di-download",
-      tanggalLapor: "2024-06-10",
-      tanggalUpdate: "2024-06-12",
-      statusTiket: "Ditutup",
-      petugasPJ: "Dewi Lestari, S.Kom",
-      tanggapanSolusi: "Bug telah diperbaiki pada versi terbaru. Silakan update aplikasi Anda.",
-    },
-    {
-      id: "TKT-2024-005",
-      namaAplikasi: "Sistem Informasi BMN",
-      kategori: "Pelatihan",
-      judulMasalah: "Meminta panduan penggunaan aplikasi BMN",
-      tanggalLapor: "2024-06-22",
-      tanggalUpdate: "2024-06-22",
-      statusTiket: "Baru",
-      petugasPJ: "-",
-      tanggapanSolusi: "",
-    },
-  ]);
+  // ✅ REVISI 1: Hapus mock data, gunakan array kosong
+  const [tiketList, setTiketList] = useState([]);
 
+  // ✅ REVISI 2: Ambil nip dari localStorage dengan aman
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const nip = user?.nip;
+
+  // ✅ REVISI 3: getStatusClass menggunakan lowercase sesuai database
   const getStatusClass = (status) => {
-    // Memetakan status ke class badge yang konsisten dengan halaman lain
     const statusMap = {
-      "Baru": "badge-menunggu",
-      "Menunggu Respon": "badge-menunggu",
-      "Diproses": "badge-diproses",
-      "Selesai": "badge-selesai",
-      "Ditutup": "badge-ditolak",
+      baru: "badge-menunggu",
+      diproses: "badge-diproses",
+      selesai: "badge-selesai",
+      ditolak: "badge-ditolak",
     };
     return statusMap[status] || "badge-menunggu";
   };
 
   const formatTanggal = (dateStr) => {
+    if (!dateStr) return "-";
     return new Date(dateStr).toLocaleDateString("id-ID", {
       day: "numeric",
       month: "long",
       year: "numeric",
     });
   };
+
+  // ✅ REVISI 2 & 3: Floating 'await' dihapus, hanya ada di dalam fungsi async ini
+  const loadTiket = async () => {
+    if (!nip) return; // Mencegah request jika nip tidak ditemukan
+    
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/helpdesk/user/${nip}`
+      );
+      setTiketList(res.data.data || []);
+    } catch (err) {
+      console.error("Gagal memuat tiket:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (nip) {
+      loadTiket();
+    }
+  }, [nip]);
 
   return (
     <div className="rekom-page status-helpdesk-page">
@@ -117,17 +86,17 @@ export default function StatusHelpdesk() {
       ) : (
         <div className="tiket-list">
           {tiketList.map((tiket) => (
-            <div key={tiket.id} className="tiket-card">
+            <div key={tiket.nomor_tiket} className="tiket-card">
               
               {/* 1. Card Header: ID, Judul & Meta */}
               <div className="card-header">
                 <div className="header-left">
-                  <span className="tiket-id">{tiket.id}</span>
-                  <h3 className="card-title">{tiket.judulMasalah}</h3>
+                  <span className="tiket-id">TKT-{new Date(tiket.created_at).getFullYear()}-{String(tiket.id).padStart(4, "0")}</span>
+                  <h3 className="card-title">{tiket.judul_masalah}</h3>
                 </div>
                 <div className="card-meta">
                   <span className="meta-item">
-                    <span className="meta-label">Aplikasi:</span> {tiket.namaAplikasi}
+                    <span className="meta-label">Aplikasi:</span> {tiket.nama_aplikasi}
                   </span>
                   <span className="meta-item">
                     <span className="meta-label">Kategori:</span> {tiket.kategori}
@@ -140,31 +109,31 @@ export default function StatusHelpdesk() {
                 <div className="status-grid">
                   <div className="status-box">
                     <span className="status-label">Status Tiket</span>
-                    <span className={`badge ${getStatusClass(tiket.statusTiket)}`}>
-                      {tiket.statusTiket}
+                    <span className={`badge ${getStatusClass(tiket.status)}`}>
+                      {tiket.status.toUpperCase()}
                     </span>
                   </div>
-                  {tiket.petugasPJ !== "-" && (
+                  {tiket.petugas_pj && (
                     <div className="status-box">
-                      <span className="status-label">Petugas Penanggung Jawab</span>
-                      <span className="info-value">👤 {tiket.petugasPJ}</span>
+                    <span className="status-label">Petugas Penanggung Jawab</span>
+                    <span className="info-value">👤 {tiket.petugas_pj}</span>
                     </div>
-                  )}
+                 )}
                 </div>
 
                 <div className="timeline-compact">
-                  <span>📅 Lapor: {formatTanggal(tiket.tanggalLapor)}</span>
-                  <span>🔄 Update Terakhir: {formatTanggal(tiket.tanggalUpdate)}</span>
+                  <span>📅 Lapor: {formatTanggal(tiket.created_at)}</span>
+                  <span>🔄 Update Terakhir: {formatTanggal(tiket.updated_at)}</span>
                 </div>
 
                 {/* 3. Tanggapan/Solusi (Muncul jika ada) */}
-                {tiket.tanggapanSolusi && (
-                  <div className={`catatan-box ${tiket.statusTiket === "Selesai" ? "catatan-success" : "catatan-info"}`}>
+                {tiket.tanggapan && (
+                  <div className={`catatan-box ${tiket.status === "selesai" ? "catatan-success" : "catatan-info"}`}>
                     <div className="catatan-header">
                       <span className="catatan-icon">💬</span>
                       <strong>Tanggapan / Solusi dari Petugas</strong>
                     </div>
-                    <p>{tiket.tanggapanSolusi}</p>
+                    <p>{tiket.tanggapan}</p>
                   </div>
                 )}
               </div>

@@ -277,7 +277,129 @@ $routes->get(
 );
 $routes->get('api/berita/count/menunggu', 'BeritaController::countMenunggu');//untuk menghitung jumlah berita dengan status menunggu
 
+// ========================================
+// API ROUTES UNTUK DATA INTERNAL
+// ========================================
+$routes->group('api', ['filter' => 'cors'], function($routes) {
+
+    // CRUD Permintaan Data Internal
+    $routes->get('data-internal', 'DataInternalController::index');
+    $routes->get('data-internal/(:num)', 'DataInternalController::show/$1');
+    $routes->post('data-internal', 'DataInternalController::create');
+    $routes->post('data-internal/(:num)', 'DataInternalController::update/$1'); // Gunakan POST untuk update karena multipart/form-data
+    $routes->delete('data-internal/(:num)', 'DataInternalController::delete/$1');
+    $routes->put('data-internal/(:num)', 'DataInternalController::update/$1');
+    $routes->post('data-internal/(:num)','DataInternalController::update/$1');
+
+    // Riwayat berdasarkan NIP
+    $routes->get(
+        'data-internal/user/(:segment)',
+        'DataInternalController::getByUser/$1'
+    );
+
+    // Dashboard admin
+    $routes->get(
+        'data-internal/count/menunggu',
+        'DataInternalController::countMenunggu'
+    );
+
+    $routes->get(
+    'data-internal/download/(:num)',
+    'DataInternalController::download/$1'
+
+    
+);
+
+/// Helpdesk
+$routes->post('helpdesk', 'HelpdeskController::create');
+
+// =========================
+// HELPDESK
+// =========================
+
+$routes->get('helpdesk', 'HelpdeskController::index');
+
+$routes->get(
+    'helpdesk/(:num)',
+    'HelpdeskController::show/$1'
+);
+
+$routes->post(
+    'helpdesk',
+    'HelpdeskController::create'
+);
+
+$routes->put(
+    'helpdesk/(:num)',
+    'HelpdeskController::update/$1'
+);
+
+$routes->get(
+    'helpdesk/user/(:segment)',
+    'HelpdeskController::getByUser/$1'
+);
+
+$routes->get(
+    'helpdesk/count/baru',
+    'HelpdeskController::countBaru'
+);
+
+$routes->put('helpdesk/(:num)', 'HelpdeskController::update/$1');
+
+$routes->get('helpdesk/dashboard','HelpdeskController::dashboard');
+    
+});
+
+//kepegawaian
 $routes->post(
     'pdf/cuti/preview',
     'PdfController::preview'
 );
+
+
+//// PPID INTERNAL
+$routes->group('api', function($routes){
+
+    $routes->get('ppid', 'PPIDController::index');
+
+    $routes->get('ppid/(:num)', 'PPIDController::show/$1');
+
+    $routes->get('ppid/user/(:any)', 'PPIDController::getByUser/$1');
+
+    $routes->post('ppid', 'PPIDController::create');
+
+    $routes->put('ppid/(:num)', 'PPIDController::update/$1');
+
+    $routes->get('ppid/count/baru','PPIDController::countBaru');
+
+    $routes->get('ppid/dashboard','PPIDController::dashboard');
+
+    $routes->get('dashboard/aktivitas','DashboardController::aktivitas');
+
+});
+
+$routes->get('ppid/count/baru', 'PPIDController::countBaru');
+
+////// UPLOAD DIP/////////
+$routes->group('api', function ($routes) {
+
+    $routes->get('dip', 'DIPController::index');
+
+    $routes->get('dip/dashboard','DIPController::dashboard');
+
+    $routes->get('dip/(:num)', 'DIPController::show/$1');
+
+    $routes->get('dip/user/(:any)', 'DIPController::getByUser/$1');
+
+    $routes->post('dip', 'DIPController::create');
+
+    $routes->put('dip/(:num)', 'DIPController::update/$1');
+
+// jika frontend mengirim FormData (multipart/form-data),
+// tambahkan juga:
+
+$routes->post('dip/update/(:num)', 'DIPController::update/$1');
+
+
+});
+

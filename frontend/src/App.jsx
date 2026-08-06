@@ -62,7 +62,6 @@ import DataPermintaan from "../pages/Humas/DataPermintaan";
 import UploadDip from "../pages/Humas/UploadDip";
 import Tiket from "../pages/Humas/Tiket";
 import Keberatan from "../pages/Humas/Keberatan";
-import Rekap from "../pages/Humas/Rekap";
 import Dip from "../pages/Humas/Dip";
 
 const currentUser = JSON.parse(
@@ -343,7 +342,6 @@ function App() {
   <Route path="upload-dip" element={<UploadDip />} />
   <Route path="tiket-helpdesk" element={<Tiket />} />
   <Route path="keberatan-ppid" element={<Keberatan />} />
-  <Route path="laporan" element={<Rekap />} />
 </Route>
          
 

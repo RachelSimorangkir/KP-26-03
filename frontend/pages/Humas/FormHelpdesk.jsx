@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FormHelpdesk.css";
@@ -111,29 +112,7 @@ useEffect(() => {
   const err = validate();
   setErrors(err);
 
-  if (Object.keys(err).length === 0) {
-
-    await Swal.fire({
-      icon: "success",
-      title: "Tiket Berhasil Dikirim",
-      html: `
-        <div style="font-size:15px; line-height:1.8">
-          Tiket bantuan berhasil dibuat.<br>
-          <strong>Tim Helpdesk akan segera memproses laporan Anda.</strong>
-        </div>
-      `,
-      confirmButtonText: "Lihat Status",
-      confirmButtonColor: "#2563eb",
-      width: "430px",
-      padding: "2rem",
-      timer: 3000,
-      timerProgressBar: true,
-    });
-
-    navigate("/humasdata/helpdesk/StatusHelpdesk");
-
-  } else {
-
+  if (Object.keys(err).length > 0) {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -142,9 +121,63 @@ useEffect(() => {
     Swal.fire({
       icon: "warning",
       title: "Form Belum Lengkap",
-      text: "Masih ada data yang harus dilengkapi sebelum tiket dikirim.",
-      confirmButtonColor: "#f59e0b",
-      confirmButtonText: "Periksa Kembali",
+      text: "Masih ada data yang harus dilengkapi.",
+    });
+
+    return;
+  }
+
+  try {
+
+    const formData = new FormData();
+
+    formData.append("nip_pelapor", form.nip);
+    formData.append("nama_pelapor", form.namaPelapor);
+    formData.append("unit_kerja", form.unitKerja);
+
+    formData.append("email", form.emailUsername);
+    formData.append("no_hp", form.nomorTelepon);
+
+    formData.append("nama_aplikasi", form.namaAplikasi);
+    formData.append("kategori", form.kategoriKendala);
+    formData.append("tingkat_urgensi", form.tingkatUrgensi);
+
+    formData.append("judul_masalah", form.judulMasalah);
+    formData.append("deskripsi_masalah", form.deskripsiMasalah);
+
+    if (form.lampiran.length > 0) {
+      formData.append("lampiran", form.lampiran[0]);
+    }
+
+    const res = await axios.post(
+      "http://localhost:8080/api/helpdesk",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (res.data.status) {
+
+      await Swal.fire({
+        icon: "success",
+        title: "Tiket Berhasil Dikirim",
+        text: "Tim Helpdesk akan segera memproses laporan Anda.",
+      });
+
+      navigate("/humasdata/helpdesk/StatusHelpdesk");
+    }
+
+  } catch (err) {
+
+    console.error(err);
+
+    Swal.fire({
+      icon: "error",
+      title: "Gagal",
+      text: "Tiket gagal dikirim.",
     });
 
   }

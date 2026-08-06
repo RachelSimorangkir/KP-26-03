@@ -9,7 +9,7 @@ class BeritaModel extends Model
     protected $table            = 'berita';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     
     // Field yang boleh diisi/diubah

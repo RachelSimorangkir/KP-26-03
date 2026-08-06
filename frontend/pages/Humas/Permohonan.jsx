@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Permohonan.css";
@@ -11,14 +12,17 @@ export default function Permohonan() {
     namaPengaju: "",
     unitKerja: "",
     
+    // Field kontak
+    email: "",
+    noHp: "",
+    
     // Field form
     jenisPermohonan: "",
     referensiPermohonan: "",
     uraian: "",
     unitKerjaTujuan: "",
     tingkatUrgensi: "",
-    dokumen: [],
-    atasanPengaju: "",
+    dokumen: [], // Tetap array agar UI .map() tidak error, tapi hanya isi 1 file
   });
 
   useEffect(() => {
@@ -28,11 +32,13 @@ export default function Permohonan() {
         ...prev,
         nip: user.nip || "",
         namaPengaju: user.nama || "",
-        unitKerja: user.unit_organisasi || ""
+        unitKerja: user.unit_organisasi || "",
+        // ✅ REV 1: atasanPengaju dihapus total dari sini
     }));
-}, []);
+  }, []);
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   // Opsi untuk dropdown
   const jenisPermohonanOptions = [
@@ -59,13 +65,6 @@ export default function Permohonan() {
     { value: "segera", label: "Segera (diproses dalam 1-3 hari kerja)" },
   ];
 
-  const atasanOptions = [
-    "Dr. Budi - Kepala Bagian",
-    "Ibu Sari - Kepala Sub Bagian",
-    "Kepala Satker",
-    "Kepala Bidang",
-  ];
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -80,24 +79,30 @@ export default function Permohonan() {
     const files = Array.from(e.target.files);
     const errs = {};
     
-    files.forEach((f) => {
-      const isValidType = ["application/pdf", "image/jpeg", "image/png", "image/jpg"].includes(f.type);
+    // ✅ REV 3: Hanya ambil file pertama karena backend hanya menerima 1 file
+    if (files.length > 0) {
+      const file = files[0];
+      const isValidType = ["application/pdf", "image/jpeg", "image/png", "image/jpg"].includes(file.type);
+      
       if (!isValidType) {
         errs.dokumen = "Hanya file PDF atau Image (JPG/PNG) yang diperbolehkan";
       }
-      if (f.size > 5 * 1024 * 1024) {
-        errs.dokumen = "Satu atau lebih file melebihi 5MB";
+      if (file.size > 5 * 1024 * 1024) {
+        errs.dokumen = "Ukuran file melebihi 5MB";
       }
-    });
-    
-    setErrors((prev) => ({ ...prev, ...errs }));
-    setForm((prev) => ({ ...prev, dokumen: files }));
+      
+      setErrors((prev) => ({ ...prev, ...errs }));
+      
+      // Hanya simpan jika valid
+      if (isValidType && file.size <= 5 * 1024 * 1024) {
+        setForm((prev) => ({ ...prev, dokumen: [file] }));
+      }
+    }
   };
 
-  const removeFile = (index) => {
-    const newFiles = [...form.dokumen];
-    newFiles.splice(index, 1);
-    setForm((prev) => ({ ...prev, dokumen: newFiles }));
+  const removeFile = () => {
+    // ✅ REV 3: Reset dokumen menjadi array kosong
+    setForm((prev) => ({ ...prev, dokumen: [] }));
   };
 
   const validate = () => {
@@ -112,19 +117,79 @@ export default function Permohonan() {
     if (!form.uraian) err.uraian = "Uraian permohonan/keberatan wajib diisi";
     if (!form.unitKerjaTujuan) err.unitKerjaTujuan = "Unit kerja tujuan wajib dipilih";
     if (!form.tingkatUrgensi) err.tingkatUrgensi = "Tingkat urgensi wajib dipilih";
-    if (!form.atasanPengaju) err.atasanPengaju = "Atasan penyetuju wajib dipilih";
     
+    // Validasi untuk Email dan Nomor HP
+    if (!form.email.trim()) {
+      err.email = "Email wajib diisi";
+    }
+    if (!form.noHp.trim()) {
+      err.noHp = "Nomor HP wajib diisi";
+    }
+
     return err;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const err = validate();
     setErrors(err);
 
     if (Object.keys(err).length === 0) {
-      alert("Permohonan berhasil dikirim!");
-      navigate("/humasdata/permohonan");
+      setLoading(true);
+      try {
+        const formData = new FormData();
+        
+        // Memetakan state form ke nama field yang diharapkan backend (snake_case)
+        formData.append("nip_pengaju", form.nip);
+        formData.append("nama_pengaju", form.namaPengaju);
+        formData.append("unit_pengaju", form.unitKerja);
+        formData.append("email", form.email);
+        formData.append("no_hp", form.noHp);
+        // ✅ REV 1: formData.append("atasan_pengaju", ...) DIHAPUS
+        formData.append("jenis_permohonan", form.jenisPermohonan);
+        formData.append("referensi_permohonan", form.referensiPermohonan);
+        formData.append("uraian_permohonan", form.uraian);
+        
+        // ✅ REV 2: Syntax error diperbaiki, dipisah menjadi 2 baris
+        formData.append("unit_tujuan", form.unitKerjaTujuan);
+        formData.append("tingkat_urgensi", form.tingkatUrgensi);
+
+        // Backend menangani 1 file 'lampiran'. Ambil file pertama dari array.
+        if (form.dokumen.length > 0) {
+          formData.append("lampiran", form.dokumen[0]);
+        }
+
+        for (let pair of formData.entries()) {console.log(pair[0], pair[1]);}
+
+        const response = await axios.post(
+          "http://localhost:8080/api/ppid",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.data.status) {
+          alert(
+            `Permohonan berhasil dikirim!\n\nNomor Registrasi: ${response.data.data.nomor_registrasi}`
+          );
+          navigate("/humasdata/PPID");
+        } else {
+          alert(response.data.message || "Gagal mengirim permohonan.");
+        }
+      } catch (err) {
+
+    console.log("Status:", err.response?.status);
+
+    console.log(JSON.stringify(err.response.data, null, 2));
+
+    console.error(err);
+
+} finally {
+        setLoading(false);
+      }
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -196,6 +261,40 @@ export default function Permohonan() {
                 readOnly
                 className="readonly-input"
               />
+            </div>
+            
+            {/* Input Email dan Nomor HP (Editable) */}
+            <div className="form-group">
+              <label>
+                Email <span className="required">*</span>
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Masukkan alamat email aktif"
+                className={errors.email ? "input-error" : ""}
+              />
+              {errors.email && (
+                <span className="error-text">{errors.email}</span>
+              )}
+            </div>
+            <div className="form-group">
+              <label>
+                Nomor HP <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                name="noHp"
+                value={form.noHp}
+                onChange={handleChange}
+                placeholder="Contoh: 081234567890"
+                className={errors.noHp ? "input-error" : ""}
+              />
+              {errors.noHp && (
+                <span className="error-text">{errors.noHp}</span>
+              )}
             </div>
           </div>
         </section>
@@ -328,15 +427,16 @@ export default function Permohonan() {
           <h2>Dokumen Pendukung</h2>
           <div className="form-group full-width">
             <label>Lampiran Dokumen</label>
+            {/* ✅ REV 3: Atribut 'multiple' dihapus */}
             <input
               type="file"
-              multiple
               accept=".pdf,image/jpeg,image/png,image/jpg"
               onChange={handleFileChange}
               className={errors.dokumen ? "input-error" : ""}
             />
+            {/* ✅ REV 4: Teks petunjuk diperbarui */}
             <small>
-              Opsional. Format: PDF, JPG, PNG. Maksimal 5MB per file.
+              Opsional. Format: PDF, JPG, PNG. Maksimal 5 MB.
             </small>
             {errors.dokumen && (
               <span className="error-text">{errors.dokumen}</span>
@@ -352,10 +452,10 @@ export default function Permohonan() {
                     <button
                       type="button"
                       className="btn-remove-file"
-                      onClick={() => removeFile(idx)}
+                      onClick={removeFile}
                       title="Hapus file"
                     >
-                      
+                      ✕
                     </button>
                   </div>
                 ))}
@@ -370,11 +470,16 @@ export default function Permohonan() {
             type="button"
             className="btn-secondary"
             onClick={() => navigate("/humasdata/PPID")}
+            disabled={loading}
           >
             Batal
           </button>
-          <button type="submit" className="btn-primary">
-            Ajukan Permohonan
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading ? "Mengirim..." : "Ajukan Permohonan"}
           </button>
         </div>
       </form>
