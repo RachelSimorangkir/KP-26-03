@@ -71,24 +71,22 @@ if (!data) {
         ← Kembali
       </button>
 
-      {/* HEADER */}
-      <div className="detail-header">
+     {/* HEADER */}
+<div className="detail-header">
 
-        <div className="avatar">
-          {data.nama?.charAt(0)}
-        </div>
+  <div className="avatar">
+    {data.nama?.charAt(0)?.toUpperCase()}
+  </div>
 
-        <div>
+  <div className="detail-header-content">
 
-          <h1>Detail Pengajuan</h1>
+    <h2>{data.nama}</h2>
 
-          <h2>{data.nama}</h2>
+    <p>{data.layanan}</p>
 
-          <p>{data.layanan}</p>
+  </div>
 
-        </div>
-
-      </div>
+</div>
 
       {/* PROGRESS */}
       <div className="status-wrapper">

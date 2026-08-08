@@ -141,34 +141,6 @@ $satuanCuti  = strtolower($pengajuan["satuan_cuti"]);
 // HITUNG SISA CUTI TAHUN BERJALAN
 //=========================================
 
-//=========================================
-// HITUNG SISA CUTI
-//=========================================
-
-$tahun = date("Y");
-
-$builder = $pengajuanModel->builder();
-
-$hasil = $builder
-    ->selectSum("durasi")
-    ->where("nip", $nip)
-    ->where("jenis_cuti", "Cuti Tahunan")
-    ->whereIn("status", [
-        "Disetujui",
-        "Selesai"
-    ])
-    ->where("EXTRACT(YEAR FROM tanggal_mulai) =", $tahun, false)
-    ->get()
-    ->getRowArray();
-
-$terpakai = (int) ($hasil["durasi"] ?? 0);
-
-$sisaN = max(0, 12 - $terpakai);
-
-$sisaN1 = 0;
-
-$sisaN3 = 0;
-
         //==============================
         // PDF
         //==============================
@@ -458,22 +430,6 @@ switch (ucfirst($satuanCuti)) {
             4,
             $noHp
         );
-
-        //=========================================
-// SISA CUTI
-//=========================================
-
-// N-3
-$pdf->SetXY(69,236);
-$pdf->Cell(15,5,$sisaN3);
-
-// N-1
-$pdf->SetXY(69,243);
-$pdf->Cell(15,5,$sisaN1);
-
-// N
-$pdf->SetXY(67.5,250);
-$pdf->Cell(15,5,$sisaN);
 
 
         //=========================================

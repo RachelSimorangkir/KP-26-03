@@ -124,7 +124,6 @@
 
 .main-content {
   flex: 1;
-  margin-left: 280px;
   padding: 24px;
   min-height: 100vh;
   background: #f8fafc;
@@ -497,5 +496,114 @@
 
   .aktivitas-waktu {
     align-self: flex-end;
+  }
+}
+
+/* =====================================
+   TOMBOL AKSI - BERITA MASUK
+===================================== */
+
+/* Kolom aksi pada tabel */
+table td:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Semua button yang berada di kolom terakhir */
+table td:last-child button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 110px;
+  height: 40px;
+
+  padding: 0 18px;
+
+  border: none !important;
+  border-radius: 10px;
+
+  background: #2563eb !important;
+  color: #ffffff !important;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+
+  transition: all 0.2s ease;
+
+  white-space: nowrap;
+}
+
+
+/* Hover */
+table td:last-child button:hover {
+  background: #1d4ed8 !important;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+}
+
+
+/* Saat diklik */
+table td:last-child button:active {
+  transform: translateY(0);
+
+  box-shadow: 0 3px 7px rgba(37, 99, 235, 0.15);
+}
+
+
+/* =====================================
+   JIKA TOMBOL AKSI BERUPA LINK
+===================================== */
+
+table td:last-child a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 110px;
+  height: 40px;
+
+  padding: 0 18px;
+
+  border-radius: 10px;
+
+  background: #2563eb !important;
+  color: #ffffff !important;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+
+  transition: all 0.2s ease;
+}
+
+table td:last-child a:hover {
+  background: #1d4ed8 !important;
+  transform: translateY(-2px);
+}
+
+
+/* =====================================
+   RESPONSIVE TOMBOL AKSI
+===================================== */
+
+@media (max-width: 768px) {
+  table td:last-child button,
+  table td:last-child a {
+    min-width: 90px;
+    height: 36px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
   }
 }
