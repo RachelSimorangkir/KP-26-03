@@ -42,7 +42,7 @@ class DbrStrukturController extends BaseController
                 // ── Sumber 1: pegawai di-assign via NIP (dari dbr_lt10) ──
                 $maps = $mapModel->where('bagian_id', $bg['id'])->findAll();
                 foreach ($maps as $m) {
-                    $rows = $db->table('dbr_lt10')->where('nip', $m['nip'])->get()->getResultArray();
+                    $rows = $db->table('dbr_lt10')->where('nip', $m['nip'])->where('bmn !=', 'Barang Default')->get()->getResultArray();
                     if (empty($rows)) {
                         $pegawaiList[] = ["nip" => $m['nip'], "nama" => "(Data pegawai tidak ditemukan)", "jabatan" => "", "barang" => []];
                         continue;

@@ -96,6 +96,11 @@ $routes->post(
 
 $routes->group('api', ['filter' => 'cors'], function ($routes) {
 
+    $routes->get(
+        'admin-bmn',
+        'AdminUserController::listAdminBmn'
+    );
+
     $routes->post(
         'peminjaman',
         'PeminjamanBarangController::create'

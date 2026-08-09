@@ -8,10 +8,11 @@ class AdminUserController extends BaseController
     {
         $model = new UserModel();
         $data = $model
-            ->select('nip, nama')
+            ->select('nip, nama_lengkap as nama')
             ->where('role', 'admin_bmn')
-            ->orderBy('nama', 'ASC')
+            ->orderBy('nama_lengkap', 'ASC')
             ->findAll();
+
         return $this->response->setJSON($data);
     }
 }

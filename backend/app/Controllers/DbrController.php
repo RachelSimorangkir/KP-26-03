@@ -19,6 +19,7 @@ class DbrController extends ResourceController
     {
         $rows = $this->model
             ->where("nip", $nip)
+            ->where("bmn !=", "Barang Default")
             ->findAll();
 
         if (empty($rows)) {
