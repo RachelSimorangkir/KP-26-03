@@ -390,20 +390,27 @@ export const AdminTable = ({ headers, children }) => (
 );
 
 // ─── ADMIN BUTTON ─────────────────────────────────────────────────────────────
+import "./AdminButtonFix.css"; // penawar khusus, biar tidak ketiban aturan CSS global (mis. HumasAdmin.css)
+
 export const AdminButton = ({ children, onClick, variant = "primary", style }) => {
   const variants = {
-    primary:   { bg: "#2563eb", color: "#fff" },
-    success:   { bg: "#16a34a", color: "#fff" },
-    danger:    { bg: "#dc2626", color: "#fff" },
+    primary:   { bg: "#2563eb", color: "#fff" },              // Edit, aksi utama
+    success:   { bg: "#16a34a", color: "#fff" },              // Setujui
+    danger:    { bg: "#dc2626", color: "#fff" },              // Tolak, Hapus
     outline:   { bg: "#fff", color: "#2563eb", border: "1.5px solid #2563eb" },
+    neutral:   { bg: "#f1f5f9", color: "#475569" },
+    info:      { bg: "#0891b2", color: "#fff" },              // Detail (teal, kotak berwarna)
   };
   const v = variants[variant] || variants.primary;
   return (
-    <button onClick={onClick} style={{
-      display: "flex", alignItems: "center", gap: 5, padding: "6px 12px",
-      background: v.bg, color: v.color, border: v.border || "none",
-      borderRadius: 6, fontWeight: 600, fontSize: 14, cursor: "pointer", ...style,
-    }}>
+    <button
+      onClick={onClick}
+      className={`admin-btn admin-btn-${variant}`}
+      style={{
+        display: "flex", alignItems: "center", gap: 5, padding: "6px 12px",
+        background: v.bg, color: v.color, border: v.border || "none",
+        borderRadius: 6, fontWeight: 600, fontSize: 14, cursor: "pointer", ...style,
+      }}>
       {children}
     </button>
   );

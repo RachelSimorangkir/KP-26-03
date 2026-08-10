@@ -282,9 +282,9 @@ const HibahKeluarAdmin = () => {
                 </td>
                 <td style={tdBase}>
                   <div style={{ display: "flex", gap: 6, whiteSpace: "nowrap" }}>
-                    <AdminButton variant="outline" onClick={() => setDetailItem(d)}>Detail</AdminButton>
-                    <AdminButton variant="outline" onClick={() => openEditModal(d)}>Edit</AdminButton>
-                    <AdminButton variant="outline" onClick={() => handleDelete(d)} style={{ color: "#dc2626", borderColor: "#dc2626" }}>Hapus</AdminButton>
+                    <AdminButton variant="info" onClick={() => setDetailItem(d)}>Detail</AdminButton>
+                    <AdminButton variant="primary" onClick={() => openEditModal(d)}>Edit</AdminButton>
+                    <AdminButton variant="danger" onClick={() => handleDelete(d)}>Hapus</AdminButton>
                   </div>
                 </td>
               </tr>

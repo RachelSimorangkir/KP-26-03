@@ -190,7 +190,7 @@ const PemeliharaanAdmin = () => {
                 {/* Aksi */}
                 <td style={{ ...tdBase, whiteSpace: "nowrap" }}>
                   <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
-                    <AdminButton variant="outline" onClick={() => setDetailItem(d)}>
+                    <AdminButton variant="info" onClick={() => setDetailItem(d)}>
                       <IconEye /> Detail
                     </AdminButton>
                     {d.status === "Diajukan" && (

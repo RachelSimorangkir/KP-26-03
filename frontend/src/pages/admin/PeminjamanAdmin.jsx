@@ -312,7 +312,7 @@ const PeminjamanAdmin = () => {
               <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}><StatusBadge status={d.status} /></td>
               <td style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>
                 <div style={{ display: "flex", gap: 6, flexWrap: "nowrap" }}>
-                  <AdminButton variant="outline" onClick={() => setDetailItem(d)}><IconEye /> Detail</AdminButton>
+                  <AdminButton variant="info" onClick={() => setDetailItem(d)}><IconEye /> Detail</AdminButton>
                   {d.status === "Diajukan" && (
                     <>
                       <AdminButton variant="success" onClick={() => handleSetujui(d.id)}>Setujui</AdminButton>
