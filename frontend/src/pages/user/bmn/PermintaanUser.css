@@ -336,69 +336,68 @@
 
 /* Judul "Data Pemohon" & "Detail Peminjaman" */
 /* ==========================================
-   STOK BARANG
+   STOK BARANG (TABLE VERSION)
 ========================================== */
 
-.stok-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-    gap:12px;
+.stok-table-wrap{
     margin-top:18px;
+    overflow-x:auto;
 }
 
-.stok-item{
-    background:#f8fbff;
-    border:1px solid #dbeafe;
-    border-radius:14px;
-
-    padding:12px 10px;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-
-    min-height:95px;
-
-    transition:.3s;
+.stok-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
 }
 
-.stok-item:hover{
-    transform:translateY(-4px);
-    box-shadow:0 8px 18px rgba(37,99,235,.12);
+.stok-table th:first-child,
+.stok-table td:first-child{
+    width:40px;
 }
 
-.stok-item .stok-nama{
-    font-size:12px;
-    font-weight:600;
-    color:#16324b;
+.stok-table th:last-child,
+.stok-table td:last-child{
+    width:100px;
     text-align:center;
-    line-height:1.4;
-    margin-bottom:8px;
 }
 
-.stok-item .stok-angka{
-    font-size:22px;
-    font-weight:800;
-    color:#2563eb;
-    line-height:1;
-    margin-bottom:6px;
+.stok-table thead tr{
+    background:#f8fbff;
 }
 
-.stok-item .stok-satuan{
-    font-size:11px;
+.stok-table th,
+.stok-table td{
+    padding:10px 12px;
+    text-align:left;
+    border-bottom:1px solid #e2e8f0;
+    color:#16324b;
+}
+
+.stok-table th{
+    font-weight:700;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
     color:#64748b;
 }
 
-.stok-item .merah{
+.stok-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+.stok-angka{
+    font-weight:700;
+}
+
+.stok-angka.merah{
     color:#dc2626;
 }
 
-.stok-item .kuning{
+.stok-angka.kuning{
     color:#d97706;
 }
 
-.stok-item .hijau{
+.stok-angka.hijau{
     color:#16a34a;
 }
 

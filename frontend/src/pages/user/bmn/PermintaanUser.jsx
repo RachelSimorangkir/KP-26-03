@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Modal, inputStyle, IconPlus, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
+import { createPortal } from "react-dom";
+import { Modal, inputStyle, IconPlus, IconSearch, downloadAsPDF, AdminHeaderCard, AdminCard, AdminButton } from "./components";
 import { useNavigate } from "react-router-dom";
 import "./PermintaanUser.css";
 
@@ -166,18 +167,38 @@ useEffect(() => {
     .catch((err) => console.error("Gagal ambil data persediaan:", err));
 }, []);
 
+  // Data stok yang sudah diurutkan dari jumlah terbanyak ke 0
+  const stokHabisPakaiSorted = [...stokHabisPakai].sort((a, b) => b.stok - a.stok);
+
+  // Keyword untuk search di tabel "Stok Barang Habis Pakai"
+  const [stokKeyword, setStokKeyword] = useState("");
+
+  const stokHabisPakaiFiltered = stokHabisPakaiSorted.filter((s) =>
+    s.nama.toLowerCase().includes(stokKeyword.toLowerCase())
+  );
 
   const [items, setItems] = useState([{ ...emptyItem }]);
+
+  // Teks yang sedang diketik user di kolom "Pilih Barang" untuk tiap baris,
+  // dan baris mana yang dropdown-nya sedang terbuka
+  const [barangSearch, setBarangSearch] = useState([""]);
+  const [dropdownOpenIndex, setDropdownOpenIndex] = useState(null);
+  const [dropdownRect, setDropdownRect] = useState(null); // {top, left, width} posisi input, dihitung ulang tiap dibuka
+
   const [submitted, setSubmitted] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [nomorSurat] = useState(generateNomor());
   const today = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 
-  const addItem = () => setItems([...items, { ...emptyItem }]);
+  const addItem = () => {
+    setItems([...items, { ...emptyItem }]);
+    setBarangSearch([...barangSearch, ""]);
+  };
 
   const removeItem = (i) => {
     if (items.length === 1) return;
     setItems(items.filter((_, idx) => idx !== i));
+    setBarangSearch(barangSearch.filter((_, idx) => idx !== i));
   };
 
   const updateItem = (i, field, value) => {
@@ -196,6 +217,15 @@ useEffect(() => {
       return newItem;
     });
     setItems(updated);
+  };
+
+  // Dipanggil saat user memilih barang dari daftar saran pencarian pada suatu baris
+  const handlePilihBarangRow = (i, namaBarang) => {
+    updateItem(i, "nama", namaBarang);
+    const updatedSearch = [...barangSearch];
+    updatedSearch[i] = namaBarang;
+    setBarangSearch(updatedSearch);
+    setDropdownOpenIndex(null);
   };
 
   const canSubmit = items.some(i => i.nama && i.jumlahMinta);
@@ -266,6 +296,7 @@ if (submitted) {
                 onClick={() => {
                     setSubmitted(false);
                     setItems([{ ...emptyItem }]);
+                    setBarangSearch([""]);
                 }}
             >
                 Buat Permintaan Baru
@@ -276,6 +307,14 @@ if (submitted) {
 
   return (
     <div>
+      {/* Override lokal: paksa padding-left ikon search di tabel stok,
+          karena .rekom-card input punya padding:8px 10px !important di CSS global */}
+      <style>{`
+        .rekom-card input.stok-search-input{
+          padding-left: 30px !important;
+        }
+      `}</style>
+
       <button
     className="back-button"
     onClick={() => navigate("/bmn")}
@@ -315,32 +354,60 @@ if (submitted) {
       {/* Stok Info */}
       <div className="rekom-card">
         <h2>Stok Barang Habis Pakai</h2>
-        <div className="stok-grid">
-          {stokHabisPakai.map((s, i) => (
-            <div key={i} className="stok-item">
 
-    <div className="stok-nama">
-        {s.nama}
-    </div>
+        {/* Search barang di tabel stok */}
+        <div style={{ position: "relative", marginBottom: 14 }}>
+          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}>
+            <IconSearch />
+          </span>
+          <input
+            className="stok-search-input"
+            style={{ ...inputStyle, paddingLeft: 30 }}
+            value={stokKeyword}
+            placeholder="Cari nama barang..."
+            onChange={(e) => setStokKeyword(e.target.value)}
+          />
+        </div>
 
-    <div
-        className={
-            s.stok === 0
-                ? "stok-angka merah"
-                : s.stok <= 2
-                ? "stok-angka kuning"
-                : "stok-angka"
-        }
-    >
-        {s.stok}
-    </div>
-
-    <div className="stok-satuan">
-        {s.satuan}
-    </div>
-
-</div>
-          ))}
+        <div className="stok-table-wrap">
+          <table className="stok-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>Jumlah</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stokHabisPakaiFiltered.length === 0 ? (
+                <tr>
+                  <td colSpan={3} style={{ textAlign: "center", color: "#94a3b8", padding: "16px 0" }}>
+                    Barang tidak ditemukan
+                  </td>
+                </tr>
+              ) : (
+                stokHabisPakaiFiltered.map((s, i) => (
+                  <tr key={s.id}>
+                    <td>{i + 1}</td>
+                    <td>{s.nama}</td>
+                    <td>
+                      <span
+                        className={
+                          s.stok === 0
+                            ? "stok-angka merah"
+                            : s.stok <= 2
+                            ? "stok-angka kuning"
+                            : "stok-angka hijau"
+                        }
+                      >
+                        {s.stok} {s.satuan}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -357,20 +424,37 @@ if (submitted) {
               </tr>
             </thead>
             <tbody>
-              {items.map((item, i) => (
+              {items.map((item, i) => {
+                const currentSearch = barangSearch[i] ?? "";
+                return (
                 <tr key={i}>
                   <td style={{ padding: "4px 6px", border: "1px solid #cbd5e1", textAlign: "left", fontWeight: 700, color: "#64748b" }}>{i + 1}</td>
-                  <td style={{ padding: "3px 5px", border: "1px solid #cbd5e1", minWidth: 160 }}>
-                    <select
+                  <td style={{ padding: "3px 5px", border: "1px solid #cbd5e1", minWidth: 160, position: "relative" }}>
+                    <input
                       style={{ ...inputStyle, fontSize: 12, border: "none", padding: "4px 5px", background: "transparent" }}
-                      value={item.nama}
-                      onChange={e => updateItem(i, "nama", e.target.value)}
-                    >
-                      <option value="">-- Pilih Barang --</option>
-                      {stokHabisPakai.map(s => (
-                        <option key={s.id} value={s.nama}>{s.nama}</option>
-                      ))}
-                    </select>
+                      value={currentSearch}
+                      placeholder="-- Cari Barang --"
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const updatedSearch = [...barangSearch];
+                        updatedSearch[i] = val;
+                        setBarangSearch(updatedSearch);
+                        const rect = e.target.getBoundingClientRect();
+                        setDropdownRect({ top: rect.bottom, left: rect.left, width: rect.width });
+                        setDropdownOpenIndex(i);
+                        if (item.nama && item.nama !== val) {
+                          updateItem(i, "nama", "");
+                        }
+                      }}
+                      onFocus={(e) => {
+                        const rect = e.target.getBoundingClientRect();
+                        setDropdownRect({ top: rect.bottom, left: rect.left, width: rect.width });
+                        setDropdownOpenIndex(i);
+                      }}
+                      onBlur={() => setTimeout(() => {
+                        setDropdownOpenIndex((prev) => (prev === i ? null : prev));
+                      }, 150)}
+                    />
                   </td>
                   <td style={{ padding: "3px 5px", border: "1px solid #cbd5e1", width: 65, textAlign: "left" }}>
                     <span style={{ fontWeight: 600, color: "#1e293b", paddingLeft: 5, fontSize: 12 }}>{item.stokAwal !== "" ? item.stokAwal : "-"}</span>
@@ -403,11 +487,57 @@ if (submitted) {
                     </button>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
         </div>
+
+        {dropdownOpenIndex !== null && dropdownRect && createPortal(
+          (() => {
+            const activeIndex = dropdownOpenIndex;
+            const activeSearch = barangSearch[activeIndex] ?? "";
+            const filtered = stokHabisPakaiSorted.filter((s) =>
+              s.nama.toLowerCase().includes(activeSearch.toLowerCase())
+            );
+            return (
+              <div
+                style={{
+                  position: "fixed",
+                  top: dropdownRect.top,
+                  left: dropdownRect.left,
+                  width: dropdownRect.width,
+                  background: "#fff",
+                  border: "1.5px solid #e2e8f0",
+                  borderRadius: 6,
+                  zIndex: 9999,
+                  maxHeight: 180,
+                  overflowY: "auto",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                }}
+              >
+                {filtered.length === 0 ? (
+                  <div style={{ padding: "8px 10px", color: "#94a3b8", fontSize: 12 }}>Barang tidak ditemukan</div>
+                ) : (
+                  filtered.map((s) => (
+                    <div
+                      key={s.id}
+                      onMouseDown={() => handlePilihBarangRow(activeIndex, s.nama)}
+                      style={{ padding: "6px 10px", cursor: "pointer", fontSize: 12, borderBottom: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
+                    >
+                      <span>{s.nama}</span>
+                      <span style={{ color: "#94a3b8", flexShrink: 0, marginLeft: 8 }}>{s.stok} {s.satuan}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            );
+          })(),
+          document.body
+        )}
 
         <button onClick={addItem} style={{ display: "flex", alignItems: "center", gap: 5, border: "1.5px dashed #2563eb", borderRadius: 6, background: "#eff6ff", color: "#2563eb", padding: "6px 14px", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>
           <IconPlus /> Tambah Barang

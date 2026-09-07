@@ -290,6 +290,13 @@
     font-weight:700;
 }
 
+.rekom-card h2{
+    font-size:24px;
+    font-weight:700;
+    color:#16324b;
+    margin-bottom:16px;
+}
+
 /* Label form */
 .rekom-card label{
     font-size:16px;
@@ -342,6 +349,72 @@
     font-weight:700;
     padding:6px 14px;
     border-radius:999px;
+}
+
+/* ==========================================
+   STOK BARANG (TABLE VERSION)
+========================================== */
+
+.stok-table-wrap{
+    margin-top:18px;
+    overflow-x:auto;
+}
+
+.stok-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+}
+
+.stok-table th:first-child,
+.stok-table td:first-child{
+    width:40px;
+}
+
+.stok-table th:last-child,
+.stok-table td:last-child{
+    width:100px;
+    text-align:center;
+}
+
+.stok-table thead tr{
+    background:#f8fbff;
+}
+
+.stok-table th,
+.stok-table td{
+    padding:12px 14px;
+    text-align:left;
+    border-bottom:1px solid #e2e8f0;
+    color:#16324b;
+}
+
+.stok-table th{
+    font-weight:700;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    color:#64748b;
+}
+
+.stok-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+.stok-angka{
+    font-weight:700;
+}
+
+.stok-angka.merah{
+    color:#dc2626;
+}
+
+.stok-angka.kuning{
+    color:#d97706;
+}
+
+.stok-angka.hijau{
+    color:#16a34a;
 }
 
 .back-button{
