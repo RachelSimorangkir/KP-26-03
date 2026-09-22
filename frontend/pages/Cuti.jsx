@@ -28,6 +28,24 @@ const [sisaCuti, setSisaCuti] = useState("");
   const [nama, setNama] = useState("");
   const [jabatan, setJabatan] = useState("");
   const [unitKerja, setUnitKerja] = useState("");
+  useEffect(() => {
+  const userNIP = localStorage.getItem("userNIP");
+
+  if (!userNIP) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${userNIP}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setNip(data.nip || userNIP);
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    })
+    .catch((error) => {
+      console.error("Gagal mengambil data pegawai:", error);
+    });
+}, []);
 
   //==========================
   // CUTI
@@ -699,17 +717,11 @@ if (jenisCuti === "Cuti Tahunan") {
 
             <label>NIP *</label>
 
-            <input
-
-              type="text"
-
-              placeholder="Masukkan NIP"
-
-              value={nip}
-
-              onChange={handleNipChange}
-
-            />
+           <input
+  type="text"
+  value={nip}
+  readOnly
+/>
 
           </div>
 
@@ -1117,7 +1129,24 @@ if (jenisCuti === "Cuti Tahunan") {
 
         <button
     className="submit-btn"
-    onClick={() => setStep(2)}
+    onClick={() => {
+        if (
+            statusKepegawaian === "PNS" &&
+            jenisCuti === "Cuti Tahunan" &&
+            Number(durasi) > 12
+        ) {
+            Swal.fire({
+                icon: "warning",
+                title: "Pengajuan Tidak Dapat Dilanjutkan",
+                text: "Jumlah cuti tahunan yang diajukan melebihi batas maksimal 12 hari.",
+                confirmButtonText: "Mengerti"
+            });
+
+            return;
+        }
+
+        setStep(2);
+    }}
 >
     Selanjutnya
 </button>

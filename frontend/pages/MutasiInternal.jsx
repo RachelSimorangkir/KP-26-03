@@ -1,6 +1,6 @@
 import "./MutasiInternal.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 function MutasiInternal() {
@@ -10,6 +10,25 @@ function MutasiInternal() {
 const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [unitKerja, setUnitKerja] = useState("");
+useEffect(() => {
+  const userNIP = localStorage.getItem("userNIP");
+
+  if (!userNIP) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${userNIP}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setNip(data.nip || userNIP);
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    })
+    .catch((error) => {
+      console.error("Gagal mengambil data pegawai:", error);
+    });
+}, []);
+
 const [status, setStatus] = useState("Menunggu");
 
 const [suratPermohonan, setSuratPermohonan] =
@@ -159,10 +178,6 @@ const handleNipChange = async (e) => {
 
       <div className="page-header">
 
-        <div className="header-icon">
-          🏢
-        </div>
-
         <div>
           <h1>Mutasi Internal Kementerian Agama</h1>
 
@@ -210,11 +225,10 @@ const handleNipChange = async (e) => {
         <div className="form-group">
           <label>NIP *</label>
           <input
-            type="text"
-            placeholder="Masukkan NIP"
-            value={nip}
-            onChange={handleNipChange}
-          />
+  type="text"
+  value={nip}
+  readOnly
+/>
         </div>
 
         <div className="form-group">

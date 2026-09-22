@@ -221,14 +221,35 @@ $satuanCuti  = strtolower($pengajuan["satuan_cuti"]);
         $pdf->SetXY(216.5,105.5);
         $pdf->Cell(45,4,$pangkat);
 
-        // Unit Kerja
-        $pdf->SetXY(57,112);
+        //=========================================
+//=========================================
+// UNIT KERJA
+//=========================================
 
-        $pdf->MultiCell(
-            135,
-            4,
-            $unitKerja
-        );
+// Ambil data unit kerja
+$unitKerja = $pegawai["unit_organisasi"];
+
+// Hapus enter / newline dan spasi berlebih
+$unitKerja = preg_replace('/\s+/', ' ', trim($unitKerja));
+
+// Font Unit Kerja
+$pdf->SetFont("Arial", "", 9);
+
+// Posisi Unit Kerja
+$pdf->SetXY(57, 112);
+
+// Tulis Unit Kerja dalam SATU BARIS
+$pdf->Cell(
+    225,
+    4,
+    $unitKerja,
+    0,
+    0,
+    "L"
+);
+
+// Kembalikan font
+$pdf->SetFont("Arial", "", 20);
 
         //=========================================
 // TANGGAL SURAT

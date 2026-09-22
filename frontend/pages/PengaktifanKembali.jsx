@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "./PengaktifanKembali.css";
 
@@ -10,6 +10,25 @@ const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [pangkat, setPangkat] = useState("");
 const [unitKerja, setUnitKerja] = useState("");
+useEffect(() => {
+  const userNIP = localStorage.getItem("userNIP");
+
+  if (!userNIP) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${userNIP}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setNip(data.nip || userNIP);
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    })
+    .catch((error) => {
+      console.error("Gagal mengambil data pegawai:", error);
+    });
+}, []);
+
 const [suratPermohonan, setSuratPermohonan] = useState(null);
 const [tanggalPengaktifan, setTanggalPengaktifan] =
   useState("");
@@ -228,9 +247,8 @@ await Swal.fire({
 
             <input
   type="text"
-  placeholder="Masukkan NIP"
   value={nip}
-  onChange={handleNipChange}
+  readOnly
 />
           </div>
 

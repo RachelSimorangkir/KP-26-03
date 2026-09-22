@@ -14,22 +14,21 @@ const [jabatan, setJabatan] = useState("");
 const [pangkat, setPangkat] = useState("");
 const [unitKerja, setUnitKerja] = useState("");
 useEffect(() => {
-  const nipLogin = localStorage.getItem("nip");
-
-  console.log("NIP LOGIN =", nipLogin);
+  const nipLogin = localStorage.getItem("userNIP");
 
   if (!nipLogin) return;
 
   fetch(`http://localhost:8080/api/pegawai/${nipLogin}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log("DATA PEGAWAI =", data);
-
-      setNip(data.nip || "");
+      setNip(data.nip || nipLogin);
       setNama(data.nama || "");
       setJabatan(data.jabatan || "");
       setPangkat(data.pangkat_golongan || "");
       setUnitKerja(data.unit_organisasi || "");
+    })
+    .catch((error) => {
+      console.error("Gagal mengambil data pegawai:", error);
     });
 }, []);
 
@@ -251,9 +250,8 @@ for (const pair of formData.entries()) {
             <div className="nip-search">
               <input
   type="text"
-  placeholder="Masukkan NIP"
   value={nip}
-  onChange={handleNipChange}
+  readOnly
 />
             </div>
           </div>

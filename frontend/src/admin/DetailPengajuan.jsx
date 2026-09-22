@@ -65,10 +65,6 @@ useEffect(() => {
 
   loadData();
 
-  const interval = setInterval(loadData, 5000);
-
-  return () => clearInterval(interval);
-
 }, [data?.id]);
 
   console.log("DATA =", data);

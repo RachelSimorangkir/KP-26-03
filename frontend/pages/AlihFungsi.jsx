@@ -1,6 +1,6 @@
 import "./AlihFungsi.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 
@@ -119,6 +119,24 @@ const [nip, setNip] = useState("");
 const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [unitKerja, setUnitKerja] = useState("");
+useEffect(() => {
+  const userNIP = localStorage.getItem("userNIP");
+
+  if (!userNIP) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${userNIP}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setNip(data.nip || userNIP);
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitKerja(data.unit_organisasi || "");
+    })
+    .catch((error) => {
+      console.error("Gagal mengambil data pegawai:", error);
+    });
+}, []);
 
 const [pendidikan, setPendidikan] = useState("");
 const [nomorHP, setNomorHP] = useState("");
@@ -183,7 +201,7 @@ const handleNipChange = async (e) => {
 <>
       <div className="form-card">
 
-        <h2>🧩 Formulir Pengajuan Alih Fungsi</h2>
+        <h2>Formulir Pengajuan Alih Fungsi</h2>
 
         <div className="form-grid">
 
@@ -192,9 +210,8 @@ const handleNipChange = async (e) => {
 
            <input
   type="text"
-  placeholder="Masukkan NIP"
   value={nip}
-  onChange={handleNipChange}
+  readOnly
 />
           </div>
 

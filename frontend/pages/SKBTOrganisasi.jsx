@@ -1,6 +1,6 @@
 import "./SKBTOrganisasi.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 
@@ -14,7 +14,25 @@ const [linkDrive, setLinkDrive] = useState("");
 const [nama, setNama] = useState("");
 const [jabatan, setJabatan] = useState("");
 const [pangkat, setPangkat] = useState("");
-const [unitOrganisasi, setUnitOrganisasi] = useState("");
+const [unitMandiri, setUnitMandiri] = useState("");
+useEffect(() => {
+  const nipLogin = localStorage.getItem("userNIP");
+
+  if (!nipLogin) return;
+
+  fetch(`http://localhost:8080/api/pegawai/${nipLogin}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setNip(data.nip || nipLogin);
+      setNama(data.nama || "");
+      setJabatan(data.jabatan || "");
+      setPangkat(data.pangkat_golongan || "");
+      setUnitMandiri(data.unit_organisasi || "");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}, []);
 const [status, setStatus] = useState("Menunggu");
 const [email, setEmail] = useState("");
 const [noHp, setNoHp] = useState("");
@@ -26,7 +44,7 @@ const [keperluan, setKeperluan] = useState("");
 formData.append("nip", nip);
 formData.append("nama", nama);
 formData.append("jabatan", jabatan);
-formData.append("unitKerja", unitOrganisasi);
+formData.append("unitKerja", unitMandiri);
 formData.append(
   "dataPengajuan",
   JSON.stringify({
@@ -164,7 +182,7 @@ const handleNipChange = async (e) => {
             <label>Unit Kerja</label>
             <input
   type="text"
-  value={unitOrganisasi}
+  value={unitMandiri}
   readOnly
 />
           </div>
