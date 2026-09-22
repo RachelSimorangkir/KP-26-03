@@ -183,6 +183,18 @@ const PeminjamanUser = () => {
       .catch((err) => console.error("Gagal ambil data barang:", err));
   }, []);
 
+  // Keyword khusus untuk search di tabel "Ketersediaan Barang"
+  const [stokKeyword, setStokKeyword] = useState("");
+
+  // Data barang untuk tabel: difilter oleh stokKeyword, lalu diurutkan dari stok terbanyak ke 0
+  const stokBarangSorted = [...stokBarang]
+    .filter(
+      (b) =>
+        b.nama.toLowerCase().includes(stokKeyword.toLowerCase()) ||
+        b.kategori.toLowerCase().includes(stokKeyword.toLowerCase())
+    )
+    .sort((a, b) => b.stok - a.stok);
+
   const [keyword, setKeyword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [barangDipilih, setBarangDipilih] = useState(null);
@@ -258,6 +270,14 @@ const PeminjamanUser = () => {
 
   return (
     <div>
+      {/* Override lokal: paksa padding-left ikon search di tabel stok,
+          karena .rekom-card input punya padding:14px 16px !important di CSS global */}
+      <style>{`
+        .rekom-card input.stok-search-input{
+          padding-left: 32px !important;
+        }
+      `}</style>
+
       <button
         className="back-button"
         onClick={() => navigate("/bmn")}
@@ -289,8 +309,68 @@ const PeminjamanUser = () => {
           sebelum barang dapat dipinjam.
         </p>
       </div>
-      
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 14 }}>
+
+      {/* Stok Panel - Tabel */}
+      <div className="rekom-card" style={{ marginBottom: 14 }}>
+        <h2>Ketersediaan Barang</h2>
+
+        {/* Search barang di tabel stok */}
+        <div style={{ position: "relative", marginBottom: 14 }}>
+          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}>
+            <IconSearch />
+          </span>
+          <input
+            className="stok-search-input"
+            style={{ ...inputStyle, paddingLeft: 32 }}
+            value={stokKeyword}
+            placeholder="Cari nama atau kategori barang..."
+            onChange={(e) => setStokKeyword(e.target.value)}
+          />
+        </div>
+
+        <div className="stok-table-wrap">
+          <table className="stok-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>Jumlah</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stokBarangSorted.length === 0 ? (
+                <tr>
+                  <td colSpan={3} style={{ textAlign: "center", color: "#94a3b8", padding: "16px 0" }}>
+                    Barang tidak ditemukan
+                  </td>
+                </tr>
+              ) : (
+                stokBarangSorted.map((b, i) => (
+                  <tr key={b.id}>
+                    <td>{i + 1}</td>
+                    <td>{b.nama}</td>
+                    <td>
+                      <span
+                        className={
+                          b.stok === 0
+                            ? "stok-angka merah"
+                            : b.stok <= 2
+                            ? "stok-angka kuning"
+                            : "stok-angka hijau"
+                        }
+                      >
+                        {b.stok === 0 ? "Habis" : `${b.stok} unit`}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
         {/* Form */}
         <AdminCard>
           <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: 12, fontSize: 25 }}>Data Pemohon</div>
@@ -377,26 +457,6 @@ const PeminjamanUser = () => {
             style={{ width: "100%", padding: "9px 0", background: (!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali) ? "#94a3b8" : "#2563eb", color: "#fff", border: "none", borderRadius: 6, fontWeight: 700, fontSize: 14, cursor: (!barangDipilih || !form.lokasi || !form.tglPinjam || !form.tglKembali) ? "not-allowed" : "pointer" }}>
             👁 Preview & Kirim Surat
           </button>
-        </AdminCard>
-
-        {/* Stok Panel */}
-        <AdminCard>
-          <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 20, marginBottom: 10, textAlign: "left" }}>Ketersediaan Barang</div>
-          {stokBarang.map(b => (
-            <div key={b.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: "1px solid #f8fafc", textAlign: "left" }}>
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#1e293b", textAlign: "left" }}>{b.nama}</div>
-                <div style={{ fontSize: 10, color: "#94a3b8", textAlign: "left" }}>{b.kategori}</div>
-              </div>
-              <span style={{
-                fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 10, flexShrink: 0, marginLeft: 10,
-                background: b.stok === 0 ? "#fef2f2" : b.stok <= 2 ? "#fffbeb" : "#f0fdf4",
-                color: b.stok === 0 ? "#dc2626" : b.stok <= 2 ? "#d97706" : "#16a34a",
-              }}>
-                {b.stok === 0 ? "Habis" : `${b.stok} unit`}
-              </span>
-            </div>
-          ))}
         </AdminCard>
       </div>
 

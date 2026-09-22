@@ -1,18 +1,5 @@
 import { useState, useEffect } from "react";
-
-import {
-    Modal,
-    StatusBadge,
-    inputStyle,
-    FormGroup,
-    IconEye,
-    downloadAsPDF,
-    AdminHeaderCard,
-    AdminCard,
-    AdminStatCard,
-    AdminTable,
-    AdminButton
-} from "../user/bmn/components";
+import { Modal, StatusBadge, inputStyle, FormGroup, IconEye, IconSearch, downloadAsPDF, AdminHeaderCard, AdminCard, AdminStatCard, AdminTable, AdminButton } from "../user/bmn/components";
 
 // ─── PREVIEW SURAT (Admin view) ───────────────────────────────────────────────
 const PreviewSuratAdmin = ({ item, stokHabisPakai, onClose }) => {
@@ -349,6 +336,15 @@ const PermintaanAdmin = () => {
     loadStok();
   }, []);
 
+  // Data stok yang sudah diurutkan dari jumlah terbanyak ke 0
+  const stokHabisPakaiSorted = [...stokHabisPakai].sort((a, b) => b.stok - a.stok);
+
+  // Keyword untuk search di tabel "Stok Barang Habis Pakai"
+  const [stokKeyword, setStokKeyword] = useState("");
+  const stokHabisPakaiFiltered = stokHabisPakaiSorted.filter(s =>
+    s.nama.toLowerCase().includes(stokKeyword.toLowerCase())
+  );
+
   const filtered = data.filter(d => {
     const matchSearch =
       d.pemohon.nama.toLowerCase().includes(search.toLowerCase()) ||
@@ -427,17 +423,68 @@ const PermintaanAdmin = () => {
         searchPlaceholder="Cari nama atau NIP..."
       />
 
-      {/* Stok */}
+      {/* Stok - versi tabel (samakan dengan halaman User) */}
       <AdminCard style={{ marginBottom: 14 }}>
+        <style>{`
+          .stok-search-input{
+            padding-left: 32px !important;
+          }
+        `}</style>
         <div style={{ fontWeight: 700, color: "#1e293b", fontSize: 22, marginBottom: 10 }}>Stok Barang Habis Pakai</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 8 }}>
-          {stokHabisPakai.map((s, i) => (
-            <div key={i} style={{ background: s.stok === 0 ? "#fef2f2" : s.stok <= 2 ? "#fffbeb" : "#f8fafc", borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 14, color: "#64748b", marginBottom: 3, lineHeight: 1.25 }}>{s.nama}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: s.stok === 0 ? "#dc2626" : s.stok <= 2 ? "#d97706" : "#2563eb" }}>{s.stok}</div>
-              <div style={{ fontSize: 11, color: "#94a3b8" }}>{s.satuan}</div>
-            </div>
-          ))}
+
+        {/* Search barang di tabel stok */}
+        <div style={{ position: "relative", marginBottom: 14 }}>
+          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}>
+            <IconSearch />
+          </span>
+          <input
+            className="stok-search-input"
+            style={{ ...inputStyle, paddingLeft: 32 }}
+            value={stokKeyword}
+            placeholder="Cari nama barang..."
+            onChange={(e) => setStokKeyword(e.target.value)}
+          />
+        </div>
+
+        <div className="stok-table-wrap">
+          <table className="stok-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>Jumlah</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stokHabisPakaiFiltered.length === 0 ? (
+                <tr>
+                  <td colSpan={3} style={{ textAlign: "center", color: "#94a3b8", padding: "16px 0" }}>
+                    Barang tidak ditemukan
+                  </td>
+                </tr>
+              ) : (
+                stokHabisPakaiFiltered.map((s, i) => (
+                  <tr key={s.id}>
+                    <td>{i + 1}</td>
+                    <td>{s.nama}</td>
+                    <td>
+                      <span
+                        className={
+                          s.stok === 0
+                            ? "stok-angka merah"
+                            : s.stok <= 2
+                            ? "stok-angka kuning"
+                            : "stok-angka hijau"
+                        }
+                      >
+                        {s.stok} {s.satuan}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </AdminCard>
 
