@@ -40,7 +40,7 @@ const [sisaCuti, setSisaCuti] = useState("");
       setNama(data.nama || "");
       setJabatan(data.jabatan || "");
       setPangkat(data.pangkat_golongan || "");
-      setUnitKerja(data.unit_organisasi || "");
+      
     })
     .catch((error) => {
       console.error("Gagal mengambil data pegawai:", error);
@@ -298,10 +298,6 @@ if (jenisCuti === "Cuti Tahunan") {
         setNama(data.nama || "");
 
         setJabatan(data.jabatan || "");
-
-        setUnitKerja(
-          data.unit_organisasi || ""
-        );
 
       }
 
@@ -759,19 +755,16 @@ if (jenisCuti === "Cuti Tahunan") {
 
           <div className="form-group">
 
-            <label>Unit Kerja *</label>
+  <label>Unit Kerja *</label>
 
-            <input
+  <input
+    type="text"
+    value={unitKerja}
+    onChange={(e) => setUnitKerja(e.target.value)}
+    placeholder="Masukkan unit kerja"
+  />
 
-              type="text"
-
-              value={unitKerja}
-
-              readOnly
-
-            />
-
-          </div>
+</div>
 
           <div className="form-group full-width">
 
